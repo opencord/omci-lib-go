@@ -172,6 +172,7 @@ func init() {
 	classToManagedEntityMap[305] = NewDot1AgCfmStack
 	classToManagedEntityMap[306] = NewDot1AgChassisManagementInfo
 	classToManagedEntityMap[307] = NewOctetString
+	classToManagedEntityMap[309] = NewMulticastOperationsProfile
 	classToManagedEntityMap[310] = NewMulticastSubscriberConfigInfo
 	classToManagedEntityMap[311] = NewMulticastSubscriberMonitor
 	classToManagedEntityMap[313] = NewReAniG
