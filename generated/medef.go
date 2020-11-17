@@ -58,6 +58,11 @@ func (bme ManagedEntityDefinition) GetClassID() ClassID {
 	return bme.ClassID
 }
 
+// SetClassID assigns the 16-bit class ID of a managed entity from a ME Definition
+func (bme *ManagedEntityDefinition) SetClassID(classID ClassID) {
+	bme.ClassID = classID
+}
+
 // GetMessageTypes retrieves the OMCI Message Types supporte3d by a managed entity from a ME Definition
 func (bme ManagedEntityDefinition) GetMessageTypes() mapset.Set {
 	return bme.MessageTypes
