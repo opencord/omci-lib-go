@@ -23,8 +23,6 @@
 
 package generated
 
-import "fmt"
-
 // ManagedEntityInfo provides ManagedEntity information
 type ManagedEntityInfo struct {
 	New func(params ...ParamData) (*ManagedEntity, error)
@@ -239,12 +237,13 @@ func init() {
 // LoadManagedEntityDefinition returns a function to create a Managed Entity for a specific
 // Managed Entity class ID
 func LoadManagedEntityDefinition(classID ClassID, params ...ParamData) (*ManagedEntity, OmciErrors) {
-	newFunc, ok := classToManagedEntityMap[classID]
-	if ok {
+	if newFunc, ok := classToManagedEntityMap[classID]; ok {
 		return newFunc(params...)
 	}
-	return nil, NewUnknownEntityError(fmt.Sprintf("managed entity %d (%#x) definition not found",
-		uint16(classID), uint16(classID)))
+	if IsVendorSpecificClassID(classID) {
+		return NewUnknownVendorSpecificME(classID, params...)
+	}
+	return NewUnknownG988ME(classID, params...)
 }
 
 // GetSupportedClassIDs returns an array of Managed Entity Class IDs supported
@@ -263,4 +262,13 @@ func GetAttributesDefinitions(classID ClassID) (AttributeDefinitionMap, OmciErro
 		return nil, err
 	}
 	return medef.GetAttributeDefinitions(), err
+}
+
+// IsVendorSpecificClassID returns true if the provided class ID is reserved in ITU-T G.988
+// for vendor specific functionality
+func IsVendorSpecificClassID(classID ClassID) bool {
+	// Values below are from Table 11.2.4-1 of ITU-T G.988 (11/2017)
+	return (ClassID(240) <= classID && classID <= ClassID(255)) ||
+		(ClassID(350) <= classID && classID <= ClassID(399)) ||
+		(ClassID(65280) <= classID && classID <= ClassID(65535))
 }

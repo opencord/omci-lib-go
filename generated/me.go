@@ -74,6 +74,11 @@ func (entity ManagedEntity) GetClassID() ClassID {
 	return entity.definition.GetClassID()
 }
 
+// SetClassID assigns the 16-bit class ID of a Managed Entity
+func (entity *ManagedEntity) SetClassID(classID ClassID) {
+	entity.definition.SetClassID(classID)
+}
+
 // GetMessageTypes returns the OMCI message types that a Managed Entity supports
 func (entity ManagedEntity) GetMessageTypes() mapset.Set {
 	return entity.definition.GetMessageTypes()
