@@ -1079,3 +1079,170 @@ func TestMibUploadNextSequence(t *testing.T) {
 //		firstTid += 1
 //	}
 //}
+
+// TestUnsupportedG988ClassIDMibUploadNextResponse tests decoding of an Unknown class ID that is
+// in the range of IDs assigned for G.988 use
+func TestUnsupportedG988ClassIDMibUploadNextResponse(t *testing.T) {
+	// The unsupported G.988 class ID below is 37 (0x0025), which is marked in the G.988
+	// (11/2017) as 'Intentionally left blank).  The encoded frame is a Get-Next
+	// response with a single attribute 1 & 16 (0x8001) encoded.
+	//
+	tid := 3
+	cid := 0x25
+	eid := 1
+	mask := 0x8000
+	hdr := "00032e0a00020000002500018000"
+	trailer := "0000002828ce00e2"
+	attr := "0102030405060708090A0B0C0D0E0F101112131415161718191A"
+	msg := hdr + attr + trailer
+	data, err := stringToPacket(msg)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, packet)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, omciMsg.TransactionID, uint16(tid))
+	assert.Equal(t, omciMsg.MessageType, MibUploadNextResponseType)
+	assert.Equal(t, omciMsg.Length, uint16(40))
+
+	msgLayer := packet.Layer(LayerTypeMibUploadNextResponse)
+	assert.NotNil(t, msgLayer)
+
+	uploadResponse, ok2 := msgLayer.(*MibUploadNextResponse)
+	assert.True(t, ok2)
+	assert.NotNil(t, uploadResponse)
+	assert.Equal(t, uploadResponse.EntityClass, OnuDataClassID)
+	assert.Equal(t, uploadResponse.EntityInstance, uint16(0))
+	assert.Equal(t, uploadResponse.ReportedME.GetClassID(), ClassID(cid))
+	assert.Equal(t, uploadResponse.ReportedME.GetEntityID(), uint16(eid))
+	assert.Equal(t, uploadResponse.ReportedME.GetAttributeMask(), uint16(mask))
+
+	name := "UnknownAttr_1"
+	blobAttribute, err := uploadResponse.ReportedME.GetAttribute(name)
+
+	assert.Nil(t, err)
+	assert.NotNil(t, blobAttribute)
+
+	byteValue, ok3 := blobAttribute.([]uint8)
+	assert.True(t, ok3)
+	assert.NotNil(t, byteValue)
+}
+
+
+func TestUnsupportedG988ClassIDMibUploadNextResponseAttributes(t *testing.T) {
+	// Same as previous, but try different attribute mask combinations
+	tid := 3
+	cid := 0x25
+	eid := 1
+
+	// There are a number of ranges for vendor ID use. List below picks one from
+	// each of those ranges
+	masks := []uint16{0x8001, 0x0000, 0x0001, 0x8000}
+
+	trailer := "0000002828ce00e2"
+	attr := "0102030405060708090A0B0C0D0E0F101112131415161718191A"
+
+	for _, mask := range masks {
+		hdr := fmt.Sprintf("00032e0a0002000000250001%04x", mask)
+
+		msg := hdr + attr + trailer
+		data, err := stringToPacket(msg)
+		assert.NoError(t, err)
+
+		packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+		assert.NotNil(t, packet)
+
+		omciLayer := packet.Layer(LayerTypeOMCI)
+		assert.NotNil(t, packet)
+
+		omciMsg, ok := omciLayer.(*OMCI)
+		assert.True(t, ok)
+		assert.Equal(t, omciMsg.TransactionID, uint16(tid))
+		assert.Equal(t, omciMsg.MessageType, MibUploadNextResponseType)
+		assert.Equal(t, omciMsg.Length, uint16(40))
+
+		msgLayer := packet.Layer(LayerTypeMibUploadNextResponse)
+		assert.NotNil(t, msgLayer)
+
+		uploadResponse, ok2 := msgLayer.(*MibUploadNextResponse)
+		assert.True(t, ok2)
+		assert.NotNil(t, uploadResponse)
+		assert.Equal(t, uploadResponse.EntityClass, OnuDataClassID)
+		assert.Equal(t, uploadResponse.EntityInstance, uint16(0))
+		assert.Equal(t, uploadResponse.ReportedME.GetClassID(), ClassID(cid))
+		assert.Equal(t, uploadResponse.ReportedME.GetEntityID(), uint16(eid))
+		assert.Equal(t, uploadResponse.ReportedME.GetAttributeMask(), uint16(mask))
+
+		//name := "UnknownAttr_1"
+		//blobAttribute, err := uploadResponse.ReportedME.GetAttribute(name)
+		//
+		//assert.Nil(t, err)
+		//assert.NotNil(t, blobAttribute)
+		//
+		//byteValue, ok3 := blobAttribute.([]uint8)
+		//assert.True(t, ok3)
+		//assert.NotNil(t, byteValue)
+	}
+}
+
+// TestUnsupportedVendorClassIDMibUploadNextResponse tests decoding of an Unknown class ID that is
+// in the range of IDs assigned for vendor assignment
+func TestUnsupportedVendorClassIDMibUploadNextResponse(t *testing.T) {
+	tid := 3
+	eid := 0
+	mask := 0x8000
+
+	// There are a number of ranges for vendor ID use. List below picks one from
+	// each of those ranges
+	classIDs := []uint16{250, 355, 65500}
+
+	hdr := "00032e0a00020000"
+	attr := "0102030405060708090A0B0C0D0E0F101112131415161718191A"
+	trailer := "0000002828ce00e2"
+
+	for _, cid := range classIDs {
+		cidToMask := fmt.Sprintf("%04x%04x%04x", cid, eid, mask)
+		msg := hdr + cidToMask + attr + trailer
+		data, err := stringToPacket(msg)
+		assert.NoError(t, err)
+
+		packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+		assert.NotNil(t, packet)
+
+		omciLayer := packet.Layer(LayerTypeOMCI)
+		assert.NotNil(t, packet)
+
+		omciMsg, ok := omciLayer.(*OMCI)
+		assert.True(t, ok)
+		assert.Equal(t, omciMsg.TransactionID, uint16(tid))
+		assert.Equal(t, omciMsg.MessageType, MibUploadNextResponseType)
+		assert.Equal(t, omciMsg.Length, uint16(40))
+
+		msgLayer := packet.Layer(LayerTypeMibUploadNextResponse)
+		assert.NotNil(t, msgLayer)
+
+		uploadResponse, ok2 := msgLayer.(*MibUploadNextResponse)
+		assert.True(t, ok2)
+		assert.NotNil(t, uploadResponse)
+		assert.Equal(t, uploadResponse.EntityClass, OnuDataClassID)
+		assert.Equal(t, uploadResponse.EntityInstance, uint16(0))
+		assert.Equal(t, uploadResponse.ReportedME.GetClassID(), ClassID(cid))
+		assert.Equal(t, uploadResponse.ReportedME.GetEntityID(), uint16(eid))
+		assert.Equal(t, uploadResponse.ReportedME.GetAttributeMask(), uint16(mask))
+
+		name := "UnknownAttr_1"
+		blobAttribute, err := uploadResponse.ReportedME.GetAttribute(name)
+
+		assert.Nil(t, err)
+		assert.NotNil(t, blobAttribute)
+
+		byteValue, ok3 := blobAttribute.([]uint8)
+		assert.True(t, ok3)
+		assert.NotNil(t, byteValue)
+	}
+}
