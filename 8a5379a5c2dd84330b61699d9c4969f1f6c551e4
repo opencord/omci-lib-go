@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d711c32_0a7974d4",
+        "filename": "omci_test.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1087,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2020-11-18T14:58:39Z",
+      "side": 1,
+      "message": "...is a MibUploadNextResponse with a single attribute 1 (0x8000)",
+      "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a55b0719_ac21a4a0",
+        "filename": "omci_test.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1133,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2020-11-18T14:58:39Z",
+      "side": 1,
+      "message": "As I have little problems understanding the multiByteField definition in the ME, perhaps the usage can be made clearer here a bit (or may be also in the following example)?\nIf \"UnknownAttr_1\" is requested here a byte slice is return, I guess with content equal to var attr. So we could perhaps check, if the first two bytes from string attr are equal to first two bytes of byteValue. Or what about checking the length of byteValue?\nWhat would be the offset of the returned attribute when requesting \"UnknownAttr_2\"?",
+      "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
