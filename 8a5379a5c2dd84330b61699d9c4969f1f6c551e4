@@ -87,6 +87,24 @@
       "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7609b953_0b5b4539",
+        "filename": "omci_test.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1133,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2020-11-19T14:28:47Z",
+      "side": 1,
+      "message": "The multibyte field defaults are binary and are coded as base64 with \"AA\u003d\u003d\" just being a single zero byte.   The decode of the attributes is performed after the ME and attribute definitions are established and there is not a way without major changes to the decode sequence to get all the data bytes and make them available.  Perhaps in a future version we could provide a \u0027raw-attributes\u0027 member in the structure to allow access to the full undecoded attribute section.\n\nWhen decoding attributes, you start at the first octet of data and that matches to the attribute mask most significant bit.  So if the mask is 0x2000, then that first byte of attribute data is associated with attribute 3.  If attribute mask bits are not set, they do not take up space in the attribute payload space.\n\nOne other key item is that unknown attributes will only be for received frames that are not known.  In the Python version, there was the ability to extend the known ME definitions and and decode capabilities on a per ONU Vendor ID basis.  While that is not available in the current library, it would simply be one additional function to add to the classidmap.go file",
+      "parentUuid": "533bc0e2_e4c7b83c",
+      "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
