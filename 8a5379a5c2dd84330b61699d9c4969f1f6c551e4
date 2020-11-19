@@ -69,6 +69,24 @@
       "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "533bc0e2_e4c7b83c",
+        "filename": "omci_test.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1133,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2020-11-19T11:00:53Z",
+      "side": 1,
+      "message": "Hmm - still have problems understanding how the attributes can really be decoded that way. To be more clear about that - normally we don\u0027t really want to (and cannot) decode individual attributes here, on the other hand we want to have access to the 28 possible data bytes of the message.\nSo this is related to the ME definition as given e.g. for the first parameter:\n1: MultiByteField(\"UnknownAttr_1\", OctetsAttributeType, 0x8000, 1, toOctets(\"AA\u003d\u003d\"), mapset.NewSetWith(Read), true, true, false, 1),\nSo questions for that (could be done as comment in the ME definition file, but I just continue here): \nSize of the MultiByteField is given as 1 - so it just indicates one byte. There is a contradiction to the default value \"AA\u003d\u003d\", but I guess it does not matter here, as the default value won\u0027t ever be used.\nThat in turn means, that each new attribute is read as with the attribute offset of 1 byte - and returns -what-? According to your test here, I assume a bytefield (slice) is returned, but what is the slice size - 1? Or Maxlen\u003d28-ParamterOffset?\nTo be honest we would not go into trying to interprete one attribute after the other. What I would imagine would be just to read the first attribute always with the full size of 28 bytes. Of course we would also want to have/store the attribute mask, but we would never interprete it but always read the first attribute only. So also when having a AVC/alarm I think we would ignore the attribute mask and just map any of the attribute mask bits to just one access to the first attribute. Would that be feasible?\nOtherwise at the moment I still can\u0027t see, if/how we really have access to the complete data field.",
+      "parentUuid": "9d2e7ff6_ff86954c",
+      "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
