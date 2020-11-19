@@ -105,6 +105,24 @@
       "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9866a88d_f302c12c",
+        "filename": "omci_test.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1133,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2020-11-19T16:04:03Z",
+      "side": 1,
+      "message": "Hmm, yes, partly understood. Anyway that would leave us storing possibly marked attributes in the usual format \u003c[unknown]attribName\u003e:\u003cvalue\u003e - so fine .\nBut not fully understood: consider mask 0xC000 is received: what is the data we see in the attributes:\non first attrib the first data byte, on second attrib second data byte (I assume because of the MultiByteField length 1 - or byte slices with different offsets and lengths?)\nIf just bytes are returned, then I would assume following line valid in the discussed line above:\nbyteValue :\u003d blobAttribute.(uint8) (respective in your line there is only one byte in the slice)\nAssuming one byte it would mean we would never store more than 16 byte attribute values (if mask is set t0 0xFFFF) (as subset of the possible 26 bytes).\nSo yes, perhaps it would be nice to have access to some \u0027raw-attribute-value\u003e field (of 26 bytes) in future ...",
+      "parentUuid": "7609b953_0b5b4539",
+      "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
