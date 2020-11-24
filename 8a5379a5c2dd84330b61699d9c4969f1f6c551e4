@@ -123,6 +123,24 @@
       "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8edfacd4_69f3f354",
+        "filename": "omci_test.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1133,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2020-11-24T14:30:29Z",
+      "side": 1,
+      "message": "For a mask of 0xC000, then attribute 1 would get the first byte of data and attribute 2 would get the other byte. Any additional data is not visible.\n\nI could look at adding a raw attribute field but since the OpenONU golang adapter is the only consumer of the library, it probably would be of much use until there was perhaps a way to derive a vendor specific device adapter much like could be done with the python-based OpenONU adapter.",
+      "parentUuid": "9866a88d_f302c12c",
+      "revId": "8a5379a5c2dd84330b61699d9c4969f1f6c551e4",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
