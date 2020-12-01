@@ -20,9 +20,9 @@ package omci_test
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/google/gopacket"
 	. "github.com/opencord/omci-lib-go"
 	. "github.com/opencord/omci-lib-go/generated"
-	"github.com/google/gopacket"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
@@ -1133,7 +1133,6 @@ func TestUnsupportedG988ClassIDMibUploadNextResponse(t *testing.T) {
 	assert.NotNil(t, byteValue)
 }
 
-
 func TestUnsupportedG988ClassIDMibUploadNextResponseAttributes(t *testing.T) {
 	// Same as previous, but try different attribute mask combinations
 	tid := 3
@@ -1245,4 +1244,61 @@ func TestUnsupportedVendorClassIDMibUploadNextResponse(t *testing.T) {
 		assert.True(t, ok3)
 		assert.NotNil(t, byteValue)
 	}
+}
+
+func TestCreateMulticastOperationsProfileMe(t *testing.T) {
+	// Test various create request for this ME
+	meParams := ParamData{
+		EntityID: uint16(0x501),
+		Attributes: AttributeValueMap{
+			"IgmpVersion":               2,
+			"IgmpFunction":              0,
+			"ImmediateLeave":            0,
+			"USIgmpTci":                 0,
+			"Robustness":                2,
+			"QuerierIp":                 0,
+			"QueryInterval":             125,
+			"QuerierMaxResponseTime":    100,
+			"LastMemberResponseTime":    10,
+			"UnauthorizedJoinBehaviour": 0,
+			"USIgmpRate":                0,
+			"USIgmpTagCtrl":             0,
+			"DSIgmpMcastTci":            []byte{0, 0, 0},
+		},
+	}
+	meInstance, newErr := NewMulticastOperationsProfile(meParams)
+	assert.NotNil(t, meInstance)
+	assert.Equal(t, newErr.StatusCode(), Success)
+
+	tid := uint16(123)
+	frame, omciErr := GenFrame(meInstance, CreateRequestType, TransactionID(tid))
+	assert.NotNil(t, frame)
+	assert.NotZero(t, len(frame))
+	assert.Nil(t, omciErr)
+
+	///////////////////////////////////////////////////////////////////
+	// Now decode
+	packet := gopacket.NewPacket(frame, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, omciLayer)
+
+	omciObj, omciOk := omciLayer.(*OMCI)
+	assert.NotNil(t, omciObj)
+	assert.True(t, omciOk)
+	assert.Equal(t, tid, omciObj.TransactionID)
+	assert.Equal(t, CreateRequestType, omciObj.MessageType)
+	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+
+	msgLayer := packet.Layer(LayerTypeCreateRequest)
+	assert.NotNil(t, msgLayer)
+
+	msgObj, msgOk := msgLayer.(*CreateRequest)
+	assert.NotNil(t, msgObj)
+	assert.True(t, msgOk)
+
+	assert.Equal(t, meInstance.GetClassID(), msgObj.EntityClass)
+	assert.Equal(t, meInstance.GetEntityID(), msgObj.EntityInstance)
+	//assert.Equal(t, meInstance.GetAttributeValueMap(), msgObj.Attributes)
 }
