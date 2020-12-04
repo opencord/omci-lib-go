@@ -34,6 +34,24 @@
       "revId": "a0017899974752a0466e0ba0547374c00b3d2240",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "431dd91c_6e29bc81",
+        "filename": "generated/multicastoperationsprofileframe.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2020-12-04T16:10:41Z",
+      "side": 1,
+      "message": "yes, the correct file is here https://gerrit.opencord.org/c/voltha-openonu-adapter-go/+/21871/12..23/vendor/github.com/opencord/omci-lib-go/generated/multicastoperationsprofileframe.go \n\nChip is working on updating it in the library",
+      "parentUuid": "4b86607e_819d4dda",
+      "revId": "a0017899974752a0466e0ba0547374c00b3d2240",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
