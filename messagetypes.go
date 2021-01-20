@@ -725,7 +725,12 @@ func (omci *GetResponse) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) 
 	//                   octets for data if the status code == 0.  So accommodate
 	//                   this behaviour in favor of greater interoperability.
 	lastOctet := 36
-	if omci.Result == me.AttributeFailure {
+
+	switch omci.Result {
+	case me.ProcessingError, me.NotSupported, me.UnknownEntity, me.UnknownInstance, me.DeviceBusy:
+		return nil // Done (do not try and decode attributes)
+
+	case me.AttributeFailure:
 		lastOctet = 32
 	}
 	omci.Attributes, err = meDefinition.DecodeAttributes(omci.AttributeMask, data[7:lastOctet], p, byte(GetResponseType))
@@ -3368,6 +3373,10 @@ func (omci *GetCurrentDataResponse) DecodeFromBytes(data []byte, p gopacket.Pack
 	}
 	omci.AttributeMask = binary.BigEndian.Uint16(data[4:6])
 
+	switch omci.Result {
+	case me.ProcessingError, me.NotSupported, me.UnknownEntity, me.UnknownInstance, me.DeviceBusy:
+		return nil // Done (do not try and decode attributes)
+	}
 	// Attribute decode
 	omci.Attributes, err = meDefinition.DecodeAttributes(omci.AttributeMask, data[6:], p, byte(GetCurrentDataResponseType))
 	if err != nil {

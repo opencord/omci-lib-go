@@ -2688,5 +2688,36 @@ func TestAttributeValueChangeSerialize(t *testing.T) {
 	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
 }
 
+
+func TestJira3769(t *testing.T) {
+	// VOL-3769.  Error parsing get response with processing error and large mask
+	sampleMessage := "035e290a0101000001FFFC000000000000000000000000000000000000000000000000000000000000000028"
+	data, err := stringToPacket(sampleMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, omciLayer)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, omciMsg.TransactionID, uint16(0x035e))
+	assert.Equal(t, omciMsg.MessageType, GetResponseType)
+	assert.Equal(t, omciMsg.DeviceIdentifier, BaselineIdent)
+	assert.Equal(t, omciMsg.Length, uint16(40))
+
+	// before bugfix for this JIRA, the following call returned 'nil'  Failure was
+	// occuring before this at during getResposne decoding.
+	msgLayer := packet.Layer(LayerTypeGetResponse)
+	assert.NotNil(t, msgLayer)
+
+	response, ok2 := msgLayer.(*GetResponse)
+	assert.True(t, ok2)
+	assert.NotNil(t, response)
+	assert.Equal(t, response.Result, me.ProcessingError)
+	assert.Equal(t, response.AttributeMask, uint16(0xFFFC))
+}
 // TODO: Create notification tests for all of the following types
 //TestResult,
