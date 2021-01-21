@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74112280_3dacf633",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1000116
+      },
+      "writtenOn": "2021-01-21T08:06:22Z",
+      "side": 1,
+      "message": "maybe it\u0027s out of my OMCI lack of knowledge, but would it be better here to return an error or the type of the ME? I think it woudl be useful to know if the device is busy for example.",
+      "revId": "4e0ac9ab012d1f3d0fdb84bccd6268f25f680b87",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
