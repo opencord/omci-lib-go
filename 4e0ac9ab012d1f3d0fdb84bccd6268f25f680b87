@@ -16,6 +16,24 @@
       "revId": "4e0ac9ab012d1f3d0fdb84bccd6268f25f680b87",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b739de9_f5dcd07d",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-01-21T14:44:04Z",
+      "side": 1,
+      "message": "This is just the decode function for a GetRequest and the value of the omci.Result is only important on whether or not to continue decode of the attributes. So basically this is not an error, just the end of the decode at this layer.",
+      "parentUuid": "74112280_3dacf633",
+      "revId": "4e0ac9ab012d1f3d0fdb84bccd6268f25f680b87",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
