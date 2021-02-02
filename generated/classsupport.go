@@ -28,10 +28,11 @@ const (
 	Ignored            // OMCI supported, but underlying function is now
 
 	// The following two are specific unsupported Managed Entity Definitions
-	UnsupportedManagedEntity				// Unsupported ITU G.988 Class ID
-	UnsupportedVendorSpecificManagedEntity	// Unsupported Vendor Specific Class ID
+	UnsupportedManagedEntity               // Unsupported ITU G.988 Class ID
+	UnsupportedVendorSpecificManagedEntity // Unsupported Vendor Specific Class ID
 )
 
 func (cs ClassSupport) String() string {
-	return [...]string{"Unknown", "Supported", "Unsupported", "Partially Supported", "Ignored"}[cs]
+	return [...]string{"Unknown", "Supported", "Unsupported", "Partially Supported", "Ignored",
+		"Unsupported", "Vendor Specific"}[cs]
 }

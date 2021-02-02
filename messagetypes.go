@@ -21,8 +21,8 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	me "github.com/opencord/omci-lib-go/generated"
 	"github.com/google/gopacket"
+	me "github.com/opencord/omci-lib-go/generated"
 )
 
 // MessageType is the OMCI Message Type or'ed with the AR/AK flags as appropriate.
@@ -1590,6 +1590,20 @@ func (omci *AlarmNotificationMsg) IsAlarmActive(alarmNumber uint8) (bool, error)
 		msg := fmt.Sprintf("invalid alarm number: %v, must be 0..224", alarmNumber)
 		return false, errors.New(msg)
 	}
+	entity, omciErr := me.LoadManagedEntityDefinition(omci.EntityClass,
+		me.ParamData{EntityID: omci.EntityInstance})
+	if omciErr.StatusCode() != me.Success {
+		return false, omciErr.GetError()
+	}
+	alarmMap := entity.GetAlarmMap()
+	if alarmMap == nil {
+		msg := "Managed Entity does not support Alarm notifications"
+		return false, errors.New(msg)
+	}
+	if _, ok := alarmMap[alarmNumber]; !ok {
+		msg := fmt.Sprintf("unsupported invalid alarm number: %v", alarmNumber)
+		return false, errors.New(msg)
+	}
 	octet := alarmNumber / 8
 	bit := 7 - (alarmNumber % 8)
 	return omci.AlarmBitmap[octet]>>bit == 1, nil
@@ -1598,6 +1612,19 @@ func (omci *AlarmNotificationMsg) IsAlarmActive(alarmNumber uint8) (bool, error)
 func (omci *AlarmNotificationMsg) IsAlarmClear(alarmNumber uint8) (bool, error) {
 	if alarmNumber >= AlarmBitmapSize {
 		msg := fmt.Sprintf("invalid alarm number: %v, must be 0..224", alarmNumber)
+		return false, errors.New(msg)
+	}
+	entity, omciErr := me.LoadManagedEntityDefinition(omci.EntityClass,
+		me.ParamData{EntityID: omci.EntityInstance})
+	if omciErr.StatusCode() != me.Success {
+		return false, omciErr.GetError()
+	}
+	alarmMap := entity.GetAlarmMap()
+	if alarmMap == nil {
+		return false, errors.New("Managed Entity does not support Alarm notifications")
+	}
+	if _, ok := alarmMap[alarmNumber]; !ok {
+		msg := fmt.Sprintf("unsupported invalid alarm number: %v", alarmNumber)
 		return false, errors.New(msg)
 	}
 	octet := alarmNumber / 8
@@ -1610,6 +1637,19 @@ func (omci *AlarmNotificationMsg) ActivateAlarm(alarmNumber uint8) error {
 		msg := fmt.Sprintf("invalid alarm number: %v, must be 0..224", alarmNumber)
 		return errors.New(msg)
 	}
+	entity, omciErr := me.LoadManagedEntityDefinition(omci.EntityClass,
+		me.ParamData{EntityID: omci.EntityInstance})
+	if omciErr.StatusCode() != me.Success {
+		return omciErr.GetError()
+	}
+	alarmMap := entity.GetAlarmMap()
+	if alarmMap == nil {
+		return errors.New("Managed Entity does not support Alarm notifications")
+	}
+	if _, ok := alarmMap[alarmNumber]; !ok {
+		msg := fmt.Sprintf("unsupported invalid alarm number: %v", alarmNumber)
+		return errors.New(msg)
+	}
 	octet := alarmNumber / 8
 	bit := 7 - (alarmNumber % 8)
 	omci.AlarmBitmap[octet] |= 1 << bit
@@ -1619,6 +1659,19 @@ func (omci *AlarmNotificationMsg) ActivateAlarm(alarmNumber uint8) error {
 func (omci *AlarmNotificationMsg) ClearAlarm(alarmNumber uint8) error {
 	if alarmNumber >= AlarmBitmapSize {
 		msg := fmt.Sprintf("invalid alarm number: %v, must be 0..224", alarmNumber)
+		return errors.New(msg)
+	}
+	entity, omciErr := me.LoadManagedEntityDefinition(omci.EntityClass,
+		me.ParamData{EntityID: omci.EntityInstance})
+	if omciErr.StatusCode() != me.Success {
+		return omciErr.GetError()
+	}
+	alarmMap := entity.GetAlarmMap()
+	if alarmMap == nil {
+		return errors.New("Managed Entity does not support Alarm notifications")
+	}
+	if _, ok := alarmMap[alarmNumber]; !ok {
+		msg := fmt.Sprintf("unsupported invalid alarm number: %v", alarmNumber)
 		return errors.New(msg)
 	}
 	octet := alarmNumber / 8
@@ -1634,27 +1687,31 @@ func (omci *AlarmNotificationMsg) DecodeFromBytes(data []byte, p gopacket.Packet
 	if err != nil {
 		return err
 	}
-	//var meDefinition me.IManagedEntityDefinition
-	//meDefinition, err = me.LoadManagedEntityDefinition(omci.EntityClass,
-	//	me.ParamData{EntityID: omci.EntityInstance})
-	//if err != nil {
-	//	return err
-	//}
-	// ME needs to support Alarms
-	// TODO: Add attribute to ME to specify that alarm is allowed
-	//if !me.SupportsMsgType(meDefinition, me.MibReset) {
-	//	return me.NewProcesssingError("managed entity does not support MIB Reset Message-Type")
-	//}
-	for index, octet := range data[4 : (AlarmBitmapSize/8)-4] {
-		omci.AlarmBitmap[index] = octet
+	meDefinition, omciErr := me.LoadManagedEntityDefinition(omci.EntityClass,
+		me.ParamData{EntityID: omci.EntityInstance})
+	if omciErr.StatusCode() != me.Success {
+		return omciErr.GetError()
 	}
-	padOffset := 4 + (AlarmBitmapSize / 8)
-	omci.zeroPadding[0] = data[padOffset]
-	omci.zeroPadding[1] = data[padOffset+1]
-	omci.zeroPadding[2] = data[padOffset+2]
+	// Is this an unsupported or vendor specific ME.  If so, it is not an error to decode
+	// the alarms.  We just cannot provide any alarm names.  Handle decode here.
+	classSupport := meDefinition.GetClassSupport()
+	isUnsupported := classSupport == me.UnsupportedManagedEntity ||
+		classSupport == me.UnsupportedVendorSpecificManagedEntity
 
-	omci.AlarmSequenceNumber = data[padOffset+3]
-	return nil
+	// Look for a non-nil/not empty Alarm Map to determine if this ME supports alarms
+	if alarmMap := meDefinition.GetAlarmMap(); isUnsupported || (alarmMap != nil && len(alarmMap) > 0) {
+		for index, octet := range data[4 : (AlarmBitmapSize/8)-4] {
+			omci.AlarmBitmap[index] = octet
+		}
+		padOffset := 4 + (AlarmBitmapSize / 8)
+		omci.zeroPadding[0] = data[padOffset]
+		omci.zeroPadding[1] = data[padOffset+1]
+		omci.zeroPadding[2] = data[padOffset+2]
+
+		omci.AlarmSequenceNumber = data[padOffset+3]
+		return nil
+	}
+	return me.NewProcessingError("managed entity does not support alarm notifications")
 }
 
 func decodeAlarmNotification(data []byte, p gopacket.PacketBuilder) error {

@@ -19,9 +19,9 @@ package omci_test
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/google/gopacket"
 	. "github.com/opencord/omci-lib-go"
 	me "github.com/opencord/omci-lib-go/generated"
-	"github.com/google/gopacket"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
@@ -2577,9 +2577,123 @@ func TestAlarmNotificationDecode(t *testing.T) {
 	})
 	assert.Equal(t, request.AlarmSequenceNumber, byte(5))
 
+	// Active/Clear tests
+	active, err2 := request.IsAlarmActive(0)
+	clear, err3 := request.IsAlarmClear(0)
+	assert.Nil(t, err2)
+	assert.Nil(t, err3)
+	assert.True(t, active)
+	assert.False(t, clear)
+
+	// Active/Clear for undefined alarm bits
+	active, err2 = request.IsAlarmActive(1)
+	clear, err3 = request.IsAlarmClear(1)
+	assert.NotNil(t, err2)
+	assert.NotNil(t, err3)
+
 	// Verify string output for message
 	packetString := packet.String()
 	assert.NotZero(t, len(packetString))
+}
+
+func TestInvalidClassAlarmNotificationDecode(t *testing.T) {
+	// Choosing GalEthernetProfile (272) since it does not support alarms, show we should
+	// file the decode
+	badMessage := "0000100a01100104800000000000000000000000000000000000000000000000000000000000000500000028"
+	data, err := stringToPacket(badMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, packet)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, omciMsg.TransactionID, uint16(0x0))
+	assert.Equal(t, omciMsg.MessageType, AlarmNotificationType)
+	assert.Equal(t, omciMsg.DeviceIdentifier, BaselineIdent)
+	assert.Equal(t, omciMsg.Length, uint16(40))
+
+	msgLayer := packet.Layer(LayerTypeAlarmNotification)
+	assert.Nil(t, msgLayer)
+
+	request, ok2 := msgLayer.(*AlarmNotificationMsg)
+	assert.False(t, ok2)
+	assert.Nil(t, request)
+}
+
+func TestUnknownsMeAlarmNotificationDecode(t *testing.T) {
+	// Choosing class ID 22 since it is in the G.988 class ID space and is reserved
+	goodMessage := "0000100a00160104800000000000000000000000000000000000000000000000000000000000000500000028"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, packet)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, omciMsg.TransactionID, uint16(0x0))
+	assert.Equal(t, omciMsg.MessageType, AlarmNotificationType)
+	assert.Equal(t, omciMsg.DeviceIdentifier, BaselineIdent)
+	assert.Equal(t, omciMsg.Length, uint16(40))
+
+	msgLayer := packet.Layer(LayerTypeAlarmNotification)
+	assert.NotNil(t, msgLayer)
+
+	request, ok2 := msgLayer.(*AlarmNotificationMsg)
+	assert.True(t, ok2)
+	assert.NotNil(t, request)
+	assert.Equal(t, request.EntityClass, me.ClassID(22))
+	assert.Equal(t, request.EntityInstance, uint16(0x104))
+	assert.Equal(t, request.AlarmBitmap, [28]byte{
+		0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	})
+	assert.Equal(t, request.AlarmSequenceNumber, byte(5))
+}
+
+func TestVendorSpecificAlarmNotificationDecode(t *testing.T) {
+	// Choosing class ID 255 since it is in the first vendor specific class ID space
+	goodMessage := "0000100a00FF0104800000000000000000000000000000000000000000000000000000000000000500000028"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, packet)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, omciMsg.TransactionID, uint16(0x0))
+	assert.Equal(t, omciMsg.MessageType, AlarmNotificationType)
+	assert.Equal(t, omciMsg.DeviceIdentifier, BaselineIdent)
+	assert.Equal(t, omciMsg.Length, uint16(40))
+
+	msgLayer := packet.Layer(LayerTypeAlarmNotification)
+	assert.NotNil(t, msgLayer)
+
+	request, ok2 := msgLayer.(*AlarmNotificationMsg)
+	assert.True(t, ok2)
+	assert.NotNil(t, request)
+	assert.Equal(t, request.EntityClass, me.ClassID(255))
+	assert.Equal(t, request.EntityInstance, uint16(0x104))
+	assert.Equal(t, request.AlarmBitmap, [28]byte{
+		0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	})
+	assert.Equal(t, request.AlarmSequenceNumber, byte(5))
 }
 
 func TestAlarmNotificationSerialize(t *testing.T) {
@@ -2688,7 +2802,6 @@ func TestAttributeValueChangeSerialize(t *testing.T) {
 	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
 }
 
-
 func TestJira3769(t *testing.T) {
 	// VOL-3769.  Error parsing get response with processing error and large mask
 	sampleMessage := "035e290a0101000001FFFC000000000000000000000000000000000000000000000000000000000000000028"
@@ -2719,5 +2832,6 @@ func TestJira3769(t *testing.T) {
 	assert.Equal(t, response.Result, me.ProcessingError)
 	assert.Equal(t, response.AttributeMask, uint16(0xFFFC))
 }
+
 // TODO: Create notification tests for all of the following types
 //TestResult,
