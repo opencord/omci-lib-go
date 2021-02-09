@@ -83,6 +83,7 @@ func init() {
 			Delete,
 			Get,
 			Set,
+			GetCurrentData,
 		),
 		AllowedAttributeMask: 0xf800,
 		AttributeDefinitions: AttributeDefinitionMap{
