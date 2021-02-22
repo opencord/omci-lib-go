@@ -29,46 +29,47 @@ import (
 type MessageType byte
 
 const (
-	CreateRequestType                 = MessageType(byte(me.Create) | me.AR)
-	CreateResponseType                = MessageType(byte(me.Create) | me.AK)
-	DeleteRequestType                 = MessageType(byte(me.Delete) | me.AR)
-	DeleteResponseType                = MessageType(byte(me.Delete) | me.AK)
-	SetRequestType                    = MessageType(byte(me.Set) | me.AR)
-	SetResponseType                   = MessageType(byte(me.Set) | me.AK)
-	GetRequestType                    = MessageType(byte(me.Get) | me.AR)
-	GetResponseType                   = MessageType(byte(me.Get) | me.AK)
-	GetAllAlarmsRequestType           = MessageType(byte(me.GetAllAlarms) | me.AR)
-	GetAllAlarmsResponseType          = MessageType(byte(me.GetAllAlarms) | me.AK)
-	GetAllAlarmsNextRequestType       = MessageType(byte(me.GetAllAlarmsNext) | me.AR)
-	GetAllAlarmsNextResponseType      = MessageType(byte(me.GetAllAlarmsNext) | me.AK)
-	MibUploadRequestType              = MessageType(byte(me.MibUpload) | me.AR)
-	MibUploadResponseType             = MessageType(byte(me.MibUpload) | me.AK)
-	MibUploadNextRequestType          = MessageType(byte(me.MibUploadNext) | me.AR)
-	MibUploadNextResponseType         = MessageType(byte(me.MibUploadNext) | me.AK)
-	MibResetRequestType               = MessageType(byte(me.MibReset) | me.AR)
-	MibResetResponseType              = MessageType(byte(me.MibReset) | me.AK)
-	TestRequestType                   = MessageType(byte(me.Test) | me.AR)
-	TestResponseType                  = MessageType(byte(me.Test) | me.AK)
-	StartSoftwareDownloadRequestType  = MessageType(byte(me.StartSoftwareDownload) | me.AR)
-	StartSoftwareDownloadResponseType = MessageType(byte(me.StartSoftwareDownload) | me.AK)
-	DownloadSectionRequestType        = MessageType(byte(me.DownloadSection) | me.AR)
-	DownloadSectionResponseType       = MessageType(byte(me.DownloadSection) | me.AK)
-	EndSoftwareDownloadRequestType    = MessageType(byte(me.EndSoftwareDownload) | me.AR)
-	EndSoftwareDownloadResponseType   = MessageType(byte(me.EndSoftwareDownload) | me.AK)
-	ActivateSoftwareRequestType       = MessageType(byte(me.ActivateSoftware) | me.AR)
-	ActivateSoftwareResponseType      = MessageType(byte(me.ActivateSoftware) | me.AK)
-	CommitSoftwareRequestType         = MessageType(byte(me.CommitSoftware) | me.AR)
-	CommitSoftwareResponseType        = MessageType(byte(me.CommitSoftware) | me.AK)
-	SynchronizeTimeRequestType        = MessageType(byte(me.SynchronizeTime) | me.AR)
-	SynchronizeTimeResponseType       = MessageType(byte(me.SynchronizeTime) | me.AK)
-	RebootRequestType                 = MessageType(byte(me.Reboot) | me.AR)
-	RebootResponseType                = MessageType(byte(me.Reboot) | me.AK)
-	GetNextRequestType                = MessageType(byte(me.GetNext) | me.AR)
-	GetNextResponseType               = MessageType(byte(me.GetNext) | me.AK)
-	GetCurrentDataRequestType         = MessageType(byte(me.GetCurrentData) | me.AR)
-	GetCurrentDataResponseType        = MessageType(byte(me.GetCurrentData) | me.AK)
-	SetTableRequestType               = MessageType(byte(me.SetTable) | me.AR)
-	SetTableResponseType              = MessageType(byte(me.SetTable) | me.AK)
+	CreateRequestType                      = MessageType(byte(me.Create) | me.AR)
+	CreateResponseType                     = MessageType(byte(me.Create) | me.AK)
+	DeleteRequestType                      = MessageType(byte(me.Delete) | me.AR)
+	DeleteResponseType                     = MessageType(byte(me.Delete) | me.AK)
+	SetRequestType                         = MessageType(byte(me.Set) | me.AR)
+	SetResponseType                        = MessageType(byte(me.Set) | me.AK)
+	GetRequestType                         = MessageType(byte(me.Get) | me.AR)
+	GetResponseType                        = MessageType(byte(me.Get) | me.AK)
+	GetAllAlarmsRequestType                = MessageType(byte(me.GetAllAlarms) | me.AR)
+	GetAllAlarmsResponseType               = MessageType(byte(me.GetAllAlarms) | me.AK)
+	GetAllAlarmsNextRequestType            = MessageType(byte(me.GetAllAlarmsNext) | me.AR)
+	GetAllAlarmsNextResponseType           = MessageType(byte(me.GetAllAlarmsNext) | me.AK)
+	MibUploadRequestType                   = MessageType(byte(me.MibUpload) | me.AR)
+	MibUploadResponseType                  = MessageType(byte(me.MibUpload) | me.AK)
+	MibUploadNextRequestType               = MessageType(byte(me.MibUploadNext) | me.AR)
+	MibUploadNextResponseType              = MessageType(byte(me.MibUploadNext) | me.AK)
+	MibResetRequestType                    = MessageType(byte(me.MibReset) | me.AR)
+	MibResetResponseType                   = MessageType(byte(me.MibReset) | me.AK)
+	TestRequestType                        = MessageType(byte(me.Test) | me.AR)
+	TestResponseType                       = MessageType(byte(me.Test) | me.AK)
+	StartSoftwareDownloadRequestType       = MessageType(byte(me.StartSoftwareDownload) | me.AR)
+	StartSoftwareDownloadResponseType      = MessageType(byte(me.StartSoftwareDownload) | me.AK)
+	DownloadSectionRequestType             = MessageType(me.DownloadSection) // me.AR is optional
+	DownloadSectionRequestWithResponseType = MessageType(byte(me.DownloadSection) | me.AR)
+	DownloadSectionResponseType            = MessageType(byte(me.DownloadSection) | me.AK)
+	EndSoftwareDownloadRequestType         = MessageType(byte(me.EndSoftwareDownload) | me.AR)
+	EndSoftwareDownloadResponseType        = MessageType(byte(me.EndSoftwareDownload) | me.AK)
+	ActivateSoftwareRequestType            = MessageType(byte(me.ActivateSoftware) | me.AR)
+	ActivateSoftwareResponseType           = MessageType(byte(me.ActivateSoftware) | me.AK)
+	CommitSoftwareRequestType              = MessageType(byte(me.CommitSoftware) | me.AR)
+	CommitSoftwareResponseType             = MessageType(byte(me.CommitSoftware) | me.AK)
+	SynchronizeTimeRequestType             = MessageType(byte(me.SynchronizeTime) | me.AR)
+	SynchronizeTimeResponseType            = MessageType(byte(me.SynchronizeTime) | me.AK)
+	RebootRequestType                      = MessageType(byte(me.Reboot) | me.AR)
+	RebootResponseType                     = MessageType(byte(me.Reboot) | me.AK)
+	GetNextRequestType                     = MessageType(byte(me.GetNext) | me.AR)
+	GetNextResponseType                    = MessageType(byte(me.GetNext) | me.AK)
+	GetCurrentDataRequestType              = MessageType(byte(me.GetCurrentData) | me.AR)
+	GetCurrentDataResponseType             = MessageType(byte(me.GetCurrentData) | me.AK)
+	SetTableRequestType                    = MessageType(byte(me.SetTable) | me.AR)
+	SetTableResponseType                   = MessageType(byte(me.SetTable) | me.AK)
 	// Autonomous ONU messages
 	AlarmNotificationType    = MessageType(byte(me.AlarmNotification))
 	AttributeValueChangeType = MessageType(byte(me.AttributeValueChange))
@@ -2143,7 +2144,7 @@ func (omci *StartSoftwareDownloadResponse) SerializeTo(b gopacket.SerializeBuffe
 type DownloadSectionRequest struct {
 	MeBasePacket  // Note: EntityInstance for software download is two specific values
 	SectionNumber byte
-	SectionData   [29]byte // 0 padding if final transfer requires only a partial block
+	SectionData   [31]byte // 0 padding if final transfer requires only a partial block
 }
 
 func (omci *DownloadSectionRequest) String() string {
@@ -2202,7 +2203,7 @@ func (omci *DownloadSectionRequest) SerializeTo(b gopacket.SerializeBuffer, opts
 	if omci.EntityClass != me.SoftwareImageClassID {
 		return me.NewProcessingError("invalid Entity Class for Download Section response")
 	}
-	bytes, err := b.AppendBytes(1 + 29)
+	bytes, err := b.AppendBytes(1 + len(omci.SectionData))
 	if err != nil {
 		return err
 	}

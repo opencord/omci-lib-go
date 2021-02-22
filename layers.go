@@ -154,6 +154,7 @@ func init() {
 	nextLayerMapping[TestRequestType] = LayerTypeTestRequest
 	nextLayerMapping[StartSoftwareDownloadRequestType] = LayerTypeStartSoftwareDownloadRequest
 	nextLayerMapping[DownloadSectionRequestType] = LayerTypeDownloadSectionRequest
+	nextLayerMapping[DownloadSectionRequestWithResponseType] = LayerTypeDownloadSectionRequest
 	nextLayerMapping[EndSoftwareDownloadRequestType] = LayerTypeEndSoftwareDownloadRequest
 	nextLayerMapping[ActivateSoftwareRequestType] = LayerTypeActivateSoftwareRequest
 	nextLayerMapping[CommitSoftwareRequestType] = LayerTypeCommitSoftwareRequest
