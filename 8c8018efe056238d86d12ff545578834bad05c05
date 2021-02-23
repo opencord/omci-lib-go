@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "170d4d13_98ab89ce",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 2147,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-02-23T09:39:12Z",
+      "side": 1,
+      "message": "What about my Jira comment to define this as slice? That would prevent the omci-lib internal copy (see below) and the additional application internal copy from available slice to this array.",
+      "revId": "8c8018efe056238d86d12ff545578834bad05c05",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9da3432d_178622ef",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 2206,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-02-23T09:39:12Z",
+      "side": 1,
+      "message": "See comment above - in case ...: application could also supply a \u0027smaller\u0027 slice, omci lib would have to assure \u0027padding\u0027",
+      "revId": "8c8018efe056238d86d12ff545578834bad05c05",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9bc50a7_84c26060",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 2211,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-02-23T09:39:12Z",
+      "side": 1,
+      "message": "see above, copy data could e avoided when using slice directly.",
+      "revId": "8c8018efe056238d86d12ff545578834bad05c05",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
