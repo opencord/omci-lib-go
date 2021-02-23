@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "59e91f95_6f16c7df",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 2147,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-02-23T14:46:11Z",
+      "side": 1,
+      "message": "We should be able to live with that - it is just a run-time optimization. \nBut yes, if there is a more general problem for this optimization, we can also handle it in some separate Jira (if at all - to touch that again on both sides)",
+      "parentUuid": "380a56f4_db24af7b",
+      "revId": "8c8018efe056238d86d12ff545578834bad05c05",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9da3432d_178622ef",
         "filename": "messagetypes.go",
         "patchSetId": 1
