@@ -2980,3 +2980,31 @@ func TestJira3769(t *testing.T) {
 
 // TODO: Create notification tests for all of the following types
 //TestResult,
+
+func TestJira3863(t *testing.T) {
+	goodMessage := "81a9240a013880010700000000000000000000000000000000000000000000000000000000000000000000283f73ddea"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, packet)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.NotNil(t, omciMsg)
+
+	msgLayer := packet.Layer(LayerTypeCreateResponse)
+	assert.NotNil(t, msgLayer)
+
+	// FEC PM ME not in class map so the following was failing (ok2 false)
+	response, ok2 := msgLayer.(*CreateResponse)
+	assert.True(t, ok2)
+	assert.NotNil(t, response)
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
+}
