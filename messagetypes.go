@@ -2332,7 +2332,7 @@ func (omci *EndSoftwareDownloadRequest) DecodeFromBytes(data []byte, p gopacket.
 	}
 	omci.CRC32 = binary.BigEndian.Uint32(data[4:8])
 	omci.ImageSize = binary.BigEndian.Uint32(data[8:12])
-	omci.NumberOfInstances = data[13]
+	omci.NumberOfInstances = data[12]
 
 	if omci.NumberOfInstances < 1 || omci.NumberOfInstances > 9 {
 		return me.NewProcessingError(fmt.Sprintf("invalid number of Instances: %v, must be 1..9",
@@ -2341,7 +2341,7 @@ func (omci *EndSoftwareDownloadRequest) DecodeFromBytes(data []byte, p gopacket.
 	omci.ImageInstances = make([]uint16, omci.NumberOfInstances)
 
 	for index := 0; index < int(omci.NumberOfInstances); index++ {
-		omci.ImageInstances[index] = binary.BigEndian.Uint16(data[14+(index*2):])
+		omci.ImageInstances[index] = binary.BigEndian.Uint16(data[13+(index*2):])
 	}
 	return nil
 }
@@ -2380,11 +2380,11 @@ func (omci *EndSoftwareDownloadRequest) SerializeTo(b gopacket.SerializeBuffer, 
 	if err != nil {
 		return err
 	}
-	binary.BigEndian.PutUint32(bytes[4:8], omci.CRC32)
-	binary.BigEndian.PutUint32(bytes[8:12], omci.ImageSize)
-	bytes[13] = omci.NumberOfInstances
+	binary.BigEndian.PutUint32(bytes[0:4], omci.CRC32)
+	binary.BigEndian.PutUint32(bytes[4:8], omci.ImageSize)
+	bytes[8] = omci.NumberOfInstances
 	for index := 0; index < int(omci.NumberOfInstances); index++ {
-		binary.BigEndian.PutUint16(bytes[14+(index*2):], omci.ImageInstances[index])
+		binary.BigEndian.PutUint16(bytes[9+(index*2):], omci.ImageInstances[index])
 	}
 	return nil
 }
@@ -2478,7 +2478,7 @@ func (omci *EndSoftwareDownloadResponse) SerializeTo(b gopacket.SerializeBuffer,
 	if omci.EntityClass != me.SoftwareImageClassID {
 		return me.NewProcessingError("invalid Entity Class for End Download response")
 	}
-	bytes, err := b.AppendBytes(3 + (3 * int(omci.NumberOfInstances)))
+	bytes, err := b.AppendBytes(2 + (3 * int(omci.NumberOfInstances)))
 	if err != nil {
 		return err
 	}
