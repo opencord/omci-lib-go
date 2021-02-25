@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34377d6e_5ab680ee",
+        "filename": "messagetypes.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 2481,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-02-25T16:30:18Z",
+      "side": 1,
+      "message": "It probably should be \nbytes, err :\u003d b.AppendBytes(2 + (3 * int(omci.NumberOfInstances)))\nto be strictly correct.",
+      "revId": "0e8a1acacbac454af4bf39e6681ccee97712f5d7",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
