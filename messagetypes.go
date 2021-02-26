@@ -2285,13 +2285,13 @@ func (omci *DownloadSectionResponse) SerializeTo(b gopacket.SerializeBuffer, opt
 	if err != nil {
 		return err
 	}
-	bytes[0] = omci.SectionNumber
 	if omci.Result > me.DeviceBusy {
 		msg := fmt.Sprintf("invalid results for Download Section response: %v, must be 0..6",
 			omci.Result)
 		return errors.New(msg)
 	}
-	bytes[1] = byte(omci.Result)
+	bytes[0] = byte(omci.Result)
+	bytes[1] = omci.SectionNumber
 	return nil
 }
 

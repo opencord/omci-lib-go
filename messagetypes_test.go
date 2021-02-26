@@ -1811,64 +1811,66 @@ func TestDownloadSectionRequestSerializeResponseExpectedMethod2(t *testing.T) {
 }
 
 func TestDownloadSectionResponseDecode(t *testing.T) {
-	// TODO: Need to complete implementation & debug this
-	//goodMessage := ""
-	//data, err := stringToPacket(goodMessage)
-	//assert.NoError(t, err)
-	//
-	//packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
-	//assert.NotNil(t, packet)
-	//
-	//omciLayer := packet.Layer(LayerTypeOMCI)
-	//assert.NotNil(t, packet)
-	//
-	//omciMsg, ok := omciLayer.(*OMCI)
-	//assert.True(t, ok)
-	//assert.Equal(t, omciMsg.TransactionID, uint16(0x0))
-	//assert.Equal(t, omciMsg.MessageType, DownloadSectionResponseType)
-	//assert.Equal(t, omciMsg.DeviceIdentifier, BaselineIdent)
-	//assert.Equal(t, omciMsg.Length, uint16(40))
-	//
-	//msgLayer := packet.Layer(LayerTypeDownloadSectionResponse)
-	//
-	//assert.NotNil(t, msgLayer)
-	//
-	//response, ok2 := msgLayer.(*DownloadSectionResponse)
-	//assert.True(t, ok2)
-	//assert.NotNil(t, response)
-	//
-	//// Verify string output for message
-	//packetString := packet.String()
-	//assert.NotZero(t, len(packetString))
+	goodMessage := "0022340a00070001061f00000000000000000000000000000000000000000000000000000000000000000028"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, packet)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, omciMsg.TransactionID, uint16(0x0022))
+	assert.Equal(t, omciMsg.MessageType, DownloadSectionResponseType)
+	assert.Equal(t, omciMsg.DeviceIdentifier, BaselineIdent)
+	assert.Equal(t, omciMsg.Length, uint16(40))
+
+	msgLayer := packet.Layer(LayerTypeDownloadSectionResponse)
+
+	assert.NotNil(t, msgLayer)
+
+	response, ok2 := msgLayer.(*DownloadSectionResponse)
+	assert.True(t, ok2)
+	assert.NotNil(t, response)
+	assert.Equal(t, me.DeviceBusy, response.Result)
+	assert.Equal(t, byte(0x1f), response.SectionNumber)
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
 }
 
 func TestDownloadSectionResponseSerialize(t *testing.T) {
-	// TODO: Need to complete implementation & debug this
-	//goodMessage := ""
-	//
-	//omciLayer := &OMCI{
-	//	TransactionID: 0x01,
-	//	MessageType:   DownloadSectionResponseType,
-	//	// DeviceIdentifier: omci.BaselineIdent,		// Optional, defaults to Baseline
-	//	// Length:           0x28,						// Optional, defaults to 40 octets
-	//}
-	//request := &DownloadSectionResponse{
-	//	MeBasePacket: MeBasePacket{
-	//		EntityClass: me.OnuDataClassID,
-	//		// Default Instance ID is 0
-	//	},
-	//}
-	//// Test serialization back to former string
-	//var options gopacket.SerializeOptions
-	//options.FixLengths = true
-	//
-	//buffer := gopacket.NewSerializeBuffer()
-	//err := gopacket.SerializeLayers(buffer, options, omciLayer, request)
-	//assert.NoError(t, err)
-	//
-	//outgoingPacket := buffer.Bytes()
-	//reconstituted := packetToString(outgoingPacket)
-	//assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
+	goodMessage := "0022340a00070001061f00000000000000000000000000000000000000000000000000000000000000000028"
+
+	omciLayer := &OMCI{
+		TransactionID: 0x0022,
+		MessageType:   DownloadSectionResponseType,
+		// DeviceIdentifier: omci.BaselineIdent,		// Optional, defaults to Baseline
+		// Length:           0x28,						// Optional, defaults to 40 octets
+	}
+	request := &DownloadSectionResponse{
+		MeBasePacket: MeBasePacket{
+			EntityClass:    me.SoftwareImageClassID,
+			EntityInstance: 1,
+		},
+		Result:        me.DeviceBusy,
+		SectionNumber: 0x1f,
+	}
+	// Test serialization back to former string
+	var options gopacket.SerializeOptions
+	options.FixLengths = true
+
+	buffer := gopacket.NewSerializeBuffer()
+	err := gopacket.SerializeLayers(buffer, options, omciLayer, request)
+	assert.NoError(t, err)
+
+	outgoingPacket := buffer.Bytes()
+	reconstituted := packetToString(outgoingPacket)
+	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
 }
 
 func TestEndSoftwareDownloadRequestDecode(t *testing.T) {
