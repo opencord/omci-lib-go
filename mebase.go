@@ -65,11 +65,11 @@ func (msg *MeBasePacket) NextLayerType() gopacket.LayerType {
 }
 
 // DecodeFromBytes decodes the given bytes into this layer
-func (msg *MeBasePacket) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
+func (msg *MeBasePacket) DecodeFromBytes(data []byte, p gopacket.PacketBuilder, contentSize int) error {
 	// Note: Base OMCI frame already checked for frame with at least 10 octets
 	msg.EntityClass = me.ClassID(binary.BigEndian.Uint16(data[0:]))
 	msg.EntityInstance = binary.BigEndian.Uint16(data[2:])
-	msg.BaseLayer = layers.BaseLayer{Contents: data[:4], Payload: data[4:]}
+	msg.BaseLayer = layers.BaseLayer{Contents: data[:contentSize], Payload: data[contentSize:]}
 	return nil
 }
 

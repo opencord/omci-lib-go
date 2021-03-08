@@ -113,8 +113,8 @@ type OMCI struct {
 	MessageType      MessageType
 	DeviceIdentifier DeviceIdent
 	ResponseExpected bool // Significant for Download Section Request only
-	Payload          []byte
-	padding          []byte
+	Payload          []byte		// TODO: Deprecated.  Use layers.BaseLayer.Payload
+	padding          []byte		// TODO: Deprecated.  Never Used
 	Length           uint16
 	MIC              uint32
 }
@@ -137,7 +137,7 @@ func (omci *OMCI) LayerType() gopacket.LayerType {
 
 // LayerContents returns the OMCI specific layer information
 func (omci *OMCI) LayerContents() []byte {
-	b := make([]byte, 8)
+	b := make([]byte, 4)
 	binary.BigEndian.PutUint16(b, omci.TransactionID)
 	b[2] = byte(omci.MessageType)
 	b[3] = byte(omci.DeviceIdentifier)
@@ -252,7 +252,7 @@ func (omci *OMCI) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
 			//return errors.New(msg)
 		}
 	}
-	omci.BaseLayer = layers.BaseLayer{data[:4], data[4:]}
+	omci.BaseLayer = layers.BaseLayer{data[:4], data[4:omci.Length]}
 	p.AddLayer(omci)
 	nextLayer, err := MsgTypeToNextLayer(omci.MessageType)
 	if err != nil {

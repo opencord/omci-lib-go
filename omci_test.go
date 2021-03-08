@@ -1091,18 +1091,34 @@ func TestUnsupportedG988ClassIDMibUploadNextResponse(t *testing.T) {
 	cid := 0x25
 	eid := 1
 	mask := 0x8000
-	hdr := "00032e0a00020000002500018000"
-	trailer := "0000002828ce00e2"
-	attr := "0102030405060708090A0B0C0D0E0F101112131415161718191A"
-	msg := hdr + attr + trailer
+	omci_hdr := "00032e0a"
+	msg_hdr  :=	"00020000002500018000"
+	attr     := "0102030405060708090A0B0C0D0E0F101112131415161718191A"
+	trailer  := "0000002828ce00e2"
+	msg := omci_hdr + msg_hdr + attr + trailer
 	data, err := stringToPacket(msg)
 	assert.NoError(t, err)
 
-	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	// Decode packet (lazy this time)
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.Lazy)
 	assert.NotNil(t, packet)
+
+	// OMCI Layer Contents are the
+	//   - TCI          (2 bytes)
+	//   - Msg Type     (1 byte)
+	//   - Device Ident (1 byte)
+	//
+	// payload is remaining layers (less optional length and MIC)
 
 	omciLayer := packet.Layer(LayerTypeOMCI)
 	assert.NotNil(t, packet)
+
+	contents := omciLayer.LayerContents()
+	payload := omciLayer.LayerPayload()
+	assert.NotNil(t, contents)
+	assert.NotNil(t, payload)
+	assert.Equal(t, len(omci_hdr) / 2, len(contents))
+	assert.Equal(t, (len(msg_hdr) + len(attr)) / 2, len(payload))
 
 	omciMsg, ok := omciLayer.(*OMCI)
 	assert.True(t, ok)
@@ -1110,8 +1126,23 @@ func TestUnsupportedG988ClassIDMibUploadNextResponse(t *testing.T) {
 	assert.Equal(t, omciMsg.MessageType, MibUploadNextResponseType)
 	assert.Equal(t, omciMsg.Length, uint16(40))
 
+	// Message Layer contents for a MIB upload next response are the
+	//    - ONU Data Class/Instance                   (4 bytes)
+	//    - Reported Managed Entity Class/Instance    (4 bytes)
+	//    - Attribute Mask                            (2 bytes)
+	//
+	// Message Layer payload for a MIB upload next response are the attributes
+	// and zero-padding (but not length & MIC)
+
 	msgLayer := packet.Layer(LayerTypeMibUploadNextResponse)
 	assert.NotNil(t, msgLayer)
+
+	contents = msgLayer.LayerContents()
+	payload = msgLayer.LayerPayload()
+	assert.NotNil(t, contents)
+	assert.NotNil(t, payload)
+	assert.Equal(t, len(msg_hdr) / 2, len(contents))
+	assert.Equal(t, len(attr) / 2, len(payload))
 
 	uploadResponse, ok2 := msgLayer.(*MibUploadNextResponse)
 	assert.True(t, ok2)
