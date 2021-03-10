@@ -2007,12 +2007,12 @@ func (omci *StartSoftwareDownloadRequest) SerializeTo(b gopacket.SerializeBuffer
 
 /////////////////////////////////////////////////////////////////////////////
 //
-type downloadResults struct {
+type DownloadResults struct {
 	ManagedEntityID uint16 // ME ID of software image entity instance (slot number plus instance 0..1 or 2..254 vendor-specific)
 	Result          me.Results
 }
 
-func (dr *downloadResults) String() string {
+func (dr *DownloadResults) String() string {
 	return fmt.Sprintf("ME: %v (%#x), Results: %d (%v)", dr.ManagedEntityID, dr.ManagedEntityID,
 		dr.Result, dr.Result)
 }
@@ -2022,7 +2022,7 @@ type StartSoftwareDownloadResponse struct {
 	Result            me.Results
 	WindowSize        byte // Window Size -1
 	NumberOfInstances byte
-	MeResults         []downloadResults
+	MeResults         []DownloadResults
 }
 
 func (omci *StartSoftwareDownloadResponse) String() string {
@@ -2065,7 +2065,7 @@ func (omci *StartSoftwareDownloadResponse) DecodeFromBytes(data []byte, p gopack
 		return errors.New(msg)
 	}
 	if omci.NumberOfInstances > 0 {
-		omci.MeResults = make([]downloadResults, omci.NumberOfInstances)
+		omci.MeResults = make([]DownloadResults, omci.NumberOfInstances)
 
 		for index := 0; index < int(omci.NumberOfInstances); index++ {
 			omci.MeResults[index].ManagedEntityID = binary.BigEndian.Uint16(data[7+(index*3):])
@@ -2395,7 +2395,7 @@ type EndSoftwareDownloadResponse struct {
 	MeBasePacket      // Note: EntityInstance for software download is two specific values
 	Result            me.Results
 	NumberOfInstances byte
-	MeResults         []downloadResults
+	MeResults         []DownloadResults
 }
 
 func (omci *EndSoftwareDownloadResponse) String() string {
@@ -2437,7 +2437,7 @@ func (omci *EndSoftwareDownloadResponse) DecodeFromBytes(data []byte, p gopacket
 		return errors.New(msg)
 	}
 	if omci.NumberOfInstances > 0 {
-		omci.MeResults = make([]downloadResults, omci.NumberOfInstances)
+		omci.MeResults = make([]DownloadResults, omci.NumberOfInstances)
 
 		for index := 0; index < int(omci.NumberOfInstances); index++ {
 			omci.MeResults[index].ManagedEntityID = binary.BigEndian.Uint16(data[6+(index*3):])

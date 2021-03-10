@@ -286,7 +286,7 @@ type SoftwareOptions struct {
 	WindowSize   uint8 // Window size - 1
 	ImageSize    uint32
 	CircuitPacks []uint16 // slot (upper 8 bits) and instance (lower 8 bits)
-	Results      []downloadResults
+	Results      []DownloadResults
 }
 
 var defaultSoftwareOptions = SoftwareOptions{
