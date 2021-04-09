@@ -17,9 +17,9 @@
 package omci_test
 
 import (
+	"github.com/google/gopacket"
 	"github.com/opencord/omci-lib-go"
 	me "github.com/opencord/omci-lib-go/generated"
-	"github.com/google/gopacket"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

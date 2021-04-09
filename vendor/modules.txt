@@ -1,16 +1,26 @@
 # github.com/aead/cmac v0.0.0-20160719120800-7af84192f0b1
-github.com/aead/cmac/aes
+## explicit
 github.com/aead/cmac
+github.com/aead/cmac/aes
 # github.com/davecgh/go-spew v1.1.1
+## explicit
 github.com/davecgh/go-spew/spew
 # github.com/deckarep/golang-set v1.7.1
+## explicit
 github.com/deckarep/golang-set
 # github.com/google/gopacket v1.1.17
+## explicit
 github.com/google/gopacket
 github.com/google/gopacket/layers
+# github.com/kr/pretty v0.2.1
+## explicit
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/stretchr/testify v1.5.1
+## explicit
 github.com/stretchr/testify/assert
+# gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15
+## explicit
 # gopkg.in/yaml.v2 v2.2.8
+## explicit
 gopkg.in/yaml.v2

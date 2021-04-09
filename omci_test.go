@@ -1092,9 +1092,9 @@ func TestUnsupportedG988ClassIDMibUploadNextResponse(t *testing.T) {
 	eid := 1
 	mask := 0x8000
 	omci_hdr := "00032e0a"
-	msg_hdr  :=	"00020000002500018000"
-	attr     := "0102030405060708090A0B0C0D0E0F101112131415161718191A"
-	trailer  := "0000002828ce00e2"
+	msg_hdr := "00020000002500018000"
+	attr := "0102030405060708090A0B0C0D0E0F101112131415161718191A"
+	trailer := "0000002828ce00e2"
 	msg := omci_hdr + msg_hdr + attr + trailer
 	data, err := stringToPacket(msg)
 	assert.NoError(t, err)
@@ -1117,8 +1117,8 @@ func TestUnsupportedG988ClassIDMibUploadNextResponse(t *testing.T) {
 	payload := omciLayer.LayerPayload()
 	assert.NotNil(t, contents)
 	assert.NotNil(t, payload)
-	assert.Equal(t, len(omci_hdr) / 2, len(contents))
-	assert.Equal(t, (len(msg_hdr) + len(attr)) / 2, len(payload))
+	assert.Equal(t, len(omci_hdr)/2, len(contents))
+	assert.Equal(t, (len(msg_hdr)+len(attr))/2, len(payload))
 
 	omciMsg, ok := omciLayer.(*OMCI)
 	assert.True(t, ok)
@@ -1141,8 +1141,8 @@ func TestUnsupportedG988ClassIDMibUploadNextResponse(t *testing.T) {
 	payload = msgLayer.LayerPayload()
 	assert.NotNil(t, contents)
 	assert.NotNil(t, payload)
-	assert.Equal(t, len(msg_hdr) / 2, len(contents))
-	assert.Equal(t, len(attr) / 2, len(payload))
+	assert.Equal(t, len(msg_hdr)/2, len(contents))
+	assert.Equal(t, len(attr)/2, len(payload))
 
 	uploadResponse, ok2 := msgLayer.(*MibUploadNextResponse)
 	assert.True(t, ok2)
