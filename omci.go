@@ -23,10 +23,11 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+
 	"github.com/aead/cmac/aes"
-	me "github.com/opencord/omci-lib-go/generated"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
+	me "github.com/opencord/omci-lib-go/generated"
 )
 
 // DeviceIdent identifies the OMCI message format. Currently either baseline or extended.
@@ -112,9 +113,9 @@ type OMCI struct {
 	TransactionID    uint16
 	MessageType      MessageType
 	DeviceIdentifier DeviceIdent
-	ResponseExpected bool // Significant for Download Section Request only
-	Payload          []byte		// TODO: Deprecated.  Use layers.BaseLayer.Payload
-	padding          []byte		// TODO: Deprecated.  Never Used
+	ResponseExpected bool   // Significant for Download Section Request only
+	Payload          []byte // TODO: Deprecated.  Use layers.BaseLayer.Payload
+	padding          []byte // TODO: Deprecated.  Never Used
 	Length           uint16
 	MIC              uint32
 }
@@ -252,7 +253,7 @@ func (omci *OMCI) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
 			//return errors.New(msg)
 		}
 	}
-	omci.BaseLayer = layers.BaseLayer{data[:4], data[4:omci.Length]}
+	omci.BaseLayer = layers.BaseLayer{Contents: data[:4], Payload: data[4:omci.Length]}
 	p.AddLayer(omci)
 	nextLayer, err := MsgTypeToNextLayer(omci.MessageType)
 	if err != nil {

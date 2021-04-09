@@ -20,9 +20,9 @@ package omci
 import (
 	"encoding/binary"
 	"fmt"
-	me "github.com/opencord/omci-lib-go/generated"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
+	me "github.com/opencord/omci-lib-go/generated"
 )
 
 type MeBasePacket struct {
