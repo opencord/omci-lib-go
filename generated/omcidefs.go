@@ -105,6 +105,7 @@ const (
 	TestResult            MsgType = 27
 	GetCurrentData        MsgType = 28
 	SetTable              MsgType = 29 // Defined in Extended Message Set Only
+	ExtendedOffset        MsgType = 0x80
 )
 
 func (mt MsgType) String() string {

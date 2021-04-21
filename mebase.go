@@ -32,6 +32,7 @@ type MeBasePacket struct {
 	gopacket.Layer
 	layers.BaseLayer
 	MsgLayerType gopacket.LayerType
+	Extended     bool
 }
 
 func (msg *MeBasePacket) String() string {

@@ -157,7 +157,7 @@ func (omci *OMCI) NextLayerType() gopacket.LayerType {
 
 func decodeOMCI(data []byte, p gopacket.PacketBuilder) error {
 	// Allow baseline messages without Length & MIC, but no less
-	if len(data) < MaxBaselineLength-8 {
+	if len(data) < 4 {
 		return errors.New("frame header too small")
 	}
 	switch DeviceIdent(data[3]) {
@@ -165,12 +165,16 @@ func decodeOMCI(data []byte, p gopacket.PacketBuilder) error {
 		return errors.New("unsupported message type")
 
 	case BaselineIdent:
-		//omci := &BaselineMessage{}
+		if len(data) < MaxBaselineLength-8 {
+			return errors.New("frame too small")
+		}
 		omci := &OMCI{}
 		return omci.DecodeFromBytes(data, p)
 
 	case ExtendedIdent:
-		//omci := &ExtendedMessage{}
+		if len(data) < 10 {
+			return errors.New("extended frame header too small")
+		}
 		omci := &OMCI{}
 		return omci.DecodeFromBytes(data, p)
 	}
@@ -217,10 +221,12 @@ func (omci *OMCI) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
 	// Decode length
 	var payloadOffset int
 	var micOffset int
+	var eomOffset int
 	if omci.DeviceIdentifier == BaselineIdent {
 		omci.Length = MaxBaselineLength - 8
 		payloadOffset = 8
 		micOffset = MaxBaselineLength - 4
+		eomOffset = MaxBaselineLength - 8
 
 		if len(data) >= micOffset {
 			length := binary.BigEndian.Uint32(data[micOffset-4:])
@@ -232,14 +238,13 @@ func (omci *OMCI) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
 		payloadOffset = 10
 		omci.Length = binary.BigEndian.Uint16(data[8:10])
 		micOffset = int(omci.Length) + payloadOffset
+		eomOffset = micOffset
 
-		if omci.Length > MaxExtendedLength {
+		if omci.Length > uint16(MaxExtendedLength-payloadOffset) {
 			return me.NewProcessingError("extended frame exceeds maximum allowed")
 		}
-		if int(omci.Length) != micOffset {
-			if int(omci.Length) < micOffset {
-				p.SetTruncated()
-			}
+		if len(data) < micOffset {
+			p.SetTruncated()
 			return me.NewProcessingError("extended frame too small")
 		}
 	}
@@ -253,9 +258,9 @@ func (omci *OMCI) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
 			//return errors.New(msg)
 		}
 	}
-	omci.BaseLayer = layers.BaseLayer{Contents: data[:4], Payload: data[4:omci.Length]}
+	omci.BaseLayer = layers.BaseLayer{data[:4], data[4:eomOffset]}
 	p.AddLayer(omci)
-	nextLayer, err := MsgTypeToNextLayer(omci.MessageType)
+	nextLayer, err := MsgTypeToNextLayer(omci.MessageType, omci.DeviceIdentifier == ExtendedIdent)
 	if err != nil {
 		return err
 	}
@@ -266,8 +271,6 @@ func (omci *OMCI) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
 // SerializationBuffer, implementing gopacket.SerializableLayer.
 // See the docs for gopacket.SerializableLayer for more info.
 func (omci *OMCI) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
-	// TODO: Hardcoded for baseline message format for now. Will eventually need to support
-	//       the extended message format.
 	bytes, err := b.PrependBytes(4)
 	if err != nil {
 		return err
@@ -288,11 +291,11 @@ func (omci *OMCI) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serializ
 			return errors.New(msg)
 		}
 	} else if omci.DeviceIdentifier == ExtendedIdent {
-		if omci.Length == 0 {
-			omci.Length = uint16(len(bytes) - 10) // Allow uninitialized length
-		}
-		if omci.Length > MaxExtendedLength {
-			msg := fmt.Sprintf("invalid Baseline message length: %v", omci.Length)
+		omci.Length = uint16(len(b.Bytes()) - 10)
+
+		// Is length larger than maximum packet (less header and trailing MIC)
+		if omci.Length > MaxExtendedLength-10-4 {
+			msg := fmt.Sprintf("invalid Extended message length: %v", omci.Length)
 			return errors.New(msg)
 		}
 	} else {
@@ -311,17 +314,20 @@ func (omci *OMCI) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serializ
 	bytes[3] = byte(omci.DeviceIdentifier)
 	b.PushLayer(LayerTypeOMCI)
 
-	bufLen := len(b.Bytes())
-	padSize := int(omci.Length) - bufLen + 4
-	if padSize < 0 {
-		msg := fmt.Sprintf("invalid OMCI Message Type length, exceeded allowed frame size by %d bytes",
-			-padSize)
-		return errors.New(msg)
-	}
-	padding, err := b.AppendBytes(padSize)
-	copy(padding, lotsOfZeros[:])
-
 	if omci.DeviceIdentifier == BaselineIdent {
+		bufLen := len(b.Bytes())
+		padSize := int(omci.Length) - bufLen + 4
+		if padSize < 0 {
+			msg := fmt.Sprintf("invalid OMCI Message Type length, exceeded allowed frame size by %d bytes",
+				-padSize)
+			return errors.New(msg)
+		}
+		padding, err := b.AppendBytes(padSize)
+		if err != nil {
+			return err
+		}
+		copy(padding, lotsOfZeros[:])
+
 		// For baseline, always provide the length
 		binary.BigEndian.PutUint32(b.Bytes()[MaxBaselineLength-8:], 40)
 	}

@@ -18,6 +18,7 @@ package omci_test
 
 import (
 	"encoding/base64"
+	"encoding/binary"
 	"fmt"
 	"github.com/google/gopacket"
 	. "github.com/opencord/omci-lib-go"
@@ -97,6 +98,11 @@ var allMessageTypes = [...]MessageType{
 	AlarmNotificationType,
 	AttributeValueChangeType,
 	TestResultType,
+}
+
+var allExtendedMessageTypes = [...]MessageType{
+	GetRequestType,
+	GetResponseType,
 }
 
 var allResults = [...]me.Results{
@@ -3024,3 +3030,232 @@ func TestJira3863(t *testing.T) {
 	packetString := packet.String()
 	assert.NotZero(t, len(packetString))
 }
+
+func TestExtendedGetRequestDecode(t *testing.T) {
+	//ONU-2G: 257
+	goodMessage := "035e490b010100000002fffc"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, packet)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, omciMsg.TransactionID, uint16(0x035e))
+	assert.Equal(t, omciMsg.MessageType, GetRequestType)
+	assert.Equal(t, omciMsg.DeviceIdentifier, ExtendedIdent)
+	assert.Equal(t, omciMsg.Length, uint16(2))
+
+	msgLayer := packet.Layer(LayerTypeGetRequest)
+	assert.NotNil(t, msgLayer)
+
+	request, ok2 := msgLayer.(*GetRequest)
+	assert.True(t, ok2)
+	assert.NotNil(t, request)
+
+	//ONU-2G: 257
+	assert.Equal(t, me.Onu2GClassID, request.EntityClass)
+	assert.Equal(t, uint16(0), request.EntityInstance)
+	assert.Equal(t, uint16(0xfffc), request.AttributeMask)
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
+}
+
+func TestExtendedGetRequestSerialize(t *testing.T) {
+	goodMessage := "035e490b010100000002fffc"
+
+	omciLayer := &OMCI{
+		TransactionID:    0x035e,
+		MessageType:      GetRequestType,
+		DeviceIdentifier: ExtendedIdent,
+		// Length parameter is optional for Extended message format serialization
+		// and if present it will be overwritten during the serialization with the
+		// actual value.
+	}
+	request := &GetRequest{
+		MeBasePacket: MeBasePacket{
+			EntityClass:    me.Onu2GClassID,
+			EntityInstance: uint16(0),
+			Extended:       true,
+		},
+		AttributeMask: uint16(0xfffc),
+	}
+	// Test serialization back to former string
+	var options gopacket.SerializeOptions
+	options.FixLengths = true
+
+	buffer := gopacket.NewSerializeBuffer()
+	err := gopacket.SerializeLayers(buffer, options, omciLayer, request)
+	assert.NoError(t, err)
+
+	outgoingPacket := buffer.Bytes()
+	reconstituted := packetToString(outgoingPacket)
+	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
+}
+
+func TestExtendedGetResponseDecode(t *testing.T) {
+	attrDef, omciErr := me.GetAttributesDefinitions(me.Onu2GClassID)
+	assert.NotNil(t, attrDef)
+	assert.NotNil(t, omciErr)
+	assert.Equal(t, omciErr.StatusCode(), me.Success)
+
+	attributes := []interface{}{
+		toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAA="), //  1: MultiByteField - "EquipmentId"  (20 zeros)
+		byte(0xb4),                               //  2: ByteField   - "OpticalNetworkUnitManagementAndControlChannelOmccVersion"
+		uint16(0x1234),                           //  3: Uint16Field - "VendorProductCode"
+		byte(1),                                  //  4: ByteField   - "SecurityCapability"
+		byte(1),                                  //  5: ByteField   - "SecurityMode"
+		uint16(0x5678),                           //  6: Uint16Field - "TotalPriorityQueueNumber"
+		byte(0x44),                               //  7: ByteField   - "TotalTrafficSchedulerNumber"
+		byte(1),                                  //  8: ByteField   - "Deprecated"
+		uint16(0x55aa),                           //  9: Uint16Field - "TotalGemPortIdNumber"
+		uint32(0xC4108011),                       // 10: Uint32Field - "Sysuptime"
+		uint16(0x6),                              // 11: Uint16Field - "ConnectivityCapability"
+		byte(6),                                  // 12: ByteField   - "CurrentConnectivityMode"
+		uint16(2),                                // 13: Uint16Field - "QualityOfServiceQosConfigurationFlexibility"
+		uint16(0x1234),                           // 14: Uint16Field - "PriorityQueueScaleFactor"
+	}
+	attributeData := make([]byte, 0)
+
+	// Walk through all attributes and encode them
+	for _, value := range attributes {
+		//attrDef, err := meDef.GetAttributeByIndex(index)
+		var buf []byte
+		u8, ok := value.(byte)
+		if ok {
+			buf = []byte{u8}
+		} else {
+			u16, ok := value.(uint16)
+			if ok {
+				buf = make([]byte, 2)
+				binary.BigEndian.PutUint16(buf, u16)
+			} else {
+				u32, ok := value.(uint32)
+				if ok {
+					buf = make([]byte, 4)
+					binary.BigEndian.PutUint32(buf, u32)
+				} else {
+					bytes, ok := value.([]byte)
+					if ok {
+						buf = bytes
+					} else {
+						assert.True(t, false) // Unknown attribute type
+					}
+				}
+			}
+		}
+		attributeData = append(attributeData, buf...)
+	}
+	attributeMask := 0xfffc
+	msgLength := len(attributeData) + 7
+	// Results is 0 ("00"), and the two optional attribute masks are 0 ("00000000") as well
+	goodMessage := "035e290b01010000" + fmt.Sprintf("%04x", msgLength) +
+		"00" + fmt.Sprintf("%04x", attributeMask) + "00000000" + packetToString(attributeData)
+
+	data, err := stringToPacket(goodMessage)
+	assert.NotNil(t, data)
+	assert.Nil(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, omciLayer)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, omciMsg.TransactionID, uint16(0x035e))
+	assert.Equal(t, omciMsg.MessageType, GetResponseType)
+	assert.Equal(t, omciMsg.DeviceIdentifier, ExtendedIdent)
+	assert.Equal(t, omciMsg.Length, uint16(msgLength))
+
+	msgLayer := packet.Layer(LayerTypeGetResponse)
+	assert.NotNil(t, msgLayer)
+
+	response, ok2 := msgLayer.(*GetResponse)
+	assert.True(t, ok2)
+	assert.NotNil(t, response)
+	assert.Equal(t, response.Result, me.Success)
+	assert.Equal(t, response.AttributeMask, uint16(attributeMask))
+	assert.Equal(t, response.FailedAttributeMask, uint16(0))
+	assert.Equal(t, response.UnsupportedAttributeMask, uint16(0))
+
+	assert.Equal(t, response.Attributes["EquipmentId"], toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAA="))
+	assert.Equal(t, response.Attributes["OpticalNetworkUnitManagementAndControlChannelOmccVersion"], byte(0xb4)) //  )
+	assert.Equal(t, response.Attributes["VendorProductCode"], uint16(0x1234))
+	assert.Equal(t, response.Attributes["SecurityCapability"], byte(1))
+	assert.Equal(t, response.Attributes["SecurityMode"], byte(1))
+	assert.Equal(t, response.Attributes["TotalPriorityQueueNumber"], uint16(0x5678))
+	assert.Equal(t, response.Attributes["TotalTrafficSchedulerNumber"], byte(0x44))
+	assert.Equal(t, response.Attributes["Deprecated"], byte(1))
+	assert.Equal(t, response.Attributes["TotalGemPortIdNumber"], uint16(0x55aa))
+	assert.Equal(t, response.Attributes["Sysuptime"], uint32(0xC4108011))
+	assert.Equal(t, response.Attributes["ConnectivityCapability"], uint16(0x6))
+	assert.Equal(t, response.Attributes["CurrentConnectivityMode"], byte(6))
+	assert.Equal(t, response.Attributes["QualityOfServiceQosConfigurationFlexibility"], uint16(2))
+	assert.Equal(t, response.Attributes["PriorityQueueScaleFactor"], uint16(0x1234))
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
+}
+
+func TestExtendedGetResponseSerialize(t *testing.T) {
+	goodMessage := "035e290b01010000003100fffc" +
+		"000000000000000000000000000000000000000000000000" +
+		"b4123401015678440155aac410801100060600021234"
+
+	omciLayer := &OMCI{
+		TransactionID:    0x035e,
+		MessageType:      GetResponseType,
+		DeviceIdentifier: ExtendedIdent,
+		// Length parameter is optional for Extended message format serialization
+		// and if present it will be overwritten during the serialization with the
+		// actual value.
+	}
+	request := &GetResponse{
+		MeBasePacket: MeBasePacket{
+			EntityClass:    me.Onu2GClassID,
+			EntityInstance: uint16(0),
+			Extended:       true,
+		},
+		Result:        0,
+		AttributeMask: uint16(0xfffc),
+		Attributes: me.AttributeValueMap{
+			"EquipmentId": toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+			"OpticalNetworkUnitManagementAndControlChannelOmccVersion": byte(0xb4),
+			"VendorProductCode":                           uint16(0x1234),
+			"SecurityCapability":                          byte(1),
+			"SecurityMode":                                byte(1),
+			"TotalPriorityQueueNumber":                    uint16(0x5678),
+			"TotalTrafficSchedulerNumber":                 byte(0x44),
+			"Deprecated":                                  byte(1),
+			"TotalGemPortIdNumber":                        uint16(0x55aa),
+			"Sysuptime":                                   uint32(0xC4108011),
+			"ConnectivityCapability":                      uint16(0x6),
+			"CurrentConnectivityMode":                     byte(6),
+			"QualityOfServiceQosConfigurationFlexibility": uint16(2),
+			"PriorityQueueScaleFactor":                    uint16(0x1234),
+		},
+	}
+	// Test serialization back to former string
+	var options gopacket.SerializeOptions
+	options.FixLengths = true
+
+	buffer := gopacket.NewSerializeBuffer()
+	err := gopacket.SerializeLayers(buffer, options, omciLayer, request)
+	assert.NoError(t, err)
+
+	outgoingPacket := buffer.Bytes()
+	reconstituted := packetToString(outgoingPacket)
+	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
+}
+
+// TODO: Also remember to add extended message tests to the meframe_test.go
+//       unit tests as more message types are supported

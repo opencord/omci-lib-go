@@ -74,6 +74,9 @@ const (
 	AlarmNotificationType    = MessageType(byte(me.AlarmNotification))
 	AttributeValueChangeType = MessageType(byte(me.AttributeValueChange))
 	TestResultType           = MessageType(byte(me.TestResult))
+
+	// Support mapping of extended format types (use MSB reserved bit)
+	ExtendedTypeDecodeOffset = MessageType(byte(0x80))
 )
 
 func (mt MessageType) String() string {
@@ -125,7 +128,7 @@ func (mt MessageType) String() string {
 		return "Start Software Download Request"
 	case StartSoftwareDownloadResponseType:
 		return "Start Software Download Response"
-	case DownloadSectionRequestType:
+	case DownloadSectionRequestType, DownloadSectionRequestWithResponseType:
 		return "Download Section Request"
 	case DownloadSectionResponseType:
 		return "Download Section Response"
@@ -649,13 +652,28 @@ func (omci *GetRequest) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) e
 	if !me.SupportsMsgType(meDefinition, me.Get) {
 		return me.NewProcessingError("managed entity does not support Get Message-Type")
 	}
-	omci.AttributeMask = binary.BigEndian.Uint16(data[4:6])
+	if omci.Extended {
+		if len(data) < 8 {
+			p.SetTruncated()
+			return errors.New("frame too small")
+		}
+		omci.AttributeMask = binary.BigEndian.Uint16(data[6:])
+	} else {
+		omci.AttributeMask = binary.BigEndian.Uint16(data[4:])
+	}
 	return nil
 }
 
 func decodeGetRequest(data []byte, p gopacket.PacketBuilder) error {
 	omci := &GetRequest{}
 	omci.MsgLayerType = LayerTypeGetRequest
+	return decodingLayerDecoder(omci, data, p)
+}
+
+func decodeGetRequestExtended(data []byte, p gopacket.PacketBuilder) error {
+	omci := &GetRequest{}
+	omci.MsgLayerType = LayerTypeGetRequest
+	omci.Extended = true
 	return decodingLayerDecoder(omci, data, p)
 }
 
@@ -675,11 +693,22 @@ func (omci *GetRequest) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Se
 	if !me.SupportsMsgType(meDefinition, me.Get) {
 		return me.NewProcessingError("managed entity does not support Get Message-Type")
 	}
-	bytes, err := b.AppendBytes(2)
+	maskOffset := 0
+	if omci.Extended {
+		maskOffset = 2
+	}
+	bytes, err := b.AppendBytes(2 + maskOffset)
 	if err != nil {
 		return err
 	}
-	binary.BigEndian.PutUint16(bytes, omci.AttributeMask)
+	if omci.Extended {
+		binary.BigEndian.PutUint16(bytes, uint16(2))
+	}
+	binary.BigEndian.PutUint16(bytes[maskOffset:], omci.AttributeMask)
+	return nil
+}
+
+func (omci *GetRequest) SerializeToExtended(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
 	return nil
 }
 
@@ -716,32 +745,55 @@ func (omci *GetResponse) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) 
 	if !me.SupportsMsgType(meDefinition, me.Get) {
 		return me.NewProcessingError("managed entity does not support Get Message-Type")
 	}
-	omci.Result = me.Results(data[4])
-	omci.AttributeMask = binary.BigEndian.Uint16(data[5:7])
+	if omci.Extended {
+		if len(data) < 13 {
+			p.SetTruncated()
+			return errors.New("frame too small")
+		}
+		omci.Result = me.Results(data[6])
+		omci.AttributeMask = binary.BigEndian.Uint16(data[7:])
 
+		// If Attribute failed or Unknown, decode optional attribute mask
+		if omci.Result == me.AttributeFailure {
+			omci.UnsupportedAttributeMask = binary.BigEndian.Uint16(data[9:])
+			omci.FailedAttributeMask = binary.BigEndian.Uint16(data[11:])
+		}
+	} else {
+		omci.Result = me.Results(data[4])
+		omci.AttributeMask = binary.BigEndian.Uint16(data[5:])
+
+		// If Attribute failed or Unknown, decode optional attribute mask
+		if omci.Result == me.AttributeFailure {
+			omci.UnsupportedAttributeMask = binary.BigEndian.Uint16(data[32:34])
+			omci.FailedAttributeMask = binary.BigEndian.Uint16(data[34:36])
+		}
+	}
 	// Attribute decode. Note that the ITU-T G.988 specification states that the
 	//                   Unsupported and Failed attribute masks are always present
 	//                   but only valid if the status code== 9.  However some XGS
 	//                   ONUs (T&W and Alpha, perhaps more) will use these last 4
 	//                   octets for data if the status code == 0.  So accommodate
 	//                   this behaviour in favor of greater interoperability.
+	firstOctet := 7
 	lastOctet := 36
+	if omci.Extended {
+		firstOctet = 13
+		lastOctet = len(data)
+	}
 
 	switch omci.Result {
 	case me.ProcessingError, me.NotSupported, me.UnknownEntity, me.UnknownInstance, me.DeviceBusy:
 		return nil // Done (do not try and decode attributes)
 
 	case me.AttributeFailure:
-		lastOctet = 32
+		if !omci.Extended {
+			lastOctet = 32
+		}
 	}
-	omci.Attributes, err = meDefinition.DecodeAttributes(omci.AttributeMask, data[7:lastOctet], p, byte(GetResponseType))
+	omci.Attributes, err = meDefinition.DecodeAttributes(omci.AttributeMask,
+		data[firstOctet:lastOctet], p, byte(GetResponseType))
 	if err != nil {
 		return err
-	}
-	// If Attribute failed or Unknown, decode optional attribute mask
-	if omci.Result == me.AttributeFailure {
-		omci.UnsupportedAttributeMask = binary.BigEndian.Uint16(data[32:34])
-		omci.FailedAttributeMask = binary.BigEndian.Uint16(data[34:36])
 	}
 	// Validate all attributes support read
 	for attrName := range omci.Attributes {
@@ -767,6 +819,13 @@ func decodeGetResponse(data []byte, p gopacket.PacketBuilder) error {
 	return decodingLayerDecoder(omci, data, p)
 }
 
+func decodeGetResponseExtended(data []byte, p gopacket.PacketBuilder) error {
+	omci := &GetResponse{}
+	omci.MsgLayerType = LayerTypeGetResponse
+	omci.Extended = true
+	return decodingLayerDecoder(omci, data, p)
+}
+
 // SerializeTo provides serialization of an Get Response message
 func (omci *GetResponse) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
 	// Basic (common) OMCI Header is 8 octets, 10
@@ -783,16 +842,27 @@ func (omci *GetResponse) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.S
 	if !me.SupportsMsgType(meDefinition, me.Get) {
 		return me.NewProcessingError("managed entity does not support the Get Message-Type")
 	}
-	bytes, err := b.AppendBytes(3)
+	resultOffset := 0
+	attributeErrExtra := 0
+
+	if omci.Extended {
+		resultOffset = 2
+		attributeErrExtra = 4 // Attribute mask + attribute error masks
+	}
+	// Space for result + mask (both types) + (len & error masks if extended)
+	buffer, err := b.AppendBytes(3 + resultOffset + attributeErrExtra)
 	if err != nil {
 		return err
 	}
-	bytes[0] = byte(omci.Result)
-	binary.BigEndian.PutUint16(bytes[1:3], omci.AttributeMask)
+	// Save result and initial mask. Other header fields updated after
+	// attribute copy
+	buffer[resultOffset] = byte(omci.Result)
+	binary.BigEndian.PutUint16(buffer[resultOffset+1:], omci.AttributeMask)
 
 	// Validate all attributes support read
 	for attrName := range omci.Attributes {
-		attr, err := me.GetAttributeDefinitionByName(meDefinition.GetAttributeDefinitions(), attrName)
+		var attr *me.AttributeDefinition
+		attr, err = me.GetAttributeDefinitionByName(meDefinition.GetAttributeDefinitions(), attrName)
 		if err != nil {
 			return err
 		}
@@ -804,52 +874,77 @@ func (omci *GetResponse) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.S
 	// Attribute serialization
 	switch omci.Result {
 	default:
+		if omci.Extended {
+			// Minimum length is 7 for extended an need to write error masks
+			binary.BigEndian.PutUint16(buffer, uint16(7))
+			binary.BigEndian.PutUint32(buffer[resultOffset+3:], 0)
+		}
 		break
 
 	case me.Success, me.AttributeFailure:
 		// TODO: Baseline only supported at this time)
-		available := MaxBaselineLength - 11 - 4 - 8
-
+		var available int
+		if omci.Extended {
+			available = MaxExtendedLength - 18 - 4 // Less: header, mic
+		} else {
+			available = MaxBaselineLength - 11 - 4 - 8 // Less: header, failed attributes, length, mic
+		}
 		// Serialize to temporary buffer if we may need to reset values due to
 		// recoverable truncation errors
-		origBuffer := b
-		b := gopacket.NewSerializeBuffer()
+		attributeBuffer := gopacket.NewSerializeBuffer()
+		var failedMask uint16
+		err, failedMask = meDefinition.SerializeAttributes(omci.Attributes, omci.AttributeMask,
+			attributeBuffer, byte(GetResponseType), available, opts.FixLengths)
 
-		err, failedMask := meDefinition.SerializeAttributes(omci.Attributes, omci.AttributeMask, b, byte(GetResponseType),
-			available, opts.FixLengths)
-
-		if err == nil && failedMask != 0 && opts.FixLengths {
+		if err != nil {
+			return err
+		}
+		if failedMask != 0 {
 			// Not all attributes would fit
 			omci.FailedAttributeMask |= failedMask
 			omci.AttributeMask &= ^failedMask
 			omci.Result = me.AttributeFailure
 
 			// Adjust already recorded values
-			bytes[0] = byte(omci.Result)
-			binary.BigEndian.PutUint16(bytes[1:3], omci.AttributeMask)
-		} else if err != nil {
-			return err
+			buffer[resultOffset] = byte(omci.Result)
+			binary.BigEndian.PutUint16(buffer[resultOffset+1:], omci.AttributeMask)
+		}
+		if omci.Extended {
+			// Set length and any failure masks
+			binary.BigEndian.PutUint16(buffer, uint16(len(attributeBuffer.Bytes())+7))
+
+			if omci.Result == me.AttributeFailure {
+				binary.BigEndian.PutUint16(buffer[resultOffset+3:], omci.UnsupportedAttributeMask)
+				binary.BigEndian.PutUint16(buffer[resultOffset+5:], omci.FailedAttributeMask)
+			} else {
+				binary.BigEndian.PutUint32(buffer[resultOffset+3:], 0)
+			}
 		}
 		// Copy over attributes to the original serialization buffer
-		newSpace, err := origBuffer.AppendBytes(len(b.Bytes()))
+		var newSpace []byte
+
+		newSpace, err = b.AppendBytes(len(attributeBuffer.Bytes()))
 		if err != nil {
 			return err
 		}
-		copy(newSpace, b.Bytes())
-		b = origBuffer
+		copy(newSpace, attributeBuffer.Bytes())
 
-		// Calculate space left. Max  - msgType header - OMCI trailer - spacedUsedSoFar
-		bytesLeft := MaxBaselineLength - 4 - 8 - len(b.Bytes())
+		if !omci.Extended {
+			// Calculate space left. Max  - msgType header - OMCI trailer - spacedUsedSoFar
+			bytesLeft := MaxBaselineLength - 4 - 8 - len(b.Bytes())
 
-		remainingBytes, err := b.AppendBytes(bytesLeft + 4)
-		if err != nil {
-			return me.NewMessageTruncatedError(err.Error())
-		}
-		copy(remainingBytes, lotsOfZeros[:])
+			var remainingBytes []byte
+			remainingBytes, err = b.AppendBytes(bytesLeft + 4)
 
-		if omci.Result == me.AttributeFailure {
-			binary.BigEndian.PutUint16(remainingBytes[bytesLeft-4:bytesLeft-2], omci.UnsupportedAttributeMask)
-			binary.BigEndian.PutUint16(remainingBytes[bytesLeft-2:bytesLeft], omci.FailedAttributeMask)
+			if err != nil {
+				return me.NewMessageTruncatedError(err.Error())
+			}
+			copy(remainingBytes, lotsOfZeros[:])
+
+			if omci.Result == me.AttributeFailure {
+				binary.BigEndian.PutUint16(remainingBytes[bytesLeft-4:bytesLeft-2], omci.UnsupportedAttributeMask)
+				binary.BigEndian.PutUint16(remainingBytes[bytesLeft-2:bytesLeft], omci.FailedAttributeMask)
+			}
 		}
 	}
 	return nil

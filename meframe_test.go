@@ -27,10 +27,10 @@ import (
 	"time"
 )
 
-var messageTypeTestFuncs map[MessageType]func(*testing.T, *me.ManagedEntity)
+var messageTypeTestFuncs map[MessageType]func(*testing.T, *me.ManagedEntity, DeviceIdent)
 
 func init() {
-	messageTypeTestFuncs = make(map[MessageType]func(*testing.T, *me.ManagedEntity), 0)
+	messageTypeTestFuncs = make(map[MessageType]func(*testing.T, *me.ManagedEntity, DeviceIdent), 0)
 
 	messageTypeTestFuncs[CreateRequestType] = testCreateRequestTypeMeFrame
 	messageTypeTestFuncs[CreateResponseType] = testCreateResponseTypeMeFrame
@@ -75,6 +75,10 @@ func init() {
 	messageTypeTestFuncs[AlarmNotificationType] = testAlarmNotificationTypeMeFrame
 	messageTypeTestFuncs[AttributeValueChangeType] = testAttributeValueChangeTypeMeFrame
 	messageTypeTestFuncs[TestResultType] = testTestResultTypeMeFrame
+
+	// Supported Extended message set types here
+	messageTypeTestFuncs[GetRequestType+ExtendedTypeDecodeOffset] = testGetRequestTypeMeFrame
+	messageTypeTestFuncs[GetResponseType+ExtendedTypeDecodeOffset] = testGetResponseTypeMeFrame
 }
 
 func getMEsThatSupportAMessageType(messageType MessageType) []*me.ManagedEntity {
@@ -93,8 +97,9 @@ func getMEsThatSupportAMessageType(messageType MessageType) []*me.ManagedEntity 
 }
 
 func TestFrameFormatNotYetSupported(t *testing.T) {
-	// We do not yet support extended frame formats. Once we do, add a bunch of tests
-	// to cover it
+	// We do not yet support a few message types for the extended frame formats.
+	// As we do, add appropriate tests and change this to one that is not supported
+	// Until all are supported
 
 	params := me.ParamData{
 		Attributes: me.AttributeValueMap{"MibDataSync": 0},
@@ -103,7 +108,7 @@ func TestFrameFormatNotYetSupported(t *testing.T) {
 	assert.NotNil(t, omciErr)
 	assert.Equal(t, omciErr.StatusCode(), me.Success)
 
-	buffer, err := GenFrame(managedEntity, GetRequestType, FrameFormat(ExtendedIdent), TransactionID(1))
+	buffer, err := GenFrame(managedEntity, SetRequestType, FrameFormat(ExtendedIdent), TransactionID(1))
 	assert.Nil(t, buffer)
 	assert.NotNil(t, err)
 }
@@ -243,7 +248,22 @@ func TestAllMessageTypes(t *testing.T) {
 			// Loop over all Managed Entities that support that type
 			for _, managedEntity := range getMEsThatSupportAMessageType(messageType) {
 				// Call the test routine
-				testRoutine(t, managedEntity)
+				testRoutine(t, managedEntity, BaselineIdent)
+				//typeTested = true
+			}
+		}
+		// Verify at least one test ran for this message type
+		// TODO: Enable once all tests are working -> assert.True(t, typeTested)
+	}
+	// Now for the extended message set message types we support
+	for _, messageType := range allExtendedMessageTypes {
+		trueMessageType := messageType - ExtendedTypeDecodeOffset
+
+		if testRoutine, ok := messageTypeTestFuncs[messageType]; ok {
+			// Loop over all Managed Entities that support that type
+			for _, managedEntity := range getMEsThatSupportAMessageType(trueMessageType) {
+				// Call the test routine
+				testRoutine(t, managedEntity, ExtendedIdent)
 				//typeTested = true
 			}
 		}
@@ -355,7 +375,7 @@ func pickAValue(attrDef me.AttributeDefinition) interface{} {
 	}
 }
 
-func testCreateRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testCreateRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// Generate the frame. Use a default Entity ID of zero, but for the
 	// OMCI library, we need to specify all supported Set-By-Create
 	params := me.ParamData{
@@ -376,7 +396,7 @@ func testCreateRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity)
 	assert.NotNil(t, err)
 	assert.Equal(t, err.StatusCode(), me.Success)
 
-	frame, omciErr := GenFrame(meInstance, CreateRequestType, TransactionID(tid))
+	frame, omciErr := GenFrame(meInstance, CreateRequestType, TransactionID(tid), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -394,7 +414,7 @@ func testCreateRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity)
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, CreateRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeCreateRequest)
 	assert.NotNil(t, msgLayer)
@@ -408,7 +428,7 @@ func testCreateRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity)
 	assert.Equal(t, meInstance.GetAttributeValueMap(), msgObj.Attributes)
 }
 
-func testCreateResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testCreateResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -434,7 +454,7 @@ func testCreateResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 		}
 	}
 	frame, omciErr := GenFrame(meInstance, CreateResponseType,
-		TransactionID(tid), Result(result), AttributeExecutionMask(mask))
+		TransactionID(tid), Result(result), AttributeExecutionMask(mask), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -452,7 +472,7 @@ func testCreateResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, CreateResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeCreateResponse)
 	assert.NotNil(t, msgLayer)
@@ -472,7 +492,7 @@ func testCreateResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	}
 }
 
-func testDeleteRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testDeleteRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// Generate the frame. Use a default Entity ID of zero, but for the
 	// OMCI library, we need to specify all supported Set-By-Create
 	params := me.ParamData{
@@ -485,7 +505,7 @@ func testDeleteRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity)
 
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 
-	frame, omciErr := GenFrame(meInstance, DeleteRequestType, TransactionID(tid))
+	frame, omciErr := GenFrame(meInstance, DeleteRequestType, TransactionID(tid), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -503,7 +523,7 @@ func testDeleteRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity)
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, DeleteRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeDeleteRequest)
 	assert.NotNil(t, msgLayer)
@@ -516,7 +536,7 @@ func testDeleteRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity)
 	assert.Equal(t, meInstance.GetEntityID(), msgObj.EntityInstance)
 }
 
-func testDeleteResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testDeleteResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -528,7 +548,8 @@ func testDeleteResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 	result := me.Results(rand.Int31n(7))   // [0, 6] Not all types will be tested
 
-	frame, omciErr := GenFrame(meInstance, DeleteResponseType, TransactionID(tid), Result(result))
+	frame, omciErr := GenFrame(meInstance, DeleteResponseType, TransactionID(tid), Result(result),
+		FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -546,7 +567,7 @@ func testDeleteResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, DeleteResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeDeleteResponse)
 	assert.NotNil(t, msgLayer)
@@ -560,7 +581,7 @@ func testDeleteResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	assert.Equal(t, result, msgObj.Result)
 }
 
-func testSetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testSetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID:   uint16(0),
 		Attributes: make(me.AttributeValueMap, 0),
@@ -592,7 +613,8 @@ func testSetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
 	assert.Equal(t, err.StatusCode(), me.Success)
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 
-	frame, omciErr := GenFrame(meInstance, SetRequestType, TransactionID(tid), AttributeMask(bitmask))
+	frame, omciErr := GenFrame(meInstance, SetRequestType, TransactionID(tid),
+		AttributeMask(bitmask), FrameFormat(messageSet))
 	// some frames cannot fit all the attributes
 	if omciErr != nil {
 		if _, ok := omciErr.(*me.MessageTruncatedError); ok {
@@ -615,7 +637,7 @@ func testSetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, SetRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeSetRequest)
 	assert.NotNil(t, msgLayer)
@@ -629,7 +651,7 @@ func testSetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
 	assert.Equal(t, meInstance.GetAttributeValueMap(), msgObj.Attributes)
 }
 
-func testSetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testSetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -665,7 +687,7 @@ func testSetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
 
 	frame, omciErr := GenFrame(meInstance, SetResponseType,
 		TransactionID(tid), Result(result),
-		AttributeMask(bitmask),
+		AttributeMask(bitmask), FrameFormat(messageSet),
 		AttributeExecutionMask(failedMask),
 		UnsupportedAttributeMask(unsupportedMask))
 	assert.NotNil(t, frame)
@@ -685,7 +707,7 @@ func testSetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, SetResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeSetResponse)
 	assert.NotNil(t, msgLayer)
@@ -707,7 +729,7 @@ func testSetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
 	}
 }
 
-func testGetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID:   uint16(0),
 		Attributes: make(me.AttributeValueMap, 0),
@@ -732,7 +754,8 @@ func testGetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
 
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 
-	frame, omciErr := GenFrame(meInstance, GetRequestType, TransactionID(tid), AttributeMask(bitmask))
+	frame, omciErr := GenFrame(meInstance, GetRequestType, TransactionID(tid),
+		AttributeMask(bitmask), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -750,7 +773,7 @@ func testGetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, GetRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeGetRequest)
 	assert.NotNil(t, msgLayer)
@@ -764,137 +787,152 @@ func testGetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
 	assert.Equal(t, meInstance.GetAttributeMask(), msgObj.AttributeMask)
 }
 
-func testGetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID:   uint16(0),
 		Attributes: make(me.AttributeValueMap),
 	}
-	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
-	result := me.Results(rand.Int31n(10))  // [0, 9]
-
-	// If success Results selected, set FailIfTruncated 50% of time to test
-	// overflow detection and failures periodically.
-	failIfTruncated := false
-	if result == me.Success && rand.Int31n(2) == 1 {
-		failIfTruncated = true
+	// Add loop to test all valid result codes for this message type
+	validResultCodes := []me.Results{
+		me.Success,
+		me.ProcessingError,
+		me.NotSupported,
+		me.ParameterError,
+		me.UnknownEntity,
+		me.UnknownInstance,
+		me.DeviceBusy,
+		me.AttributeFailure,
 	}
-	// Always pass a failure mask, but should only get encoded if result == ParameterError
-	var unsupportedMask uint16
-	var failedMask uint16
-	attrDefs := managedEntity.GetAttributeDefinitions()
-	for _, attrDef := range attrDefs {
-		if attrDef.Index == 0 {
-			continue // Skip entity ID, already specified
+	for _, result := range validResultCodes {
+		tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 
-		} else if attrDef.GetAccess().Contains(me.Read) {
-			// Random 10% chance this parameter unsupported and
-			// 10% it failed
-			switch rand.Int31n(5) {
-			default:
-				// TODO: Table attributes not yet supported.  For Table Attributes, figure out a
-				//       good way to unit test this and see if that can be extended to a more
-				//       general operation that provides the 'get-next' frames to the caller who
-				//		 wishes to serialize a table attribute.
-				if !attrDef.IsTableAttribute() {
-					params.Attributes[attrDef.GetName()] = pickAValue(attrDef)
+		// If success Results selected, set FailIfTruncated 50% of time to test
+		// overflow detection and failures periodically.  This is primarily for
+		// baseline message set for those MEs that may have lots of attribute space
+		// needed.  If extended message set, always fail if truncated since we should
+		// be able to stuff as much as we want (at least for now in these unit tests)
+		failIfTruncated := false
+		if result == me.Success && (rand.Int31n(2) == 1 || messageSet == ExtendedIdent) {
+			failIfTruncated = true
+		}
+		// Always pass a failure mask, but should only get encoded if result == ParameterError
+		var unsupportedMask uint16
+		var failedMask uint16
+		attrDefs := managedEntity.GetAttributeDefinitions()
+		for _, attrDef := range attrDefs {
+			if attrDef.Index == 0 {
+				continue // Skip entity ID, already specified
+
+			} else if attrDef.GetAccess().Contains(me.Read) {
+				// Random 5% chance this parameter unsupported and
+				// 5% it failed
+				switch rand.Int31n(20) {
+				default:
+					// TODO: Table attributes not yet supported.  For Table Attributes, figure out a
+					//       good way to unit test this and see if that can be extended to a more
+					//       general operation that provides the 'get-next' frames to the caller who
+					//		 wishes to serialize a table attribute.
+					if !attrDef.IsTableAttribute() {
+						params.Attributes[attrDef.GetName()] = pickAValue(attrDef)
+					}
+				case 0:
+					unsupportedMask |= attrDef.Mask
+				case 1:
+					failedMask |= attrDef.Mask
 				}
-			case 0:
-				unsupportedMask |= attrDef.Mask
-			case 1:
-				failedMask |= attrDef.Mask
 			}
 		}
-	}
-	bitmask, attrErr := me.GetAttributesBitmap(attrDefs, getAttributeNameSet(params.Attributes))
-	assert.Nil(t, attrErr)
+		bitmask, attrErr := me.GetAttributesBitmap(attrDefs, getAttributeNameSet(params.Attributes))
+		assert.Nil(t, attrErr)
 
-	// Create the managed instance
-	meInstance, err := me.NewManagedEntity(managedEntity.GetManagedEntityDefinition(), params)
+		// Create the managed instance
+		meInstance, err := me.NewManagedEntity(managedEntity.GetManagedEntityDefinition(), params)
 
-	frame, omciErr := GenFrame(meInstance, GetResponseType,
-		TransactionID(tid), Result(result),
-		AttributeMask(bitmask),
-		AttributeExecutionMask(failedMask),
-		UnsupportedAttributeMask(unsupportedMask),
-		FailIfTruncated(failIfTruncated))
+		frame, omciErr := GenFrame(meInstance, GetResponseType,
+			TransactionID(tid), Result(result),
+			AttributeMask(bitmask), FrameFormat(messageSet),
+			AttributeExecutionMask(failedMask),
+			UnsupportedAttributeMask(unsupportedMask),
+			FailIfTruncated(failIfTruncated))
 
-	// TODO: Need to test if err is MessageTruncatedError. Sometimes reported as
-	//       a proessing error
-	if omciErr != nil {
-		if _, ok := omciErr.(*me.MessageTruncatedError); ok {
-			return
+		// TODO: Need to test if err is MessageTruncatedError. Sometimes reported as
+		//       a proessing error
+		if omciErr != nil {
+			if _, ok := omciErr.(*me.MessageTruncatedError); ok {
+				return
+			}
 		}
-	}
-	assert.NotNil(t, frame)
-	assert.NotZero(t, len(frame))
-	assert.NotNil(t, err)
-	assert.Equal(t, err.StatusCode(), me.Success)
+		assert.NotNil(t, frame)
+		assert.NotZero(t, len(frame))
+		assert.NotNil(t, err)
+		assert.Equal(t, err.StatusCode(), me.Success)
 
-	///////////////////////////////////////////////////////////////////
-	// Now decode and compare
-	packet := gopacket.NewPacket(frame, LayerTypeOMCI, gopacket.NoCopy)
-	assert.NotNil(t, packet)
+		///////////////////////////////////////////////////////////////////
+		// Now decode and compare
+		packet := gopacket.NewPacket(frame, LayerTypeOMCI, gopacket.NoCopy)
+		assert.NotNil(t, packet)
 
-	omciLayer := packet.Layer(LayerTypeOMCI)
-	assert.NotNil(t, omciLayer)
+		omciLayer := packet.Layer(LayerTypeOMCI)
+		assert.NotNil(t, omciLayer)
 
-	omciObj, omciOk := omciLayer.(*OMCI)
-	assert.NotNil(t, omciObj)
-	assert.True(t, omciOk)
-	assert.Equal(t, tid, omciObj.TransactionID)
-	assert.Equal(t, GetResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+		omciObj, omciOk := omciLayer.(*OMCI)
+		assert.NotNil(t, omciObj)
+		assert.True(t, omciOk)
+		assert.Equal(t, tid, omciObj.TransactionID)
+		assert.Equal(t, GetResponseType, omciObj.MessageType)
+		assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
-	msgLayer := packet.Layer(LayerTypeGetResponse)
-	// If requested Result was Success and FailIfTruncated is true, then we may
-	// fail (get nil layer) if too many attributes to fit in a frame
-	if result == me.Success && msgLayer == nil {
-		return // was expected
-	}
-	assert.NotNil(t, msgLayer)
-
-	msgObj, msgOk := msgLayer.(*GetResponse)
-	assert.NotNil(t, msgObj)
-	assert.True(t, msgOk)
-
-	assert.Equal(t, meInstance.GetClassID(), msgObj.EntityClass)
-	assert.Equal(t, meInstance.GetEntityID(), msgObj.EntityInstance)
-
-	switch msgObj.Result {
-	default:
-		assert.Equal(t, result, msgObj.Result)
-		assert.Zero(t, msgObj.FailedAttributeMask)
-		assert.Zero(t, msgObj.UnsupportedAttributeMask)
-
-	case me.Success:
-		assert.Equal(t, result, msgObj.Result)
-		assert.Zero(t, msgObj.FailedAttributeMask)
-		assert.Zero(t, msgObj.UnsupportedAttributeMask)
-		assert.Equal(t, meInstance.GetAttributeValueMap(), msgObj.Attributes)
-
-	case me.AttributeFailure:
-		// Should have been Success or AttributeFailure to start with
-		assert.True(t, result == me.Success || result == me.AttributeFailure)
-		if result == me.AttributeFailure {
-			assert.Equal(t, unsupportedMask, msgObj.UnsupportedAttributeMask)
+		msgLayer := packet.Layer(LayerTypeGetResponse)
+		// If requested Result was Success and FailIfTruncated is true, then we may
+		// fail (get nil layer) if too many attributes to fit in a frame
+		if result == me.Success && msgLayer == nil {
+			return // was expected
 		}
-		// Returned may have more bits set in failed mask and less attributes
-		// since failIfTruncated is false and we may add more fail attributes
-		// since they do not fit. May also set only lower value (lower bits)
-		// if it turns out that the upper bits are already pre-assigned to the
-		// failure bits.
-		//
-		// Make sure any successful attributes were requested
-		meMap := meInstance.GetAttributeValueMap()
-		for name := range msgObj.Attributes {
-			getValue, ok := meMap[name]
-			assert.True(t, ok)
-			assert.NotNil(t, getValue)
+		assert.NotNil(t, msgLayer)
+
+		msgObj, msgOk := msgLayer.(*GetResponse)
+		assert.NotNil(t, msgObj)
+		assert.True(t, msgOk)
+
+		assert.Equal(t, meInstance.GetClassID(), msgObj.EntityClass)
+		assert.Equal(t, meInstance.GetEntityID(), msgObj.EntityInstance)
+
+		switch msgObj.Result {
+		default:
+			assert.Equal(t, result, msgObj.Result)
+			assert.Zero(t, msgObj.FailedAttributeMask)
+			assert.Zero(t, msgObj.UnsupportedAttributeMask)
+
+		case me.Success:
+			assert.Equal(t, result, msgObj.Result)
+			assert.Zero(t, msgObj.FailedAttributeMask)
+			assert.Zero(t, msgObj.UnsupportedAttributeMask)
+			assert.Equal(t, meInstance.GetAttributeValueMap(), msgObj.Attributes)
+
+		case me.AttributeFailure:
+			// Should have been Success or AttributeFailure to start with
+			assert.True(t, result == me.Success || result == me.AttributeFailure)
+			if result == me.AttributeFailure {
+				assert.Equal(t, unsupportedMask, msgObj.UnsupportedAttributeMask)
+			}
+			// Returned may have more bits set in failed mask and less attributes
+			// since failIfTruncated is false and we may add more fail attributes
+			// since they do not fit. May also set only lower value (lower bits)
+			// if it turns out that the upper bits are already pre-assigned to the
+			// failure bits.
+			//
+			// Make sure any successful attributes were requested
+			meMap := meInstance.GetAttributeValueMap()
+			for name := range msgObj.Attributes {
+				getValue, ok := meMap[name]
+				assert.True(t, ok)
+				assert.NotNil(t, getValue)
+			}
 		}
 	}
 }
 
-func testGetAllAlarmsRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetAllAlarmsRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -906,7 +944,8 @@ func testGetAllAlarmsRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedE
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 	mode := uint8(rand.Int31n(2))          // [0, 1]
 
-	frame, omciErr := GenFrame(meInstance, GetAllAlarmsRequestType, TransactionID(tid), RetrievalMode(mode))
+	frame, omciErr := GenFrame(meInstance, GetAllAlarmsRequestType, TransactionID(tid),
+		RetrievalMode(mode), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -924,7 +963,7 @@ func testGetAllAlarmsRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedE
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, GetAllAlarmsRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeGetAllAlarmsRequest)
 	assert.NotNil(t, msgLayer)
@@ -938,7 +977,7 @@ func testGetAllAlarmsRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedE
 	assert.Equal(t, mode, msgObj.AlarmRetrievalMode)
 }
 
-func testGetAllAlarmsResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetAllAlarmsResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -951,7 +990,7 @@ func testGetAllAlarmsResponseTypeMeFrame(t *testing.T, managedEntity *me.Managed
 	numOfCommands := uint16(rand.Int31n(5)) // [0, 5)
 
 	frame, omciErr := GenFrame(meInstance, GetAllAlarmsResponseType, TransactionID(tid),
-		SequenceNumberCountOrSize(numOfCommands))
+		SequenceNumberCountOrSize(numOfCommands), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -969,7 +1008,7 @@ func testGetAllAlarmsResponseTypeMeFrame(t *testing.T, managedEntity *me.Managed
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, GetAllAlarmsResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeGetAllAlarmsResponse)
 	assert.NotNil(t, msgLayer)
@@ -983,7 +1022,7 @@ func testGetAllAlarmsResponseTypeMeFrame(t *testing.T, managedEntity *me.Managed
 	assert.Equal(t, numOfCommands, msgObj.NumberOfCommands)
 }
 
-func testGetAllAlarmsNextRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetAllAlarmsNextRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -996,7 +1035,7 @@ func testGetAllAlarmsNextRequestTypeMeFrame(t *testing.T, managedEntity *me.Mana
 	sequenceNumber := uint16(rand.Int31n(5)) // [0, 5)
 
 	frame, omciErr := GenFrame(meInstance, GetAllAlarmsNextRequestType, TransactionID(tid),
-		SequenceNumberCountOrSize(sequenceNumber))
+		SequenceNumberCountOrSize(sequenceNumber), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1014,7 +1053,7 @@ func testGetAllAlarmsNextRequestTypeMeFrame(t *testing.T, managedEntity *me.Mana
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, GetAllAlarmsNextRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeGetAllAlarmsNextRequest)
 	assert.NotNil(t, msgLayer)
@@ -1028,7 +1067,7 @@ func testGetAllAlarmsNextRequestTypeMeFrame(t *testing.T, managedEntity *me.Mana
 	assert.Equal(t, sequenceNumber, msgObj.CommandSequenceNumber)
 }
 
-func testGetAllAlarmsNextResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetAllAlarmsNextResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1049,7 +1088,7 @@ func testGetAllAlarmsNextResponseTypeMeFrame(t *testing.T, managedEntity *me.Man
 		alarmInfo.AlarmBitmap[octet] = uint8(rand.Intn(256))
 	}
 	frame, omciErr := GenFrame(meInstance, GetAllAlarmsNextResponseType, TransactionID(tid),
-		Alarm(alarmInfo))
+		Alarm(alarmInfo), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1067,7 +1106,7 @@ func testGetAllAlarmsNextResponseTypeMeFrame(t *testing.T, managedEntity *me.Man
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, GetAllAlarmsNextResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeGetAllAlarmsNextResponse)
 	assert.NotNil(t, msgLayer)
@@ -1085,7 +1124,7 @@ func testGetAllAlarmsNextResponseTypeMeFrame(t *testing.T, managedEntity *me.Man
 	}
 }
 
-func testMibUploadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testMibUploadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1096,7 +1135,7 @@ func testMibUploadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEnti
 
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 
-	frame, omciErr := GenFrame(meInstance, MibUploadRequestType, TransactionID(tid))
+	frame, omciErr := GenFrame(meInstance, MibUploadRequestType, TransactionID(tid), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1114,7 +1153,7 @@ func testMibUploadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEnti
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, MibUploadRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeMibUploadRequest)
 	assert.NotNil(t, msgLayer)
@@ -1127,7 +1166,7 @@ func testMibUploadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEnti
 	assert.Equal(t, meInstance.GetEntityID(), msgObj.EntityInstance)
 }
 
-func testMibUploadResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testMibUploadResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1140,7 +1179,7 @@ func testMibUploadResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEnt
 	numOfCommands := uint16(rand.Int31n(5)) // [0, 5)
 
 	frame, omciErr := GenFrame(meInstance, MibUploadResponseType, TransactionID(tid),
-		SequenceNumberCountOrSize(numOfCommands))
+		SequenceNumberCountOrSize(numOfCommands), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1158,7 +1197,7 @@ func testMibUploadResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEnt
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, MibUploadResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeMibUploadResponse)
 	assert.NotNil(t, msgLayer)
@@ -1172,7 +1211,7 @@ func testMibUploadResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEnt
 	assert.Equal(t, numOfCommands, msgObj.NumberOfCommands)
 }
 
-func testMibUploadNextRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testMibUploadNextRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1186,7 +1225,7 @@ func testMibUploadNextRequestTypeMeFrame(t *testing.T, managedEntity *me.Managed
 
 	var frame []byte
 	frame, omciErr := GenFrame(meInstance, MibUploadNextRequestType, TransactionID(tid),
-		SequenceNumberCountOrSize(seqNumber))
+		SequenceNumberCountOrSize(seqNumber), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1204,7 +1243,7 @@ func testMibUploadNextRequestTypeMeFrame(t *testing.T, managedEntity *me.Managed
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, MibUploadNextRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeMibUploadNextRequest)
 	assert.NotNil(t, msgLayer)
@@ -1218,7 +1257,7 @@ func testMibUploadNextRequestTypeMeFrame(t *testing.T, managedEntity *me.Managed
 	assert.Equal(t, meInstance.GetEntityID(), msgObj.EntityInstance)
 }
 
-func testMibUploadNextResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testMibUploadNextResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1232,7 +1271,8 @@ func testMibUploadNextResponseTypeMeFrame(t *testing.T, managedEntity *me.Manage
 	// TODO: Since only baseline messages supported, send only one ME
 	uploadMe := meInstance
 
-	frame, omciErr := GenFrame(meInstance, MibUploadNextResponseType, TransactionID(tid), Payload(uploadMe))
+	frame, omciErr := GenFrame(meInstance, MibUploadNextResponseType, TransactionID(tid),
+		Payload(uploadMe), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1250,7 +1290,7 @@ func testMibUploadNextResponseTypeMeFrame(t *testing.T, managedEntity *me.Manage
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, MibUploadNextResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeMibUploadNextResponse)
 	assert.NotNil(t, msgLayer)
@@ -1265,7 +1305,7 @@ func testMibUploadNextResponseTypeMeFrame(t *testing.T, managedEntity *me.Manage
 	assert.Equal(t, uploadMe.GetEntityID(), msgObj.ReportedME.GetEntityID())
 }
 
-func testMibResetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testMibResetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1276,7 +1316,7 @@ func testMibResetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntit
 
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 
-	frame, omciErr := GenFrame(meInstance, MibResetRequestType, TransactionID(tid))
+	frame, omciErr := GenFrame(meInstance, MibResetRequestType, TransactionID(tid), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1294,7 +1334,7 @@ func testMibResetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntit
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, MibResetRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeMibResetRequest)
 	assert.NotNil(t, msgLayer)
@@ -1307,7 +1347,7 @@ func testMibResetRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntit
 	assert.Equal(t, meInstance.GetEntityID(), msgObj.EntityInstance)
 }
 
-func testMibResetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testMibResetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1319,7 +1359,8 @@ func testMibResetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEnti
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 	result := me.Results(rand.Int31n(7))   // [0, 6] Not all types will be tested
 
-	frame, omciErr := GenFrame(meInstance, MibResetResponseType, TransactionID(tid), Result(result))
+	frame, omciErr := GenFrame(meInstance, MibResetResponseType, TransactionID(tid),
+		Result(result), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1337,7 +1378,7 @@ func testMibResetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEnti
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, MibResetResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeMibResetResponse)
 	assert.NotNil(t, msgLayer)
@@ -1351,15 +1392,15 @@ func testMibResetResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEnti
 	assert.Equal(t, result, msgObj.Result)
 }
 
-func testTestRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testTestRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testTestResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testTestResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testStartSoftwareDownloadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testStartSoftwareDownloadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	instance := uint16(0) // ONU-G
 	image := uint16(1)
 	params := me.ParamData{
@@ -1376,7 +1417,8 @@ func testStartSoftwareDownloadRequestTypeMeFrame(t *testing.T, managedEntity *me
 		ImageSize:    uint32(rand.Int31n(0x100000) + 0x100000), // [1 Meg, 2M-1]
 		CircuitPacks: []uint16{0},                              // [1 Meg, 2M-1]
 	}
-	frame, omciErr := GenFrame(meInstance, StartSoftwareDownloadRequestType, TransactionID(tid), Software(options))
+	frame, omciErr := GenFrame(meInstance, StartSoftwareDownloadRequestType,
+		TransactionID(tid), Software(options), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1394,7 +1436,7 @@ func testStartSoftwareDownloadRequestTypeMeFrame(t *testing.T, managedEntity *me
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, StartSoftwareDownloadRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeStartSoftwareDownloadRequest)
 	assert.NotNil(t, msgLayer)
@@ -1413,43 +1455,43 @@ func testStartSoftwareDownloadRequestTypeMeFrame(t *testing.T, managedEntity *me
 	}
 }
 
-func testStartSoftwareDownloadResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testStartSoftwareDownloadResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testDownloadSectionRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testDownloadSectionRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testDownloadSectionResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testDownloadSectionResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testEndSoftwareDownloadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testEndSoftwareDownloadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testEndSoftwareDownloadResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testEndSoftwareDownloadResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testActivateSoftwareRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testActivateSoftwareRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testActivateSoftwareResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testActivateSoftwareResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testCommitSoftwareRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testCommitSoftwareRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testCommitSoftwareResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testCommitSoftwareResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testSynchronizeTimeRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testSynchronizeTimeRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1462,7 +1504,8 @@ func testSynchronizeTimeRequestTypeMeFrame(t *testing.T, managedEntity *me.Manag
 	tm := time.Now().UTC()
 	tmUnix := tm.Unix()
 
-	frame, omciErr := GenFrame(meInstance, SynchronizeTimeRequestType, TransactionID(tid), Payload(tmUnix))
+	frame, omciErr := GenFrame(meInstance, SynchronizeTimeRequestType, TransactionID(tid),
+		Payload(tmUnix), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1480,7 +1523,7 @@ func testSynchronizeTimeRequestTypeMeFrame(t *testing.T, managedEntity *me.Manag
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, SynchronizeTimeRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeSynchronizeTimeRequest)
 	assert.NotNil(t, msgLayer)
@@ -1500,7 +1543,7 @@ func testSynchronizeTimeRequestTypeMeFrame(t *testing.T, managedEntity *me.Manag
 	assert.Equal(t, uint8(tm.Second()), msgObj.Second)
 }
 
-func testSynchronizeTimeResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testSynchronizeTimeResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1515,7 +1558,7 @@ func testSynchronizeTimeResponseTypeMeFrame(t *testing.T, managedEntity *me.Mana
 
 	var frame []byte
 	frame, omciErr := GenFrame(meInstance, SynchronizeTimeResponseType, TransactionID(tid),
-		Result(result), SuccessResult(successResult))
+		Result(result), SuccessResult(successResult), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1533,7 +1576,7 @@ func testSynchronizeTimeResponseTypeMeFrame(t *testing.T, managedEntity *me.Mana
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, SynchronizeTimeResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeSynchronizeTimeResponse)
 	assert.NotNil(t, msgLayer)
@@ -1552,7 +1595,7 @@ func testSynchronizeTimeResponseTypeMeFrame(t *testing.T, managedEntity *me.Mana
 	}
 }
 
-func testRebootRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testRebootRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1564,7 +1607,8 @@ func testRebootRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity)
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 	condition := uint8(rand.Int31n(3))     // [0, 3]
 
-	frame, omciErr := GenFrame(meInstance, RebootRequestType, TransactionID(tid), RebootCondition(condition))
+	frame, omciErr := GenFrame(meInstance, RebootRequestType, TransactionID(tid),
+		RebootCondition(condition), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1582,7 +1626,7 @@ func testRebootRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity)
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, RebootRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeRebootRequest)
 	assert.NotNil(t, msgLayer)
@@ -1596,7 +1640,7 @@ func testRebootRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity)
 	assert.Equal(t, condition, msgObj.RebootCondition)
 }
 
-func testRebootResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testRebootResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID: uint16(0),
 	}
@@ -1608,7 +1652,8 @@ func testRebootResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 	result := me.Results(rand.Int31n(7))   // [0, 6] Not all types will be tested
 
-	frame, omciErr := GenFrame(meInstance, RebootResponseType, TransactionID(tid), Result(result))
+	frame, omciErr := GenFrame(meInstance, RebootResponseType, TransactionID(tid),
+		Result(result), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1626,7 +1671,7 @@ func testRebootResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, RebootResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeRebootResponse)
 	assert.NotNil(t, msgLayer)
@@ -1640,7 +1685,7 @@ func testRebootResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	assert.Equal(t, result, msgObj.Result)
 }
 
-func testGetNextRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetNextRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID:   uint16(0),
 		Attributes: make(me.AttributeValueMap, 0),
@@ -1678,8 +1723,8 @@ func testGetNextRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	seqNumber := uint16(rand.Int31n(0xFFFF)) // [0, 0xFFFE]
 	tid := uint16(rand.Int31n(0xFFFE) + 1)   // [1, 0xFFFF]
 
-	frame, omciErr := GenFrame(meInstance, GetNextRequestType, TransactionID(tid), SequenceNumberCountOrSize(seqNumber),
-		AttributeMask(bitmask))
+	frame, omciErr := GenFrame(meInstance, GetNextRequestType, TransactionID(tid),
+		SequenceNumberCountOrSize(seqNumber), AttributeMask(bitmask), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1697,7 +1742,7 @@ func testGetNextRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, GetNextRequestType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeGetNextRequest)
 	assert.NotNil(t, msgLayer)
@@ -1712,7 +1757,7 @@ func testGetNextRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity
 	assert.Equal(t, seqNumber, msgObj.SequenceNumber)
 }
 
-func testGetNextResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetNextResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	params := me.ParamData{
 		EntityID:   uint16(0),
 		Attributes: make(me.AttributeValueMap, 0),
@@ -1756,7 +1801,7 @@ func testGetNextResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntit
 	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
 
 	frame, omciErr := GenFrame(meInstance, GetNextResponseType, TransactionID(tid), Result(result),
-		AttributeMask(bitmask))
+		AttributeMask(bitmask), FrameFormat(messageSet))
 	assert.NotNil(t, frame)
 	assert.NotZero(t, len(frame))
 	assert.Nil(t, omciErr)
@@ -1776,7 +1821,7 @@ func testGetNextResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntit
 	assert.True(t, omciOk)
 	assert.Equal(t, tid, omciObj.TransactionID)
 	assert.Equal(t, GetNextResponseType, omciObj.MessageType)
-	assert.Equal(t, BaselineIdent, omciObj.DeviceIdentifier)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
 
 	msgLayer := packet.Layer(LayerTypeGetNextResponse)
 	assert.NotNil(t, msgLayer)
@@ -1814,30 +1859,30 @@ func testGetNextResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntit
 	}
 }
 
-func testGetCurrentDataRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetCurrentDataRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testGetCurrentDataResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testGetCurrentDataResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testSetTableRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testSetTableRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testSetTableResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testSetTableResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testAlarmNotificationTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testAlarmNotificationTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testAttributeValueChangeTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testAttributeValueChangeTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }
 
-func testTestResultTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity) {
+func testTestResultTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
 	// TODO: Implement
 }

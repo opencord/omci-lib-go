@@ -141,7 +141,7 @@ func (bme ManagedEntityDefinition) DecodeAttributes(mask uint16, data []byte, p 
 					data = data[len(valueBuffer):]
 
 				case byte(Set) | AR: // Set Request
-					fmt.Println("TODO")
+					// TODO: No support at this time
 
 				case byte(SetTable) | AR: // Set Table Request
 					// TODO: Only baseline supported at this time

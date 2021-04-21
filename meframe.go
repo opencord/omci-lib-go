@@ -414,6 +414,9 @@ func GenFrame(meInstance *me.ManagedEntity, messageType MessageType, options ...
 }
 
 func CreateRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// NOTE: The OMCI parser does not extract the default values of set-by-create attributes
 	//       and are the zero 'default' (or nil) at this time.  For this reason, make sure
 	//       you specify all non-zero default values and pass them in appropriate
@@ -421,6 +424,7 @@ func CreateRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Serializable
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		Attributes: m.GetAttributeValueMap(),
 	}
@@ -443,10 +447,14 @@ func CreateRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Serializable
 }
 
 func CreateResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	meLayer := &CreateResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		Result: opt.result,
 	}
@@ -457,20 +465,28 @@ func CreateResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Serializabl
 }
 
 func DeleteRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	meLayer := &DeleteRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	return meLayer, nil
 }
 
 func DeleteResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	meLayer := &DeleteResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		Result: opt.result,
 	}
@@ -493,11 +509,15 @@ func SetRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLay
 	// Get payload space available
 	maxPayload := maxPacketAvailable(m, opt)
 	payloadAvailable := int(maxPayload) - 2 // Less attribute mask
-
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+		// payloadAvailable -= 2				// Less length
+	}
 	meLayer := &SetRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		AttributeMask: 0,
 		Attributes:    make(me.AttributeValueMap),
@@ -546,10 +566,14 @@ func SetRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLay
 }
 
 func SetResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	meLayer := &SetResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		Result: opt.result,
 	}
@@ -582,6 +606,7 @@ func GetRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLay
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		AttributeMask: mask,
 	}
@@ -601,6 +626,7 @@ func GetResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLa
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		Result:        opt.result,
 		AttributeMask: 0,
@@ -666,11 +692,15 @@ func GetResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLa
 }
 
 func GetAllAlarmsRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &GetAllAlarmsRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		AlarmRetrievalMode: opt.mode,
 	}
@@ -678,11 +708,15 @@ func GetAllAlarmsRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Serial
 }
 
 func GetAllAlarmsResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &GetAllAlarmsResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		NumberOfCommands: opt.sequenceNumberCountOrSize,
 	}
@@ -690,11 +724,15 @@ func GetAllAlarmsResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Seria
 }
 
 func GetAllAlarmsNextRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &GetAllAlarmsNextRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		CommandSequenceNumber: opt.sequenceNumberCountOrSize,
 	}
@@ -702,11 +740,15 @@ func GetAllAlarmsNextRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Se
 }
 
 func GetAllAlarmsNextResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &GetAllAlarmsNextResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		AlarmEntityClass:    opt.alarm.AlarmClassID,
 		AlarmEntityInstance: opt.alarm.AlarmInstance,
@@ -724,22 +766,30 @@ func GetAllAlarmsNextResponseFrame(m *me.ManagedEntity, opt options) (gopacket.S
 }
 
 func MibUploadRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &MibUploadRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: 0,
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	return meLayer, nil
 }
 
 func MibUploadResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &MibUploadResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: 0,
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		NumberOfCommands: opt.sequenceNumberCountOrSize,
 	}
@@ -747,11 +797,15 @@ func MibUploadResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Serializ
 }
 
 func MibUploadNextRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &MibUploadNextRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: 0,
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		CommandSequenceNumber: opt.sequenceNumberCountOrSize,
 	}
@@ -759,11 +813,15 @@ func MibUploadNextRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Seria
 }
 
 func MibUploadNextResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &MibUploadNextResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	if opt.payload == nil {
@@ -792,22 +850,30 @@ func MibUploadNextResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Seri
 }
 
 func MibResetRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &MibResetRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	return meLayer, nil
 }
 
 func MibResetResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &MibResetResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		Result: opt.result,
 	}
@@ -815,6 +881,9 @@ func MibResetResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Serializa
 }
 
 func AlarmNotificationFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -824,6 +893,7 @@ func AlarmNotificationFrame(m *me.ManagedEntity, opt options) (gopacket.Serializ
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -837,6 +907,9 @@ func AlarmNotificationFrame(m *me.ManagedEntity, opt options) (gopacket.Serializ
 }
 
 func AttributeValueChangeFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -846,6 +919,7 @@ func AttributeValueChangeFrame(m *me.ManagedEntity, opt options) (gopacket.Seria
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		AttributeMask: 0,
 		Attributes:    make(me.AttributeValueMap),
@@ -861,6 +935,9 @@ func AttributeValueChangeFrame(m *me.ManagedEntity, opt options) (gopacket.Seria
 }
 
 func TestRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -870,6 +947,7 @@ func TestRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLa
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -882,6 +960,9 @@ func TestRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLa
 }
 
 func TestResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -891,6 +972,7 @@ func TestResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableL
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -903,11 +985,15 @@ func TestResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableL
 }
 
 func StartSoftwareDownloadRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &StartSoftwareDownloadRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		WindowSize:           opt.software.WindowSize,
 		ImageSize:            opt.software.ImageSize,
@@ -927,11 +1013,15 @@ func StartSoftwareDownloadRequestFrame(m *me.ManagedEntity, opt options) (gopack
 }
 
 func StartSoftwareDownloadResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &StartSoftwareDownloadResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		WindowSize:        opt.software.WindowSize,
 		NumberOfInstances: byte(len(opt.software.CircuitPacks)),
@@ -950,6 +1040,9 @@ func StartSoftwareDownloadResponseFrame(m *me.ManagedEntity, opt options) (gopac
 }
 
 func DownloadSectionRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -959,6 +1052,7 @@ func DownloadSectionRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Ser
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -971,6 +1065,9 @@ func DownloadSectionRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Ser
 }
 
 func DownloadSectionResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -980,6 +1077,7 @@ func DownloadSectionResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Se
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -992,6 +1090,9 @@ func DownloadSectionResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Se
 }
 
 func EndSoftwareDownloadRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1001,6 +1102,7 @@ func EndSoftwareDownloadRequestFrame(m *me.ManagedEntity, opt options) (gopacket
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1013,6 +1115,9 @@ func EndSoftwareDownloadRequestFrame(m *me.ManagedEntity, opt options) (gopacket
 }
 
 func EndSoftwareDownloadResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1022,6 +1127,7 @@ func EndSoftwareDownloadResponseFrame(m *me.ManagedEntity, opt options) (gopacke
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1034,6 +1140,9 @@ func EndSoftwareDownloadResponseFrame(m *me.ManagedEntity, opt options) (gopacke
 }
 
 func ActivateSoftwareRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1043,6 +1152,7 @@ func ActivateSoftwareRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Se
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1055,6 +1165,9 @@ func ActivateSoftwareRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Se
 }
 
 func ActivateSoftwareResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1064,6 +1177,7 @@ func ActivateSoftwareResponseFrame(m *me.ManagedEntity, opt options) (gopacket.S
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1076,6 +1190,9 @@ func ActivateSoftwareResponseFrame(m *me.ManagedEntity, opt options) (gopacket.S
 }
 
 func CommitSoftwareRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1085,6 +1202,7 @@ func CommitSoftwareRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Seri
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1097,6 +1215,9 @@ func CommitSoftwareRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Seri
 }
 
 func CommitSoftwareResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1106,6 +1227,7 @@ func CommitSoftwareResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Ser
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1118,11 +1240,15 @@ func CommitSoftwareResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Ser
 }
 
 func SynchronizeTimeRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &SynchronizeTimeRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Decode payload option. If nil, no timestamp provided
@@ -1139,11 +1265,15 @@ func SynchronizeTimeRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Ser
 }
 
 func SynchronizeTimeResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &SynchronizeTimeResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		Result:         opt.result,
 		SuccessResults: opt.mode,
@@ -1152,11 +1282,15 @@ func SynchronizeTimeResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Se
 }
 
 func RebootRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &RebootRequest{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		RebootCondition: opt.mode,
 	}
@@ -1164,11 +1298,15 @@ func RebootRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Serializable
 }
 
 func RebootResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Common for all MEs
 	meLayer := &RebootResponse{
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		Result: opt.result,
 	}
@@ -1176,6 +1314,9 @@ func RebootResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Serializabl
 }
 
 func GetNextRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Validate attribute mask
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
@@ -1195,6 +1336,7 @@ func GetNextRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Serializabl
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		AttributeMask:  mask,
 		SequenceNumber: opt.sequenceNumberCountOrSize,
@@ -1203,6 +1345,9 @@ func GetNextRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Serializabl
 }
 
 func GetNextResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	// Validate attribute mask
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
@@ -1218,6 +1363,7 @@ func GetNextResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Serializab
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 		Result:        opt.result,
 		AttributeMask: 0,
@@ -1274,6 +1420,9 @@ func GetNextResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Serializab
 }
 
 func TestResultFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1283,6 +1432,7 @@ func TestResultFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLay
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1295,6 +1445,9 @@ func TestResultFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLay
 }
 
 func GetCurrentDataRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1304,6 +1457,7 @@ func GetCurrentDataRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Seri
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1316,6 +1470,9 @@ func GetCurrentDataRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Seri
 }
 
 func GetCurrentDataResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1325,6 +1482,7 @@ func GetCurrentDataResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Ser
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1340,6 +1498,9 @@ func SetTableRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Serializab
 	if opt.frameFormat != ExtendedIdent {
 		return nil, errors.New("SetTable message type only supported with Extended OMCI Messaging")
 	}
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
+	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
@@ -1349,6 +1510,7 @@ func SetTableRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Serializab
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       opt.frameFormat == ExtendedIdent,
 		},
 	}
 	// Get payload space available
@@ -1362,7 +1524,10 @@ func SetTableRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Serializab
 
 func SetTableResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
 	if opt.frameFormat != ExtendedIdent {
-		return nil, errors.New("SetTable message type only supported with Extended OMCI Messaging")
+		return nil, errors.New("SetTable message type only supported with Extended OMCI Message Set")
+	}
+	if opt.frameFormat == ExtendedIdent {
+		return nil, errors.New("Extended message set for this message type is not supported")
 	}
 	mask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
@@ -1373,6 +1538,7 @@ func SetTableResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Serializa
 		MeBasePacket: MeBasePacket{
 			EntityClass:    m.GetClassID(),
 			EntityInstance: m.GetEntityID(),
+			Extended:       true,
 		},
 	}
 	// Get payload space available

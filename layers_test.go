@@ -25,9 +25,9 @@ import (
 )
 
 // Note: The majority of this file is tested by other unit tests
-func TestKnownMessageTytpe(t *testing.T) {
+func TestKnownMessageType(t *testing.T) {
 	for _, msg := range allMessageTypes {
-		layer, err := omci.MsgTypeToNextLayer(msg)
+		layer, err := omci.MsgTypeToNextLayer(msg, false)
 		assert.NotEqual(t, layer, gopacket.LayerTypeZero)
 		assert.Nil(t, err)
 	}
@@ -36,9 +36,9 @@ func TestKnownMessageTytpe(t *testing.T) {
 	assert.NotEqual(t, len(strMsg), 0)
 }
 
-func TestUnknownMessageTytpe(t *testing.T) {
+func TestUnknownMessageType(t *testing.T) {
 	unknown := omci.MessageType(0xFF)
-	layer, err := omci.MsgTypeToNextLayer(unknown)
+	layer, err := omci.MsgTypeToNextLayer(unknown, false)
 	assert.Equal(t, layer, gopacket.LayerTypeZero)
 	assert.NotNil(t, err)
 }
