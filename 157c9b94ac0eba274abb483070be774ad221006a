@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "c0220f1d_6dd016ea",
+        "filename": "omci.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-04-28T13:43:51Z",
+      "side": 1,
+      "message": "Ok and accepted. A bit more efficient approach could be this:\n        if len(data) \u003c 10 {\n                //minimum frame size is not available\n\t\treturn errors.New(\"frame too small\")\n\t}\n\tomci :\u003d \u0026OMCI{}\n\tswitch DeviceIdent(data[3]) {\n\tdefault:\n\t\treturn errors.New(\"unsupported device identifier\")  //\u003c\u003c\u003c\u003c attention: changed comment!\n\tcase BaselineIdent:\n\t\tif len(data) \u003c MaxBaselineLength-8 {\n\t\t\treturn errors.New(\"frame too small for baseline format\")\n\t\t}\n\t\treturn omci.DecodeFromBytes(data, p)\n\tcase ExtendedIdent:\n\t\treturn omci.DecodeFromBytes(data, p)\n\t}",
+      "parentUuid": "39abc25e_8f1cb19f",
+      "revId": "157c9b94ac0eba274abb483070be774ad221006a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "344d0724_07034442",
         "filename": "omci.go",
         "patchSetId": 1
