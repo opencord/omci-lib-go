@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bf3e3696_19d7f886",
+        "filename": "omci.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-04-28T13:14:58Z",
+      "side": 1,
+      "message": "Most of the length changes are to remove older code related to baseline decode only.",
+      "parentUuid": "506aa551_ac2c982a",
+      "revId": "157c9b94ac0eba274abb483070be774ad221006a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e1d82307_72ff0723",
         "filename": "omci.go",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2021-04-28T10:42:59Z",
       "side": 1,
       "message": "Why do you test against 4 when below tests enforce 40 or 10? Might be this test is obsolete here now?",
+      "revId": "157c9b94ac0eba274abb483070be774ad221006a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39abc25e_8f1cb19f",
+        "filename": "omci.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-04-28T13:14:58Z",
+      "side": 1,
+      "message": "At octet 3 there is a byte that describes the message type.  Baseline frames are always 48 octets less trailer of 8.    Extended message set can have frames as small as 11 bytes. So trying to move to checking only for what is needed in the next decode and make error messages more specific.",
+      "parentUuid": "e1d82307_72ff0723",
       "revId": "157c9b94ac0eba274abb483070be774ad221006a",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
@@ -50,6 +86,24 @@
       "revId": "157c9b94ac0eba274abb483070be774ad221006a",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ddd918d_bcb4c900",
+        "filename": "omci.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-04-28T13:14:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "344d0724_07034442",
+      "revId": "157c9b94ac0eba274abb483070be774ad221006a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
