@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "506aa551_ac2c982a",
+        "filename": "omci.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-04-28T10:42:59Z",
+      "side": 1,
+      "message": "comment might be updated",
+      "revId": "157c9b94ac0eba274abb483070be774ad221006a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1d82307_72ff0723",
+        "filename": "omci.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-04-28T10:42:59Z",
+      "side": 1,
+      "message": "Why do you test against 4 when below tests enforce 40 or 10? Might be this test is obsolete here now?",
+      "revId": "157c9b94ac0eba274abb483070be774ad221006a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "344d0724_07034442",
+        "filename": "omci.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-04-28T10:42:59Z",
+      "side": 1,
+      "message": "Was already like this, but perhaps more accurate: \"invalid OMCI basline padding space, ...\"",
+      "revId": "157c9b94ac0eba274abb483070be774ad221006a",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
