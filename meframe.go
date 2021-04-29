@@ -43,7 +43,7 @@ func init() {
 	encoderMap[MibUploadRequestType] = MibUploadRequestFrame
 	encoderMap[MibUploadNextRequestType] = MibUploadNextRequestFrame
 	encoderMap[MibResetRequestType] = MibResetRequestFrame
-	encoderMap[TestRequestType] = TestRequestFrame
+	//encoderMap[TestRequestType] = TestRequestFrame
 	encoderMap[StartSoftwareDownloadRequestType] = StartSoftwareDownloadRequestFrame
 	encoderMap[DownloadSectionRequestType] = DownloadSectionRequestFrame
 	encoderMap[EndSoftwareDownloadRequestType] = EndSoftwareDownloadRequestFrame
@@ -63,7 +63,7 @@ func init() {
 	encoderMap[MibUploadResponseType] = MibUploadResponseFrame
 	encoderMap[MibUploadNextResponseType] = MibUploadNextResponseFrame
 	encoderMap[MibResetResponseType] = MibResetResponseFrame
-	encoderMap[TestResponseType] = TestResponseFrame
+	//encoderMap[TestResponseType] = TestResponseFrame
 	encoderMap[StartSoftwareDownloadResponseType] = StartSoftwareDownloadResponseFrame
 	encoderMap[DownloadSectionResponseType] = DownloadSectionResponseFrame
 	encoderMap[EndSoftwareDownloadResponseType] = EndSoftwareDownloadResponseFrame
@@ -76,7 +76,7 @@ func init() {
 	encoderMap[SetTableResponseType] = SetTableResponseFrame
 	encoderMap[AlarmNotificationType] = AlarmNotificationFrame
 	encoderMap[AttributeValueChangeType] = AttributeValueChangeFrame
-	encoderMap[TestResultType] = TestResultFrame
+	//encoderMap[TestResultType] = TestResultFrame
 }
 
 type options struct {
@@ -934,55 +934,55 @@ func AttributeValueChangeFrame(m *me.ManagedEntity, opt options) (gopacket.Seria
 	return meLayer, errors.New("todo: Not implemented")
 }
 
-func TestRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
-	if opt.frameFormat == ExtendedIdent {
-		return nil, errors.New("Extended message set for this message type is not supported")
-	}
-	mask, err := checkAttributeMask(m, opt.attributeMask)
-	if err != nil {
-		return nil, err
-	}
-	// Common for all MEs
-	meLayer := &TestRequest{
-		MeBasePacket: MeBasePacket{
-			EntityClass:    m.GetClassID(),
-			EntityInstance: m.GetEntityID(),
-			Extended:       opt.frameFormat == ExtendedIdent,
-		},
-	}
-	// Get payload space available
-	maxPayload := maxPacketAvailable(m, opt)
+//func TestRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+//	if opt.frameFormat == ExtendedIdent {
+//		return nil, errors.New("Extended message set for this message type is not supported")
+//	}
+//	mask, err := checkAttributeMask(m, opt.attributeMask)
+//	if err != nil {
+//		return nil, err
+//	}
+//	// Common for all MEs
+//	meLayer := &TestRequest{
+//		MeBasePacket: MeBasePacket{
+//			EntityClass:    m.GetClassID(),
+//			EntityInstance: m.GetEntityID(),
+//			Extended:       opt.frameFormat == ExtendedIdent,
+//		},
+//	}
+//	// Get payload space available
+//	maxPayload := maxPacketAvailable(m, opt)
+//
+//	// TODO: Lots of work to do
+//
+//	fmt.Println(mask, maxPayload)
+//	return meLayer, errors.New("todo: Not implemented")
+//}
 
-	// TODO: Lots of work to do
-
-	fmt.Println(mask, maxPayload)
-	return meLayer, errors.New("todo: Not implemented")
-}
-
-func TestResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
-	if opt.frameFormat == ExtendedIdent {
-		return nil, errors.New("Extended message set for this message type is not supported")
-	}
-	mask, err := checkAttributeMask(m, opt.attributeMask)
-	if err != nil {
-		return nil, err
-	}
-	// Common for all MEs
-	meLayer := &TestResponse{
-		MeBasePacket: MeBasePacket{
-			EntityClass:    m.GetClassID(),
-			EntityInstance: m.GetEntityID(),
-			Extended:       opt.frameFormat == ExtendedIdent,
-		},
-	}
-	// Get payload space available
-	maxPayload := maxPacketAvailable(m, opt)
-
-	// TODO: Lots of work to do
-
-	fmt.Println(mask, maxPayload)
-	return meLayer, errors.New("todo: Not implemented")
-}
+//func TestResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+//	if opt.frameFormat == ExtendedIdent {
+//		return nil, errors.New("Extended message set for this message type is not supported")
+//	}
+//	mask, err := checkAttributeMask(m, opt.attributeMask)
+//	if err != nil {
+//		return nil, err
+//	}
+//	// Common for all MEs
+//	meLayer := &TestResponse{
+//		MeBasePacket: MeBasePacket{
+//			EntityClass:    m.GetClassID(),
+//			EntityInstance: m.GetEntityID(),
+//			Extended:       opt.frameFormat == ExtendedIdent,
+//		},
+//	}
+//	// Get payload space available
+//	maxPayload := maxPacketAvailable(m, opt)
+//
+//	// TODO: Lots of work to do
+//
+//	fmt.Println(mask, maxPayload)
+//	return meLayer, errors.New("todo: Not implemented")
+//}
 
 func StartSoftwareDownloadRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
 	if opt.frameFormat == ExtendedIdent {
@@ -1419,30 +1419,30 @@ func GetNextResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Serializab
 	return meLayer, nil
 }
 
-func TestResultFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
-	if opt.frameFormat == ExtendedIdent {
-		return nil, errors.New("Extended message set for this message type is not supported")
-	}
-	mask, err := checkAttributeMask(m, opt.attributeMask)
-	if err != nil {
-		return nil, err
-	}
-	// Common for all MEs
-	meLayer := &TestResultMsg{
-		MeBasePacket: MeBasePacket{
-			EntityClass:    m.GetClassID(),
-			EntityInstance: m.GetEntityID(),
-			Extended:       opt.frameFormat == ExtendedIdent,
-		},
-	}
-	// Get payload space available
-	maxPayload := maxPacketAvailable(m, opt)
-
-	// TODO: Lots of work to do
-
-	fmt.Println(mask, maxPayload)
-	return meLayer, errors.New("todo: Not implemented")
-}
+//func TestResultFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
+//	if opt.frameFormat == ExtendedIdent {
+//		return nil, errors.New("Extended message set for this message type is not supported")
+//	}
+//	mask, err := checkAttributeMask(m, opt.attributeMask)
+//	if err != nil {
+//		return nil, err
+//	}
+//	// Common for all MEs
+//	meLayer := &TestResultNotification{
+//		MeBasePacket: MeBasePacket{
+//			EntityClass:    m.GetClassID(),
+//			EntityInstance: m.GetEntityID(),
+//			Extended:       opt.frameFormat == ExtendedIdent,
+//		},
+//	}
+//	// Get payload space available
+//	maxPayload := maxPacketAvailable(m, opt)
+//
+//	// TODO: Lots of work to do
+//
+//	fmt.Println(mask, maxPayload)
+//	return meLayer, errors.New("todo: Not implemented")
+//}
 
 func GetCurrentDataRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
 	if opt.frameFormat == ExtendedIdent {

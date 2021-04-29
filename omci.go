@@ -86,9 +86,17 @@ const MaxExtendedLength = 1980
 const MaxAttributeMibUploadNextBaselineLength = MaxBaselineLength - 14 - 8
 
 // MaxAttributeGetNextBaselineLength is the maximum payload size for attributes for
-// a Baseline MIB Get Next message. This is just the attribute portion of the
-// message contents and does not include the Result Code & Attribute Mask.
+// a Baseline MIB Get Next message for the baseline message set. This is just the
+// attribute portion of the message contents and does not include the Result Code & Attribute Mask.
 const MaxAttributeGetNextBaselineLength = MaxBaselineLength - 11 - 8
+
+// MaxTestRequestLength is the maximum payload size for test request message
+// for the baseline message set.
+const MaxTestRequestLength = MaxBaselineLength - 8 - 8
+
+// MaxTestResultsLength is the maximum payload size for test results message
+// for the baseline message set.
+const MaxTestResultsLength = MaxBaselineLength - 8 - 8
 
 // MaxManagedEntityMibUploadNextExtendedLength is the maximum payload size for ME
 // entries for an Extended MIB Upload Next message. Extended messages differ from
@@ -115,7 +123,6 @@ type OMCI struct {
 	DeviceIdentifier DeviceIdent
 	ResponseExpected bool   // Significant for Download Section Request only
 	Payload          []byte // TODO: Deprecated.  Use layers.BaseLayer.Payload
-	padding          []byte // TODO: Deprecated.  Never Used
 	Length           uint16
 	MIC              uint32
 }
@@ -157,25 +164,24 @@ func (omci *OMCI) NextLayerType() gopacket.LayerType {
 
 func decodeOMCI(data []byte, p gopacket.PacketBuilder) error {
 	// Allow baseline messages without Length & MIC, but no less
-	if len(data) < 4 {
+	if len(data) < 10 {
+		p.SetTruncated()
 		return errors.New("frame header too small")
 	}
+	omci := &OMCI{}
+
 	switch DeviceIdent(data[3]) {
 	default:
-		return errors.New("unsupported message type")
+		return errors.New("unsupported message set/device identifier")
 
 	case BaselineIdent:
 		if len(data) < MaxBaselineLength-8 {
+			p.SetTruncated()
 			return errors.New("frame too small")
 		}
-		omci := &OMCI{}
 		return omci.DecodeFromBytes(data, p)
 
 	case ExtendedIdent:
-		if len(data) < 10 {
-			return errors.New("extended frame header too small")
-		}
-		omci := &OMCI{}
 		return omci.DecodeFromBytes(data, p)
 	}
 }
