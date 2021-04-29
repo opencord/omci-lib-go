@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10bfc37b_5f70a969",
+        "filename": "meframe.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 937,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-04-29T14:25:17Z",
+      "side": 1,
+      "message": "Plan is to add the MeFrame support back for the generic format during Extended Message Set implementation.   Can accelerate if BBSIM uses these higher level functions.",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
