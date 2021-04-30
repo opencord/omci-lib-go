@@ -16,6 +16,74 @@
       "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b685598_386f3bcb",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1956,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-04-30T08:15:20Z",
+      "side": 1,
+      "message": "You omitted ONU-G for some reason?",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "560b5f8c_e5b22576",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1958,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-04-30T08:15:20Z",
+      "side": 1,
+      "message": "I would prefer a more general name like ContentFormat1TestRequest (else it might be confusing for the other classes)",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b72bd36_8125b6bf",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1959,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-04-30T08:15:20Z",
+      "side": 1,
+      "message": "LayerTypeTestResult? Looks strange in the request handling ...",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72ac3f19_24e56fd0",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-04-30T08:15:20Z",
+      "side": 1,
+      "message": "See naming comment above.",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
     }
   ]
 }
