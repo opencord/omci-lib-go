@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0baa3e6e_f90aa89f",
+        "filename": "meframe.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 937,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-04-30T13:21:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10bfc37b_5f70a969",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b685598_386f3bcb",
         "filename": "messagetypes.go",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2021-04-30T08:15:20Z",
       "side": 1,
       "message": "You omitted ONU-G for some reason?",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea0a4ac3_aeda33f8",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1956,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-04-30T13:21:16Z",
+      "side": 1,
+      "message": "I do not plan to do any other customized Test Request/Result decodes until they are needed but plan to use the generic struct type instead.",
+      "parentUuid": "8b685598_386f3bcb",
       "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "65cf2724_71867b06",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1958,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-04-30T13:21:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "560b5f8c_e5b22576",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b72bd36_8125b6bf",
         "filename": "messagetypes.go",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "274785d6_57d8e66c",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1959,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-04-30T13:21:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0b72bd36_8125b6bf",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "72ac3f19_24e56fd0",
         "filename": "messagetypes.go",
         "patchSetId": 1
@@ -84,6 +156,24 @@
       "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a687bf11_2b0d0e65",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-04-30T13:21:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "72ac3f19_24e56fd0",
+      "revId": "d8637b00975c89ce6167e2dc468b2be2a4f0b88b",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
