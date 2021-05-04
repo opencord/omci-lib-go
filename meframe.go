@@ -283,17 +283,21 @@ var defaultAlarmOptions = AlarmOptions{
 // Software related frames have a wide variety of settable values. Placing them
 // in a separate struct is mainly to keep the base options simple
 type SoftwareOptions struct {
-	WindowSize   uint8 // Window size - 1
-	ImageSize    uint32
-	CircuitPacks []uint16 // slot (upper 8 bits) and instance (lower 8 bits)
-	Results      []DownloadResults
+	WindowSize    uint8 // Window size - 1
+	SectionNumber uint8 // [0..Window size - 1]
+	ImageSize     uint32
+	CircuitPacks  []uint16 // slot (upper 8 bits) and instance (lower 8 bits)
+	Results       []DownloadResults
+	Data          []byte
 }
 
 var defaultSoftwareOptions = SoftwareOptions{
-	WindowSize:   0,
-	ImageSize:    0,
-	CircuitPacks: nil,
-	Results:      nil,
+	WindowSize:    0,
+	SectionNumber: 0,
+	ImageSize:     0,
+	CircuitPacks:  nil,
+	Results:       nil,
+	Data:          nil,
 }
 
 // EncodeFrame will encode the Managed Entity specific protocol struct and an
@@ -364,9 +368,9 @@ func maxPacketAvailable(m *me.ManagedEntity, opt options) uint {
 	}
 	// OMCI Header          - 4 octets
 	// Class ID/Instance ID - 4 octets
-	// Length field			- 4 octets
+	// Length field			- 2 octets
 	// MIC                  - 4 octets
-	return MaxExtendedLength - 16
+	return MaxExtendedLength - 14
 }
 
 func calculateAttributeMask(m *me.ManagedEntity, requestedMask uint16) (uint16, error) {
@@ -1040,12 +1044,8 @@ func StartSoftwareDownloadResponseFrame(m *me.ManagedEntity, opt options) (gopac
 }
 
 func DownloadSectionRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
-	if opt.frameFormat == ExtendedIdent {
-		return nil, errors.New("Extended message set for this message type is not supported")
-	}
-	mask, err := checkAttributeMask(m, opt.attributeMask)
-	if err != nil {
-		return nil, err
+	if opt.software.Data == nil {
+		return nil, me.NewNonStatusError("Software image data missing")
 	}
 	// Common for all MEs
 	meLayer := &DownloadSectionRequest{
@@ -1054,24 +1054,13 @@ func DownloadSectionRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Ser
 			EntityInstance: m.GetEntityID(),
 			Extended:       opt.frameFormat == ExtendedIdent,
 		},
+		SectionNumber: opt.software.SectionNumber,
+		SectionData:   opt.software.Data,
 	}
-	// Get payload space available
-	maxPayload := maxPacketAvailable(m, opt)
-
-	// TODO: Lots of work to do
-
-	fmt.Println(mask, maxPayload)
-	return meLayer, errors.New("todo: Not implemented")
+	return meLayer, nil
 }
 
 func DownloadSectionResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
-	if opt.frameFormat == ExtendedIdent {
-		return nil, errors.New("Extended message set for this message type is not supported")
-	}
-	mask, err := checkAttributeMask(m, opt.attributeMask)
-	if err != nil {
-		return nil, err
-	}
 	// Common for all MEs
 	meLayer := &DownloadSectionResponse{
 		MeBasePacket: MeBasePacket{
@@ -1079,14 +1068,10 @@ func DownloadSectionResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Se
 			EntityInstance: m.GetEntityID(),
 			Extended:       opt.frameFormat == ExtendedIdent,
 		},
+		Result:        opt.result,
+		SectionNumber: opt.software.SectionNumber,
 	}
-	// Get payload space available
-	maxPayload := maxPacketAvailable(m, opt)
-
-	// TODO: Lots of work to do
-
-	fmt.Println(mask, maxPayload)
-	return meLayer, errors.New("todo: Not implemented")
+	return meLayer, nil
 }
 
 func EndSoftwareDownloadRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {

@@ -1654,12 +1654,12 @@ func TestDownloadSectionRequestDecodeNoResponseExpected(t *testing.T) {
 	assert.True(t, ok2)
 	assert.NotNil(t, request)
 	assert.Equal(t, uint8(0xcc), request.SectionNumber)
-	assert.Equal(t, 31, len(request.SectionData))
+	assert.Equal(t, MaxDownloadSectionLength, len(request.SectionData))
 
 	sectionData, genErr := stringToPacket("01020304050607080910111213141516171819202122232425262728293031")
 	assert.Nil(t, genErr)
 	assert.NotNil(t, sectionData)
-	assert.Equal(t, 31, len(sectionData))
+	assert.Equal(t, MaxDownloadSectionLength, len(sectionData))
 	assert.Equal(t, sectionData, request.SectionData[:])
 
 	// Verify string output for message
@@ -1698,7 +1698,7 @@ func TestDownloadSectionRequestDecodeResponseExpected(t *testing.T) {
 	sectionData, genErr := stringToPacket("01020304050607080910111213141516171819202122232425262728293031")
 	assert.Nil(t, genErr)
 	assert.NotNil(t, sectionData)
-	assert.Equal(t, 31, len(sectionData))
+	assert.Equal(t, MaxDownloadSectionLength, len(sectionData))
 	assert.Equal(t, sectionData, request.SectionData[:])
 
 	// Verify string output for message
@@ -1718,7 +1718,7 @@ func TestDownloadSectionRequestSerializeNoResponseExpected(t *testing.T) {
 	sectionData, genErr := stringToPacket("01020304050607080910111213141516171819202122232425262728293031")
 	assert.Nil(t, genErr)
 	assert.NotNil(t, sectionData)
-	assert.Equal(t, 31, len(sectionData))
+	assert.Equal(t, MaxDownloadSectionLength, len(sectionData))
 
 	request := &DownloadSectionRequest{
 		MeBasePacket: MeBasePacket{
@@ -1726,9 +1726,44 @@ func TestDownloadSectionRequestSerializeNoResponseExpected(t *testing.T) {
 			// Default Instance ID is 0
 		},
 		SectionNumber: 0xcc,
+		SectionData:   sectionData,
 	}
-	copy(request.SectionData[:], sectionData)
+	// Test serialization back to former string
+	var options gopacket.SerializeOptions
+	options.FixLengths = true
 
+	buffer := gopacket.NewSerializeBuffer()
+	err := gopacket.SerializeLayers(buffer, options, omciLayer, request)
+	assert.NoError(t, err)
+
+	outgoingPacket := buffer.Bytes()
+	reconstituted := packetToString(outgoingPacket)
+	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
+}
+
+func TestDownloadSectionRequestSerializeNoResponsePartialDataExpected(t *testing.T) {
+	// If a small buffer is provided, serialize will now zero extend the baseline format
+	goodMessage := "0123140a00070000cc0102030405060708091011121314151617181920212223242526272829000000000028"
+
+	omciLayer := &OMCI{
+		TransactionID: 0x0123,
+		MessageType:   DownloadSectionRequestType,
+		// DeviceIdentifier: omci.BaselineIdent,		// Optional, defaults to Baseline
+		// Length:           0x28,						// Optional, defaults to 40 octets
+	}
+	sectionData, genErr := stringToPacket("0102030405060708091011121314151617181920212223242526272829")
+	assert.Nil(t, genErr)
+	assert.NotNil(t, sectionData)
+	assert.Equal(t, MaxDownloadSectionLength-2, len(sectionData)) // Partial data buffer
+
+	request := &DownloadSectionRequest{
+		MeBasePacket: MeBasePacket{
+			EntityClass: me.SoftwareImageClassID,
+			// Default Instance ID is 0
+		},
+		SectionNumber: 0xcc,
+		SectionData:   sectionData,
+	}
 	// Test serialization back to former string
 	var options gopacket.SerializeOptions
 	options.FixLengths = true
@@ -1755,7 +1790,7 @@ func TestDownloadSectionRequestSerializeResponseExpectedMethod1(t *testing.T) {
 	sectionData, genErr := stringToPacket("01020304050607080910111213141516171819202122232425262728293031")
 	assert.Nil(t, genErr)
 	assert.NotNil(t, sectionData)
-	assert.Equal(t, 31, len(sectionData))
+	assert.Equal(t, MaxDownloadSectionLength, len(sectionData))
 
 	request := &DownloadSectionRequest{
 		MeBasePacket: MeBasePacket{
@@ -1763,9 +1798,8 @@ func TestDownloadSectionRequestSerializeResponseExpectedMethod1(t *testing.T) {
 			// Default Instance ID is 0
 		},
 		SectionNumber: 0xcc,
+		SectionData:   sectionData,
 	}
-	copy(request.SectionData[:], sectionData)
-
 	// Test serialization back to former string
 	var options gopacket.SerializeOptions
 	options.FixLengths = true
@@ -1792,7 +1826,7 @@ func TestDownloadSectionRequestSerializeResponseExpectedMethod2(t *testing.T) {
 	sectionData, genErr := stringToPacket("01020304050607080910111213141516171819202122232425262728293031")
 	assert.Nil(t, genErr)
 	assert.NotNil(t, sectionData)
-	assert.Equal(t, 31, len(sectionData))
+	assert.Equal(t, MaxDownloadSectionLength, len(sectionData))
 
 	request := &DownloadSectionRequest{
 		MeBasePacket: MeBasePacket{
@@ -1800,9 +1834,8 @@ func TestDownloadSectionRequestSerializeResponseExpectedMethod2(t *testing.T) {
 			EntityInstance: 0x0001, // Default is zero, here we want image 1
 		},
 		SectionNumber: 0xcc,
+		SectionData:   sectionData,
 	}
-	copy(request.SectionData[:], sectionData)
-
 	// Test serialization back to former string
 	var options gopacket.SerializeOptions
 	options.FixLengths = true
@@ -3064,6 +3097,32 @@ func TestExtendedGetRequestDecode(t *testing.T) {
 	assert.NotZero(t, len(packetString))
 }
 
+func TestExtendedGetRequestDecodeTruncated(t *testing.T) {
+	goodMessage := "035e490b010100000002ff"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	failure := packet.ErrorLayer()
+	assert.NotNil(t, failure)
+
+	decodeFailure, ok := failure.(*gopacket.DecodeFailure)
+	assert.NotNil(t, decodeFailure)
+	assert.True(t, ok)
+	assert.NotNil(t, decodeFailure.String())
+	assert.True(t, len(decodeFailure.String()) > 0)
+
+	metadata := packet.Metadata()
+	assert.NotNil(t, metadata)
+	assert.True(t, metadata.Truncated)
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
+}
+
 func TestExtendedGetRequestSerialize(t *testing.T) {
 	goodMessage := "035e490b010100000002fffc"
 
@@ -3240,6 +3299,348 @@ func TestExtendedGetResponseSerialize(t *testing.T) {
 			"QualityOfServiceQosConfigurationFlexibility": uint16(2),
 			"PriorityQueueScaleFactor":                    uint16(0x1234),
 		},
+	}
+	// Test serialization back to former string
+	var options gopacket.SerializeOptions
+	options.FixLengths = true
+
+	buffer := gopacket.NewSerializeBuffer()
+	err := gopacket.SerializeLayers(buffer, options, omciLayer, request)
+	assert.NoError(t, err)
+
+	outgoingPacket := buffer.Bytes()
+	reconstituted := packetToString(outgoingPacket)
+	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
+}
+
+//                    1                   2                   3                   4
+//  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
+// 0008140a00070001		    - Download section, AR=0
+//                 cc       - Section 0xcc
+//                   01020304050607080910111213141516171819202122232425262728293031
+//                                                                                 00000028
+func TestExtendedDownloadSectionRequestDecodeNoResponseExpected(t *testing.T) {
+	goodMessage := "0008140b00070001"
+	payloadFragment := "01020304050607080910111213141516171819202122232425"
+	payloadTotal := payloadFragment + payloadFragment + payloadFragment + payloadFragment +
+		payloadFragment + payloadFragment + payloadFragment + payloadFragment
+	sectionNumber := 0x88
+	length := 1 + (8 * 25)
+	hdr := fmt.Sprintf("%04x%02x", length, sectionNumber)
+	goodMessage += hdr + payloadTotal
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+	assert.Nil(t, packet.ErrorLayer())
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, omciLayer)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, uint16(0x0008), omciMsg.TransactionID)
+	assert.Equal(t, DownloadSectionRequestType, omciMsg.MessageType)
+	assert.False(t, omciMsg.ResponseExpected)
+	assert.Equal(t, ExtendedIdent, omciMsg.DeviceIdentifier)
+	assert.Equal(t, uint16(length), omciMsg.Length)
+
+	msgLayer := packet.Layer(LayerTypeDownloadSectionRequest)
+	assert.NotNil(t, msgLayer)
+
+	request, ok2 := msgLayer.(*DownloadSectionRequest)
+	assert.True(t, ok2)
+	assert.NotNil(t, request)
+	assert.Equal(t, uint8(sectionNumber), request.SectionNumber)
+	assert.Equal(t, length-1, len(request.SectionData))
+
+	data, err = stringToPacket(payloadTotal)
+	assert.NoError(t, err)
+	assert.Equal(t, data, request.SectionData[:])
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
+}
+
+func TestExtendedDownloadSectionRequestDecodeResponseExpected(t *testing.T) {
+	goodMessage := "0008540b00070001"
+	payloadFragment := "01020304050607080910111213141516171819202122232425"
+	payloadTotal := payloadFragment + payloadFragment + payloadFragment + payloadFragment +
+		payloadFragment + payloadFragment + payloadFragment + payloadFragment +
+		payloadFragment + payloadFragment + payloadFragment + payloadFragment +
+		payloadFragment + payloadFragment + payloadFragment + payloadFragment +
+		payloadFragment + payloadFragment + payloadFragment + payloadFragment
+	sectionNumber := 0x88
+	length := 1 + (20 * 25)
+	hdr := fmt.Sprintf("%04x%02x", length, sectionNumber)
+	goodMessage += hdr + payloadTotal
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+	assert.Nil(t, packet.ErrorLayer())
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, omciLayer)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, uint16(0x0008), omciMsg.TransactionID)
+	assert.Equal(t, DownloadSectionRequestWithResponseType, omciMsg.MessageType)
+	assert.True(t, omciMsg.ResponseExpected)
+	assert.Equal(t, ExtendedIdent, omciMsg.DeviceIdentifier)
+	assert.Equal(t, uint16(length), omciMsg.Length)
+
+	msgLayer := packet.Layer(LayerTypeDownloadSectionRequest)
+	assert.NotNil(t, msgLayer)
+
+	request, ok2 := msgLayer.(*DownloadSectionRequest)
+	assert.True(t, ok2)
+	assert.NotNil(t, request)
+	assert.Equal(t, uint8(sectionNumber), request.SectionNumber)
+	assert.Equal(t, length-1, len(request.SectionData))
+
+	data, err = stringToPacket(payloadTotal)
+	assert.NoError(t, err)
+	assert.Equal(t, data, request.SectionData)
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
+}
+
+func TestExtendedDownloadSectionRequestDecodeTruncated(t *testing.T) {
+	goodMessage := "0008540b000700010000"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	failure := packet.ErrorLayer()
+	assert.NotNil(t, failure)
+
+	decodeFailure, ok := failure.(*gopacket.DecodeFailure)
+	assert.NotNil(t, decodeFailure)
+	assert.True(t, ok)
+	assert.NotNil(t, decodeFailure.String())
+	assert.True(t, len(decodeFailure.String()) > 0)
+
+	metadata := packet.Metadata()
+	assert.NotNil(t, metadata)
+	assert.True(t, metadata.Truncated)
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
+}
+
+func TestExtendedDownloadSectionRequestSerializeNoResponseExpected(t *testing.T) {
+	goodMessage := "0123140b00070001"
+	payloadFragment := "01020304050607080910111213141516171819202122232425"
+	payloadTotal := payloadFragment + payloadFragment + payloadFragment + payloadFragment +
+		payloadFragment + payloadFragment + payloadFragment + payloadFragment
+	sectionNumber := 0x84
+	length := 1 + (8 * 25)
+	hdr := fmt.Sprintf("%04x%02x", length, sectionNumber)
+	goodMessage += hdr + payloadTotal
+
+	omciLayer := &OMCI{
+		TransactionID:    0x0123,
+		MessageType:      DownloadSectionRequestType,
+		DeviceIdentifier: ExtendedIdent,
+	}
+	sectionData, genErr := stringToPacket(payloadTotal)
+	assert.Nil(t, genErr)
+	assert.NotNil(t, sectionData)
+	assert.Equal(t, len(payloadTotal)/2, len(sectionData))
+
+	request := &DownloadSectionRequest{
+		MeBasePacket: MeBasePacket{
+			EntityClass:    me.SoftwareImageClassID,
+			EntityInstance: uint16(1),
+			Extended:       true,
+		},
+		SectionNumber: byte(sectionNumber),
+		SectionData:   sectionData,
+	}
+	// Test serialization back to former string
+	var options gopacket.SerializeOptions
+	options.FixLengths = true
+
+	buffer := gopacket.NewSerializeBuffer()
+	err := gopacket.SerializeLayers(buffer, options, omciLayer, request)
+	assert.NoError(t, err)
+
+	outgoingPacket := buffer.Bytes()
+	reconstituted := packetToString(outgoingPacket)
+	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
+}
+
+func TestExtendedDownloadSectionRequestSerializeResponseExpectedMethod1(t *testing.T) {
+	goodMessage := "2468540b00070001"
+	payloadFragment := "01020304050607080910111213141516171819202122232425"
+	payloadTotal := payloadFragment + payloadFragment + payloadFragment + payloadFragment +
+		payloadFragment + payloadFragment + payloadFragment + payloadFragment
+	sectionNumber := 0x84
+	length := 1 + (8 * 25)
+	hdr := fmt.Sprintf("%04x%02x", length, sectionNumber)
+	goodMessage += hdr + payloadTotal
+
+	omciLayer := &OMCI{
+		TransactionID:    0x2468,
+		MessageType:      DownloadSectionRequestType, // or DownloadSectionRequestWithResponseType
+		ResponseExpected: true,
+		DeviceIdentifier: ExtendedIdent,
+	}
+	sectionData, genErr := stringToPacket(payloadTotal)
+	assert.Nil(t, genErr)
+	assert.NotNil(t, sectionData)
+	assert.Equal(t, len(payloadTotal)/2, len(sectionData))
+
+	request := &DownloadSectionRequest{
+		MeBasePacket: MeBasePacket{
+			EntityClass:    me.SoftwareImageClassID,
+			EntityInstance: uint16(1),
+			Extended:       true,
+		},
+		SectionNumber: byte(sectionNumber),
+		SectionData:   sectionData,
+	}
+	// Test serialization back to former string
+	var options gopacket.SerializeOptions
+	options.FixLengths = true
+
+	buffer := gopacket.NewSerializeBuffer()
+	err := gopacket.SerializeLayers(buffer, options, omciLayer, request)
+	assert.NoError(t, err)
+
+	outgoingPacket := buffer.Bytes()
+	reconstituted := packetToString(outgoingPacket)
+	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
+}
+
+func TestExtendedDownloadSectionRequestSerializeResponseExpectedMethod2(t *testing.T) {
+	goodMessage := "2468540b00070001"
+	payloadFragment := "01020304050607080910111213141516171819202122232425"
+	payloadTotal := payloadFragment + payloadFragment + payloadFragment + payloadFragment +
+		payloadFragment + payloadFragment + payloadFragment + payloadFragment
+	sectionNumber := 0x84
+	length := 1 + (8 * 25)
+	hdr := fmt.Sprintf("%04x%02x", length, sectionNumber)
+	goodMessage += hdr + payloadTotal
+
+	// In this case, just use the request type with AR response requested already encoded
+	omciLayer := &OMCI{
+		TransactionID:    0x2468,
+		MessageType:      DownloadSectionRequestWithResponseType,
+		ResponseExpected: true,
+		DeviceIdentifier: ExtendedIdent,
+	}
+	sectionData, genErr := stringToPacket(payloadTotal)
+	assert.Nil(t, genErr)
+	assert.NotNil(t, sectionData)
+	assert.Equal(t, len(payloadTotal)/2, len(sectionData))
+
+	request := &DownloadSectionRequest{
+		MeBasePacket: MeBasePacket{
+			EntityClass:    me.SoftwareImageClassID,
+			EntityInstance: 0x0001, // Default is zero, here we want image 1
+			Extended:       true,
+		},
+		SectionNumber: byte(sectionNumber),
+		SectionData:   sectionData,
+	}
+	// Test serialization back to former string
+	var options gopacket.SerializeOptions
+	options.FixLengths = true
+
+	buffer := gopacket.NewSerializeBuffer()
+	err := gopacket.SerializeLayers(buffer, options, omciLayer, request)
+	assert.NoError(t, err)
+
+	outgoingPacket := buffer.Bytes()
+	reconstituted := packetToString(outgoingPacket)
+	assert.Equal(t, strings.ToLower(goodMessage), reconstituted)
+}
+
+func TestExtendedDownloadSectionResponseDecode(t *testing.T) {
+	goodMessage := "0022340b000700010002061f"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, omciLayer)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.Equal(t, omciMsg.TransactionID, uint16(0x0022))
+	assert.Equal(t, omciMsg.MessageType, DownloadSectionResponseType)
+	assert.Equal(t, omciMsg.DeviceIdentifier, ExtendedIdent)
+	assert.Equal(t, uint16(2), omciMsg.Length)
+
+	msgLayer := packet.Layer(LayerTypeDownloadSectionResponse)
+	assert.NotNil(t, msgLayer)
+
+	response, ok2 := msgLayer.(*DownloadSectionResponse)
+	assert.True(t, ok2)
+	assert.NotNil(t, response)
+	assert.Equal(t, me.DeviceBusy, response.Result)
+	assert.Equal(t, byte(0x1f), response.SectionNumber)
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
+}
+
+func TestExtendedDownloadSectionResponseDecodeTruncated(t *testing.T) {
+	goodMessage := "0022340b00070001000106"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	failure := packet.ErrorLayer()
+	assert.NotNil(t, failure)
+
+	decodeFailure, ok := failure.(*gopacket.DecodeFailure)
+	assert.NotNil(t, decodeFailure)
+	assert.True(t, ok)
+	assert.NotNil(t, decodeFailure.String())
+	assert.True(t, len(decodeFailure.String()) > 0)
+
+	metadata := packet.Metadata()
+	assert.NotNil(t, metadata)
+	assert.True(t, metadata.Truncated)
+
+	// Verify string output for message
+	packetString := packet.String()
+	assert.NotZero(t, len(packetString))
+}
+
+func TestExtendedDownloadSectionResponseSerialize(t *testing.T) {
+	goodMessage := "0022340b000700010002061f"
+
+	omciLayer := &OMCI{
+		TransactionID:    0x0022,
+		MessageType:      DownloadSectionResponseType,
+		DeviceIdentifier: ExtendedIdent,
+	}
+	request := &DownloadSectionResponse{
+		MeBasePacket: MeBasePacket{
+			EntityClass:    me.SoftwareImageClassID,
+			EntityInstance: 1,
+			Extended:       true,
+		},
+		Result:        me.DeviceBusy,
+		SectionNumber: 0x1f,
 	}
 	// Test serialization back to former string
 	var options gopacket.SerializeOptions

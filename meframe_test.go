@@ -52,6 +52,8 @@ func init() {
 	messageTypeTestFuncs[MibResetResponseType] = testMibResetResponseTypeMeFrame
 	messageTypeTestFuncs[TestRequestType] = testTestRequestTypeMeFrame
 	messageTypeTestFuncs[TestResponseType] = testTestResponseTypeMeFrame
+
+	// For Download section, AR=0 if not response expected, AR=1 if response expected (last section of a window)4
 	messageTypeTestFuncs[StartSoftwareDownloadRequestType] = testStartSoftwareDownloadRequestTypeMeFrame
 	messageTypeTestFuncs[StartSoftwareDownloadResponseType] = testStartSoftwareDownloadResponseTypeMeFrame
 	messageTypeTestFuncs[DownloadSectionRequestType] = testDownloadSectionRequestTypeMeFrame
@@ -79,6 +81,11 @@ func init() {
 	// Supported Extended message set types here
 	messageTypeTestFuncs[GetRequestType+ExtendedTypeDecodeOffset] = testGetRequestTypeMeFrame
 	messageTypeTestFuncs[GetResponseType+ExtendedTypeDecodeOffset] = testGetResponseTypeMeFrame
+
+	// For Download section, AR=0 if not response expected, AR=1 if response expected (last section of a window)
+	messageTypeTestFuncs[DownloadSectionRequestType+ExtendedTypeDecodeOffset] = testDownloadSectionRequestTypeMeFrame
+	// TODO: messageTypeTestFuncs[DownloadSectionRequestWithResponseType+ExtendedTypeDecodeOffset] = testDownloadSectionLastRequestTypeMeFrame
+	messageTypeTestFuncs[DownloadSectionResponseType+ExtendedTypeDecodeOffset] = testDownloadSectionResponseTypeMeFrame
 }
 
 func getMEsThatSupportAMessageType(messageType MessageType) []*me.ManagedEntity {
@@ -1460,11 +1467,117 @@ func testStartSoftwareDownloadResponseTypeMeFrame(t *testing.T, managedEntity *m
 }
 
 func testDownloadSectionRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
-	// TODO: Implement
+	// TODO: In future, also support slot/multiple download formats
+	instance := uint16(0)
+	image := uint16(rand.Intn(1)) // Image 0 or 1 for this test
+	params := me.ParamData{
+		EntityID: (instance << 8) + image,
+	}
+	// Create the managed instance
+	meInstance, err := me.NewManagedEntity(managedEntity.GetManagedEntityDefinition(), params)
+	assert.NotNil(t, err)
+	assert.Equal(t, err.StatusCode(), me.Success)
+
+	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
+	var data []byte
+
+	if messageSet == ExtendedIdent {
+		data = make([]byte, MaxDownloadSectionExtendedLength)
+	} else {
+		data = make([]byte, MaxDownloadSectionLength)
+	}
+	for index, _ := range data {
+		data[index] = byte(index & 0xFF)
+	}
+	options := SoftwareOptions{
+		SectionNumber: uint8(rand.Int31n(255)), // [0, 255]
+		Data:          data,
+	}
+	frame, omciErr := GenFrame(meInstance, DownloadSectionRequestType,
+		TransactionID(tid), Software(options), FrameFormat(messageSet))
+	assert.NotNil(t, frame)
+	assert.NotZero(t, len(frame))
+	assert.Nil(t, omciErr)
+
+	///////////////////////////////////////////////////////////////////
+	// Now decode and compare
+	packet := gopacket.NewPacket(frame, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, omciLayer)
+
+	omciObj, omciOk := omciLayer.(*OMCI)
+	assert.NotNil(t, omciObj)
+	assert.True(t, omciOk)
+	assert.Equal(t, tid, omciObj.TransactionID)
+	assert.Equal(t, DownloadSectionRequestType, omciObj.MessageType)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
+
+	msgLayer := packet.Layer(LayerTypeDownloadSectionRequest)
+	assert.NotNil(t, msgLayer)
+
+	msgObj, msgOk := msgLayer.(*DownloadSectionRequest)
+	assert.NotNil(t, msgObj)
+	assert.True(t, msgOk)
+
+	assert.Equal(t, meInstance.GetClassID(), msgObj.EntityClass)
+	assert.Equal(t, meInstance.GetEntityID(), msgObj.EntityInstance)
+	assert.Equal(t, options.SectionNumber, msgObj.SectionNumber)
+	assert.NotNil(t, msgObj.SectionData)
+	assert.Equal(t, options.Data, msgObj.SectionData)
 }
 
 func testDownloadSectionResponseTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {
-	// TODO: Implement
+	instance := uint16(0)
+	image := uint16(rand.Intn(1)) // Image 0 or 1 for this test
+	params := me.ParamData{
+		EntityID: (instance << 8) + image,
+	}
+	// Create the managed instance
+	meInstance, err := me.NewManagedEntity(managedEntity.GetManagedEntityDefinition(), params)
+	assert.NotNil(t, err)
+	assert.Equal(t, err.StatusCode(), me.Success)
+
+	tid := uint16(rand.Int31n(0xFFFE) + 1) // [1, 0xFFFF]
+	result := me.Results(rand.Int31n(7))   // [0, 6] Not all types will be tested
+	swOptions := SoftwareOptions{
+		SectionNumber: uint8(rand.Int31n(255)), // [0, 255]
+	}
+	var frame []byte
+	frame, omciErr := GenFrame(meInstance, DownloadSectionResponseType, TransactionID(tid),
+		Result(result), FrameFormat(messageSet), Software(swOptions))
+
+	assert.NotNil(t, frame)
+	assert.NotZero(t, len(frame))
+	assert.Nil(t, omciErr)
+
+	///////////////////////////////////////////////////////////////////
+	// Now decode and compare
+	packet := gopacket.NewPacket(frame, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, omciLayer)
+
+	omciObj, omciOk := omciLayer.(*OMCI)
+	assert.NotNil(t, omciObj)
+	assert.True(t, omciOk)
+	assert.Equal(t, tid, omciObj.TransactionID)
+	assert.Equal(t, DownloadSectionResponseType, omciObj.MessageType)
+	assert.Equal(t, messageSet, omciObj.DeviceIdentifier)
+
+	msgLayer := packet.Layer(LayerTypeDownloadSectionResponse)
+	assert.NotNil(t, msgLayer)
+
+	msgObj, msgOk := msgLayer.(*DownloadSectionResponse)
+	assert.NotNil(t, msgObj)
+	assert.True(t, msgOk)
+
+	assert.Equal(t, meInstance.GetClassID(), msgObj.EntityClass)
+	assert.Equal(t, meInstance.GetEntityID(), msgObj.EntityInstance)
+	assert.Equal(t, result, msgObj.Result)
+	assert.Equal(t, swOptions.SectionNumber, msgObj.SectionNumber)
 }
 
 func testEndSoftwareDownloadRequestTypeMeFrame(t *testing.T, managedEntity *me.ManagedEntity, messageSet DeviceIdent) {

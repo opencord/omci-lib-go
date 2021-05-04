@@ -2353,17 +2353,18 @@ func (omci *StartSoftwareDownloadResponse) SerializeTo(b gopacket.SerializeBuffe
 	return nil
 }
 
-/////////////////////////////////////////////////////////////////////////////
-//
+// DownloadSectionRequest data is bound by the message set in use. For the
+// Baseline message set use MaxDownloadSectionLength and for the Extended message
+// set, MaxDownloadSectionExtendedLength is provided
 type DownloadSectionRequest struct {
 	MeBasePacket  // Note: EntityInstance for software download is two specific values
 	SectionNumber byte
-	SectionData   [31]byte // 0 padding if final transfer requires only a partial block
+	SectionData   []byte // 0 padding if final transfer requires only a partial block for baseline set
 }
 
 func (omci *DownloadSectionRequest) String() string {
-	return fmt.Sprintf("%v, Section #: %v",
-		omci.MeBasePacket.String(), omci.SectionNumber)
+	return fmt.Sprintf("%v, Section #: %v, Data Length: %v",
+		omci.MeBasePacket.String(), omci.SectionNumber, len(omci.SectionData))
 }
 
 // DecodeFromBytes decodes the given bytes of a Download Section Request into this layer
@@ -2386,14 +2387,41 @@ func (omci *DownloadSectionRequest) DecodeFromBytes(data []byte, p gopacket.Pack
 	if omci.EntityClass != me.SoftwareImageClassID {
 		return me.NewProcessingError("invalid Entity Class for Download Section request")
 	}
-	omci.SectionNumber = data[4]
-	copy(omci.SectionData[0:], data[5:])
+	if omci.Extended {
+		if len(data) < 7 {
+			p.SetTruncated()
+			return errors.New("frame too small")
+		}
+		if len(data[7:]) > MaxDownloadSectionExtendedLength {
+			return errors.New(fmt.Sprintf("software image data too large. Received %v, Max: %v",
+				len(data[7:]), MaxDownloadSectionExtendedLength))
+		}
+		omci.SectionData = make([]byte, len(data[7:]))
+		omci.SectionNumber = data[6]
+		copy(omci.SectionData, data[7:])
+	} else {
+		if len(data[5:]) != MaxDownloadSectionLength {
+			p.SetTruncated()
+			return errors.New(fmt.Sprintf("software image size invalid. Received %v, Expected: %v",
+				len(data[5:]), MaxDownloadSectionLength))
+		}
+		omci.SectionData = make([]byte, MaxDownloadSectionLength)
+		omci.SectionNumber = data[4]
+		copy(omci.SectionData, data[5:])
+	}
 	return nil
 }
 
 func decodeDownloadSectionRequest(data []byte, p gopacket.PacketBuilder) error {
 	omci := &DownloadSectionRequest{}
 	omci.MsgLayerType = LayerTypeDownloadSectionRequest
+	return decodingLayerDecoder(omci, data, p)
+}
+
+func decodeDownloadSectionRequestExtended(data []byte, p gopacket.PacketBuilder) error {
+	omci := &DownloadSectionRequest{}
+	omci.MsgLayerType = LayerTypeDownloadSectionRequest
+	omci.Extended = true
 	return decodingLayerDecoder(omci, data, p)
 }
 
@@ -2417,12 +2445,40 @@ func (omci *DownloadSectionRequest) SerializeTo(b gopacket.SerializeBuffer, opts
 	if omci.EntityClass != me.SoftwareImageClassID {
 		return me.NewProcessingError("invalid Entity Class for Download Section response")
 	}
-	bytes, err := b.AppendBytes(1 + len(omci.SectionData))
-	if err != nil {
-		return err
+	sectionLength := len(omci.SectionData)
+	if omci.Extended {
+		if sectionLength > MaxDownloadSectionExtendedLength {
+			msg := fmt.Sprintf("invalid Download Section data length, must be <= %v, received: %v",
+				MaxDownloadSectionExtendedLength, sectionLength)
+			return me.NewProcessingError(msg)
+		}
+		// Append section data
+		bytes, err := b.AppendBytes(3 + sectionLength)
+		if err != nil {
+			return err
+		}
+		binary.BigEndian.PutUint16(bytes, uint16(1+sectionLength))
+		bytes[2] = omci.SectionNumber
+		copy(bytes[3:], omci.SectionData)
+	} else {
+		if sectionLength > MaxDownloadSectionLength {
+			msg := fmt.Sprintf("invalid Download Section data length, must be <= %v, received: %v",
+				MaxDownloadSectionLength, sectionLength)
+			return me.NewProcessingError(msg)
+		}
+		// Append section data
+		bytes, err := b.AppendBytes(1 + MaxDownloadSectionLength)
+		if err != nil {
+			return err
+		}
+		bytes[0] = omci.SectionNumber
+		copy(bytes[1:], omci.SectionData)
+
+		// Zero extended if needed
+		if sectionLength < MaxDownloadSectionLength {
+			copy(omci.SectionData[sectionLength:], lotsOfZeros[:MaxDownloadSectionLength-sectionLength])
+		}
 	}
-	bytes[0] = omci.SectionNumber
-	copy(bytes[1:], omci.SectionData[0:])
 	return nil
 }
 
@@ -2459,19 +2515,35 @@ func (omci *DownloadSectionResponse) DecodeFromBytes(data []byte, p gopacket.Pac
 	if omci.EntityClass != me.SoftwareImageClassID {
 		return me.NewProcessingError("invalid Entity Class for Download Section response")
 	}
-	omci.Result = me.Results(data[4])
+	if omci.Extended {
+		if len(data) < 8 {
+			p.SetTruncated()
+			return errors.New("frame too small")
+		}
+		omci.Result = me.Results(data[6])
+		omci.SectionNumber = data[7]
+	} else {
+		omci.Result = me.Results(data[4])
+		omci.SectionNumber = data[5]
+	}
 	if omci.Result > me.DeviceBusy {
 		msg := fmt.Sprintf("invalid results for Download Section response: %v, must be 0..6",
 			omci.Result)
 		return errors.New(msg)
 	}
-	omci.SectionNumber = data[5]
 	return nil
 }
 
 func decodeDownloadSectionResponse(data []byte, p gopacket.PacketBuilder) error {
 	omci := &DownloadSectionResponse{}
 	omci.MsgLayerType = LayerTypeDownloadSectionResponse
+	return decodingLayerDecoder(omci, data, p)
+}
+
+func decodeDownloadSectionResponseExtended(data []byte, p gopacket.PacketBuilder) error {
+	omci := &DownloadSectionResponse{}
+	omci.MsgLayerType = LayerTypeDownloadSectionResponse
+	omci.Extended = true
 	return decodingLayerDecoder(omci, data, p)
 }
 
@@ -2495,17 +2567,27 @@ func (omci *DownloadSectionResponse) SerializeTo(b gopacket.SerializeBuffer, opt
 	if omci.EntityClass != me.SoftwareImageClassID {
 		return me.NewProcessingError("invalid Entity Class for Download Section response")
 	}
-	bytes, err := b.AppendBytes(2)
-	if err != nil {
-		return err
-	}
 	if omci.Result > me.DeviceBusy {
 		msg := fmt.Sprintf("invalid results for Download Section response: %v, must be 0..6",
 			omci.Result)
 		return errors.New(msg)
 	}
-	bytes[0] = byte(omci.Result)
-	bytes[1] = omci.SectionNumber
+	if omci.Extended {
+		bytes, err := b.AppendBytes(4)
+		if err != nil {
+			return err
+		}
+		binary.BigEndian.PutUint16(bytes, uint16(2))
+		bytes[2] = byte(omci.Result)
+		bytes[3] = omci.SectionNumber
+	} else {
+		bytes, err := b.AppendBytes(2)
+		if err != nil {
+			return err
+		}
+		bytes[0] = byte(omci.Result)
+		bytes[1] = omci.SectionNumber
+	}
 	return nil
 }
 

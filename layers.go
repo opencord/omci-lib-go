@@ -50,7 +50,9 @@ var (
 	LayerTypeSetTableRequest              gopacket.LayerType
 
 	// Extended Message Types
-	LayerTypeGetRequestExtended gopacket.LayerType
+	LayerTypeGetRequestExtended                 gopacket.LayerType
+	LayerTypeDownloadSectionRequestExtended     gopacket.LayerType
+	LayerTypeDownloadSectionLastRequestExtended gopacket.LayerType
 )
 var (
 	// Baseline Message Types
@@ -79,7 +81,8 @@ var (
 	LayerTypeSetTableResponse              gopacket.LayerType
 
 	// Extended Message Types
-	LayerTypeGetResponseExtended gopacket.LayerType
+	LayerTypeGetResponseExtended             gopacket.LayerType
+	LayerTypeDownloadSectionResponseExtended gopacket.LayerType
 )
 
 func mkReqLayer(mt me.MsgType, mts string, decode gopacket.DecodeFunc) gopacket.LayerType {
@@ -151,6 +154,9 @@ func init() {
 
 	LayerTypeGetRequestExtended = mkReqLayer(me.Get|me.ExtendedOffset, "GetRequest-Ext", gopacket.DecodeFunc(decodeGetRequestExtended))
 	LayerTypeGetResponseExtended = mkRespLayer(me.Get|me.ExtendedOffset, "GetResponse-Ext", gopacket.DecodeFunc(decodeGetResponseExtended))
+	LayerTypeDownloadSectionRequestExtended = mkLayer(me.DownloadSection|me.ExtendedOffset, "DownloadSectionRequest-Ext", gopacket.DecodeFunc(decodeDownloadSectionRequestExtended))
+	LayerTypeDownloadSectionLastRequestExtended = mkReqLayer(me.DownloadSection|me.ExtendedOffset, "DownloadLastSectionRequest-Ext", gopacket.DecodeFunc(decodeDownloadSectionRequestExtended))
+	LayerTypeDownloadSectionResponseExtended = mkRespLayer(me.DownloadSection|me.ExtendedOffset, "DownloadSectionResponse-Ext", gopacket.DecodeFunc(decodeDownloadSectionResponseExtended))
 
 	// Map message_type and action to layer
 	nextLayerMapping = make(map[MessageType]gopacket.LayerType)
@@ -205,6 +211,11 @@ func init() {
 	// Extended message support
 	nextLayerMapping[GetRequestType+ExtendedTypeDecodeOffset] = LayerTypeGetRequestExtended
 	nextLayerMapping[GetResponseType+ExtendedTypeDecodeOffset] = LayerTypeGetResponseExtended
+
+	// For Download section, AR=0 if not response expected, AR=1 if response expected (last section of a window)
+	nextLayerMapping[DownloadSectionRequestType+ExtendedTypeDecodeOffset] = LayerTypeDownloadSectionRequestExtended
+	nextLayerMapping[DownloadSectionRequestWithResponseType+ExtendedTypeDecodeOffset] = LayerTypeDownloadSectionLastRequestExtended
+	nextLayerMapping[DownloadSectionResponseType+ExtendedTypeDecodeOffset] = LayerTypeDownloadSectionResponseExtended
 }
 
 func MsgTypeToNextLayer(mt MessageType, isExtended bool) (gopacket.LayerType, error) {

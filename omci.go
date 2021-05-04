@@ -90,6 +90,10 @@ const MaxAttributeMibUploadNextBaselineLength = MaxBaselineLength - 14 - 8
 // attribute portion of the message contents and does not include the Result Code & Attribute Mask.
 const MaxAttributeGetNextBaselineLength = MaxBaselineLength - 11 - 8
 
+// MaxDownloadSectionLength is the maximum payload size for section data of
+// a Download Section request message for the baseline message set.
+const MaxDownloadSectionLength = 31
+
 // MaxTestRequestLength is the maximum payload size for test request message
 // for the baseline message set.
 const MaxTestRequestLength = MaxBaselineLength - 8 - 8
@@ -108,6 +112,10 @@ const MaxManagedEntityMibUploadNextExtendedLength = MaxExtendedLength - 10 - 4
 // a Extended MIB Get Next message. This is just the attribute portion of the
 // message contents and does not include the Result Code & Attribute Mask.
 const MaxAttributeGetNextExtendedLength = MaxExtendedLength - 13 - 4
+
+// MaxDownloadSectionExtendedLength is the maximum payload size for section data of
+// a Download Section request message for the extended message set.
+const MaxDownloadSectionExtendedLength = MaxExtendedLength - 11 - 4
 
 // NullEntityID is often used as the Null/void Managed Entity ID for attributes
 // that are used to refer to other Managed Entities but are currently not provisioned.
