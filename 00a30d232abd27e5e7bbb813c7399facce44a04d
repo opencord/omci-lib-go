@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc9b346c_4f0cca94",
+        "filename": "messagetypes.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 2362,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-05-04T19:11:41Z",
+      "side": 1,
+      "message": "NOTE: The SectionData is now a byte slice which will likely require a small change in its use in the OpenONU Go adapter.\n\nSee changes in messagetypes_test.go for an example",
+      "revId": "00a30d232abd27e5e7bbb813c7399facce44a04d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
