@@ -1950,13 +1950,13 @@ func decodeTestRequest(data []byte, p gopacket.PacketBuilder) error {
 	switch me.ClassID(classID) {
 	default:
 		omci := &TestRequest{}
-		omci.MsgLayerType = LayerTypeTestResult
+		omci.MsgLayerType = LayerTypeTestRequest
 		return decodingLayerDecoder(omci, data, p)
 
 	case me.AniGClassID, me.ReAniGClassID, me.PhysicalPathTerminationPointReUniClassID,
 		me.ReUpstreamAmplifierClassID, me.ReDownstreamAmplifierClassID:
 		omci := &OpticalLineSupervisionTestRequest{}
-		omci.MsgLayerType = LayerTypeTestResult
+		omci.MsgLayerType = LayerTypeTestRequest
 		return decodingLayerDecoder(omci, data, p)
 	}
 }

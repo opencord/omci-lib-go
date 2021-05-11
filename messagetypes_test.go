@@ -3852,7 +3852,7 @@ func TestGenericTestRequestDecode(t *testing.T) {
 	assert.Equal(t, BaselineIdent, omciMsg.DeviceIdentifier)
 	assert.Equal(t, uint16(40), omciMsg.Length)
 
-	msgLayer := packet.Layer(LayerTypeTestResult)
+	msgLayer := packet.Layer(LayerTypeTestRequest)
 	assert.NotNil(t, msgLayer)
 
 	// This is a generic struct since we do not do detailed decode
@@ -3900,7 +3900,7 @@ func TestOpticalLineSupervisionTestRequestDecode(t *testing.T) {
 	assert.Equal(t, BaselineIdent, omciMsg.DeviceIdentifier)
 	assert.Equal(t, uint16(40), omciMsg.Length)
 
-	msgLayer := packet.Layer(LayerTypeTestResult)
+	msgLayer := packet.Layer(LayerTypeTestRequest)
 	assert.NotNil(t, msgLayer)
 
 	// This is a optical line test results
