@@ -86,6 +86,10 @@ func init() {
 	messageTypeTestFuncs[DownloadSectionRequestType+ExtendedTypeDecodeOffset] = testDownloadSectionRequestTypeMeFrame
 	// TODO: messageTypeTestFuncs[DownloadSectionRequestWithResponseType+ExtendedTypeDecodeOffset] = testDownloadSectionLastRequestTypeMeFrame
 	messageTypeTestFuncs[DownloadSectionResponseType+ExtendedTypeDecodeOffset] = testDownloadSectionResponseTypeMeFrame
+
+	messageTypeTestFuncs[AlarmNotificationType+ExtendedTypeDecodeOffset] = testAlarmNotificationTypeMeFrame
+	messageTypeTestFuncs[AttributeValueChangeType+ExtendedTypeDecodeOffset] = testAttributeValueChangeTypeMeFrame
+	messageTypeTestFuncs[TestResultType+ExtendedTypeDecodeOffset] = testTestResultTypeMeFrame
 }
 
 func getMEsThatSupportAMessageType(messageType MessageType) []*me.ManagedEntity {

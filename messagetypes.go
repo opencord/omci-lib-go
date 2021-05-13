@@ -1673,7 +1673,7 @@ const AlarmBitmapSize = 224
 type AlarmNotificationMsg struct {
 	MeBasePacket
 	AlarmBitmap         [AlarmBitmapSize / 8]byte
-	zeroPadding         [3]byte
+	zeroPadding         [3]byte // Note: This zero padding is not present in the Extended Message Set
 	AlarmSequenceNumber byte
 }
 
@@ -1795,17 +1795,28 @@ func (omci *AlarmNotificationMsg) DecodeFromBytes(data []byte, p gopacket.Packet
 	isUnsupported := classSupport == me.UnsupportedManagedEntity ||
 		classSupport == me.UnsupportedVendorSpecificManagedEntity
 
+	mapOffset := 4
+	if omci.Extended {
+		mapOffset = 6
+		if len(data) < 6+28+1 {
+			p.SetTruncated()
+			return errors.New("frame too small")
+		}
+	}
 	// Look for a non-nil/not empty Alarm Map to determine if this ME supports alarms
 	if alarmMap := meDefinition.GetAlarmMap(); isUnsupported || (alarmMap != nil && len(alarmMap) > 0) {
-		for index, octet := range data[4 : (AlarmBitmapSize/8)-4] {
+		for index, octet := range data[mapOffset : (AlarmBitmapSize/8)-mapOffset] {
 			omci.AlarmBitmap[index] = octet
 		}
-		padOffset := 4 + (AlarmBitmapSize / 8)
-		omci.zeroPadding[0] = data[padOffset]
-		omci.zeroPadding[1] = data[padOffset+1]
-		omci.zeroPadding[2] = data[padOffset+2]
-
-		omci.AlarmSequenceNumber = data[padOffset+3]
+		if omci.Extended {
+			omci.AlarmSequenceNumber = data[mapOffset+(AlarmBitmapSize/8)]
+		} else {
+			padOffset := mapOffset + (AlarmBitmapSize / 8)
+			omci.zeroPadding[0] = data[padOffset]
+			omci.zeroPadding[1] = data[padOffset+1]
+			omci.zeroPadding[2] = data[padOffset+2]
+			omci.AlarmSequenceNumber = data[padOffset+3]
+		}
 		return nil
 	}
 	return me.NewProcessingError("managed entity does not support alarm notifications")
@@ -1817,6 +1828,13 @@ func decodeAlarmNotification(data []byte, p gopacket.PacketBuilder) error {
 	return decodingLayerDecoder(omci, data, p)
 }
 
+func decodeAlarmNotificationExtended(data []byte, p gopacket.PacketBuilder) error {
+	omci := &AlarmNotificationMsg{}
+	omci.MsgLayerType = LayerTypeAlarmNotification
+	omci.Extended = true
+	return decodingLayerDecoder(omci, data, p)
+}
+
 // SerializeTo provides serialization of an Alarm Notification message
 func (omci *AlarmNotificationMsg) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
 	// Basic (common) OMCI Header is 8 octets, 10
@@ -1824,29 +1842,40 @@ func (omci *AlarmNotificationMsg) SerializeTo(b gopacket.SerializeBuffer, opts g
 	if err != nil {
 		return err
 	}
-	//var meDefinition me.IManagedEntityDefinition
-	//meDefinition, err = me.LoadManagedEntityDefinition(omci.EntityClass,
+	// TODO: Support of encoding AlarmNotification into supported types not yet supported
+	//meDefinition, omciErr := me.LoadManagedEntityDefinition(omci.EntityClass,
 	//	me.ParamData{EntityID: omci.EntityInstance})
-	//if err != nil {
-	//	return err
+	//if omciErr.StatusCode() != me.Success {
+	//	return omciErr.GetError()
 	//}
-	// ME needs to support Alarms
-	// TODO: Add attribute to ME to specify that alarm is allowed
-	//if !me.SupportsMsgType(meDefinition, me.MibReset) {
-	//	return me.NewProcessingError("managed entity does not support MIB Reset Message-Type")
+	//if !me.SupportsMsgType(meDefinition, me.AlarmNotification) {
+	//	return me.NewProcessingError("managed entity does not support Alarm Notification Message-Type")
 	//}
-	bytes, err := b.AppendBytes((AlarmBitmapSize / 8) + 3 + 1)
-	if err != nil {
-		return err
+	if omci.Extended {
+		bytes, err := b.AppendBytes(2 + (AlarmBitmapSize / 8) + 1)
+		if err != nil {
+			return err
+		}
+		binary.BigEndian.PutUint16(bytes, uint16((AlarmBitmapSize/8)+1))
+
+		for index, octet := range omci.AlarmBitmap {
+			bytes[2+index] = octet
+		}
+		bytes[2+(AlarmBitmapSize/8)] = omci.AlarmSequenceNumber
+	} else {
+		bytes, err := b.AppendBytes((AlarmBitmapSize / 8) + 3 + 1)
+		if err != nil {
+			return err
+		}
+		for index, octet := range omci.AlarmBitmap {
+			bytes[index] = octet
+		}
+		padOffset := AlarmBitmapSize / 8
+		bytes[padOffset] = 0
+		bytes[padOffset+1] = 0
+		bytes[padOffset+2] = 0
+		bytes[padOffset+3] = omci.AlarmSequenceNumber
 	}
-	for index, octet := range omci.AlarmBitmap {
-		bytes[index] = octet
-	}
-	padOffset := AlarmBitmapSize / 8
-	bytes[padOffset] = 0
-	bytes[padOffset+1] = 0
-	bytes[padOffset+2] = 0
-	bytes[padOffset+3] = omci.AlarmSequenceNumber
 	return nil
 }
 
@@ -1875,9 +1904,18 @@ func (omci *AttributeValueChangeMsg) DecodeFromBytes(data []byte, p gopacket.Pac
 	if omciErr.StatusCode() != me.Success {
 		return omciErr.GetError()
 	}
-	omci.AttributeMask = binary.BigEndian.Uint16(data[4:6])
+	// TODO: Support for encoding AVC into message type support not yet supported
+	//if !me.SupportsMsgType(meDefinition, me.AlarmNotification) {
+	//	return me.NewProcessingError("managed entity does not support Alarm Notification Message-Type")
+	//}
+	maskOffset := 4
+	if omci.Extended {
+		maskOffset = 6
+	}
+	omci.AttributeMask = binary.BigEndian.Uint16(data[maskOffset:])
 	// Attribute decode
-	omci.Attributes, err = meDefinition.DecodeAttributes(omci.AttributeMask, data[6:40], p, byte(AttributeValueChangeType))
+	omci.Attributes, err = meDefinition.DecodeAttributes(omci.AttributeMask, data[maskOffset+2:],
+		p, byte(AttributeValueChangeType))
 	// TODO: Add support for attributes that can have an AVC associated with them and then add a check here
 	// Validate all attributes support AVC
 	//for attrName := range omci.attributes {
@@ -1896,6 +1934,13 @@ func (omci *AttributeValueChangeMsg) DecodeFromBytes(data []byte, p gopacket.Pac
 func decodeAttributeValueChange(data []byte, p gopacket.PacketBuilder) error {
 	omci := &AttributeValueChangeMsg{}
 	omci.MsgLayerType = LayerTypeAttributeValueChange
+	return decodingLayerDecoder(omci, data, p)
+}
+
+func decodeAttributeValueChangeExtended(data []byte, p gopacket.PacketBuilder) error {
+	omci := &AttributeValueChangeMsg{}
+	omci.MsgLayerType = LayerTypeAttributeValueChange
+	omci.Extended = true
 	return decodingLayerDecoder(omci, data, p)
 }
 
@@ -1923,18 +1968,36 @@ func (omci *AttributeValueChangeMsg) SerializeTo(b gopacket.SerializeBuffer, opt
 	//		return me.NewProcessingError(msg)
 	//	}
 	//}
-	bytes, err := b.AppendBytes(2)
+	var maskOffset int
+	var bytesAvailable int
+	if omci.Extended {
+		maskOffset = 2
+		bytesAvailable = MaxExtendedLength - 12 - 4
+	} else {
+		maskOffset = 0
+		bytesAvailable = MaxBaselineLength - 10 - 8
+	}
+	bytes, err := b.AppendBytes(maskOffset + 2)
 	if err != nil {
 		return err
 	}
-	binary.BigEndian.PutUint16(bytes, omci.AttributeMask)
+	binary.BigEndian.PutUint16(bytes[maskOffset:], omci.AttributeMask)
 
 	// Attribute serialization
-	// TODO: Only Baseline supported at this time
-	bytesAvailable := MaxBaselineLength - 10 - 8
+	attributeBuffer := gopacket.NewSerializeBuffer()
+	if err, _ = meDefinition.SerializeAttributes(omci.Attributes, omci.AttributeMask,
+		attributeBuffer, byte(GetResponseType), bytesAvailable, false); err != nil {
+		return err
+	}
 
-	err, _ = meDefinition.SerializeAttributes(omci.Attributes, omci.AttributeMask, b,
-		byte(AttributeValueChangeType), bytesAvailable, false)
+	if omci.Extended {
+		binary.BigEndian.PutUint16(bytes, uint16(len(attributeBuffer.Bytes())+2))
+	}
+	bytes, err = b.AppendBytes(len(attributeBuffer.Bytes()))
+	if err != nil {
+		return err
+	}
+	copy(bytes, attributeBuffer.Bytes())
 	return err
 }
 
@@ -3635,6 +3698,31 @@ func decodeTestResult(data []byte, p gopacket.PacketBuilder) error {
 	}
 }
 
+func decodeTestResultExtended(data []byte, p gopacket.PacketBuilder) error {
+	// Peek at Managed Entity Type
+	if len(data) < 8 {
+		p.SetTruncated()
+		return errors.New("frame too small")
+	}
+	classID := binary.BigEndian.Uint16(data)
+
+	// Is it a Managed Entity class we support customized decode of?
+	switch me.ClassID(classID) {
+	default:
+		omci := &TestResultNotification{}
+		omci.MsgLayerType = LayerTypeTestResult
+		omci.Extended = true
+		return decodingLayerDecoder(omci, data, p)
+
+	case me.AniGClassID, me.ReAniGClassID, me.PhysicalPathTerminationPointReUniClassID,
+		me.ReUpstreamAmplifierClassID, me.ReDownstreamAmplifierClassID:
+		omci := &OpticalLineSupervisionTestResult{}
+		omci.MsgLayerType = LayerTypeTestResult
+		omci.Extended = true
+		return decodingLayerDecoder(omci, data, p)
+	}
+}
+
 type TestResultNotification struct {
 	MeBasePacket
 	Payload []byte
@@ -3651,7 +3739,11 @@ func (omci *TestResultNotification) String() string {
 // DecodeFromBytes decodes the given bytes of a Test Result Notification into this layer
 func (omci *TestResultNotification) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
 	// Common ClassID/EntityID decode in msgBase
-	err := omci.MeBasePacket.DecodeFromBytes(data, p, 4)
+	payloadOffset := 4
+	if omci.Extended {
+		payloadOffset = 6
+	}
+	err := omci.MeBasePacket.DecodeFromBytes(data, p, payloadOffset)
 	if err != nil {
 		return err
 	}
@@ -3666,8 +3758,22 @@ func (omci *TestResultNotification) DecodeFromBytes(data []byte, p gopacket.Pack
 	if !me.SupportsMsgType(meDefinition, me.Test) {
 		return me.NewProcessingError("managed entity does not support Test Message-Type")
 	}
-	omci.Payload = make([]byte, MaxTestResultsLength)
-	copy(omci.Payload, omci.MeBasePacket.Payload)
+	if omci.Extended {
+		if len(data) < 6 {
+			p.SetTruncated()
+			return errors.New("frame too small")
+		}
+		length := binary.BigEndian.Uint16(data[4:])
+		if len(data) < 6+int(length) {
+			p.SetTruncated()
+			return errors.New("frame too small")
+		}
+		omci.Payload = make([]byte, length)
+		copy(omci.Payload, data[6:])
+	} else {
+		omci.Payload = make([]byte, MaxTestResultsLength)
+		copy(omci.Payload, omci.MeBasePacket.Payload)
+	}
 	return nil
 }
 
@@ -3692,17 +3798,27 @@ func (omci *TestResultNotification) SerializeTo(b gopacket.SerializeBuffer, opts
 	if omci.Payload == nil {
 		return errors.New("Test Results payload is missing")
 	}
-	if len(omci.Payload) > MaxTestResultsLength {
-		msg := fmt.Sprintf("Invalid Test Results payload size. Received %v bytes, expected %v",
-			len(omci.Payload), MaxTestResultsLength)
+
+	payloadOffset := 0
+	maxSize := MaxTestResultsLength
+
+	if omci.Extended {
+		payloadOffset = 2
+		maxSize = MaxExtendedLength - 10 - 4
+	}
+	if len(omci.Payload) > maxSize {
+		msg := fmt.Sprintf("Invalid Test Results payload size. Received %v bytes, max expected %v",
+			len(omci.Payload), maxSize)
 		return errors.New(msg)
 	}
-	bytes, err := b.AppendBytes(len(omci.Payload))
+	bytes, err := b.AppendBytes(len(omci.Payload) + payloadOffset)
 	if err != nil {
 		return err
 	}
-
-	copy(bytes, omci.Payload)
+	if omci.Extended {
+		binary.BigEndian.PutUint16(bytes, uint16(len(omci.Payload)))
+	}
+	copy(bytes[payloadOffset:], omci.Payload)
 	return nil
 }
 
@@ -3735,7 +3851,11 @@ func (omci *OpticalLineSupervisionTestResult) TestResults() []byte {
 // DecodeFromBytes decodes the given bytes of a Test Result Notification into this layer
 func (omci *OpticalLineSupervisionTestResult) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
 	// Common ClassID/EntityID decode in msgBase
-	err := omci.MeBasePacket.DecodeFromBytes(data, p, 4+17)
+	payloadOffset := 4
+	if omci.Extended {
+		payloadOffset = 6
+	}
+	err := omci.MeBasePacket.DecodeFromBytes(data, p, payloadOffset+17)
 	if err != nil {
 		return err
 	}
@@ -3753,26 +3873,26 @@ func (omci *OpticalLineSupervisionTestResult) DecodeFromBytes(data []byte, p gop
 	// Note: Unsupported tests will have a type = 0 and the value should be zero
 	//       as well, but that constraint is not enforced at this time.
 	// Type = 1
-	omci.PowerFeedVoltageType = data[4]
-	omci.PowerFeedVoltage = binary.BigEndian.Uint16(data[5:])
+	omci.PowerFeedVoltageType = data[payloadOffset]
+	omci.PowerFeedVoltage = binary.BigEndian.Uint16(data[payloadOffset+1:])
 
 	// Type = 3
-	omci.ReceivedOpticalPowerType = data[7]
-	omci.ReceivedOpticalPower = binary.BigEndian.Uint16(data[8:])
+	omci.ReceivedOpticalPowerType = data[payloadOffset+3]
+	omci.ReceivedOpticalPower = binary.BigEndian.Uint16(data[payloadOffset+4:])
 
 	// Type = 5
-	omci.MeanOpticalLaunchType = data[10]
-	omci.MeanOpticalLaunch = binary.BigEndian.Uint16(data[11:])
+	omci.MeanOpticalLaunchType = data[payloadOffset+6]
+	omci.MeanOpticalLaunch = binary.BigEndian.Uint16(data[payloadOffset+7:])
 
 	// Type = 9
-	omci.LaserBiasCurrentType = data[13]
-	omci.LaserBiasCurrent = binary.BigEndian.Uint16(data[14:])
+	omci.LaserBiasCurrentType = data[payloadOffset+9]
+	omci.LaserBiasCurrent = binary.BigEndian.Uint16(data[payloadOffset+10:])
 
 	// Type = 12
-	omci.TemperatureType = data[16]
-	omci.Temperature = binary.BigEndian.Uint16(data[17:])
+	omci.TemperatureType = data[payloadOffset+12]
+	omci.Temperature = binary.BigEndian.Uint16(data[payloadOffset+13:])
 
-	omci.GeneralPurposeBuffer = binary.BigEndian.Uint16(data[19:])
+	omci.GeneralPurposeBuffer = binary.BigEndian.Uint16(data[payloadOffset+15:])
 	return nil
 }
 
@@ -3793,22 +3913,30 @@ func (omci *OpticalLineSupervisionTestResult) SerializeTo(b gopacket.SerializeBu
 	if !me.SupportsMsgType(meDefinition, me.Test) {
 		return me.NewProcessingError("managed entity does not support Test Message-Type")
 	}
-	bytes, err := b.AppendBytes(17)
+	payloadOffset := 0
+
+	if omci.Extended {
+		payloadOffset = 2
+	}
+	bytes, err := b.AppendBytes(payloadOffset + 17)
 	if err != nil {
 		return err
 	}
 
-	bytes[0] = omci.PowerFeedVoltageType
-	binary.BigEndian.PutUint16(bytes[1:], omci.PowerFeedVoltage)
-	bytes[3] = omci.ReceivedOpticalPowerType
-	binary.BigEndian.PutUint16(bytes[4:], omci.ReceivedOpticalPower)
-	bytes[6] = omci.MeanOpticalLaunchType
-	binary.BigEndian.PutUint16(bytes[7:], omci.MeanOpticalLaunch)
-	bytes[9] = omci.LaserBiasCurrentType
-	binary.BigEndian.PutUint16(bytes[10:], omci.LaserBiasCurrent)
-	bytes[12] = omci.TemperatureType
-	binary.BigEndian.PutUint16(bytes[13:], omci.Temperature)
-	binary.BigEndian.PutUint16(bytes[15:], omci.GeneralPurposeBuffer)
+	if omci.Extended {
+		binary.BigEndian.PutUint16(bytes, 17)
+	}
+	bytes[payloadOffset] = omci.PowerFeedVoltageType
+	binary.BigEndian.PutUint16(bytes[payloadOffset+1:], omci.PowerFeedVoltage)
+	bytes[payloadOffset+3] = omci.ReceivedOpticalPowerType
+	binary.BigEndian.PutUint16(bytes[payloadOffset+4:], omci.ReceivedOpticalPower)
+	bytes[payloadOffset+6] = omci.MeanOpticalLaunchType
+	binary.BigEndian.PutUint16(bytes[payloadOffset+7:], omci.MeanOpticalLaunch)
+	bytes[payloadOffset+9] = omci.LaserBiasCurrentType
+	binary.BigEndian.PutUint16(bytes[payloadOffset+10:], omci.LaserBiasCurrent)
+	bytes[payloadOffset+12] = omci.TemperatureType
+	binary.BigEndian.PutUint16(bytes[payloadOffset+13:], omci.Temperature)
+	binary.BigEndian.PutUint16(bytes[payloadOffset+15:], omci.GeneralPurposeBuffer)
 	return nil
 }
 

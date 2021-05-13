@@ -49,7 +49,7 @@ var (
 	LayerTypeGetCurrentDataRequest        gopacket.LayerType
 	LayerTypeSetTableRequest              gopacket.LayerType
 
-	// Extended Message Types
+	// Extended Request Message Types
 	LayerTypeGetRequestExtended                 gopacket.LayerType
 	LayerTypeDownloadSectionRequestExtended     gopacket.LayerType
 	LayerTypeDownloadSectionLastRequestExtended gopacket.LayerType
@@ -80,9 +80,12 @@ var (
 	LayerTypeGetCurrentDataResponse        gopacket.LayerType
 	LayerTypeSetTableResponse              gopacket.LayerType
 
-	// Extended Message Types
+	// Extended Response/Notification Message Types
 	LayerTypeGetResponseExtended             gopacket.LayerType
 	LayerTypeDownloadSectionResponseExtended gopacket.LayerType
+	LayerTypeAlarmNotificationExtended       gopacket.LayerType
+	LayerTypeAttributeValueChangeExtended    gopacket.LayerType
+	LayerTypeTestResultExtended              gopacket.LayerType
 )
 
 func mkReqLayer(mt me.MsgType, mts string, decode gopacket.DecodeFunc) gopacket.LayerType {
@@ -158,6 +161,10 @@ func init() {
 	LayerTypeDownloadSectionLastRequestExtended = mkReqLayer(me.DownloadSection|me.ExtendedOffset, "DownloadLastSectionRequest-Ext", gopacket.DecodeFunc(decodeDownloadSectionRequestExtended))
 	LayerTypeDownloadSectionResponseExtended = mkRespLayer(me.DownloadSection|me.ExtendedOffset, "DownloadSectionResponse-Ext", gopacket.DecodeFunc(decodeDownloadSectionResponseExtended))
 
+	LayerTypeAlarmNotificationExtended = mkLayer(me.AlarmNotification|me.ExtendedOffset, "AlarmNotification-Ext", gopacket.DecodeFunc(decodeAlarmNotificationExtended))
+	LayerTypeAttributeValueChangeExtended = mkLayer(me.AttributeValueChange|me.ExtendedOffset, "AttributeValueChange-Ext", gopacket.DecodeFunc(decodeAttributeValueChangeExtended))
+	LayerTypeTestResultExtended = mkLayer(me.TestResult|me.ExtendedOffset, "TestResult-Ext", gopacket.DecodeFunc(decodeTestResultExtended))
+
 	// Map message_type and action to layer
 	nextLayerMapping = make(map[MessageType]gopacket.LayerType)
 
@@ -216,6 +223,10 @@ func init() {
 	nextLayerMapping[DownloadSectionRequestType+ExtendedTypeDecodeOffset] = LayerTypeDownloadSectionRequestExtended
 	nextLayerMapping[DownloadSectionRequestWithResponseType+ExtendedTypeDecodeOffset] = LayerTypeDownloadSectionLastRequestExtended
 	nextLayerMapping[DownloadSectionResponseType+ExtendedTypeDecodeOffset] = LayerTypeDownloadSectionResponseExtended
+
+	nextLayerMapping[AlarmNotificationType+ExtendedTypeDecodeOffset] = LayerTypeAlarmNotificationExtended
+	nextLayerMapping[AttributeValueChangeType+ExtendedTypeDecodeOffset] = LayerTypeAttributeValueChangeExtended
+	nextLayerMapping[TestResultType+ExtendedTypeDecodeOffset] = LayerTypeTestResultExtended
 }
 
 func MsgTypeToNextLayer(mt MessageType, isExtended bool) (gopacket.LayerType, error) {
