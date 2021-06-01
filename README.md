@@ -49,6 +49,8 @@ by unit tests, but work still remains for sufficient/better unit test coverage.
  - TestResult
  - TestRequest
  - TestResponse
+ - GetCurrentDataRequest
+ - GetCurrentDataResponse
 
 ## Message Types supported but lacking any unit test
 The following OMCI message types currently have been coded but do not
@@ -57,8 +59,6 @@ have any unit test coverage.
  - StartSoftwareDownloadResponse
  - ActivateSoftwareRequest
  - ActivateSoftwareResponse
- - GetCurrentDataRequest
- - GetCurrentDataResponse
  
 ## Message Types not yet supported
 
