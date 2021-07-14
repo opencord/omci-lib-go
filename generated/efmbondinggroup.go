@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // EfmBondingGroupClassID is the 16-bit ID for the OMCI
 // Managed entity EFM bonding group
-const EfmBondingGroupClassID ClassID = ClassID(419)
+const EfmBondingGroupClassID ClassID = ClassID(418)
 
 var efmbondinggroupBME *ManagedEntityDefinition
 
-// EfmBondingGroup (class ID #419)
+// EfmBondingGroup (class ID #418)
 //	The EFM bonding group represents a group of links that are bonded. In [IEEE 802.3], a bonding
 //	group is known as a PAF [physical medium entity (PME) aggregation function] and a link is known
 //	as a PME instance of this ME are created and deleted by the OLT.
@@ -73,7 +73,7 @@ type EfmBondingGroup struct {
 func init() {
 	efmbondinggroupBME = &ManagedEntityDefinition{
 		Name:    "EfmBondingGroup",
-		ClassID: 419,
+		ClassID: 418,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -100,7 +100,7 @@ func init() {
 	}
 }
 
-// NewEfmBondingGroup (class ID 419) creates the basic
+// NewEfmBondingGroup (class ID 418) creates the basic
 // Managed Entity definition that is used to validate an ME of this type that
 // is received from or transmitted to the OMCC.
 func NewEfmBondingGroup(params ...ParamData) (*ManagedEntity, OmciErrors) {

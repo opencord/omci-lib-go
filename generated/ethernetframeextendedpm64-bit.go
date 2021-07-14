@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // EthernetFrameExtendedPm64BitClassID is the 16-bit ID for the OMCI
 // Managed entity Ethernet frame extended PM 64-bit
-const EthernetFrameExtendedPm64BitClassID ClassID = ClassID(426)
+const EthernetFrameExtendedPm64BitClassID ClassID = ClassID(425)
 
 var ethernetframeextendedpm64bitBME *ManagedEntityDefinition
 
-// EthernetFrameExtendedPm64Bit (class ID #426)
+// EthernetFrameExtendedPm64Bit (class ID #425)
 //	This ME collects some of the PM data at a point where an Ethernet flow can be observed. It is
 //	based on the Etherstats group of [IETF RFC 2819] and [IETF RFC 2863]. Instances of this ME are
 //	created and deleted by the OLT. References to received frames are to be interpreted as the
@@ -122,7 +122,7 @@ type EthernetFrameExtendedPm64Bit struct {
 func init() {
 	ethernetframeextendedpm64bitBME = &ManagedEntityDefinition{
 		Name:    "EthernetFrameExtendedPm64Bit",
-		ClassID: 426,
+		ClassID: 425,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -161,7 +161,7 @@ func init() {
 	}
 }
 
-// NewEthernetFrameExtendedPm64Bit (class ID 426) creates the basic
+// NewEthernetFrameExtendedPm64Bit (class ID 425) creates the basic
 // Managed Entity definition that is used to validate an ME of this type that
 // is received from or transmitted to the OMCC.
 func NewEthernetFrameExtendedPm64Bit(params ...ParamData) (*ManagedEntity, OmciErrors) {
