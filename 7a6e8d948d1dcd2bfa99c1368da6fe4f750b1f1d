@@ -1,0 +1,9 @@
+Verified+1: Jenkins Technical User <do-not-reply@opennetworking.org>
+Code-Review+1: Michael Pagenkopf <michael.pagenkopf@adtran.com>
+Code-Review+1: Andrea Campanella <andrea@opennetworking.org>
+Code-Review+2: Girish Gowdra <girish@opennetworking.org>
+Submitted-by: Girish Gowdra <girish@opennetworking.org>
+Submitted-at: Thu, 15 Jul 2021 17:27:48 +0000
+Reviewed-on: https://gerrit.opencord.org/c/omci-lib-go/+/26032
+Project: omci-lib-go
+Branch: refs/heads/master
