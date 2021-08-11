@@ -45,32 +45,72 @@ var dot1agmaintenancedomainBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies an instance of this ME. The values 0 and
-//			0xFFFF are reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies an instance of this ME. The values 0 and 0xFFFF are reserved.
+//			(R, setbycreate) (mandatory) (2-bytes)
 //
 //		Md Level
-//			MD level:	This attribute ranges from 0..7 and specifies the maintenance level of this MD. Higher
-//			numbers have wider geographic scope. (R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute ranges from 0..7 and specifies the maintenance level of this MD. Higher numbers
+//			have wider geographic scope. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Md Name Format
-//			MD name format: This attribute specifies one of several possible formats for the MD name
-//			attribute. (R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute specifies one of several possible formats for the MD name attribute. (R,-W,
+//			setbycreate) (mandatory) (1-byte)
 //
-//		Md Name 1 Md Name 2
-//			MD name 1, MD name 2:These two attributes may be regarded as a 50-byte octet string whose value
-//			is the left-justified maintenance domain name. The MD name may or may not be a printable
-//			character string, so an octet string is the appropriate representation. If the MD name format
-//			specifies a DNS-like name or a character string, the string is null-terminated; otherwise, its
-//			length is determined by the MD name format. If the MD has no name (MD name format-=-0), this
-//			attribute is undefined. Note that binary comparisons of the MD name are made in other CFM state
-//			machines, so blanks, alphabetic case, etc., are significant. Also, note that the MD name and the
-//			MA name must be packed (with additional bytes) into 48-byte CFM message headers. (R,-W)
-//			(mandatory if MD name format is not 1) (25-bytes * 2 attributes)
+//		MD Name 1
+//			These two attributes may be regarded as a 50-byte octet string whose value is the left-justified
+//			maintenance domain name. The MD name may or may not be a printable character string, so an octet
+//			string is the appropriate representation. If the MD name format specifies a DNS-like name or a
+//			character string, the string is null-terminated; otherwise, its length is determined by the MD
+//			name format. If the MD has no name (MD name format-=-0), this attribute is undefined. Note that
+//			binary comparisons of the MD name are made in other CFM state machines, so blanks, alphabetic
+//			case, etc., are significant. Also, note that the MD name and the MA name must be packed (with
+//			additional bytes) into 48-byte CFM message headers. (R,-W) (mandatory if MD name format is not
+//			1) (25-bytes * 2 attributes)
+//
+//		MD Name 2
+//			These two attributes may be regarded as a 50-byte octet string whose value is the left-justified
+//			maintenance domain name. The MD name may or may not be a printable character string, so an octet
+//			string is the appropriate representation. If the MD name format specifies a DNS-like name or a
+//			character string, the string is null-terminated; otherwise, its length is determined by the MD
+//			name format. If the MD has no name (MD name format-=-0), this attribute is undefined. Note that
+//			binary comparisons of the MD name are made in other CFM state machines, so blanks, alphabetic
+//			case, etc., are significant. Also, note that the MD name and the MA name must be packed (with
+//			additional bytes) into 48-byte CFM message headers. (R,-W) (mandatory if MD name format is not
+//			1) (25-bytes * 2 attributes)
 //
 //		Maintenance Domain Intermediate Point Half Function Mhf Creation
+//			Maintenance domain intermediate point half function (MHF) creation: This attribute determines
+//			whether an associated bridge creates an MHF for this MD, under circumstances defined in
+//			clause-22.2.3 of [IEEE 802.1ag]. This attribute is an enumeration with the following values.
+//
+//			1	None
+//
+//			2	Default (IEEE 802.1ag term). The bridge can create MHFs on an associated VID on any port
+//			through which the VID can pass, where: i) there are no lower active MD levels or ii) there is a
+//			maintenance association end point (MEP) at the next lower active MD level on the port.
+//
+//			3	Explicit. The bridge can create MHFs on an associated VID on any port through which the VID
+//			can pass, but only if an MEP exists at some lower maintenance level.
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Sender Id Permission
+//			This attribute determines the contents of the sender ID type-length-value (TLV) included in CFM
+//			messages transmitted by maintenance points (MPs) controlled by this MD. Chassis ID and
+//			management address information is available from the dot1ag chassismanagement info ME. The
+//			attribute is an enumeration with the following values.
+//
+//			1	None: the sender ID TLV is not to be sent.
+//
+//			2	Chassis: the chassis ID length, chassis ID subtype, and chassis ID fields of the sender ID TLV
+//			are to be sent, but not the management address fields.
+//
+//			3	Manage: the management address fields of the sender ID TLV are to be sent, but the chassis ID
+//			length is to be transmitted with the value 0, and the chassis ID subtype, and chassis ID fields
+//			are not to be sent.
+//
+//			4	ChassisManage: all chassis ID and management address fields are to be sent.
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 type Dot1AgMaintenanceDomain struct {
@@ -88,14 +128,15 @@ func init() {
 			Get,
 			Set,
 		),
-		AllowedAttributeMask: 0xf800,
+		AllowedAttributeMask: 0xfc00,
 		AttributeDefinitions: AttributeDefinitionMap{
 			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
 			1: ByteField("MdLevel", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
 			2: ByteField("MdNameFormat", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: MultiByteField("MdName1MdName2", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4: ByteField("MaintenanceDomainIntermediatePointHalfFunctionMhfCreation", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5: ByteField("SenderIdPermission", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			3: MultiByteField("MdName1", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4: MultiByteField("MdName2", OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5: ByteField("MaintenanceDomainIntermediatePointHalfFunctionMhfCreation", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6: ByteField("SenderIdPermission", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

@@ -46,47 +46,88 @@ var dot1agmaintenanceassociationBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies an instance of this ME. The values 0 and
-//			0xFFFF are reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies an instance of this ME. The values 0 and 0xFFFF are reserved.
+//			(R, setbycreate) (mandatory) (2-bytes)
 //
 //		Md Pointer
-//			MD pointer:	This pointer specifies the dot1ag maintenance domain with which this MA is
-//			associated. A null pointer specifies that the MA is not associated with an MD. (R,-W,
-//			setbycreate) (mandatory) (2-bytes)
+//			This pointer specifies the dot1ag maintenance domain with which this MA is associated. A null
+//			pointer specifies that the MA is not associated with an MD. (R,-W, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Short Ma Name Format
-//			Short MA name format: This attribute specifies one of several possible formats for the short MA
-//			name attribute. Value 1, the primary VLAN ID, is recommended to be the default. (R,-W,
-//			setbycreate) (mandatory) (1-byte)
+//			This attribute specifies one of several possible formats for the short MA name attribute. Value
+//			1, the primary VLAN ID, is recommended to be the default. (R,-W, setbycreate) (mandatory)
+//			(1-byte)
 //
-//		Short Ma Name 1, Short Ma Name 2
-//			Short MA name 1, Short MA name 2: These two attributes may be regarded as an octet string whose
-//			value is the left-justified MA name. Because the MA name may or may not be a printable character
-//			string, an octet string is the appropriate representation. If the short MA name format specifies
-//			a character string, the string is null-terminated; otherwise, its length is determined by the
-//			short MA name format. Note that binary comparisons of the short MA name are made in other CFM
-//			state machines, so blanks, alphabetic case, etc., are significant. Also, note that the MD name
-//			and the MA short name must be packed (with additional bytes) into 48-byte CFM message headers.
-//			(R,-W) (mandatory) (25-bytes * 2 attributes)
+//		Short MA Name 1
+//			These two attributes may be regarded as an octet string whose value is the left-justified MA
+//			name. Because the MA name may or may not be a printable character string, an octet string is the
+//			appropriate representation. If the short MA name format specifies a character string, the string
+//			is null-terminated; otherwise, its length is determined by the short MA name format. Note that
+//			binary comparisons of the short MA name are made in other CFM state machines, so blanks,
+//			alphabetic case, etc., are significant. Also, note that the MD name and the MA short name must
+//			be packed (with additional bytes) into 48-byte CFM message headers. (R,-W) (mandatory) (25-bytes
+//			* 2 attributes)
+//
+//		Short MA Name 2
+//			These two attributes may be regarded as an octet string whose value is the left-justified MA
+//			name. Because the MA name may or may not be a printable character string, an octet string is the
+//			appropriate representation. If the short MA name format specifies a character string, the string
+//			is null-terminated; otherwise, its length is determined by the short MA name format. Note that
+//			binary comparisons of the short MA name are made in other CFM state machines, so blanks,
+//			alphabetic case, etc., are significant. Also, note that the MD name and the MA short name must
+//			be packed (with additional bytes) into 48-byte CFM message headers. (R,-W) (mandatory) (25-bytes
+//			* 2 attributes)
 //
 //		Continuity Check Message Ccm Interval
+//			3:	100 ms
+//
+//			4:	1 s
+//
+//			5:	10 s
+//
+//			6:	1 min
+//
+//			7:	10 min
+//
 //			Short intervals should be used judiciously, as they can interfere with the network's ability to
 //			handle subscriber traffic. The recommended value is 1-s. (R,-W, setbycreate) (mandatory)
 //			(1-byte)
 //
+//			Continuity check message (CCM) interval: If CCMs are enabled on an MEP, the CCM interval
+//			attribute specifies the rate at which they are generated. The MEP also expects to receive CCMs
+//			from each of the other MEPs in its CC database at this rate.
+//
+//			0:	CCM transmission disabled
+//
+//			1:	3.33 ms
+//
+//			2:	10 ms
+//
 //		Associated Vlans
-//			Associated VLANs: This attribute is a list of up to 12 VLAN IDs with which this MA is
-//			associated. Once a set of VLANs is defined, the ONU should deny operations to other dot1ag MAs
-//			or dot1ag default MD level entries that conflict with the set membership. The all-zeros value
-//			indicates that this MA is not associated with any VLANs. Assuming that the attribute is not 0,
-//			the first entry is understood to be the primary VLAN. Except forwarded linktrace messages
-//			(LTMs), CFM messages emitted by MPs in this MA are tagged with the primary VLAN ID. (R,-W)
-//			(mandatory) (2-bytes/entry * 12-entries-=-24-bytes)
+//			This attribute is a list of up to 12 VLAN IDs with which this MA is associated. Once a set of
+//			VLANs is defined, the ONU should deny operations to other dot1ag MAs or dot1ag default MD level
+//			entries that conflict with the set membership. The all-zeros value indicates that this MA is not
+//			associated with any VLANs. Assuming that the attribute is not 0, the first entry is understood
+//			to be the primary VLAN. Except forwarded linktrace messages (LTMs), CFM messages emitted by MPs
+//			in this MA are tagged with the primary VLAN ID. (R,-W) (mandatory) (2-bytes/entry *
+//			12-entries-=-24-bytes)
 //
 //		Mhf Creation
-//			(R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute determines whether the bridge creates an MHF, under circumstances defined in
+//			clause 22.2.3 of [IEEE 802.1ag]. This attribute is an enumeration with the following values:
 //
-//		Sender Id Permission
+//			1	None. No MHFs are created on this bridge for this MA.
+//
+//			2	Default (IEEE 802.1ag term). The bridge can create MHFs on this VID on any port through which
+//			the VID can pass.
+//
+//			3	Explicit. The bridge can create MHFs on this VID on any port through which the VID can pass,
+//			but only if an MEP exists at some lower maintenance level.
+//
+//			4	Defer. This value causes the ONU to use the setting of the parent MD. This is recommended to
+//			be the default value.
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 type Dot1AgMaintenanceAssociation struct {
@@ -109,11 +150,11 @@ func init() {
 			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
 			1: Uint16Field("MdPointer", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
 			2: ByteField("ShortMaNameFormat", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: MultiByteField("ShortMaName1,ShortMaName2", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4: ByteField("ContinuityCheckMessageCcmInterval", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5: MultiByteField("AssociatedVlans", OctetsAttributeType, 0x0800, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6: ByteField("MhfCreation", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7: ByteField("SenderIdPermission", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			3: MultiByteField("ShortMaName1", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4: MultiByteField("ShortMaName2", OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5: ByteField("ContinuityCheckMessageCcmInterval", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6: Uint16Field("AssociatedVlans", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7: ByteField("MhfCreation", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

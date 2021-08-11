@@ -52,44 +52,61 @@ var dot1agchassismanagementinfoBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies this ME. There is at most one instance,
-//			whose value is 0. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies this ME. There is at most one instance, whose value is 0. (R)
+//			(mandatory) (2-bytes)
 //
 //		Chassis Id Length
-//			Chassis ID length: The length of the chassis ID attribute (not including the chassis ID subtype
-//			attribute), default value 0. (R,-W) (mandatory) (1-byte)
+//			The length of the chassis ID attribute (not including the chassis ID subtype attribute), default
+//			value 0. (R,-W) (mandatory) (1-byte)
 //
 //		Chassis Id Subtype
+//			The format of the chassis ID attribute, default value 7, as defined in [IEEE 802.1AB]:
+//
 //			(R,-W) (mandatory) (1-byte)
 //
-//		Chassis Id Part 1 Chassis Id Part 2
-//			Chassis ID part 1, Chassis ID part 2: These two attributes may be regarded as an octet string of
-//			up to 50-bytes whose length is given by the chassis ID length attribute and whose value is the
-//			left-justified chassis ID. (R,-W) (mandatory) (25-bytes-*-2 attributes)
+//		Chassis ID Part 1
+//			These two attributes may be regarded as an octet string of up to 50-bytes whose length is given
+//			by the chassis ID length attribute and whose value is the left-justified chassis ID. (R,-W)
+//			(mandatory) (25-bytes-*-2 attributes)
+//
+//		Chassis ID Part 2
+//			These two attributes may be regarded as an octet string of up to 50-bytes whose length is given
+//			by the chassis ID length attribute and whose value is the left-justified chassis ID. (R,-W)
+//			(mandatory) (25-bytes-*-2 attributes)
 //
 //		Management Address Domain Length
-//			Management address domain length: The length of the management address domain attribute, default
-//			value 0. If this attribute has the value 0, all of the other management address attributes are
-//			undefined. (R,-W) (mandatory) (1-byte)
+//			The length of the management address domain attribute, default value 0. If this attribute has
+//			the value 0, all of the other management address attributes are undefined. (R,-W) (mandatory)
+//			(1-byte)
 //
-//		Management Address Domain 1, Management Address Domain 2
-//			Management address domain 1, Management address domain 2: These two attributes may be regarded
-//			as an octet string of up to 50-bytes whose length is given by the management address domain
-//			length attribute and whose value is the left-justified management address domain. The attribute
-//			is coded as an object identifier (OID) as per [ITUT X.690], referring to a TDomain as defined in
-//			[IETF RFC 2579]. Typical domain values include snmpUDPDomain (from SNMPv2-TM [IETF RFC 3417])
-//			and snmpIeee802Domain (from SNMP-IEEE 802-TM-MIB [IETF RFC 4789]). (R,-W) (mandatory) (25-bytes
-//			* 2 attributes)
+//		Management Address Domain 1
+//			These two attributes may be regarded as an octet string of up to 50-bytes whose length is given
+//			by the management address domain length attribute and whose value is the left-justified
+//			management address domain. The attribute is coded as an object identifier (OID) as per [ITUT
+//			X.690], referring to a TDomain as defined in [IETF RFC 2579]. Typical domain values include
+//			snmpUDPDomain (from SNMPv2-TM [IETF RFC 3417]) and snmpIeee802Domain (from SNMP-IEEE 802-TM-MIB
+//			[IETF RFC 4789]). (R,-W) (mandatory) (25-bytes * 2 attributes)
+//
+//		Management Address Domain 2
+//			These two attributes may be regarded as an octet string of up to 50-bytes whose length is given
+//			by the management address domain length attribute and whose value is the left-justified
+//			management address domain. The attribute is coded as an object identifier (OID) as per [ITUT
+//			X.690], referring to a TDomain as defined in [IETF RFC 2579]. Typical domain values include
+//			snmpUDPDomain (from SNMPv2-TM [IETF RFC 3417]) and snmpIeee802Domain (from SNMP-IEEE 802-TM-MIB
+//			[IETF RFC 4789]). (R,-W) (mandatory) (25-bytes * 2 attributes)
 //
 //		Management Address Length
-//			Management address length: The length of the management address attribute, default value 0.
-//			(R,-W) (mandatory) (1-byte)
+//			The length of the management address attribute, default value 0. (R,-W) (mandatory) (1-byte)
 //
-//		Management Address 1 Management Address 2
-//			Management address 1, Management address 2: These two attributes may be regarded as an octet
-//			string of up to 50-bytes whose length is given by the management address length attribute and
-//			whose value is the left-justified management address. (R,-W) (mandatory) (25-bytes * 2
-//			attributes)
+//		Management Address 1
+//			These two attributes may be regarded as an octet string of up to 50-bytes whose length is given
+//			by the management address length attribute and whose value is the left-justified management
+//			address. (R,-W) (mandatory) (25-bytes * 2 attributes)
+//
+//		Management Address 2
+//			These two attributes may be regarded as an octet string of up to 50-bytes whose length is given
+//			by the management address length attribute and whose value is the left-justified management
+//			address. (R,-W) (mandatory) (25-bytes * 2 attributes)
 //
 type Dot1AgChassisManagementInfo struct {
 	ManagedEntityDefinition
@@ -104,16 +121,19 @@ func init() {
 			Get,
 			Set,
 		),
-		AllowedAttributeMask: 0xfe00,
+		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: ByteField("ChassisIdLength", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2: ByteField("ChassisIdSubtype", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3: MultiByteField("ChassisIdPart1ChassisIdPart2", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4: ByteField("ManagementAddressDomainLength", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5: MultiByteField("ManagementAddressDomain1,ManagementAddressDomain2", OctetsAttributeType, 0x0800, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6: ByteField("ManagementAddressLength", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7: MultiByteField("ManagementAddress1ManagementAddress2", OctetsAttributeType, 0x0200, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 7),
+			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField("ChassisIdLength", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField("ChassisIdSubtype", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3:  MultiByteField("ChassisIdPart1", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  MultiByteField("ChassisIdPart2", OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  ByteField("ManagementAddressDomainLength", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  MultiByteField("ManagementAddressDomain1", OctetsAttributeType, 0x0400, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  MultiByteField("ManagementAddressDomain2", OctetsAttributeType, 0x0200, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField("ManagementAddressLength", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  MultiByteField("ManagementAddress1", OctetsAttributeType, 0x0080, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: MultiByteField("ManagementAddress2", OctetsAttributeType, 0x0040, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 10),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,
