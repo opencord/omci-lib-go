@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcde7f71_307ee86c",
+        "filename": "generated/dot1agchassis-managementinfo.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-08-11T15:02:42Z",
+      "side": 1,
+      "message": "Note: As part of my work to code-generate the 3/2020 AMD-3 of G\u003e988, I also improved the comment generation for the MEs.  No functionality change, just less need to open up the G.988 doc if you don\u0027t need to.",
+      "revId": "8fddd110eb455041e690b2d5d1e08daa93e69332",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
