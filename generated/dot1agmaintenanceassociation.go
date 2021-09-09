@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Dot1AgMaintenanceAssociationClassID is the 16-bit ID for the OMCI
 // Managed entity Dot1ag maintenance association
-const Dot1AgMaintenanceAssociationClassID ClassID = ClassID(300)
+const Dot1AgMaintenanceAssociationClassID = ClassID(300) // 0x012c
 
 var dot1agmaintenanceassociationBME *ManagedEntityDefinition
 
-// Dot1AgMaintenanceAssociation (class ID #300)
+// Dot1AgMaintenanceAssociation (Class ID: #300 / 0x012c)
 //	This ME models an [IEEE 802.1ag] service defined on a bridge port. An MA is a set of endpoints
 //	on opposite sides of a network, all existing at a defined maintenance level. One of the
 //	endpoints resides on the local ONU; the others are understood to be configured in a consistent

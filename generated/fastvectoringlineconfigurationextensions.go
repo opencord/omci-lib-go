@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // FastVectoringLineConfigurationExtensionsClassID is the 16-bit ID for the OMCI
 // Managed entity FAST vectoring line configuration extensions
-const FastVectoringLineConfigurationExtensionsClassID ClassID = ClassID(434)
+const FastVectoringLineConfigurationExtensionsClassID = ClassID(434) // 0x01b2
 
 var fastvectoringlineconfigurationextensionsBME *ManagedEntityDefinition
 
-// FastVectoringLineConfigurationExtensions (class ID #434)
+// FastVectoringLineConfigurationExtensions (Class ID: #434 / 0x01b2)
 //	This ME extends FAST line configuration MEs with attributes that are specific to vectoring. An
 //	instance of this ME is created and deleted by the OLT.
 //
@@ -42,8 +42,8 @@ var fastvectoringlineconfigurationextensionsBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The value 0 is
-//			reserved. (R, set-by-create) (mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. The value 0 is reserved. (R, set-
+//			by-create) (mandatory) (2 bytes)
 //
 //		Fext Cancellation Enabling_Disabling Upstream Fext_To_Cancel_Enableus
 //			FEXT cancellation enabling/disabling upstream (FEXT_TO_CANCEL_ENABLEus): A value of 1 enables

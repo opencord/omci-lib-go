@@ -27,14 +27,19 @@ import "github.com/deckarep/golang-set"
 
 // ExtendedVlanTaggingOperationConfigurationDataClassID is the 16-bit ID for the OMCI
 // Managed entity Extended VLAN tagging operation configuration data
-const ExtendedVlanTaggingOperationConfigurationDataClassID ClassID = ClassID(171)
+const ExtendedVlanTaggingOperationConfigurationDataClassID = ClassID(171) // 0x00ab
 
 var extendedvlantaggingoperationconfigurationdataBME *ManagedEntityDefinition
 
-// ExtendedVlanTaggingOperationConfigurationData (class ID #171)
-//	This ME organizes data associated with VLAN tagging. Regardless of its point of attachment, the
-//	specified tagging operations refer to the upstream direction. Instances of this ME are created
-//	and deleted by the OLT.
+// ExtendedVlanTaggingOperationConfigurationData (Class ID: #171 / 0x00ab)
+//	This ME organizes data associated with VLAN classification and tagging operations. Regardless of
+//	its point of attachment, the specified tagging operations refer to the upstream direction.
+//	Instances of this ME are created and deleted by the OLT.
+//
+//	Through separate attributes, this ME supports either a Received frame VLAN tagging operation
+//	table attribute in its backward compatible form, or an enhanced frame classification and
+//	processing capability. The OLT can determine whether the ONU supports the enhanced capability
+//	through the Enhanced mode attribute of the ONU3-G ME.
 //
 //	Relationships
 //		Zero or one instance of this ME may exist for an instance of any ME that can terminate or modify
@@ -49,10 +54,45 @@ var extendedvlantaggingoperationconfigurationdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute provides a unique number for each instance of this ME. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute provides a unique number for each instance of this ME. (R, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Association Type
+//			This attribute identifies the type of the ME associated with this extended VLAN tagging ME.
+//			Values are assigned as follows.
+//
+//			0	MAC bridge port configuration data
+//
+//			1	IEEE 802.1p mapper service profile
+//
+//			2	Physical path termination point Ethernet UNI
+//
+//			3	IP host config data or IPv6 host config data
+//
+//			4	Physical path termination point xDSL UNI
+//
+//			5	GEM IW termination point
+//
+//			6	Multicast GEM IW termination point
+//
+//			7	Physical path termination point MoCA UNI
+//
+//			8	Reserved
+//
+//			9	Ethernet flow termination point
+//
+//			10	Virtual Ethernet interface point
+//
+//			11	MPLS pseudowire termination point
+//
+//			12	EFM bonding group
+//
+//			(R,-W, setbycreate) (mandatory) (1-byte)
+//
+//			NOTE 1 - If a MAC bridge is configured, code points 1, 5, 6 and 11 are associated with the ANI
+//			side of the MAC bridge. Code point 0 is associated with the ANI or UNI side, depending on the
+//			location of the MAC bridge port. The other code points are associated with the UNI side.
+//
 //			When the extended VLAN tagging ME is associated with the ANI side, it behaves as an upstream
 //			egress rule, and as a downstream ingress rule when the downstream mode attribute is equal to 0.
 //			When the extended VLAN tagging ME is associated with the UNI side, the extended VLAN tagging ME
@@ -60,34 +100,454 @@ var extendedvlantaggingoperationconfigurationdataBME *ManagedEntityDefinition
 //			attribute is equal to 0.
 //
 //		Received Frame Vlan Tagging Operation Table Max Size
-//			Received frame VLAN tagging operation table max size: This attribute indicates the maximum
-//			number of entries that can be set in the received frame VLAN tagging operation table. (R)
-//			(mandatory) (2-bytes)
+//			This attribute indicates the maximum number of entries that can be set in the received frame
+//			VLAN tagging operation table. (R) (mandatory) (2-bytes)
 //
 //		Input Tpid
-//			Input TPID:	This attribute gives the special TPID value for operations on the input (filtering)
-//			side of the table. Typical values include 0x88A8 and 0x9100. (R,-W) (mandatory) (2-bytes)
+//			This attribute gives the special TPID value for operations on the input (filtering) side of the
+//			table. Typical values include 0x88A8 and 0x9100. (R,-W) (mandatory) (2-bytes)
 //
 //		Output Tpid
-//			Output TPID: This attribute gives the special TPID value for operations on the output (tagging)
-//			side of the table. Typical values include 0x88A8 and 0x9100. (R,-W) (mandatory) (2-bytes)
+//			This attribute gives the special TPID value for operations on the output (tagging) side of the
+//			table. Typical values include 0x88A8 and 0x9100. (R,-W) (mandatory) (2-bytes)
 //
 //		Downstream Mode
+//			Regardless of its association, the rules of the received frame VLAN tagging operation table
+//			attribute pertain to upstream traffic. The downstream mode attribute defines the tagging action
+//			to be applied to downstream frames.
+//
+//			The received frame VLAN tagging operation table installs defaults upstream rules. In the
+//			downstream direction, the upstream default rules with the default treatment do not apply. It
+//			should be noted that downstream frame treatment is defined by the downstream mode attribute and
+//			is not affected by the upstream default rules.
+//
+//			The received frame VLAN tagging operation table can result in two types of rule mappings:
+//
+//			o	One to one mapping: A table contains one or more rules that result in unique mappings between
+//			the ingress and egress flows.
+//
+//			o	Many to one mapping: A table contains more than one rule that results in the same ANI-side tag
+//			configuration.
+//
+//			For one-to-one  mappings, the inverse operation to apply in the downstream direction (in the
+//			case of bidirectional flows) is the inverse operation of the upstream rule.
+//
+//			Many-to-one mappings are possible however, and these are treated as follows.
+//
+//			o	If an upstream many-to-one mapping results from multiple operation rules producing the same
+//			ANI-side tag configuration, then the first matching rule in the list defines the inverse
+//			operation. The meaning of match depends on the value of the downstream mode attribute.
+//
+//			o	If the many-to-one mapping results from "don't care" fields in the filter being replaced with
+//			provisioned fields in the ANI side tags, then the inverse is defined to set the corresponding
+//			fields on the ANI side to their lowest legal value.
+//
+//			If the upstream rule merely copies (i.e., no explicit value is specified in the filter field) an
+//			inbound tag value to an outbound tag value, the comparison in the downstream direction applies
+//			to all tag values. This applies separately to the VID and P-bit fields. For example, with a
+//			downstream mode of 2 and an upstream rule that translates the VID while carrying forward the
+//			P-bit value, downstream frames that match the specified WAN-side VID will match any P-bit value
+//			and will translate the VID.
+//
+//			0	The operation performed in the downstream direction is the inverse of that performed in the
+//			upstream direction. Which treatment and filter fields are used for downstream filtering and the
+//			handling of unmatched frames are left to the implementation of the ONU.
+//
+//			1	Regardless of the filter rules, no operation is performed in the downstream direction. All
+//			downstream frames are forwarded unmodified.
+//
+//			2	Filter on VID and P-bit value. On a match, perform the inverse operation on both the VID and
+//			P-bit value. If no match is found, forward the frame unmodified.
+//
+//			3	Filter on VID only. On a match, perform the inverse VID operation only; pass the P bits
+//			through. If no match is found, forward the frame unmodified.
+//
+//			4	Filter on P-bit only. On a match, perform the inverse P-bit operation only; pass the VID
+//			through. If no match is found, forward the frame unmodified.
+//
+//			5	Filter on VID and P-bit value. On a match, perform the inverse operation on both the VID and
+//			P-bit value. If no match is found, discard the frame.
+//
+//			6	Filter on VID. On a match, perform the inverse operation on the VID only; pass the P bits
+//			through. If no match is found, discard the frame.
+//
+//			7	Filter on P-bit only. On a match, perform the inverse P-bit operation only; pass the VID
+//			through. If no match is found, discard the frame.
+//
+//			8	Regardless of the filter rules, discard all downstream traffic.
+//
+//			Please refer to Table 9.3.13-2 for example downstream mode use cases.
+//
 //			All other values are reserved. (R, W) (mandatory) (1 byte)
 //
 //		Received Frame Vlan Tagging Operation Table
-//			111	Set TPID-=-output TPID, DEI = 1
+//			Padding: (8 bits)
+//
+//			Filter Ethertype: (4 bits) the Ethertype value on which to filter received frames, as follows.
+//
+//			NOTE 3 - This filter is recommended for use on untagged frames or frames with priority tags
+//			only.
+//
+//			0	Do not filter on Ethertype.
+//
+//			1	Ethertype = 0x0800 (filter IPoE frames)
+//
+//			2	Ethertype = 0x8863 or 0x8864 (filter PPPoE frames)
+//
+//			3	Ethertype = 0x0806 (filter ARP frames)
+//
+//			4	Ethertype = 0x86DD (filter IPv6 IpoE frames)
+//
+//			5	Ethertype = 0x888E (filter EAPOL frames)
+//
+//			Other values: reserved.
+//
+//			Filter on extended criteria: (8 bits) filter on key upper level protocols:
+//
+//			0	Do not filter on extended criteria
+//
+//			1	DHCPv4 - frames matching the well-known DHCPv4 UDP ports (67, 68) will be filtered by this
+//			criteria code point.
+//
+//			2	DHCPv6 - frames matching the well-known DHCPv6 UDP ports (546, 547) will be filtered by this
+//			criteria code point.
+//
+//			NOTE 4 - This filter is recommended for use on untagged frames or priority framed tags only.
+//
+//			Treatment tags to remove: (2 bits) Defines the tag treatment. The following values are
+//			supported:
+//
+//			0..2	Remove 0, 1 or 2 tags, respectively. If one tag is specified, then the outer tag is
+//			stripped from double-tagged frames.
+//
+//			3	Discard the frame. No symmetric downstream operation exists; i.e., this rule is ignored in the
+//			downstream direction.
+//
+//			Padding: (10 bits)
+//
+//			Treatment outer priority: (4 bits): Defines the outer VLAN priority treatment. The following
+//			values are supported:
+//
+//			0..7	Add an outer tag, and insert this value as the priority in the outer VLAN tag.
+//
+//			8	Add an outer tag, and copy the outer priority from the inner priority of the received frame.
+//
+//			9	Add an outer tag, and copy the outer priority from the outer priority of the received frame.
+//
+//			10	Add an outer tag, and derive P bits from the DSCP field of the incoming frame according to
+//			the Extended VLAN tagging operation configuration data ME DSCP to P-bit mapping attribute.
+//
+//			15	Do not add an outer tag.
+//
+//			Other values: reserved.
+//
+//			Treatment outer VID: (13 bits). Defines the outer VID treatment. The following values are
+//			supported:
+//
+//			0..4094	Use this value as the VID in the outer VLAN tag.
+//
+//			4096	Copy the outer VID from the inner VID of the received frame.
+//
+//			4097	Copy the outer VID from the outer VID of the received frame.
+//
+//			Other values: reserved.
+//
+//			Treatment outer TPID/DEI: (3 bits). Defines the outer VLAN TPID/DEI treatment. The following
+//			values are supported:
+//
+//			000	Copy TPID (and DEI, if present) from the inner tag of the received frame.
+//
+//			001	Copy TPID (and DEI, if present) from the outer tag of the received frame.
+//
+//			010	Set TPID = output TPID attribute value of the Extended VLAN tagging operation configuration
+//			data ME and copy DEI bit from the inner tag of the received frame
+//
+//			011	Set TPID = output TPID attribute value of the Extended VLAN tagging operation configuration
+//			data ME and copy DEI from the outer tag of the received frame
+//
+//			100	Set TPID = 0x8100
+//
+//			101	Reserved
+//
+//			110	Set TPID = output TPID attribute value of the Extended VLAN tagging operation configuration
+//			data ME and set DEI = 0
+//
+//			111	Set TPID = output TPID attribute value of the Extended VLAN tagging operation configuration
+//			data ME and set DEI = 1
+//
+//			Padding: (12 bits)
+//
+//			Treatment inner priority: (4 bits). Defines the inner VLAN priority treatment. The following
+//			values are supported:
+//
+//			0..7	Add an inner tag, and insert this value as the priority to insert in the inner VLAN tag.
+//
+//			8	Add an inner tag, and copy the inner priority from the inner priority of the received frame.
+//
+//			9	Add an inner tag, and copy the inner priority from the outer priority of the received frame.
+//
+//			10	Add an inner tag, and derive P bits from the DSCP field of the incoming frame according to
+//			the Extended VLAN tagging operation configuration data ME DSCP to P-bit mapping attribute.
+//
+//			15	Do not add an inner tag.
+//
+//			Other values: reserved.
+//
+//			Treatment inner VID: (13 bits): Defines the inner VLAN VID treatment.  The following values are
+//			supported:
+//
+//			0..4094	Use this value as the VID in the inner VLAN tag.
+//
+//			4096	Copy the inner VID from the inner VID of the received frame.
+//
+//			4097	Copy the inner VID from the outer VID of the received frame.
+//
+//			Other values: reserved.
+//
+//			Treatment inner TPID/DEI: (3 bits). Defines the inner VLAN TPID/DEI treatment. The following
+//			values are supported:
+//
+//			000	Copy TPID (and DEI, if present) from the inner tag of the received frame.
+//
+//			001	Copy TPID (and DEI, if present) from the outer tag of the received frame.
+//
+//			010	Set TPID = output TPID attribute value of the Extended VLAN tagging operation configuration
+//			data ME and copy the DEI bit from the inner tag of the received frame.
+//
+//			011	Set TPID = output TPID attribute value of the Extended VLAN tagging operation configuration
+//			data ME and, copy the DEI from the outer tag of the received frame.
+//
+//			100	Set TPID = 0x8100
+//
+//			101	Reserved
+//
+//			110	Set TPID = output TPID attribute value of the Extended VLAN tagging operation configuration
+//			data ME and set DEI = 0
+//
+//			111	Set TPID = output TPID attribute value of the Extended VLAN tagging operation configuration
+//			data ME and set DEI = 1
+//
+//			This attribute is a table that filters and tags upstream frames. Each entry represents a tagging
+//			rule, comprising a filtering part (the first eight fields) and a treatment part (the last seven
+//			fields). Each incoming upstream packet is matched against each rule in list order. The first
+//			rule that matches the packet is selected as the active rule, and the packet is then treated
+//			according to that rule.
+//
+//			There are three categories of rules: zero-tag, single-tag, and double-tag rules. Logically,
+//			these categories are separate, and apply to their respective incoming frame types. In other
+//			words, a single-tag rule should not apply to a double-tagged frame, even though the single-tag
+//			rule might match the outer tag of the double-tagged frame.
+//
+//			Single-tag rules have a filter outer priority field-= 15 (indicating no external tag), zero-tag
+//			rules have both filter priority fields-= 15 (indicating no tags), and double-tag rules have both
+//			filter priority fields set to a value that differs from 15 (indicating two tags).
+//
+//			Each tagging rule is based on a remove or an add operation, where up to two tags can be removed
+//			or added. A modify operation is applied by the combination of remove and add.
+//
+//			By convention, when a single tag is added, the treatments use the inner tag data fields. This is
+//			true even for treatments where a single tag is added to a frame that already has a tag, i.e.,
+//			added as a second tag. The outer tag data fields are used only when two tags are added by the
+//			same rule.
+//
+//			The terms inner and outer only have meaning with respect to the tags that are being filtered or
+//			added.
+//
+//			The first 8-bytes of each entry are guaranteed to be unique, and are used to identify table
+//			entries (list order, above, refers to a sort on the first 8-bytes). The OLT deletes a table
+//			entry by setting all of its last 8-bytes to 0xFF.
+//
+//			When the table is created, the ONU should autonomously predefine three entries that list the
+//			default treatment (normal forwarding without filtering or modification) for untagged, single
+//			tagged, and double tagged frames. As an exception to the rule on ordered processing, these
+//			default rules are always considered as a last resort for frames that do not match any other
+//			rule. Best practice dictates that these entries not be deleted by the OLT; however, they can be
+//			modified to produce the desired default behaviour.
+//
+//			It should be noted that downstream frame treatment is defined by the downstream mode attribute
+//			and is not affected by the upstream default rules.
+//
+//			15, 4096, x, 15, 4096, x, 0, (0, 15, x, x, 15, x, x) - no tags
+//
+//			15, 4096, x, 14, 4096, x, 0, (0, 15, x, x, 15, x, x) - 1 tag
+//
+//			14, 4096, x, 14, 4096, x, 0, (0, 15, x, x, 15, x, x) - 2 tags
+//
+//			NOTE 2 - x is a "don't care" field and should be set to zero.
+//
+//			See Figure 9.3.13-1.
+//
+//			(R,-W) (mandatory) (16N bytes, where N is the number of VLAN tagging rules)
+//
+//			Filter outer priority: (4 bits) Defines the outer VLAN priority filtering operation. The
+//			following values are supported:
+//
+//			0..7	Filter received frames on this outer priority (P bit) value.
+//
+//			8	Do not filter on outer priority.
+//
+//			14	This is the default filter when no other two-tag rule applies.
+//
+//			15	This entry is not a double-tag rule; ignore all other outer tag filter fields.
+//
+//			Other values: reserved.
+//
+//			Filter outer VID: (13 bits) Defines the outer VLAN VID filtering operation.  The following
+//			values are supported:
+//
+//			0..4094	Filter received frames on this outer VID value.
+//
+//			4096	Do not filter on the outer VID.
+//
+//			Other values: reserved.
+//
+//			Filter outer TPID/DEI: (3 bits) Defines the outer VLAN TPID/DEI filtering operation. The
+//			following values are supported:
+//
+//			000	Do not filter on outer TPID field.
+//
+//			100	Outer TPID = 0x8100. Filter on frames with the outer TPID set to 0x8100.
+//
+//			101	Outer TPID = input TPID attribute value, don't care about DEI bit. Filter on frames with the
+//			outer TPID set to match the Extended VLAN tagging operation configuration data Input TPID
+//			attribute value and ignore the DEI bit.
+//
+//			110	Outer TPID = input TPID, DEI = 0. Filter on frames with the outer TPID set to match the
+//			Extended VLAN tagging operation configuration data Input TPID attribute value and DEI set to the
+//			value 0.
+//
+//			111	Outer TPID = input TPID, DEI = 1. Filter on frames with the outer TPID set to match the
+//			Extended VLAN tagging operation configuration data Input TPID attribute value and DEI set to the
+//			value 1
+//
+//			Padding: (12 bits)
+//
+//			Filter inner priority: (4 bits) Defines the inner VLAN priority filtering operation.  The
+//			following values are supported:
+//
+//			0..7	Filter received frames on this inner priority value.
+//
+//			8	Do not filter on inner priority.
+//
+//			14	This is the default filter when no other one-tag rule applies.
+//
+//			15	This entry is a no-tag rule; ignore all other VLAN tag filter fields.
+//
+//			Other values: reserved.
+//
+//			Filter inner VID: (13 bits) Defines the inner VLAN VID filtering operation.  The following
+//			values are supported:
+//
+//			0..4094	Filter received frames on this inner VID value.
+//
+//			4096	Do not filter on the inner VID.
+//
+//			Other values: reserved.
+//
+//			Filter inner TPID/DEI: (3 bits) Defines the inner VLAN TPID/DEI filtering operation. The
+//			following values are supported:
+//
+//			000	Do not filter on inner TPID field.
+//
+//			100	Inner TPID = 0x8100. Filter on frames with the inner TPID set to 0x8100.
+//
+//			101	Inner TPID = input TPID attribute value, don't care about DEI bit. Filter on frames with the
+//			inner TPID set to match the Extended VLAN tagging operation configuration data Input TPID
+//			attribute value and ignore the DEI bit.
+//
+//			110	Inner TPID = input TPID, DEI = 0. Filter on frames with the inner TPID set to match the
+//			Extended VLAN tagging operation configuration data Input TPID attribute value and DEI set to the
+//			value 0.
+//
+//			111	Inner TPID = input TPID, DEI = 1. Filter on frames with the inner TPID set to match the
+//			Extended VLAN tagging operation configuration data Input TPID attribute value and DEI set to the
+//			value 1.
 //
 //		Associated Me Pointer
+//			This attribute points to the ME with which this extended VLAN tagging operation configuration
+//			data ME is associated. (R,-W, setbycreate) (mandatory) (2-bytes)
+//
 //			NOTE 5 - When the association type is xDSL, the two MSBs may be used to indicate a bearer
 //			channel.
 //
 //		Dscp To P Bit Mapping
+//			DSCP to P-bit mapping: This attribute specifies mapping from DSCP to P bits. The attribute can
+//			be considered a bit string sequence of 64 3-bit groups. The 64 sequence entries represent the
+//			possible values of the 6-bit DSCP field. Each 3-bit group specifies the P-bit value to which the
+//			associated DSCP value should be mapped. (R,-W) (optional) (24-bytes)
+//
 //			NOTE 6 - If certain bits in the DSCP field are to be ignored in the mapping process, the
 //			attribute should be provisioned such that all possible values of those bits produce the same
 //			P-bit mapping. This can be applied to the case where instead of full DSCP, the operator wishes
 //			to adopt the priority mechanism based on IP precedence, which needs only the three MSBs of the
 //			DSCP field.
+//
+//		Enhanced Mode
+//			The Boolean value true specifies that the Enhanced received frame classification and processing
+//			table is used, and the Received frame VLAN tagging operation table is ignored. The value false
+//			indicates the Enhanced received frame classification and processing table is not used. It is
+//			strongly recommended that the OLT uses the same value for all Extended VLAN tagging operation
+//			configuration data instances created on an ONU. (R, Setbycreate) (optional) (1-byte)
+//
+//		Enhanced Received Frame Classification And Processing Table
+//			This attribute is a table that provides enhanced capability for frame classification and
+//			processing. It extends the Received frame VLAN tagging operation table attribute with a set
+//			control field, a row key and direction. Each incoming packet is matched against each rule in row
+//			key order (smaller value row key has higher precedence) and direction. The first rule that
+//			matches the packet is selected as the active rule, and the packet is then treated according to
+//			that rule.
+//
+//			When the table is empty, the ONU discards all received frames. The OLT may choose to create
+//			three entries that list the default treatment (normal forwarding without filtering or
+//			modification) for untagged, single tagged, and double tagged frames, with the direction field
+//			set to 0.
+//
+//			NOTE 7 - Where no change is noted, the definitions in the Received frame VLAN tagging operation
+//			table attribute remain applicable.
+//
+//			(R,-W) (optional) (28N bytes, where N is the number of entries in the table).
+//
+//			Set ctrl: (2 bits)
+//
+//			This field determines the meaning of a set operation. These bits are returned as 00 during get
+//			next operations.
+//
+//			1	Write this entry into the table. Overwrite any existing entry with the same row key.
+//
+//			2	Delete this entry from the table. The remaining fields are not meaningful.
+//
+//			NOTE 8 - unlike the delete operation in the Received frame VLAN tagging operation table, the OLT
+//			does not need to set all eight bytes in Word 4 and Word 5 to 0xFF.
+//
+//			3	Clear all entries from the table. The remaining fields are not meaningful.
+//
+//			Other values: reserved.
+//
+//			Dir: (2 bits)
+//
+//			This field determines the direction of the classification and processing rule.
+//
+//			0	This is an upstream rule. In the downstream direction, the inverse classification and
+//			operation is defined based on the downstream mode code point. All downstream mode codepoints are
+//			considered valid to be used when dir=0 is used (including downstream  mode 8).
+//
+//			1	This is an upstream-only rule. This rule is ignored in the downstream direction.
+//
+//			2	This is a downstream-only rule. This rule is ignored in the upstream direction.
+//
+//			Other values: reserved.
+//
+//			Row key: (16 bits)
+//
+//			The row key distinguishes rows in the table. It is the responsibility of the OLT to assign and
+//			track row keys and content, and to ensure the classification rules are not duplicated and in the
+//			correct ordering.
+//
+//			For Filter outer priority, Filter outer VID, Filter outer TPID/DEI, Filter inner priority,
+//			Filter inner VID, Filter inner TPID/DEI, Filter on Extended Criteria, Filter Ethertype,
+//			Treatment outer priority, Treatment outer VID, Treatment outer TPID/DEI, Treatment inner
+//			priority, Treatment inner VID, and Treatment inner TPID/DEI values please refer to Received
+//			frame VLAN tagging operation table in this ME.
 //
 type ExtendedVlanTaggingOperationConfigurationData struct {
 	ManagedEntityDefinition
@@ -106,17 +566,19 @@ func init() {
 			Set,
 			SetTable,
 		),
-		AllowedAttributeMask: 0xff00,
+		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: ByteField("AssociationType", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: Uint16Field("ReceivedFrameVlanTaggingOperationTableMaxSize", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3: Uint16Field("InputTpid", UnsignedIntegerAttributeType, 0x2000, 34984, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4: Uint16Field("OutputTpid", UnsignedIntegerAttributeType, 0x1000, 34984, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5: ByteField("DownstreamMode", EnumerationAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6: TableField("ReceivedFrameVlanTaggingOperationTable", TableAttributeType, 0x0400, TableInfo{nil, 16}, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7: Uint16Field("AssociatedMePointer", PointerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8: MultiByteField("DscpToPBitMapping", OctetsAttributeType, 0x0100, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, true, false, 8),
+			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField("AssociationType", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  Uint16Field("ReceivedFrameVlanTaggingOperationTableMaxSize", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  Uint16Field("InputTpid", UnsignedIntegerAttributeType, 0x2000, 34984, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  Uint16Field("OutputTpid", UnsignedIntegerAttributeType, 0x1000, 34984, mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  ByteField("DownstreamMode", EnumerationAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  TableField("ReceivedFrameVlanTaggingOperationTable", TableAttributeType, 0x0400, TableInfo{nil, 16}, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  Uint16Field("AssociatedMePointer", PointerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  MultiByteField("DscpToPBitMapping", OctetsAttributeType, 0x0100, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  ByteField("EnhancedMode", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate), false, true, false, 9),
+			10: TableField("EnhancedReceivedFrameClassificationAndProcessingTable", TableAttributeType, 0x0040, TableInfo{nil, 28}, mapset.NewSetWith(Read, Write), false, true, false, 10),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

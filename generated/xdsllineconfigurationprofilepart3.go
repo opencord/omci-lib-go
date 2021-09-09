@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslLineConfigurationProfilePart3ClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL line configuration profile part 3
-const XdslLineConfigurationProfilePart3ClassID ClassID = ClassID(106)
+const XdslLineConfigurationProfilePart3ClassID = ClassID(106) // 0x006a
 
 var xdsllineconfigurationprofilepart3BME *ManagedEntityDefinition
 
-// XdslLineConfigurationProfilePart3 (class ID #106)
+// XdslLineConfigurationProfilePart3 (Class ID: #106 / 0x006a)
 //	The overall xDSL line configuration profile is modelled in several parts, all of which are
 //	associated together through a common ME ID (the client PPTP xDSL UNI part 1 has a single
 //	pointer, which refers to the entire set of line configuration profile parts).
@@ -41,11 +41,20 @@ var xdsllineconfigurationprofilepart3BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. All xDSL and
-//			VDSL2 line configuration profiles and extensions that pertain to a given PPTP xDSL UNI must
-//			share a common ME ID. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. All xDSL and VDSL2 line
+//			configuration profiles and extensions that pertain to a given PPTP xDSL UNI must share a common
+//			ME ID. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Loop Diagnostics Mode Forced Ldsf
+//			Loop diagnostics mode forced (LDSF): This configuration parameter forces the line into loop
+//			diagnostic mode via the xTU-C. It is only valid for [ITUT-G.992.3], [ITUT-G.992.4] and
+//			[ITUT-G.992.5]. It is defined as follows.
+//
+//			0	Inhibits the xTU-C from performing loop diagnostic mode procedures on the line. Loop
+//			diagnostic mode procedures may still be initiated by the xTU-R.
+//
+//			1	Forces the xTU-C to perform loop diagnostics procedures.
+//
 //			Only while the line power management state is L3 can the line be forced into loop diagnostic
 //			mode. When loop diagnostic procedures complete successfully, the ONU resets this attribute to 0.
 //			The line remains in the L3 idle state. The loop diagnostics data are available at least until
@@ -56,6 +65,12 @@ var xdsllineconfigurationprofilepart3BME *ManagedEntityDefinition
 //			timeout, then an initialization failure occurs. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Automode Cold Start Forced
+//			This attribute is defined to improve testing of the performance of xTUs supporting automode.
+//			Valid values are 0 and 1. A change in value of this attribute indicates a change in loop
+//			conditions applied to the devices under test. The xTUs reset any historical information used for
+//			automode, for shortening an ITU-T G.994.1 handshake, or for shortening the initialization
+//			procedure.
+//
 //			Automode is defined as the case where multiple operation modes are enabled in xTSE (Table
 //			9.7.12-1) and where the selection of the operation mode to be used for transmission depends, not
 //			only on the common capabilities of both xTUs (as exchanged in [ITU-T G.994.1]), but also on
@@ -76,18 +91,18 @@ var xdsllineconfigurationprofilepart3BME *ManagedEntityDefinition
 //			dB to 31 (31 dB). (R, W, setbycreate) (mandatory) (1 byte)
 //
 //		Force Inp Downstream
-//			Force INP downstream: When set to 1, the FORCEINPds attribute forces the framer settings of all
-//			downstream bearer channels to be selected such that the impulse noise protection (INP) computed
-//			according to the formula specified in the relevant Recommendation is greater than or equal to
-//			the minimal INP requirement. The default value 0 disables this function. (R, W) (mandatory for
-//			[ITU-T G.993.2], optional for other Recommendations that support it) (1 byte)
-//
-//		Force Inp Upstream
-//			Force INP upstream: When set to 1, the FORCEINPus attribute forces the framer settings of all
-//			upstream bearer channels to be selected such that the INP computed according to the formula
-//			specified in the relevant Recommendation is greater than or equal to the minimal INP
+//			When set to 1, the FORCEINPds attribute forces the framer settings of all downstream bearer
+//			channels to be selected such that the impulse noise protection (INP) computed according to the
+//			formula specified in the relevant Recommendation is greater than or equal to the minimal INP
 //			requirement. The default value 0 disables this function. (R, W) (mandatory for [ITU-T G.993.2],
 //			optional for other Recommendations that support it) (1 byte)
+//
+//		Force Inp Upstream
+//			When set to 1, the FORCEINPus attribute forces the framer settings of all upstream bearer
+//			channels to be selected such that the INP computed according to the formula specified in the
+//			relevant Recommendation is greater than or equal to the minimal INP requirement. The default
+//			value 0 disables this function. (R, W) (mandatory for [ITU-T G.993.2], optional for other
+//			Recommendations that support it) (1 byte)
 //
 //		Update Request Flag For Near_End Test Parameters
 //			Update request flag for near-end test parameters: The UPDATE-TEST-NE attribute forces an update
@@ -109,6 +124,11 @@ var xdsllineconfigurationprofilepart3BME *ManagedEntityDefinition
 //			when the flag is set via the OMCI or by an autonomous process in the system. (R,-W) (optional)
 //			(1-byte)
 //
+//			The following eight attributes configure the impulse noise monitoring (INM) function, whose
+//			results are available via the xDSL impulse noise monitor PM history data ME. The downstream
+//			attributes are applicable to [ITUT G.993.2], [ITUT G.992.3] and [ITUT G.992.5]. Only [ITUT
+//			G.993.2] supports the upstream attributes.
+//
 //		Inm Inter Arrival Time Offset Upstream
 //			INM inter-arrival time offset upstream: INMIATOus is the inter-arrival time (IAT) offset that
 //			the xTU-C receiver uses to determine in which bin of the IAT histogram the IAT is reported.
@@ -121,15 +141,14 @@ var xdsllineconfigurationprofilepart3BME *ManagedEntityDefinition
 //			from 0 to 7 in steps of 1. (R,-W) (optional) (1-byte)
 //
 //		Inm Cluster Continuation Value Upstream
-//			INM cluster continuation value upstream: INMCCus is the cluster continuation value that the
-//			xTU-C receiver uses in the cluster indication process described in the applicable
-//			Recommendation. Valid values for INMCC range from 0 to 64 DMT symbols in steps of 1 DMT symbol.
-//			(R,-W) (optional) (1-byte)
+//			INMCCus is the cluster continuation value that the xTU-C receiver uses in the cluster indication
+//			process described in the applicable Recommendation. Valid values for INMCC range from 0 to 64
+//			DMT symbols in steps of 1 DMT symbol. (R,-W) (optional) (1-byte)
 //
 //		Inm Equivalent Inp Mode Upstream
-//			INM equivalent INP mode upstream: INM_INPEQ_MODEus is the INM equivalent INP mode that the xTU-C
-//			receiver uses in the computation of the equivalent INP, as defined in the applicable
-//			Recommendation. Valid values for INM_INPEQ_MODE are 0..4. (R,-W) (optional) (1-byte)
+//			INM_INPEQ_MODEus is the INM equivalent INP mode that the xTU-C receiver uses in the computation
+//			of the equivalent INP, as defined in the applicable Recommendation. Valid values for
+//			INM_INPEQ_MODE are 0..4. (R,-W) (optional) (1-byte)
 //
 //		Inm Inter Arrival Time Offset Downstream
 //			INM inter-arrival time offset downstream: INMIATOds is the IAT offset that the xTU-R receiver
@@ -142,15 +161,14 @@ var xdsllineconfigurationprofilepart3BME *ManagedEntityDefinition
 //			range from 0 to 7 in steps of 1. (R,-W) (optional) (1-byte)
 //
 //		Inm Cluster Continuation Value Downstream
-//			INM cluster continuation value downstream: INMCCds is the cluster continuation value that the
-//			xTU-R receiver uses in the cluster indication process described in the applicable
-//			Recommendation. Valid values for INMCC range from 0 to 64 DMT symbols in steps of 1 DMT symbol.
-//			(R,-W) (optional) (1-byte)
+//			INMCCds is the cluster continuation value that the xTU-R receiver uses in the cluster indication
+//			process described in the applicable Recommendation. Valid values for INMCC range from 0 to 64
+//			DMT symbols in steps of 1 DMT symbol. (R,-W) (optional) (1-byte)
 //
 //		Inm Equivalent Inp Mode Downstream
-//			INM equivalent INP mode downstream: INM_INPEQ_MODEds is the INM equivalent INP mode that the
-//			xTU-R receiver uses in the computation of the equivalent INP, as defined in the applicable
-//			Recommendation. Valid values for INM_INPEQ_MODE are 0..4. (R,-W) (optional) (1-byte)
+//			INM_INPEQ_MODEds is the INM equivalent INP mode that the xTU-R receiver uses in the computation
+//			of the equivalent INP, as defined in the applicable Recommendation. Valid values for
+//			INM_INPEQ_MODE are 0..4. (R,-W) (optional) (1-byte)
 //
 type XdslLineConfigurationProfilePart3 struct {
 	ManagedEntityDefinition

@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // InterworkingVccTerminationPointClassID is the 16-bit ID for the OMCI
 // Managed entity Interworking VCC termination point
-const InterworkingVccTerminationPointClassID ClassID = ClassID(14)
+const InterworkingVccTerminationPointClassID = ClassID(14) // 0x000e
 
 var interworkingvccterminationpointBME *ManagedEntityDefinition
 
-// InterworkingVccTerminationPoint (class ID #14)
+// InterworkingVccTerminationPoint (Class ID: #14 / 0x000e)
 //	An instance of this ME represents a point in the ONU where the IW of a service or underlying
 //	physical infrastructure (e.g., ADSL) to an ATM layer takes place. At this point, ATM cells are
 //	generated from a bit stream (e.g., Ethernet) or a bit stream is reconstructed from ATM cells.
@@ -44,40 +44,52 @@ var interworkingvccterminationpointBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R,-setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R,-setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Vci Value
-//			VCI value:	This attribute identifies the VCI value associated with this IW VCC TP. (R,-W,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute identifies the VCI value associated with this IW VCC TP. (R,-W, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Vp Network Ctp Connectivity Pointer
-//			VP network CTP connectivity pointer: This attribute points to the VP network CTP associated with
-//			this IW VCC TP. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute points to the VP network CTP associated with this IW VCC TP. (R,-W, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Deprecated 1
-//			Deprecated 1: Not used; should be set to 0. (R,-W, setbycreate) (mandatory) (1-byte)
+//			Not used; should be set to 0. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Deprecated 2
-//			Deprecated 2: Not used; should be set to 0. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			Not used; should be set to 0. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Aal5 Profile Pointer
-//			AAL5 profile pointer: This attribute points to an instance of the AAL5 profile. (R,-W,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute points to an instance of the AAL5 profile. (R,-W, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Deprecated 3
-//			Deprecated 3: Not used; should be set to 0. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			Not used; should be set to 0. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Aal Loopback Configuration
+//			This attribute sets the ATM loopback configuration. All code points are retained for backward
+//			compatibility, but some are not expected to be needed in current and future applications.
+//
+//			0	No loopback
+//
+//			1	Loopback 1, loopback of downstream traffic before FEC of AAL1
+//
+//			2	Loopback 2, loopback of downstream traffic after FEC of AAL1
+//
+//			3	Loopback after AAL, loopback of downstream traffic after any AAL. Loopback after AAL is
+//			depicted in Figure 9.13.4-1.
+//
 //			The default value of this attribute is 0. (R,-W) (mandatory) (1-byte)
 //
 //		Pptp Counter
-//			PPTP counter: This value is the number of instances of PPTP MEs associated with this instance of
-//			the IW VCC TP. (R) (optional) (1-byte)
+//			This value is the number of instances of PPTP MEs associated with this instance of the IW VCC
+//			TP. (R) (optional) (1-byte)
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 type InterworkingVccTerminationPoint struct {
 	ManagedEntityDefinition

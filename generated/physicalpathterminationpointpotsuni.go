@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PhysicalPathTerminationPointPotsUniClassID is the 16-bit ID for the OMCI
 // Managed entity Physical path termination point POTS UNI
-const PhysicalPathTerminationPointPotsUniClassID ClassID = ClassID(53)
+const PhysicalPathTerminationPointPotsUniClassID = ClassID(53) // 0x0035
 
 var physicalpathterminationpointpotsuniBME *ManagedEntityDefinition
 
-// PhysicalPathTerminationPointPotsUni (class ID #53)
+// PhysicalPathTerminationPointPotsUni (Class ID: #53 / 0x0035)
 //	This ME represents a POTS UNI in the ONU, where a physical path terminates and physical path
 //	level functions (analogue telephony) are performed.
 //
@@ -56,9 +56,9 @@ var physicalpathterminationpointpotsuniBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. This 2-byte
-//			number indicates the physical position of the UNI. The first byte is the slot ID (defined in
-//			clause 9.1.5). The second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. This 2-byte number indicates the
+//			physical position of the UNI. The first byte is the slot ID (defined in clause 9.1.5). The
+//			second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
 //
 //		Administrative State
 //			When the administrative state is set to lock, all user functions of this UNI are blocked, and
@@ -66,66 +66,85 @@ var physicalpathterminationpointpotsuniBME *ManagedEntityDefinition
 //			default value for this attribute is outside the scope of this Recommendation. (R, W) (mandatory)
 //			(1 byte)
 //
+//			This attribute shuts down (2), locks (1) and unlocks (0) the functions performed by this ME. If
+//			the administrative state is set to shut down while the POTS UNI line state is non-idle, no
+//			action is taken until the POTS UNI line state changes to idle, whereupon the administrative
+//			state changes to locked. If the administrative state is set to shut down and the POTS UNI line
+//			state is already idle, the administrative state is immediately set to locked. In both cases, the
+//			transition from shutting down to locked state is signalled with an AVC.
+//
 //		Deprecated
-//			Deprecated: This attribute is not used and should not be supported. (R,-W) (optional) (2-bytes)
+//			This attribute is not used and should not be supported. (R,-W) (optional) (2-bytes)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Impedance
+//			2	C1=150 nF, R1=750 Ohm, R2=270 Ohm
+//
+//			3	C1=115 nF, R1=820 Ohm, R2=220 Ohm
+//
+//			4	C1=230 nF, R1=1050 Ohm, R2=320 Ohm
+//
 //			where C1, R1, and R2 are related as shown in Figure 9.9.1-1. Upon ME instantiation, the ONU sets
 //			this attribute to 0. (R,-W) (optional) (1-byte)
 //
+//			This attribute specifies the impedance for the POTS UNI. Valid values include the following.
+//
+//			0	600 Ohm
+//
+//			1	900 Ohm
+//
+//			The following parameter sets from Annex C of [ETSI TS 101 270-1] are also defined:
+//
 //		Transmission Path
-//			Transmission path: This attribute allows setting the POTS UNI either to full-time on-hook
-//			transmission (0) or part-time on-hook transmission (1). Upon ME instantiation, the ONU sets this
-//			attribute to 0. (R,-W) (optional) (1-byte)
+//			This attribute allows setting the POTS UNI either to full-time on-hook transmission (0) or part-
+//			time on-hook transmission (1). Upon ME instantiation, the ONU sets this attribute to 0. (R,-W)
+//			(optional) (1-byte)
 //
 //		Rx Gain
-//			Rx gain:	This attribute specifies a gain value for the received signal in the form of a 2s
-//			complement number. Valid values are -120 (12.0-dB) to 60 (+6.0-dB). The direction of the
-//			affected signal is in the D to A direction, towards the telephone set. Upon ME instantiation,
-//			the ONU sets this attribute to 0. (R, W) (optional) (1 byte)
+//			This attribute specifies a gain value for the received signal in the form of a 2s complement
+//			number. Valid values are -120 (12.0-dB) to 60 (+6.0-dB). The direction of the affected signal is
+//			in the D to A direction, towards the telephone set. Upon ME instantiation, the ONU sets this
+//			attribute to 0. (R, W) (optional) (1 byte)
 //
 //		Tx Gain
-//			Tx gain:	This attribute specifies a gain value for the transmit signal in the form of a 2s
-//			complement number. Valid values are -120 (12.0-dB) to 60 (+6.0-dB). The direction of the
-//			affected signal is in the A to D direction, away from the telephone set. Upon ME instantiation,
-//			the ONU sets this attribute to 0. (R, W) (optional) (1 byte)
+//			This attribute specifies a gain value for the transmit signal in the form of a 2s complement
+//			number. Valid values are -120 (12.0-dB) to 60 (+6.0-dB). The direction of the affected signal is
+//			in the A to D direction, away from the telephone set. Upon ME instantiation, the ONU sets this
+//			attribute to 0. (R, W) (optional) (1 byte)
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Hook State
-//			Hook state:	This attribute indicates the current state of the subscriber line: 0-= on hook, 1-=
-//			off hook (R) (optional) (1-byte)
+//			This attribute indicates the current state of the subscriber line: 0-= on hook, 1-= off hook (R)
+//			(optional) (1-byte)
 //
 //		Pots Holdover Time
-//			POTS holdover time: This attribute determines the time during which the POTS loop voltage is
-//			held up when a LOS or softswitch connectivity is detected (please refer to the following table
-//			for description of behaviours).. After the specified time elapses, the ONU drops the loop
-//			voltage, and may thereby cause premises intrusion alarm or fire panel circuits to go active.
-//			When the ONU ranges successfully on the PON or softswitch connectivity is restored, it restores
-//			the POTS loop voltage immediately and resets the timer to zero. The attribute is expressed in
-//			seconds. The default value 0 selects the vendor's factory policy. (R,-W) (optional) (2-bytes)
+//			This attribute determines the time during which the POTS loop voltage is held up when a LOS or
+//			softswitch connectivity is detected (please refer to the following table for description of
+//			behaviours).. After the specified time elapses, the ONU drops the loop voltage, and may thereby
+//			cause premises intrusion alarm or fire panel circuits to go active. When the ONU ranges
+//			successfully on the PON or softswitch connectivity is restored, it restores the POTS loop
+//			voltage immediately and resets the timer to zero. The attribute is expressed in seconds. The
+//			default value 0 selects the vendor's factory policy. (R,-W) (optional) (2-bytes)
 //
 //		Nominal Feed Voltage
-//			Nominal feed voltage: This attribute indicates the designed nominal feed voltage of the POTS
-//			loop. It is an absolute value with resolution 1-V. This attribute does not represent the actual
-//			voltage measured on the loop, which is available through the test command. (R,-W) (optional)
-//			(1-byte)
+//			This attribute indicates the designed nominal feed voltage of the POTS loop. It is an absolute
+//			value with resolution 1-V. This attribute does not represent the actual voltage measured on the
+//			loop, which is available through the test command. (R,-W) (optional) (1-byte)
 //
 //		Loss Of Softswitch
-//			Loss of softswitch: This Boolean attribute controls whether the T/R holdover initiation
-//			criteria. False disables loss of softswitch connectivity detection as criteria for initiating
-//			the POTS holdover timer. True enables loss of softswitch connectivity detection as criteria for
-//			initiating the POTS holdover timer. This attribute is optional (if not implemented, the POTS
-//			holdover time is triggered on a LOS when POTS holdover is greater than zero). (R,-W) (optional)
-//			(1-byte)
+//			This Boolean attribute controls whether the T/R holdover initiation criteria. False disables
+//			loss of softswitch connectivity detection as criteria for initiating the POTS holdover timer.
+//			True enables loss of softswitch connectivity detection as criteria for initiating the POTS
+//			holdover timer. This attribute is optional (if not implemented, the POTS holdover time is
+//			triggered on a LOS when POTS holdover is greater than zero). (R,-W) (optional) (1-byte)
 //
 type PhysicalPathTerminationPointPotsUni struct {
 	ManagedEntityDefinition

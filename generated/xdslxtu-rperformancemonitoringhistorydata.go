@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslXtuRPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL xTU-R performance monitoring history data
-const XdslXtuRPerformanceMonitoringHistoryDataClassID ClassID = ClassID(113)
+const XdslXtuRPerformanceMonitoringHistoryDataClassID = ClassID(113) // 0x0071
 
 var xdslxturperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// XdslXtuRPerformanceMonitoringHistoryData (class ID #113)
+// XdslXtuRPerformanceMonitoringHistoryData (Class ID: #113 / 0x0071)
 //	This ME collects PM data of the xTUC to xTUR path as seen from the xTU-R. Instances of this ME
 //	are created and deleted by the OLT.
 //
@@ -42,13 +42,12 @@ var xdslxturperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -56,28 +55,47 @@ var xdslxturperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			data 2 ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Loss Of Frame Seconds
-//			Loss of frame seconds: (R) (mandatory) (2-bytes)
+//			(R) (mandatory) (2-bytes)
 //
 //		Loss Of Signal Seconds
-//			Loss of signal seconds: (R) (mandatory) (2-bytes)
+//			(R) (mandatory) (2-bytes)
 //
 //		Loss Of Power Seconds
-//			Loss of power seconds: (R) (mandatory) (2-bytes)
+//			(R) (mandatory) (2-bytes)
 //
 //		Errored Seconds
-//			Errored seconds: This attribute counts 1-s intervals with one or more far end block error (FEBE)
-//			anomalies summed over all transmitted bearer channels, or one or more LOSFE defects, or one or
-//			more RDI defects, or one or more LPR-FE defects. (R) (mandatory) (2-bytes)
+//			This attribute counts 1-s intervals with one or more far end block error (FEBE) anomalies summed
+//			over all transmitted bearer channels, or one or more LOSFE defects, or one or more RDI defects,
+//			or one or more LPR-FE defects. (R) (mandatory) (2-bytes)
 //
 //		Severely Errored Seconds
+//			This attribute counts severely errored seconds (SES-LFE). An SES is declared if, during a 1-s
+//			interval, 18 or more FEBE anomalies were reported across the totality of bearer channels, or
+//			there were one or more far-end LOS defects, one or more RDI defects or one or more LPRFE
+//			defects.
+//
+//			If the relevant Recommendation ([ITUT G.992.3], [ITUT G.992.5] or [ITUT G.993.2]) supports a 1-s
+//			normalized CRC-8 anomaly counter increment, the 1-s SES counter follows this value instead of
+//			counting FEBE anomalies directly.
+//
+//			If a CRC is applied for multiple bearer channels, then each related FEBE anomaly is counted only
+//			once for the whole set of related bearer channels.
+//
 //			(R) (mandatory) (2-bytes)
 //
 //		Fec Seconds
-//			FEC seconds: This attribute counts seconds during which there was an FEC anomaly. (R)
-//			(mandatory) (2-bytes)
+//			This attribute counts seconds during which there was an FEC anomaly. (R) (mandatory) (2-bytes)
 //
 //		Unavailable Seconds
+//			The far-end xDSL termination becomes unavailable at the onset of 10 contiguous SES-LFEs. The 10
+//			SES-LFEs are included in unavailable time. Once unavailable, the far-end line becomes available
+//			at the onset of 10 contiguous seconds with no SES-LFEs. The 10-s with no SES-LFEs are excluded
+//			from unavailable time. Some attribute counts are inhibited during unavailability - see clause
+//			7.2.7.13 of [ITUT G.997.1].
+//
 //			(R) (mandatory) (2-bytes)
+//
+//			This attribute counts 1-s intervals during which the far-end xDSL termination is unavailable.
 //
 //		Leftr Defect Seconds
 //			"leftr" defect seconds: If retransmission is used, this parameter is a count of the seconds with

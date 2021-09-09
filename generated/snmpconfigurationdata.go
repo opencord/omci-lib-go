@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // SnmpConfigurationDataClassID is the 16-bit ID for the OMCI
 // Managed entity SNMP configuration data
-const SnmpConfigurationDataClassID ClassID = ClassID(335)
+const SnmpConfigurationDataClassID = ClassID(335) // 0x014f
 
 var snmpconfigurationdataBME *ManagedEntityDefinition
 
-// SnmpConfigurationData (class ID #335)
+// SnmpConfigurationData (Class ID: #335 / 0x014f)
 //	The SNMP configuration data ME provides a way for the OLT to provision an IP path for an SNMP
 //	management agent.
 //
@@ -42,41 +42,40 @@ var snmpconfigurationdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The ME IDs 0 and
-//			0xFFFF are reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The ME IDs 0 and 0xFFFF are
+//			reserved. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Snmp Version
-//			SNMP version: This integer attribute is the SNMP protocol version to be supported. (R,-W,
-//			setbycreate) (mandatory) (2-bytes)
+//			This integer attribute is the SNMP protocol version to be supported. (R,-W, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Snmp Agent Address
-//			SNMP agent address: This attribute is a pointer to a TCP/UDP config data ME, which provides the
-//			SNMP agent. (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute is a pointer to a TCP/UDP config data ME, which provides the SNMP agent. (R, W,
+//			setbycreate) (mandatory) (2 bytes)
 //
 //		Snmp Server Address
-//			SNMP server address: This attribute is the IP address of the SNMP server. (R, W, setbycreate)
-//			(mandatory) (4 bytes)
+//			This attribute is the IP address of the SNMP server. (R, W, setbycreate) (mandatory) (4 bytes)
 //
 //		Snmp Server Port
-//			SNMP server port: This attribute is the UDP port number of the SNMP server. (R, W, setbycreate)
-//			(mandatory) (2 bytes)
+//			This attribute is the UDP port number of the SNMP server. (R, W, setbycreate) (mandatory) (2
+//			bytes)
 //
 //		Security Name Pointer
-//			Security name pointer: This attribute points to a large string whose content represents the SNMP
-//			security name in a human-readable format that is independent of the security model. SecurityName
-//			is defined in [b-IETF RFC 2571]. (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute points to a large string whose content represents the SNMP security name in a
+//			human-readable format that is independent of the security model. SecurityName is defined in
+//			[b-IETF RFC 2571]. (R, W, setbycreate) (mandatory) (2 bytes)
 //
 //		Community For Read
-//			Community for read: This attribute is a pointer to a large string that contains the name of the
-//			read community. (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute is a pointer to a large string that contains the name of the read community. (R,
+//			W, setbycreate) (mandatory) (2 bytes)
 //
 //		Community For Write
-//			Community for write: This attribute is a pointer to a large string that contains the name of the
-//			write community. (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute is a pointer to a large string that contains the name of the write community. (R,
+//			W, setbycreate) (mandatory) (2 bytes)
 //
 //		Sys Name Pointer
-//			Sys name pointer: This attribute points to a large string whose content identifies the SNMP
-//			system name. SysName is defined in [b-IETF RFC-3418]. (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute points to a large string whose content identifies the SNMP system name. SysName
+//			is defined in [b-IETF RFC-3418]. (R, W, setbycreate) (mandatory) (2 bytes)
 //
 type SnmpConfigurationData struct {
 	ManagedEntityDefinition

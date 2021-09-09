@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Dot1AgMepClassID is the 16-bit ID for the OMCI
 // Managed entity Dot1ag MEP
-const Dot1AgMepClassID ClassID = ClassID(302)
+const Dot1AgMepClassID = ClassID(302) // 0x012e
 
 var dot1agmepBME *ManagedEntityDefinition
 
-// Dot1AgMep (class ID #302)
+// Dot1AgMep (Class ID: #302 / 0x012e)
 //	This ME models an MEP as defined primarily in [IEEE 802.1ag] and secondarily in [ITUT Y.1731].
 //	It is created and deleted by the OLT. An MEP exists at one of eight possible maintenance levels,
 //	and resides at the boundary of a MD. It inherits a name, and optionally a set of associated
@@ -43,78 +43,98 @@ var dot1agmepBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Layer 2 Entity Pointer
-//			Layer 2 entity pointer: Depending on the value of the layer 2 type attribute, this pointer
-//			specifies the MAC bridge port configuration data ME or the IEEE 802.1p mapper service profile ME
-//			with which this MEP is associated. (R,-W, setbycreate) (mandatory) (2-bytes)
-//
-//		Layer 2 Type
-//			Layer 2 type:	This attribute specifies whether the MA is associated with a MAC bridge port
-//			(value 0) or an IEEE 802.1p mapper (value 1). (R,-W, setbycreate) (mandatory) (1-byte)
-//
-//		Ma Pointer
-//			MA pointer:	This pointer specifies the maintenance association with which this MEP is
+//			Depending on the value of the layer 2 type attribute, this pointer specifies the MAC bridge port
+//			configuration data ME or the IEEE 802.1p mapper service profile ME with which this MEP is
 //			associated. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
+//		Layer 2 Type
+//			This attribute specifies whether the MA is associated with a MAC bridge port (value 0) or an
+//			IEEE 802.1p mapper (value 1). (R,-W, setbycreate) (mandatory) (1-byte)
+//
+//		Ma Pointer
+//			This pointer specifies the maintenance association with which this MEP is associated. (R,-W,
+//			setbycreate) (mandatory) (2-bytes)
+//
 //		Mep Id
-//			MEP ID:	This attribute specifies the MEP's own identity in the MA. For a given MA, the MEP ID
-//			must be unique throughout the network defined by the MD. The MEP ID is defined in the range
-//			1..8191. The value 0 indicates that no MEP ID is (yet) configured. (R,-W, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute specifies the MEP's own identity in the MA. For a given MA, the MEP ID must be
+//			unique throughout the network defined by the MD. The MEP ID is defined in the range 1..8191. The
+//			value 0 indicates that no MEP ID is (yet) configured. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Mep Control
+//			This attribute specifies some of the overall behavioural aspects of the MEP. It is interpreted
+//			as follows.
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Primary Vlan
-//			Primary VLAN: This attribute is a 12-bit VLAN ID. The value 0 indicates that the MEP inherits
-//			its primary VLAN from its parent MA. CFM messages, except forwarded LTMs, are tagged with the
-//			primary VLAN ID. If explicitly specified, the value of this attribute must be one of the VLANs
-//			associated with the parent MA. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute is a 12-bit VLAN ID. The value 0 indicates that the MEP inherits its primary VLAN
+//			from its parent MA. CFM messages, except forwarded LTMs, are tagged with the primary VLAN ID. If
+//			explicitly specified, the value of this attribute must be one of the VLANs associated with the
+//			parent MA. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Administrative State
-//			Administrative state: This attribute locks (1) and unlocks (0) the functions performed by this
-//			ME. Administrative state is further described in clause A.1.6. (R,-W, setbycreate) (mandatory)
-//			(1-byte)
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause A.1.6. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Ccm And Ltm Priority
-//			CCM and LTM priority: Ranging from 0..7, this attribute permits CCM and LTM frames to be
-//			explicitly prioritized, which may be needed if flows are separated, e.g., by 802.1p priority.
-//			The priority specified in this attribute is also used in linktrace reply (LTR) frames originated
-//			by this MEP. The value 0xFF selects the IEEE 802.1ag default, whereby CCM and LTM frames are
-//			transmitted with the highest Ethernet priority available. (R,-W, setbycreate) (mandatory)
-//			(1-byte)
+//			Ranging from 0..7, this attribute permits CCM and LTM frames to be explicitly prioritized, which
+//			may be needed if flows are separated, e.g., by 802.1p priority. The priority specified in this
+//			attribute is also used in linktrace reply (LTR) frames originated by this MEP. The value 0xFF
+//			selects the IEEE 802.1ag default, whereby CCM and LTM frames are transmitted with the highest
+//			Ethernet priority available. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Egress Identifier
-//			Egress identifier: This attribute comprises 8-bytes to be included in LTMs. They allow received
-//			LTRs to be directed to the correct originator. The attribute includes the originator MAC address
-//			and a locally defined identifier. If this field is 0, the ONU uses the MEP's MAC address, with 0
-//			as the locally defined identifier. (R,-W, setbycreate) (mandatory) (8-bytes)
+//			This attribute comprises 8-bytes to be included in LTMs. They allow received LTRs to be directed
+//			to the correct originator. The attribute includes the originator MAC address and a locally
+//			defined identifier. If this field is 0, the ONU uses the MEP's MAC address, with 0 as the
+//			locally defined identifier. (R,-W, setbycreate) (mandatory) (8-bytes)
 //
 //		Peer Mep Ids
-//			Peer MEP IDs: This attribute lists the expected peer MEPs for CCMs, 2-bytes per MEP ID. [IEEE
-//			802.1ag] allows for multipoint networks, and therefore a list of peer MEPs. This attribute
-//			allows for up to 12 peers for a given MEP, though GPON applications are expected to need only a
-//			single peer. Missing or unexpected messages trigger alarm declaration after a soak interval.
-//			Unused peer MEP slots should be set to 0. (R,-W) (mandatory) (24-bytes)
+//			This attribute lists the expected peer MEPs for CCMs, 2-bytes per MEP ID. [IEEE 802.1ag] allows
+//			for multipoint networks, and therefore a list of peer MEPs. This attribute allows for up to 12
+//			peers for a given MEP, though GPON applications are expected to need only a single peer. Missing
+//			or unexpected messages trigger alarm declaration after a soak interval. Unused peer MEP slots
+//			should be set to 0. (R,-W) (mandatory) (24-bytes)
 //
 //		Eth Ais Control
+//			This attribute controls the generation of Ethernet alarm indication signal (AIS) frames when
+//			they are enabled through the MEP control attribute. It is interpreted as follows:
+//
 //			(R,-W, setbycreate) (mandatory if ETH AIS is enabled) (1-byte)
 //
 //		Fault Alarm Threshold
+//			This attribute specifies the lowest priority alarm that is allowed to generate a fault alarm.
+//			The value 0 specifies that the ONU uses its internal default. It is defined as follows.
+//
+//			1	All defects generate alarms after suitable soaking, including AIS and RDICCM.
+//
+//			2	Alarm generated only by one of: MACstatus, RemoteCCM, ErrorCCM, XconCCM. This value is
+//			recommended as the default in [IEEE 802.1ag].
+//
+//			3	Alarm generated only by one of: RemoteCCM, ErrorCCM, XconCCM.
+//
+//			4	Alarm generated only by one of: ErrorCCM, XconCCM.
+//
+//			5	Alarm generated only by: XconCCM.
+//
+//			6	No alarms are to be reported. This setting may be useful during configuration of services
+//			across the network when spurious alarms could otherwise be generated.
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		Alarm Declaration Soak Time
-//			Alarm declaration soak time: This attribute defines the defect soak time that must elapse before
-//			the MEP declares an alarm. It is expressed in 10-ms units with a range of 250 to 1000, i.e.,
-//			2.5-s to 10-s. The default is recommended to be 2.5 seconds. (R,-W) (mandatory) (2-bytes)
+//			This attribute defines the defect soak time that must elapse before the MEP declares an alarm.
+//			It is expressed in 10-ms units with a range of 250 to 1000, i.e., 2.5-s to 10-s. The default is
+//			recommended to be 2.5 seconds. (R,-W) (mandatory) (2-bytes)
 //
 //		Alarm Clear Soak Time
-//			Alarm clear soak time: This attribute defines the defect-free soak time that must elapse before
-//			the MEP clears an alarm. It is expressed in intervals of 10-ms with a range of 250 to 1-000,
-//			i.e., 2.5-s to 10-s. The default is recommended to be 10-s. (R,-W) (mandatory) (2-bytes)
+//			This attribute defines the defect-free soak time that must elapse before the MEP clears an
+//			alarm. It is expressed in intervals of 10-ms with a range of 250 to 1-000, i.e., 2.5-s to 10-s.
+//			The default is recommended to be 10-s. (R,-W) (mandatory) (2-bytes)
 //
 type Dot1AgMep struct {
 	ManagedEntityDefinition

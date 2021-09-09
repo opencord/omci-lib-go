@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslChannelConfigurationProfileClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL channel configuration profile
-const XdslChannelConfigurationProfileClassID ClassID = ClassID(107)
+const XdslChannelConfigurationProfileClassID = ClassID(107) // 0x006b
 
 var xdslchannelconfigurationprofileBME *ManagedEntityDefinition
 
-// XdslChannelConfigurationProfile (class ID #107)
+// XdslChannelConfigurationProfile (Class ID: #107 / 0x006b)
 //	This ME contains the channel configuration profile for an xDSL UNI. An instance of this ME is
 //	created and deleted by the OLT.
 //
@@ -45,26 +45,33 @@ var xdslchannelconfigurationprofileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The value 0 is
-//			reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The value 0 is reserved. (R,
+//			setbycreate) (mandatory) (2-bytes)
 //
 //		Minimum Data Rate
-//			Minimum data rate: This parameter specifies the minimum desired net data rate for the bearer
-//			channel. It is coded in bits per second. (R,-W, setbycreate) (mandatory) (4-bytes)
+//			This parameter specifies the minimum desired net data rate for the bearer channel. It is coded
+//			in bits per second. (R,-W, setbycreate) (mandatory) (4-bytes)
 //
 //		Maximum Data Rate
-//			Maximum data rate: This parameter specifies the maximum desired net data rate for the bearer
-//			channel. It is coded in bits per second. (R,-W, setbycreate) (mandatory) (4-bytes)
+//			This parameter specifies the maximum desired net data rate for the bearer channel. It is coded
+//			in bits per second. (R,-W, setbycreate) (mandatory) (4-bytes)
 //
 //		Rate Adaptation Ratio
-//			Rate adaptation ratio: This attribute specifies the weight that should be taken into account
-//			when performing rate adaptation in the direction of the bearer channel. The attribute is defined
-//			as a percentage. The value 20, for example, means that 20% of the available data rate (in excess
-//			of the minimum data rate summed over all bearer channels) is assigned to this bearer channel and
-//			80% to the other bearer channels. The OLT must ensure that the sum of rate adaptation ratios
-//			over all bearers in one direction is 100%. (R,-W, setbycreate) (optional) (1-byte)
+//			This attribute specifies the weight that should be taken into account when performing rate
+//			adaptation in the direction of the bearer channel. The attribute is defined as a percentage. The
+//			value 20, for example, means that 20% of the available data rate (in excess of the minimum data
+//			rate summed over all bearer channels) is assigned to this bearer channel and 80% to the other
+//			bearer channels. The OLT must ensure that the sum of rate adaptation ratios over all bearers in
+//			one direction is 100%. (R,-W, setbycreate) (optional) (1-byte)
 //
 //		Maximum Interleaving Delay
+//			This attribute is the maximum one-way interleaving delay introduced by the PMS-TC between the
+//			alpha and the beta reference points, in the direction of the bearer channel. The one-way
+//			interleaving delay is defined in individual xDSL Recommendations as cap(S*D)-/4-ms, where S is
+//			the S factor, D is the interleaving depth, and cap() denotes rounding to the next higher
+//			integer. xTUs choose S and D values such that the actual one-way interleaving delay does not
+//			exceed the configured maximum interleaving delay.
+//
 //			The delay is coded in milliseconds, varying from 2 to 63, with special meaning assigned to
 //			values 0, 1 and 255. The value 0 indicates that no delay bound is imposed. The value 1 indicates
 //			the fast latency path is to be used in the ITUT G.992.1 operating mode and S and D are to be
@@ -73,26 +80,24 @@ var xdslchannelconfigurationprofileBME *ManagedEntityDefinition
 //			operation. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Data Rate Threshold Upshift
-//			Data rate threshold upshift: This attribute is a threshold on the cumulative data rate upshift
-//			achieved over one or more bearer channel data rate adaptations. An upshift rate change (DRT up)
-//			notification is issued by the PPTP xDSL UNI part 1 when the actual data rate exceeds the data
-//			rate at the last entry into showtime by more than the threshold. The data rate threshold is
-//			coded in bits per second. (R,-W, setbycreate) (mandatory for xDSL standards that use this
-//			attribute) (4-bytes)
+//			This attribute is a threshold on the cumulative data rate upshift achieved over one or more
+//			bearer channel data rate adaptations. An upshift rate change (DRT up) notification is issued by
+//			the PPTP xDSL UNI part 1 when the actual data rate exceeds the data rate at the last entry into
+//			showtime by more than the threshold. The data rate threshold is coded in bits per second. (R,-W,
+//			setbycreate) (mandatory for xDSL standards that use this attribute) (4-bytes)
 //
 //		Data Rate Threshold Downshift
-//			Data rate threshold downshift: This attribute is a threshold on the cumulative data rate
-//			downshift achieved over one or more bearer channel data rate adaptations. A downshift rate
-//			change (DRT down) notification is issued by the PPTP xDSL UNI part 1 when the actual data rate
-//			is below the data rate at the last entry into showtime by more than the threshold. The data rate
-//			threshold is coded in bits per second. (R,-W, setbycreate) (mandatory for xDSL standards that
-//			use this attribute) (4-bytes)
+//			This attribute is a threshold on the cumulative data rate downshift achieved over one or more
+//			bearer channel data rate adaptations. A downshift rate change (DRT down) notification is issued
+//			by the PPTP xDSL UNI part 1 when the actual data rate is below the data rate at the last entry
+//			into showtime by more than the threshold. The data rate threshold is coded in bits per second.
+//			(R,-W, setbycreate) (mandatory for xDSL standards that use this attribute) (4-bytes)
 //
 //		Minimum Reserved Data Rate
-//			Minimum reserved data rate: This attribute specifies the desired minimum reserved net data rate
-//			for the bearer channel. The rate is coded in bits per second. This attribute is needed only if
-//			the rate adaptation mode is set to dynamic in the xDSL line configuration profile part 1. (R,-W,
-//			setbycreate) (optional) (4-bytes)
+//			This attribute specifies the desired minimum reserved net data rate for the bearer channel. The
+//			rate is coded in bits per second. This attribute is needed only if the rate adaptation mode is
+//			set to dynamic in the xDSL line configuration profile part 1. (R,-W, setbycreate) (optional)
+//			(4-bytes)
 //
 //		Minimum Data Rate In Low _ Power State
 //			Minimum data rate in low-power state: This parameter specifies the minimum desired net data rate
@@ -101,10 +106,36 @@ var xdslchannelconfigurationprofileBME *ManagedEntityDefinition
 //			in bits per second. (R,-W, setbycreate) (mandatory) (4-byte)
 //
 //		Minimum Impulse Noise Protection
+//			The INPmin attribute specifies the minimum INP for the bearer channel if it is transported over
+//			DMT symbols with a subcarrier spacing of 4.3125-kHz. INP is expressed in DMT symbols with a
+//			subcarrier spacing of 4.3125-kHz. It can be 1/2 symbol or any integer number of symbols from 0
+//			to 16, inclusive.
+//
+//			If the xTU does not support the configured INPmin value, it uses the nearest supported INP value
+//			greater than INPmin.
+//
+//			Value	INPmin
+//
+//			1	0 symbols
+//
+//			2	1/2 symbol
+//
+//			N	(N-- 2) symbols, 3 <= N <= 18
+//
 //			(R,-W, setbycreate) (optional for [ITU-T G.992.1], mandatory for other xDSL standards that use
 //			this attribute) (1-byte)
 //
 //		Maximum Bit Error Ratio
+//			This attribute specifies the desired maximum bit error ratio for the bearer channel. It is only
+//			valid for [ITUT-G.992.3], [ITUT-G.992.4] and [ITUT-G.992.5]. The bit error ratio is specified
+//			via the following values:
+//
+//			1	10-3
+//
+//			2	10-5
+//
+//			3	10-7
+//
 //			(R,-W, setbycreate) (mandatory for standards that use this attribute) (1-byte)
 //
 //		Minimum Impulse Noise Protection 8_Khz
@@ -115,25 +146,24 @@ var xdslchannelconfigurationprofileBME *ManagedEntityDefinition
 //			for [ITUT-G.993.2]) (1 byte)
 //
 //		Maximum Delay Variation
-//			Maximum delay variation: The DVMAX attribute specifies the maximum value for delay variation
-//			allowed in an OLR procedure. Its value ranges from 1 (0.1-ms) to 254 (25.4-ms). The special
-//			value 255 specifies that no delay variation bound is imposed. (R, W) (optional: used by
-//			[ITUT-G.993.2]) (1 byte)
+//			The DVMAX attribute specifies the maximum value for delay variation allowed in an OLR procedure.
+//			Its value ranges from 1 (0.1-ms) to 254 (25.4-ms). The special value 255 specifies that no delay
+//			variation bound is imposed. (R, W) (optional: used by [ITUT-G.993.2]) (1 byte)
 //
 //		Channel Initialization Policy Selection
-//			Channel initialization policy selection: The CIPOLICY attribute specifies the policy to
-//			determine transceiver configuration at initialization. Valid values are 0..1, as defined in the
-//			Recommendations that use this attribute. (R,-W) (optional) (1-byte)
+//			The CIPOLICY attribute specifies the policy to determine transceiver configuration at
+//			initialization. Valid values are 0..1, as defined in the Recommendations that use this
+//			attribute. (R,-W) (optional) (1-byte)
 //
 //		Minimum Sos Bit Rate Downstream
-//			Minimum SOS bit rate downstream: The MIN-SOS-BR-ds attribute specifies the minimum net data rate
-//			required for a valid SOS request in the downstream direction. The value is coded as an unsigned
-//			integer representing the data rate as a multiple of 8-kbit/s. (R,-W) (optional) (4-bytes)
+//			The MIN-SOS-BR-ds attribute specifies the minimum net data rate required for a valid SOS request
+//			in the downstream direction. The value is coded as an unsigned integer representing the data
+//			rate as a multiple of 8-kbit/s. (R,-W) (optional) (4-bytes)
 //
 //		Minimum Sos Bit Rate Upstream
-//			Minimum SOS bit rate upstream: The MIN-SOS-BR-us attribute specifies the minimum net data rate
-//			required for a valid SOS request in the upstream direction. The value is coded as an unsigned
-//			integer representing the data rate as a multiple of 8-kbit/s. (R,-W) (optional) (4-bytes)
+//			The MIN-SOS-BR-us attribute specifies the minimum net data rate required for a valid SOS request
+//			in the upstream direction. The value is coded as an unsigned integer representing the data rate
+//			as a multiple of 8-kbit/s. (R,-W) (optional) (4-bytes)
 //
 type XdslChannelConfigurationProfile struct {
 	ManagedEntityDefinition

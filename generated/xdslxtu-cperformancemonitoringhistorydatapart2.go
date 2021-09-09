@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslXtuCPerformanceMonitoringHistoryDataPart2ClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL xTU-C performance monitoring history data part 2
-const XdslXtuCPerformanceMonitoringHistoryDataPart2ClassID ClassID = ClassID(408)
+const XdslXtuCPerformanceMonitoringHistoryDataPart2ClassID = ClassID(408) // 0x0198
 
 var xdslxtucperformancemonitoringhistorydatapart2BME *ManagedEntityDefinition
 
-// XdslXtuCPerformanceMonitoringHistoryDataPart2 (class ID #408)
+// XdslXtuCPerformanceMonitoringHistoryDataPart2 (Class ID: #408 / 0x0198)
 //	This ME collects PM data on the xTUC to xTUR path as seen from the xTU-C. Instances of this ME
 //	are created and deleted by the OLT.
 //
@@ -42,13 +42,12 @@ var xdslxtucperformancemonitoringhistorydatapart2BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 and 2 MEs

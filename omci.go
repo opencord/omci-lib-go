@@ -33,7 +33,7 @@ import (
 // DeviceIdent identifies the OMCI message format. Currently either baseline or extended.
 type DeviceIdent byte
 
-// LayerTypeOmci provide a gopacket LayerType for OMCI messages
+// LayerTypeOMCI provides a gopacket LayerType for OMCI messages
 var (
 	LayerTypeOMCI gopacket.LayerType
 )
@@ -53,7 +53,7 @@ const (
 	// G-PON OLTs and ONUs support the baseline message set
 	BaselineIdent DeviceIdent = 0x0A
 
-	// ExtendedIdent messager are up to 1920 octets but may not be supported by all ONUs or OLTs.
+	// ExtendedIdent messages are up to 1920 octets but may not be supported by all ONUs or OLTs.
 	ExtendedIdent DeviceIdent = 0x0B
 )
 
@@ -136,12 +136,6 @@ type OMCI struct {
 }
 
 func (omci *OMCI) String() string {
-	//msgType := me.MsgType(byte(omci.MessageType) & me.MsgTypeMask)
-	//if me.IsAutonomousNotification(msgType) {
-	//	return fmt.Sprintf("OMCI: Type: %v:", msgType)
-	//} else if byte(omci.MessageType)&me.AK == me.AK {
-	//	return fmt.Sprintf("OMCI: Type: %v Response", msgType)
-	//}
 	return fmt.Sprintf("Type: %v, TID: %d (%#x), Ident: %v",
 		omci.MessageType, omci.TransactionID, omci.TransactionID, omci.DeviceIdentifier)
 }
@@ -149,6 +143,19 @@ func (omci *OMCI) String() string {
 // LayerType returns LayerTypeOMCI
 func (omci *OMCI) LayerType() gopacket.LayerType {
 	return LayerTypeOMCI
+}
+
+// CanDecode returns the layers that this class can decode
+func (omci *OMCI) CanDecode() gopacket.LayerClass {
+	return LayerTypeOMCI
+}
+
+// NextLayerType returns the layer type contained by this DecodingLayer.
+func (omci *OMCI) NextLayerType() gopacket.LayerType {
+	if next, ok := nextLayerMapping[omci.MessageType]; ok {
+		return next
+	}
+	return gopacket.LayerTypePayload
 }
 
 // LayerContents returns the OMCI specific layer information
@@ -160,19 +167,9 @@ func (omci *OMCI) LayerContents() []byte {
 	return b
 }
 
-// CanDecode returns the layers that this class can decode
-func (omci *OMCI) CanDecode() gopacket.LayerClass {
-	return LayerTypeOMCI
-}
-
-// NextLayerType returns the layer type contained by this DecodingLayer.
-func (omci *OMCI) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
-}
-
 func decodeOMCI(data []byte, p gopacket.PacketBuilder) error {
 	// Allow baseline messages without Length & MIC, but no less
-	if len(data) < 10 {
+	if len(data) < 4 {
 		p.SetTruncated()
 		return errors.New("frame header too small")
 	}
@@ -185,11 +182,17 @@ func decodeOMCI(data []byte, p gopacket.PacketBuilder) error {
 	case BaselineIdent:
 		if len(data) < MaxBaselineLength-8 {
 			p.SetTruncated()
-			return errors.New("frame too small")
+			return fmt.Errorf("frame too small. OMCI baseline frame length %v, %v required",
+				len(data), MaxBaselineLength-8)
 		}
 		return omci.DecodeFromBytes(data, p)
 
 	case ExtendedIdent:
+		if len(data) < 10 {
+			p.SetTruncated()
+			return fmt.Errorf("frame too small. OMCI minimal extended frame length %v, 10 required",
+				len(data))
+		}
 		return omci.DecodeFromBytes(data, p)
 	}
 }
@@ -219,10 +222,7 @@ func calculateMicAes128(data []byte) (uint32, error) {
 
 // DecodeFromBytes will decode the OMCI layer of a packet/message
 func (omci *OMCI) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
-	if len(data) < 10 {
-		p.SetTruncated()
-		return errors.New("frame too small")
-	}
+	// Minimal Baseline and Extended message set length has already been checked
 	omci.TransactionID = binary.BigEndian.Uint16(data[0:])
 	omci.MessageType = MessageType(data[2])
 	omci.DeviceIdentifier = DeviceIdent(data[3])
@@ -272,7 +272,10 @@ func (omci *OMCI) DecodeFromBytes(data []byte, p gopacket.PacketBuilder) error {
 			//return errors.New(msg)
 		}
 	}
-	omci.BaseLayer = layers.BaseLayer{data[:4], data[4:eomOffset]}
+	omci.BaseLayer = layers.BaseLayer{
+		Contents: data[:4],
+		Payload:  data[4:eomOffset],
+	}
 	p.AddLayer(omci)
 	nextLayer, err := MsgTypeToNextLayer(omci.MessageType, omci.DeviceIdentifier == ExtendedIdent)
 	if err != nil {
@@ -290,9 +293,15 @@ func (omci *OMCI) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serializ
 		return err
 	}
 	// OMCI layer error checks
-	isNotification := (int(omci.MessageType) & ^me.MsgTypeMask) == 0
-	if omci.TransactionID == 0 && !isNotification {
+	// Self-initiated Test Results have a TID of 0, OLT-requested do not.
+	isNotification := omci.MessageType == AlarmNotificationType ||
+		omci.MessageType == AttributeValueChangeType
+
+	if omci.TransactionID == 0 && !isNotification && omci.MessageType != TestResultType {
 		return errors.New("omci Transaction ID is zero for non-Notification type message")
+	}
+	if omci.TransactionID != 0 && isNotification {
+		return errors.New("omci Transaction ID is not zero for Notification type message")
 	}
 	if omci.DeviceIdentifier == 0 {
 		omci.DeviceIdentifier = BaselineIdent // Allow uninitialized device identifier

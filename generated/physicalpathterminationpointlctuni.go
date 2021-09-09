@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PhysicalPathTerminationPointLctUniClassID is the 16-bit ID for the OMCI
 // Managed entity Physical path termination point LCT UNI
-const PhysicalPathTerminationPointLctUniClassID ClassID = ClassID(83)
+const PhysicalPathTerminationPointLctUniClassID = ClassID(83) // 0x0053
 
 var physicalpathterminationpointlctuniBME *ManagedEntityDefinition
 
-// PhysicalPathTerminationPointLctUni (class ID #83)
+// PhysicalPathTerminationPointLctUni (Class ID: #83 / 0x0053)
 //	This ME models debug access to the ONU from any physical or logical port, for example, via a
 //	dedicated LCT UNI, via ordinary subscriber UNIs, or via the IP host config ME.
 //
@@ -63,18 +63,18 @@ var physicalpathterminationpointlctuniBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. This 2-byte
-//			number indicates the physical position of the UNI. The first byte is the slot ID (defined in
-//			clause 9.1.5). The second byte is the port ID, with the range 1..255. If the LCT UNI is
-//			associated with the ONU as a whole, its ME ID should be 0. (R) (mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. This 2-byte number indicates the
+//			physical position of the UNI. The first byte is the slot ID (defined in clause 9.1.5). The
+//			second byte is the port ID, with the range 1..255. If the LCT UNI is associated with the ONU as
+//			a whole, its ME ID should be 0. (R) (mandatory) (2 bytes)
 //
 //		Administrative State
-//			Administrative state: This attribute locks (1) and unlocks (0) the functions performed by this
-//			ME. Administrative state is described generically in clause-A.1.6. The LCT has additional
-//			administrative state behaviour. When the administrative state is set to lock, debug access
-//			through all physical or logical means is blocked, except that the operation of a possible ONU
-//			remote debug ME is not affected. Administrative lock of ME instance 0 overrides administrative
-//			lock of any other PPTP LCT UNIs that may exist. (R, W) (mandatory) (1-byte)
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is described generically in clause-A.1.6. The LCT has additional administrative state
+//			behaviour. When the administrative state is set to lock, debug access through all physical or
+//			logical means is blocked, except that the operation of a possible ONU remote debug ME is not
+//			affected. Administrative lock of ME instance 0 overrides administrative lock of any other PPTP
+//			LCT UNIs that may exist. (R, W) (mandatory) (1-byte)
 //
 type PhysicalPathTerminationPointLctUni struct {
 	ManagedEntityDefinition

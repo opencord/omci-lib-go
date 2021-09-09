@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // TrafficDescriptorClassID is the 16-bit ID for the OMCI
 // Managed entity Traffic descriptor
-const TrafficDescriptorClassID ClassID = ClassID(280)
+const TrafficDescriptorClassID = ClassID(280) // 0x0118
 
 var trafficdescriptorBME *ManagedEntityDefinition
 
-// TrafficDescriptor (class ID #280)
+// TrafficDescriptor (Class ID: #280 / 0x0118)
 //	The traffic descriptor is a profile that allows for traffic management. A priority controlled
 //	ONU can point from a MAC bridge port configuration data ME to a traffic descriptor in order to
 //	implement traffic management (marking, policing). A rate controlled ONU can point to a traffic
@@ -61,35 +61,93 @@ var trafficdescriptorBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Cir
-//			CIR:	This attribute specifies the committed information rate, in bytes per second. The default
-//			is 0. (R,-W, setbycreate) (optional) (4-bytes)
+//			This attribute specifies the committed information rate, in bytes per second. The default is 0.
+//			(R,-W, setbycreate) (optional) (4-bytes)
 //
 //		Pir
-//			PIR:	This attribute specifies the peak information rate, in bytes per second. The default value
-//			0 accepts the ONU's factory policy. (R,-W, setbycreate) (optional) (4-bytes)
+//			This attribute specifies the peak information rate, in bytes per second. The default value 0
+//			accepts the ONU's factory policy. (R,-W, setbycreate) (optional) (4-bytes)
 //
 //		Cbs
-//			CBS:	This attribute specifies the committed burst size, in bytes. The default is 0. (R,-W,
+//			This attribute specifies the committed burst size, in bytes. The default is 0. (R,-W,
 //			setbycreate) (optional) (4-bytes)
 //
 //		Pbs
-//			PBS:	This attribute specifies the peak burst size, in bytes. The default value 0 accepts the
-//			ONU's factory policy. (R,-W, setbycreate) (optional) (4-bytes)
+//			This attribute specifies the peak burst size, in bytes. The default value 0 accepts the ONU's
+//			factory policy. (R,-W, setbycreate) (optional) (4-bytes)
 //
 //		Colour Mode
+//			This attribute specifies whether the colour marking algorithm considers pre-existing marking on
+//			ingress packets (colour-aware) or ignores it (colour-blind). In colour-aware mode, packets can
+//			only be demoted (from green to yellow or red, or from yellow to red). The default value is 0.
+//
+//			0	Colour-blind
+//
+//			1	Colour-aware
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		Ingress Colour Marking
+//			This attribute is meaningful in colour-aware mode. It identifies how pre-existing drop
+//			precedence is marked on ingress packets. For DEI and PCP marking, a drop eligible indicator is
+//			equivalent to yellow; otherwise, the colour is green. For DSCP AF marking, the lowest drop
+//			precedence is equivalent to green; otherwise, the colour is yellow. The default value is 0.
+//
+//			0	No marking (ignore ingress marking)
+//
+//			2	DEI [IEEE 802.1ad]
+//
+//			3	PCP 8P0D [IEEE 802.1ad]
+//
+//			4	PCP 7P1D [IEEE 802.1ad]
+//
+//			5	PCP 6P2D [IEEE 802.1ad]
+//
+//			6	PCP 5P3D [IEEE 802.1ad]
+//
+//			7	DSCP AF class [IETF RFC 2597]
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		Egress Colour Marking
+//			2	DEI [IEEE 802.1ad]
+//
+//			3	PCP 8P0D [IEEE 802.1ad]
+//
+//			4	PCP 7P1D [IEEE 802.1ad]
+//
+//			5	PCP 6P2D [IEEE 802.1ad]
+//
+//			6	PCP 5P3D [IEEE 802.1ad]
+//
+//			7	DSCP AF class [IETF RFC 2597]
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
+//			This attribute specifies how drop precedence is to be marked by the ONU on egress packets. If
+//			set to internal marking only, the externally visible packet contents are not modified, but the
+//			packet is identified in a vendor-specific local way that indicates its colour to the priority
+//			queue ME. It is possible for the egress marking to differ from the ingress marking; for example,
+//			ingress PCP marking could be translated to DEI egress marking. The default value is 0.
+//
+//			0	No marking
+//
+//			1	Internal marking only
+//
 //		Meter Type
+//			This attribute specifies the algorithm used to determine the colour of the packet. The default
+//			value is 0.
+//
+//			0	Not specified
+//
+//			1	[b-IETF RFC 4115]
+//
+//			2	[b-IETF RFC 2698]
+//
 //			(R, setbycreate) (optional) (1-byte)
 //
 type TrafficDescriptor struct {

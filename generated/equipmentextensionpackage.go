@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // EquipmentExtensionPackageClassID is the 16-bit ID for the OMCI
 // Managed entity Equipment extension package
-const EquipmentExtensionPackageClassID ClassID = ClassID(160)
+const EquipmentExtensionPackageClassID = ClassID(160) // 0x00a0
 
 var equipmentextensionpackageBME *ManagedEntityDefinition
 
-// EquipmentExtensionPackage (class ID #160)
+// EquipmentExtensionPackage (Class ID: #160 / 0x00a0)
 //	This ME supports optional extensions to circuit pack MEs. If the circuit pack supports these
 //	features, the ONU creates and deletes this ME along with its associated real or virtual circuit
 //	pack.
@@ -41,16 +41,46 @@ var equipmentextensionpackageBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the ONU-G or cardholder. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the ONU-G or cardholder. (R) (mandatory) (2-bytes)
 //
 //		Environmental Sense
+//			This attribute provisions an ONU that supports external sense points, e.g., physical security
+//			detectors at an enclosure. Each pair of bits is defined as follows.
+//
+//			00	Sense point disabled (default)
+//
+//			01	Report contact closure
+//
+//			10	Report contact open
+//
+//			11	Sense point disabled (same as 00)
+//
+//			If the byte is represented in binary as 0B hhgg ffee ddcc bbaa, bits hh correspond to sense
+//			point 1, while bits aa correspond to sense point 8. (R,-W) (optional) (2-bytes)
+//
 //			NOTE - Some specific sense point applications are already defined on the ONU-G ME. It is the
 //			vendor's choice how to configure and report sense points that appear both generically and
 //			specifically.
 //
 //		Contact Closure Output
+//			This attribute provisions an ONU that supports external contact closure outputs, e.g., sump pump
+//			or air conditioner activation at an ONU enclosure. A contact point is said to be released when
+//			it is not energized. Whether this corresponds to an open or a closed electrical circuit depends
+//			on the ONU's wiring options. Upon ONU initialization, all contact points should go to the
+//			released state.
+//
+//			If the byte is represented in binary as 0B hhgg ffee ddcc bbaa, bits hh correspond to contact
+//			output point 1, while bits aa correspond to contact output point 8.
+//
+//			On write, the bits of this attribute have the following meaning.
+//
+//			0x	No change to contact output point state
+//
+//			10	Release contact output point
+//
+//			11	Operate contact output point
+//
 //			On read, the left bit in each pair should be set to 0 at the ONU and ignored at the OLT. The
 //			right bit indicates a released output point with 0 and an operated contact point with 1. (R,-W)
 //			(optional) (2-bytes)

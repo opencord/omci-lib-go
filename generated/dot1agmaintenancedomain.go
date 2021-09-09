@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Dot1AgMaintenanceDomainClassID is the 16-bit ID for the OMCI
 // Managed entity Dot1ag maintenance domain
-const Dot1AgMaintenanceDomainClassID ClassID = ClassID(299)
+const Dot1AgMaintenanceDomainClassID = ClassID(299) // 0x012b
 
 var dot1agmaintenancedomainBME *ManagedEntityDefinition
 
-// Dot1AgMaintenanceDomain (class ID #299)
+// Dot1AgMaintenanceDomain (Class ID: #299 / 0x012b)
 //	In [IEEE 802.1ag], a maintenance domain (MD) is a context within which configuration fault
 //	management (CFM) connectivity verification can occur. Individual services (maintenance
 //	associations, MAs) exist within an MD. An MD is created and deleted by the OLT. The MD ME is

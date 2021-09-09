@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // OctetStringClassID is the 16-bit ID for the OMCI
 // Managed entity Octet string
-const OctetStringClassID ClassID = ClassID(307)
+const OctetStringClassID = ClassID(307) // 0x0133
 
 var octetstringBME *ManagedEntityDefinition
 
-// OctetString (class ID #307)
+// OctetString (Class ID: #307 / 0x0133)
 //	The octet string is modelled on the large string ME. The large string is constrained to
 //	printable characters because it uses null as a trailing delimiter. The octet string has a length
 //	attribute and is therefore suitable for arbitrary sequences of bytes.
@@ -47,15 +47,88 @@ var octetstringBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The values 0 and
-//			0xFFFF are reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The values 0 and 0xFFFF are
+//			reserved. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Length
-//			Length:	This attribute specifies the number of octets that comprise the sequence of octets. This
+//			This attribute specifies the number of octets that comprise the sequence of octets. This
 //			attribute defaults to 0 to indicate no octet string is defined. The maximum value of this
 //			attribute is 375 (15 parts, 25-bytes each). (R,-W) (mandatory) (2-bytes)
 //
-//		Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9, Part 10, Part 11, Part 12, Part 13, Part 14, Part 15
+//			In the following, 15 additional attributes are defined; they are identical. The octet string is
+//			simply divided into as many parts as necessary, starting at part 1 and left justified.
+//
+//		Part 1
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 2
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 3
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 4
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 5
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 6
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 7
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 8
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 9
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 10
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 11
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 12
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 13
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 14
+//			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
+//			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
+//			attributes)
+//
+//		Part 15
 //			Part 1, Part 2, Part 3, Part 4, Part 5, Part 6, Part 7, Part 8, Part 9,  Part 10, Part 11, Part
 //			12, Part 13, Part 14, Part 15:  (R,-W) (part 1 mandatory, others optional) (25-bytes * 15
 //			attributes)
@@ -75,11 +148,25 @@ func init() {
 			Get,
 			Set,
 		),
-		AllowedAttributeMask: 0xc000,
+		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: Uint16Field("Length", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2: MultiByteField("Part1,Part2,Part3,Part4,Part5,Part6,Part7,Part8,Part9,Part10,Part11,Part12,Part13,Part14,Part15", OctetsAttributeType, 0x4000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 2),
+			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint16Field("Length", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  MultiByteField("Part1", OctetsAttributeType, 0x4000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3:  MultiByteField("Part2", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 3),
+			4:  MultiByteField("Part3", OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  MultiByteField("Part4", OctetsAttributeType, 0x0800, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 5),
+			6:  MultiByteField("Part5", OctetsAttributeType, 0x0400, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7:  MultiByteField("Part6", OctetsAttributeType, 0x0200, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8:  MultiByteField("Part7", OctetsAttributeType, 0x0100, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  MultiByteField("Part8", OctetsAttributeType, 0x0080, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: MultiByteField("Part9", OctetsAttributeType, 0x0040, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: MultiByteField("Part10", OctetsAttributeType, 0x0020, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: MultiByteField("Part11", OctetsAttributeType, 0x0010, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: MultiByteField("Part12", OctetsAttributeType, 0x0008, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: MultiByteField("Part13", OctetsAttributeType, 0x0004, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 14),
+			15: MultiByteField("Part14", OctetsAttributeType, 0x0002, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 15),
+			16: MultiByteField("Part15", OctetsAttributeType, 0x0001, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

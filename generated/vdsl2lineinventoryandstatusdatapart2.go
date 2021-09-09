@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Vdsl2LineInventoryAndStatusDataPart2ClassID is the 16-bit ID for the OMCI
 // Managed entity VDSL2 line inventory and status data part 2
-const Vdsl2LineInventoryAndStatusDataPart2ClassID ClassID = ClassID(169)
+const Vdsl2LineInventoryAndStatusDataPart2ClassID = ClassID(169) // 0x00a9
 
 var vdsl2lineinventoryandstatusdatapart2BME *ManagedEntityDefinition
 
-// Vdsl2LineInventoryAndStatusDataPart2 (class ID #169)
+// Vdsl2LineInventoryAndStatusDataPart2 (Class ID: #169 / 0x00a9)
 //	This ME extends the xDSL line configuration MEs. The ME name was chosen because its attributes
 //	were initially unique to ITU-T G.993.2 VDSL2. Due to continuing standards development, some
 //	attributes - and therefore this ME - have also become applicable to other Recommendations,
@@ -47,9 +47,8 @@ var vdsl2lineinventoryandstatusdatapart2BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R) (mandatory) (2-bytes)
 //
 //		Vdsl2 Transmission System Capability Xtu_R
 //			VDSL2 transmission system capability xTU-R: This attribute extends the xTU-R transmission system
@@ -57,41 +56,66 @@ var vdsl2lineinventoryandstatusdatapart2BME *ManagedEntityDefinition
 //			capabilities. It is a defined by bits 57..64 of Table 9.7.12-1. (R) (mandatory) (1-byte)
 //
 //		Actsnrmodeus
+//			1	Virtual noise inactive
+//
+//			2	Virtual noise active
+//
 //			(R) (mandatory) (1-byte)
 //
+//			This attribute indicates whether transmitter-referred virtual noise is active on the line in the
+//			upstream direction.
+//
 //		Upbokle
-//			UPBOKLE:	This attribute contains the electrical length estimated by the VTU-O expressed in
-//			decibels at 1-MHz, kl0 (see O-UPDATE in clause 12.3.3.2.1.2 of [ITUT-G.993.2]). This is the
-//			final electrical length that would have been sent from the VTU-O to the VTU-R if the electrical
-//			length were not forced by the OLT. The value lies in the range 0 (0.0-dB) to 1280 (128.0-dB) (R)
-//			(mandatory) (2-bytes)
+//			This attribute contains the electrical length estimated by the VTU-O expressed in decibels at
+//			1-MHz, kl0 (see O-UPDATE in clause 12.3.3.2.1.2 of [ITUT-G.993.2]). This is the final electrical
+//			length that would have been sent from the VTU-O to the VTU-R if the electrical length were not
+//			forced by the OLT. The value lies in the range 0 (0.0-dB) to 1280 (128.0-dB) (R) (mandatory)
+//			(2-bytes)
+//
+//			The following four attributes have similar definitions. In each case, valid attribute values are
+//			1, 2, 4, 8. In ADSL applications, the corresponding value is fixed at 1, and therefore need not
+//			be specified. For VDSL2, it is equal to the size of the subcarrier group used to compute these
+//			attributes (see clause 11.4.1 of [ITUT G.993.2]).
 //
 //		Hlingus
-//			HLINGus:	This attribute is the number of subcarriers per group used to report HLINpsus. (R)
-//			(mandatory) (1-byte)
+//			This attribute is the number of subcarriers per group used to report HLINpsus. (R) (mandatory)
+//			(1-byte)
 //
 //		Hloggus
-//			HLOGGus:	This attribute is the number of subcarriers per group used to report HLOGpsus. (R)
-//			(mandatory) (1-byte)
+//			This attribute is the number of subcarriers per group used to report HLOGpsus. (R) (mandatory)
+//			(1-byte)
 //
 //		Qlngus
-//			QLNGus:	This attribute is the number of subcarriers per group used to report QLNpsus. (R)
-//			(mandatory) (1-byte)
+//			This attribute is the number of subcarriers per group used to report QLNpsus. (R) (mandatory)
+//			(1-byte)
 //
 //		Snrgus
-//			SNRGus:	This attribute is the number of subcarriers per group used to report SNRpsus. (R)
-//			(mandatory) (1-byte)
+//			This attribute is the number of subcarriers per group used to report SNRpsus. (R) (mandatory)
+//			(1-byte)
 //
 //		Mrefpsdus Table
+//			The upstream medley reference PSD attribute contains the set of breakpoints exchanged in the
+//			MREFPSDus fields of the R-PRM message of [ITU-T G.993.2].
+//
+//			The format is similar to that specified for the PSD descriptor in [ITUT-G.993.2]. In [ITU-T
+//			G.993.2], the first byte gives the size of the table, each entry of which is 3-bytes. In the
+//			OMCI definition, the first byte is omitted because the size of the table is known from the
+//			response to the get command.
+//
 //			(R) (mandatory) (3 * N bytes, where N is the number of breakpoints)
 //
 //		Trellisus
+//			This attribute reports whether trellis coding is in use in the upstream direction.
+//
+//			0	Trellis not used
+//
+//			1	Trellis used
+//
 //			(R) (mandatory for ITU-T G.993.2 VDSL2, optional for others) (1-byte)
 //
 //		Actualce
-//			ACTUALCE: This attribute reports the cyclic extension used on the line. It is coded as an
-//			unsigned integer from 2 to 16 in units of N/32 samples, where 2N is the IDFT size. (R)
-//			(mandatory) (1-byte)
+//			This attribute reports the cyclic extension used on the line. It is coded as an unsigned integer
+//			from 2 to 16 in units of N/32 samples, where 2N is the IDFT size. (R) (mandatory) (1-byte)
 //
 //		Upbokle_R
 //			UPBOKLE-R: This attribute contains the electrical length estimated by the VTU-R expressed in
@@ -100,18 +124,28 @@ var vdsl2lineinventoryandstatusdatapart2BME *ManagedEntityDefinition
 //			(2-bytes)
 //
 //		Actual Rate Adaptation Mode Upstream
+//			The ACT-RA-MODEus attribute indicates the actual active RA mode in the upstream direction.
+//
+//			1	MANUAL
+//
+//			2	AT_INIT
+//
+//			3	DYNAMIC
+//
+//			4	DYNAMIC with SOS ([ITU-T G.993.2] only)
+//
 //			(R) (optional) (1-byte)
 //
 //		Actual Impulse Noise Protection Roc Upstream
-//			Actual impulse noise protection ROC upstream: The ACTINP-ROC-us attribute reports the actual INP
-//			of the ROC in the upstream direction expressed in multiples of T4k. The INP of this attribute is
-//			equal to the integer value multiplied by 0.1 symbols. Valid values and usage are given in clause
-//			7.5.1.34.2 of [ITUT-G.997.1]. (R) (optional) (1-byte)
+//			The ACTINP-ROC-us attribute reports the actual INP of the ROC in the upstream direction
+//			expressed in multiples of T4k. The INP of this attribute is equal to the integer value
+//			multiplied by 0.1 symbols. Valid values and usage are given in clause 7.5.1.34.2 of
+//			[ITUT-G.997.1]. (R) (optional) (1-byte)
 //
 //		Snr Margin Roc Upstream
-//			SNR margin ROC upstream: The SNRM-ROC-us attribute reports the actual signal-to-noise margin of
-//			the ROC in the upstream direction. Its value ranges from 0  (-64.0-dB) to 1270 (+63.0-dB). The
-//			special value 0xFFFF indicates that the attribute is out of range. (R) (optional) (2-bytes)
+//			The SNRM-ROC-us attribute reports the actual signal-to-noise margin of the ROC in the upstream
+//			direction. Its value ranges from 0  (-64.0-dB) to 1270 (+63.0-dB). The special value 0xFFFF
+//			indicates that the attribute is out of range. (R) (optional) (2-bytes)
 //
 type Vdsl2LineInventoryAndStatusDataPart2 struct {
 	ManagedEntityDefinition

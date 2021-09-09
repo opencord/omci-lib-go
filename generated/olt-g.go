@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // OltGClassID is the 16-bit ID for the OMCI
 // Managed entity OLT-G
-const OltGClassID ClassID = ClassID(131)
+const OltGClassID = ClassID(131) // 0x0083
 
 var oltgBME *ManagedEntityDefinition
 
-// OltG (class ID #131)
+// OltG (Class ID: #131 / 0x0083)
 //	This optional ME identifies the OLT to which an ONU is connected. This ME provides a way for the
 //	ONU to configure itself for operability with a particular OLT. It also provides a way for the
 //	OLT to communicate the time of day to the ONU.
@@ -46,25 +46,32 @@ var oltgBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. There is only
-//			one instance, number 0. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. There is only one instance, number
+//			0. (R) (mandatory) (2-bytes)
 //
 //		Olt Vendor Id
-//			OLT vendor ID: This attribute identifies the OLT vendor. It is the same as the four most
-//			significant bytes of an ONU serial number specified in the respective TC layer specification.
-//			Upon instantiation, this attribute comprises all spaces. (R,-W) (mandatory) (4-bytes)
+//			This attribute identifies the OLT vendor. It is the same as the four most significant bytes of
+//			an ONU serial number specified in the respective TC layer specification. Upon instantiation,
+//			this attribute comprises all spaces. (R,-W) (mandatory) (4-bytes)
 //
 //		Equipment Id
-//			Equipment ID: This attribute may be used to identify the specific type of OLT. The default value
-//			of all spaces indicates that equipment ID information is not available or applicable to the OLT
-//			being represented. (R,-W) (mandatory) (20-bytes)
+//			This attribute may be used to identify the specific type of OLT. The default value of all spaces
+//			indicates that equipment ID information is not available or applicable to the OLT being
+//			represented. (R,-W) (mandatory) (20-bytes)
 //
 //		Version
-//			Version:	This attribute identifies the version of the OLT as defined by the vendor. The default
-//			left-justified ASCII string "0" (padded with trailing nulls) indicates that version information
-//			is not available or applicable to the OLT being represented. (R,-W) (mandatory) (14-bytes)
+//			This attribute identifies the version of the OLT as defined by the vendor. The default left-
+//			justified ASCII string "0" (padded with trailing nulls) indicates that version information is
+//			not available or applicable to the OLT being represented. (R,-W) (mandatory) (14-bytes)
 //
 //		Time Of Day Information
+//			This attribute provides the information required to achieve time of day synchronization between
+//			a reference clock at the OLT and a local clock at the ONU. This attribute comprises two fields:
+//			the first field (4-bytes) is the sequence number of the specified GEM superframe. The second
+//			field (10-bytes) is TstampN as defined in clause 10.4.6 of [ITUT G.984.3], clause 13.2 of [ITUT
+//			G.987.3] and clause 13.2 of [ITU-T G.989.3], using the timestamp format of clause 5.3.3 of [IEEE
+//			1588]. The value 0 in all bytes is reserved as a null value. (R,-W) (optional) (14-bytes)
+//
 //			NOTE - In ITU-T G.987/ITU-T G.989 systems, the superframe count field of the time of day
 //			information attribute contains the 32 LSBs of the actual counter.
 //

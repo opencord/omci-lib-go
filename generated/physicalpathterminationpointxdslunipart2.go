@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PhysicalPathTerminationPointXdslUniPart2ClassID is the 16-bit ID for the OMCI
 // Managed entity Physical path termination point xDSL UNI part 2
-const PhysicalPathTerminationPointXdslUniPart2ClassID ClassID = ClassID(99)
+const PhysicalPathTerminationPointXdslUniPart2ClassID = ClassID(99) // 0x0063
 
 var physicalpathterminationpointxdslunipart2BME *ManagedEntityDefinition
 
-// PhysicalPathTerminationPointXdslUniPart2 (class ID #99)
+// PhysicalPathTerminationPointXdslUniPart2 (Class ID: #99 / 0x0063)
 //	This ME represents the point in the ONU where physical paths terminate on an xDSL CO modem
 //	(xTU-C). Standards and chip sets support several forms of DSL, including VDSL2, and the xDSL ME
 //	family is used for all of them, with specific extensions for technology variations.
@@ -44,33 +44,35 @@ var physicalpathterminationpointxdslunipart2BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1. (R) (mandatory) (2-bytes)
+//
+//			Each of the following eight attributes is a pointer to an xDSL channel configuration profile ME.
+//			In each case, the default value 0, set when the ME is auto-created, is a null pointer.
 //
 //		Xdsl Channel Configuration Profile For Bearer Channel 0 Downstream
-//			xDSL channel configuration profile for bearer channel 0 downstream: 	(R,-W) (optional) (2-bytes)
+//				(R,-W) (optional) (2-bytes)
 //
 //		Xdsl Channel Configuration Profile For Bearer Channel 1 Downstream
-//			xDSL channel configuration profile for bearer channel 1 downstream: 	(R,-W) (optional) (2-bytes)
+//				(R,-W) (optional) (2-bytes)
 //
 //		Xdsl Channel Configuration Profile For Bearer Channel 2 Downstream
-//			xDSL channel configuration profile for bearer channel 2 downstream: 	(R,-W) (optional) (2-bytes)
+//				(R,-W) (optional) (2-bytes)
 //
 //		Xdsl Channel Configuration Profile For Bearer Channel 3 Downstream
-//			xDSL channel configuration profile for bearer channel 3 downstream: 	(R,-W) (optional) (2-bytes)
+//				(R,-W) (optional) (2-bytes)
 //
 //		Xdsl Channel Configuration Profile For Bearer Channel 0 Upstream
-//			xDSL channel configuration profile for bearer channel 0 upstream: 	(R,-W) (optional) (2-bytes)
+//				(R,-W) (optional) (2-bytes)
 //
 //		Xdsl Channel Configuration Profile For Bearer Channel 1 Upstream
-//			xDSL channel configuration profile for bearer channel 1 upstream: 	(R,-W) (optional) (2-bytes)
+//				(R,-W) (optional) (2-bytes)
 //
 //		Xdsl Channel Configuration Profile For Bearer Channel 2 Upstream
-//			xDSL channel configuration profile for bearer channel 2 upstream: 	(R,-W) (optional) (2-bytes)
+//				(R,-W) (optional) (2-bytes)
 //
 //		Xdsl Channel Configuration Profile For Bearer Channel 3 Upstream
-//			xDSL channel configuration profile for bearer channel 3 upstream: 	(R,-W) (optional) (2-bytes)
+//				(R,-W) (optional) (2-bytes)
 //
 type PhysicalPathTerminationPointXdslUniPart2 struct {
 	ManagedEntityDefinition

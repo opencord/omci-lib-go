@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // IpHostConfigDataClassID is the 16-bit ID for the OMCI
 // Managed entity IP host config data
-const IpHostConfigDataClassID ClassID = ClassID(134)
+const IpHostConfigDataClassID = ClassID(134) // 0x0086
 
 var iphostconfigdataBME *ManagedEntityDefinition
 
-// IpHostConfigData (class ID #134)
+// IpHostConfigData (Class ID: #134 / 0x0086)
 //	The IP host config data configures IPv4 based services offered on the ONU. The ONU automatically
 //	creates instances of this ME if IP host services are available. A possible IPv6 stack is
 //	supported through the IPv6 host config data ME. In this clause, references to IP addresses are
@@ -44,72 +44,153 @@ var iphostconfigdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The ONU creates
-//			as many instances as there are independent IPv4 stacks on the ONU. To facilitate discovery, IP
-//			host config data MEs should be numbered from 0 upwards. The ONU should create IP(v4) and IPv6
-//			host config data MEs with separate ME IDs, such that other MEs can use a single TP type
-//			attribute to link with either. (R) (mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. The ONU creates as many instances
+//			as there are independent IPv4 stacks on the ONU. To facilitate discovery, IP host config data
+//			MEs should be numbered from 0 upwards. The ONU should create IP(v4) and IPv6 host config data
+//			MEs with separate ME IDs, such that other MEs can use a single TP type attribute to link with
+//			either. (R) (mandatory) (2 bytes)
 //
 //		Ip Options
+//			This attribute is a bit map that enables or disables IP-related options. The value 1 enables the
+//			option while 0 disables it. The default value of this attribute is 0.
+//
+//			0x01	Enable DHCP
+//
+//			0x02	Respond to pings
+//
+//			0x04	Respond to traceroute messages
+//
+//			0x08	Enable IP stack
+//
+//			0x10..0x80	Reserved
+//
 //			(R,-W) (mandatory) (1-byte)
 //
 //		Mac Address
-//			MAC address: This attribute indicates the MAC address used by the IP node. (R) (mandatory)
-//			(6-bytes)
+//			This attribute indicates the MAC address used by the IP node. (R) (mandatory) (6-bytes)
 //
 //		Onu Identifier
-//			Onu identifier: A unique ONU identifier string. If set to a non-null value, this string is used
-//			instead of the MAC address in retrieving dynamic host configuration protocol (DHCP) parameters.
-//			If the string is shorter than 25 characters, it must be null terminated. Its default value is 25
-//			null bytes. (R,-W) (mandatory) (25-bytes)
+//			A unique ONU identifier string. If set to a non-null value, this string is used instead of the
+//			MAC address in retrieving dynamic host configuration protocol (DHCP) parameters. If the string
+//			is shorter than 25 characters, it must be null terminated. Its default value is 25 null bytes.
+//			(R,-W) (mandatory) (25-bytes)
+//
+//			Several attributes of this ME may be paired together into two categories, manual settings and
+//			current values.
+//
+//			While the IP stack is disabled, there is no IP connectivity to the external world from this ME
+//			instance.
+//
+//			While DHCP is disabled, the current values are always the same as the manual settings. While
+//			DHCP is enabled, the current values are those assigned by DHCP, or undefined (0) if DHCP has
+//			never assigned values.
 //
 //		Ip Address
-//			IP address:	The address used for IP host services; this attribute has the default value 0.
-//			(R,-W) (mandatory) (4-bytes)
-//
-//		Mask
-//			Mask:	The subnet mask for IP host services; this attribute has the default value 0. (R,-W)
+//			The address used for IP host services; this attribute has the default value 0. (R,-W)
 //			(mandatory) (4-bytes)
 //
-//		Gateway
-//			Gateway:	The default gateway address used for IP host services; this attribute has the default
-//			value 0. (R,-W) (mandatory) (4-bytes)
-//
-//		Primary Dns
-//			Primary DNS: The address of the primary DNS server; this attribute has the default value 0.
-//			(R,-W) (mandatory) (4-bytes)
-//
-//		Secondary Dns
-//			Secondary DNS: The address of the secondary DNS server; this attribute has the default value 0.
-//			(R,-W) (mandatory) (4-bytes)
-//
-//		Current Address
-//			Current address: Current address of the IP host service. (R) (optional) (4-bytes)
-//
-//		Current Mask
-//			Current mask: Current subnet mask for the IP host service. (R) (optional) (4-bytes)
-//
-//		Current Gateway
-//			Current gateway: Current default gateway address for the IP host service. (R) (optional)
+//		Mask
+//			The subnet mask for IP host services; this attribute has the default value 0. (R,-W) (mandatory)
 //			(4-bytes)
 //
+//		Gateway
+//			The default gateway address used for IP host services; this attribute has the default value 0.
+//			(R,-W) (mandatory) (4-bytes)
+//
+//		Primary Dns
+//			The address of the primary DNS server; this attribute has the default value 0. (R,-W)
+//			(mandatory) (4-bytes)
+//
+//		Secondary Dns
+//			The address of the secondary DNS server; this attribute has the default value 0. (R,-W)
+//			(mandatory) (4-bytes)
+//
+//		Current Address
+//			Current address of the IP host service. (R) (optional) (4-bytes)
+//
+//		Current Mask
+//			Current subnet mask for the IP host service. (R) (optional) (4-bytes)
+//
+//		Current Gateway
+//			Current default gateway address for the IP host service. (R) (optional) (4-bytes)
+//
 //		Current Primary Dns
-//			Current primary DNS: Current primary DNS server address. (R) (optional) (4-bytes)
+//			Current primary DNS server address. (R) (optional) (4-bytes)
 //
 //		Current Secondary Dns
-//			Current secondary DNS: Current secondary DNS server address. (R) (optional) (4-bytes)
+//			Current secondary DNS server address. (R) (optional) (4-bytes)
 //
 //		Domain Name
-//			Domain name: If DHCP indicates a domain name, it is presented here. If no domain name is
-//			indicated, this attribute is set to a null string. If the string is shorter than 25-bytes, it
-//			must be null terminated. The default value is 25 null bytes. (R) (mandatory) (25-bytes)
+//			If DHCP indicates a domain name, it is presented here. If no domain name is indicated, this
+//			attribute is set to a null string. If the string is shorter than 25-bytes, it must be null
+//			terminated. The default value is 25 null bytes. (R) (mandatory) (25-bytes)
 //
 //		Host Name
-//			Host name:	If DHCP indicates a host name, it is presented here. If no host name is indicated,
-//			this attribute is set to a null string. If the string is shorter than 25-bytes, it must be null
+//			If DHCP indicates a host name, it is presented here. If no host name is indicated, this
+//			attribute is set to a null string. If the string is shorter than 25-bytes, it must be null
 //			terminated. The default value is 25 null bytes. (R) (mandatory) (25-bytes)
 //
 //		Relay Agent Options
+//			This attribute is a pointer to a large string ME whose content specifies one or more DHCP relay
+//			agent options. (R, W) (optional) (2-bytes)
+//
+//			The contents of the large string are parsed by the ONU and converted into text strings. Variable
+//			substitution is based on defined three-character groups, each of which begins with the '%'
+//			character. The string '%%' is an escape mechanism whose output is a single '%' character. When
+//			the ONU cannot perform variable substitution on a substring of the large string, it generates
+//			the specified option as an exact quotation of the provisioned substring value.
+//
+//			Provisioning of the large string is separate from the operation of setting the pointer in this
+//			attribute. It is the responsibility of the OLT to ensure that the large string contents are
+//			correct and meaningful.
+//
+//			Three-character variable definitions are as follows. The first variable in the large string must
+//			specify one of the option types. Both options for a given IP version may be present if desired,
+//			each introduced by its option identifier. Terminology is taken from clause 3.9.3 of [b-BBF
+//			TR-101].
+//
+//			%01, %18 Specifies that the following string is for option 82 sub-option 1, agent circuit-ID
+//			(IPv4) or option 18, interface-ID (IPv6). The equivalence permits the same large string to be
+//			used in both IP environments.
+//
+//			%02, %37 Specifies that the following string is for option 82 sub-option 2, relay agent remote-
+//			ID (IPv4) or option 37, relay agent remote-ID (IPv6). The equivalence permits the same large
+//			string to be used in both IP environments.
+//
+//			%SL	In [b-BBF TR-101], this is called a slot. In an ONU, this variable refers to a shelf. It
+//			would be meaningful if the ONU has multiple shelves internally or is daisy-chained to multiple
+//			equipment modules. The range of this variable is "0".. "99"
+//
+//			%SU	In TR-101, this is called a sub-slot. In fact, it represents a cardholder. The range of this
+//			variable is "0".. "99"
+//
+//			%PO	UNI port number. The range of this variable is "0".. "999"
+//
+//			%AE	ATM or Ethernet. This variable can take on the values "atm" or "eth".
+//
+//			%SV	S-VID for Ethernet UNI, or ATM virtual path identifier (VPI) for ATM UNI, as it exists on
+//			the DHCP request received upstream across the UNI. Range "0".. "4096" for S-VID; range "0"..
+//			"255" for VPI. The value "4096" indicates no S-VID tag.
+//
+//			%CV	C-VID (Q-VID) for Ethernet UNI, or ATM virtual circuit identifier (VCI) for ATM UNI, as it
+//			exists on the DHCP request received upstream across the UNI. Range "0".. "4096" for C-VID; range
+//			"0".."65535" for VCI. The value "4096" indicates no C-VID tag.
+//
+//			Spaces in the provisioned string are significant.
+//
+//			Example: if the large string were provisioned with the value
+//
+//			%01%SL/%SU/%PO:%AE/%SV.%CV<null>,
+//
+//			then the ONU would generate the following DHCP option 82 agent circuit-ID string for an Ethernet
+//			UNI that sent a DHCP request with no S tag and C tag = 3210 on shelf 2, slot 3, port 4.
+//
+//			2/3/4:eth/4096.3210
+//
+//			With the same provisioning, the ONU would generate the following DHCP option 82 agent circuit-ID
+//			string for an ATM UNI that sent a DHCP request on VPI = 123 and VCI = 4567 on shelf 2, slot 3,
+//			port 4.
+//
 //			2/3/4:atm/123.4567
 //
 type IpHostConfigData struct {

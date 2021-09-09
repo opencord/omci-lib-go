@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // EthernetPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity Ethernet performance monitoring history data
-const EthernetPerformanceMonitoringHistoryDataClassID ClassID = ClassID(24)
+const EthernetPerformanceMonitoringHistoryDataClassID = ClassID(24) // 0x0018
 
 var ethernetperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// EthernetPerformanceMonitoringHistoryData (class ID #24)
+// EthernetPerformanceMonitoringHistoryData (Class ID: #24 / 0x0018)
 //	This ME collects some of the PM data for a physical Ethernet interface. Instances of this ME are
 //	created and deleted by the OLT.
 //
@@ -42,78 +42,76 @@ var ethernetperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP Ethernet UNI. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP Ethernet UNI. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 and 2 MEs
 //			that contains PM threshold values. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Fcs Errors
-//			FCS errors:	This attribute counts frames received on a particular interface that were an
-//			integral number of octets in length but failed the FCS check. The count is incremented when the
-//			MAC service returns the frameCheckError status to the link layer control (LLC) or other MAC
-//			user. Received frames for which multiple error conditions are obtained are counted according to
-//			the error status presented to the LLC. (R) (mandatory) (4-bytes)
+//			This attribute counts frames received on a particular interface that were an integral number of
+//			octets in length but failed the FCS check. The count is incremented when the MAC service returns
+//			the frameCheckError status to the link layer control (LLC) or other MAC user. Received frames
+//			for which multiple error conditions are obtained are counted according to the error status
+//			presented to the LLC. (R) (mandatory) (4-bytes)
 //
 //		Excessive Collision Counter
-//			Excessive collision counter: This attribute counts frames whose transmission failed due to
-//			excessive collisions.-(R) (mandatory) (4-bytes)
+//			This attribute counts frames whose transmission failed due to excessive collisions.-(R)
+//			(mandatory) (4-bytes)
 //
 //		Late Collision Counter
-//			Late collision counter: This attribute counts the number of times that a collision was detected
-//			later than 512 bit times into the transmission of a packet. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of times that a collision was detected later than 512 bit times
+//			into the transmission of a packet. (R) (mandatory) (4-bytes)
 //
 //		Frames Too Long
-//			Frames too long: This attribute counts received frames that exceeded the maximum permitted frame
-//			size. The count is incremented when the MAC service returns the frameTooLong status to the LLC.
-//			(R) (mandatory) (4-bytes)
+//			This attribute counts received frames that exceeded the maximum permitted frame size. The count
+//			is incremented when the MAC service returns the frameTooLong status to the LLC. (R) (mandatory)
+//			(4-bytes)
 //
 //		Buffer Overflows On Receive
-//			Buffer overflows on receive: This attribute counts the number of times that the receive buffer
-//			overflowed. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of times that the receive buffer overflowed. (R) (mandatory)
+//			(4-bytes)
 //
 //		Buffer Overflows On Transmit
-//			Buffer overflows on transmit: This attribute counts the number of times that the transmit buffer
-//			overflowed. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of times that the transmit buffer overflowed. (R) (mandatory)
+//			(4-bytes)
 //
 //		Single Collision Frame Counter
-//			Single collision frame counter: This attribute counts successfully transmitted frames whose
-//			transmission was delayed by exactly one collision. (R) (mandatory) (4-bytes)
+//			This attribute counts successfully transmitted frames whose transmission was delayed by exactly
+//			one collision. (R) (mandatory) (4-bytes)
 //
 //		Multiple Collisions Frame Counter
-//			Multiple collisions frame counter: This attribute counts successfully transmitted frames whose
-//			transmission was delayed by more than one collision. (R) (mandatory) (4-bytes)
+//			This attribute counts successfully transmitted frames whose transmission was delayed by more
+//			than one collision. (R) (mandatory) (4-bytes)
 //
 //		Sqe Counter
-//			SQE counter: This attribute counts the number of times that the SQE test error message was
-//			generated by the PLS sublayer. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of times that the SQE test error message was generated by the
+//			PLS sublayer. (R) (mandatory) (4-bytes)
 //
 //		Deferred Transmission Counter
-//			Deferred transmission counter: This attribute counts frames whose first transmission attempt was
-//			delayed because the medium was busy. The count does not include frames involved in collisions.
-//			(R) (mandatory) (4-bytes)
+//			This attribute counts frames whose first transmission attempt was delayed because the medium was
+//			busy. The count does not include frames involved in collisions. (R) (mandatory) (4-bytes)
 //
 //		Internal Mac Transmit Error Counter
-//			Internal MAC transmit error counter: This attribute counts frames whose transmission failed due
-//			to an internal MAC sublayer transmit error. (R) (mandatory) (4-bytes)
+//			This attribute counts frames whose transmission failed due to an internal MAC sublayer transmit
+//			error. (R) (mandatory) (4-bytes)
 //
 //		Carrier Sense Error Counter
-//			Carrier sense error counter: This attribute counts the number of times that carrier sense was
-//			lost or never asserted when attempting to transmit a frame. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of times that carrier sense was lost or never asserted when
+//			attempting to transmit a frame. (R) (mandatory) (4-bytes)
 //
 //		Alignment Error Counter
-//			Alignment error counter: This attribute counts received frames that were not an integral number
-//			of octets in length and did not pass the FCS check. (R) (mandatory) (4-bytes)
+//			This attribute counts received frames that were not an integral number of octets in length and
+//			did not pass the FCS check. (R) (mandatory) (4-bytes)
 //
 //		Internal Mac Receive Error Counter
-//			Internal MAC receive error counter: This attribute counts frames whose reception failed due to
-//			an internal MAC sublayer receive error. (R) (mandatory) (4-bytes)
+//			This attribute counts frames whose reception failed due to an internal MAC sublayer receive
+//			error. (R) (mandatory) (4-bytes)
 //
 type EthernetPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

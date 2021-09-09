@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Aal5ProfileClassID is the 16-bit ID for the OMCI
 // Managed entity AAL5 profile
-const Aal5ProfileClassID ClassID = ClassID(16)
+const Aal5ProfileClassID = ClassID(16) // 0x0010
 
 var aal5profileBME *ManagedEntityDefinition
 
-// Aal5Profile (class ID #16)
+// Aal5Profile (Class ID: #16 / 0x0010)
 //	This ME organizes data that describe the AAL type 5 processing functions of the ONU. It is used
 //	with the IW VCC TP ME.
 //
@@ -42,17 +42,37 @@ var aal5profileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Max Cpcs Pdu Size
-//			Max CPCS PDU size: This attribute specifies the maximum CPCS PDU size to be transmitted over the
-//			connection in both upstream and downstream directions. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute specifies the maximum CPCS PDU size to be transmitted over the connection in both
+//			upstream and downstream directions. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Aal Mode
+//			This attribute specifies the AAL mode as follows.
+//
+//			0	Message assured
+//
+//			1	Message unassured
+//
+//			2	Streaming assured
+//
+//			3	Streaming non assured
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Sscs Type
+//			This attribute specifies the SSCS type for the AAL. Valid values are as follows.
+//
+//			0	Null
+//
+//			1	Data SSCS based on SSCOP, assured operation
+//
+//			2	Data SSCS based on SSCOP, non-assured operation
+//
+//			3	Frame relay SSCS
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 type Aal5Profile struct {

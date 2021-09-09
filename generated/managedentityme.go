@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // ManagedEntityMeClassID is the 16-bit ID for the OMCI
 // Managed entity Managed entity ME
-const ManagedEntityMeClassID ClassID = ClassID(288)
+const ManagedEntityMeClassID = ClassID(288) // 0x0120
 
 var managedentitymeBME *ManagedEntityDefinition
 
-// ManagedEntityMe (class ID #288)
+// ManagedEntityMe (Class ID: #288 / 0x0120)
 //	The ME describes the details of each ME that is supported by the ONU. This ME is not included in
 //	an MIB upload.
 //
@@ -40,39 +40,62 @@ var managedentitymeBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Its value is
-//			equal to the ME type value, and is the same as the code found in the ME type table attribute of
-//			the OMCI ME and Table-11.2.41. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Its value is equal to the ME type
+//			value, and is the same as the code found in the ME type table attribute of the OMCI ME and
+//			Table-11.2.41. (R) (mandatory) (2-bytes)
 //
 //		Name
-//			Name:	This attribute contains a 25-byte ASCII coded mnemonic tag for the ME type. Strings
-//			shorter than 25-bytes are padded with null characters. (R) (mandatory) (25-bytes)
+//			This attribute contains a 25-byte ASCII coded mnemonic tag for the ME type. Strings shorter than
+//			25-bytes are padded with null characters. (R) (mandatory) (25-bytes)
 //
 //		Attributes Table
+//			This table contains pointers to the attribute MEs that describe each of this ME's attributes.
+//			(R) (mandatory) (2 * X bytes, where X is the number of entries in the table.)
+//
 //			NOTE - The ME ID attribute is not included in the list, since the type of this attribute is
 //			fixed.
 //
 //		Access
+//			This attribute represents who creates this ME. The following code points are defined.
+//
+//			1	Created by the ONU
+//
+//			2	Created by the OLT
+//
+//			3	Created by both the ONU and OLT
+//
 //			(R) (mandatory) (1-byte)
 //
 //		Alarms Table
-//			Alarms table: This attribute lists the alarm codes that are supported. (R) (mandatory) (Y bytes,
-//			where Y is the number of entries in the table.)
+//			This attribute lists the alarm codes that are supported. (R) (mandatory) (Y bytes, where Y is
+//			the number of entries in the table.)
 //
 //		Avcs Table
-//			AVCs table:	This attribute lists the AVCs that are supported. (R) (mandatory) (Z bytes, where Z
-//			is the number of entries in the table.)
+//			This attribute lists the AVCs that are supported. (R) (mandatory) (Z bytes, where Z is the
+//			number of entries in the table.)
 //
 //		Actions
-//			Actions:	This attribute lists the action codes supported on this object, formatted as a bit map.
-//			The action codes are the MTs from Table-11.2.2-1. The LSB represents action 0, and so on. (R)
+//			This attribute lists the action codes supported on this object, formatted as a bit map. The
+//			action codes are the MTs from Table-11.2.2-1. The LSB represents action 0, and so on. (R)
 //			(mandatory) (4-bytes)
 //
 //		Instances Table
-//			Instances table: This attribute is a list of pointers to all instances of this ME. (R)
-//			(mandatory) (2 * V bytes, where V is the number of entries in the table.)
+//			This attribute is a list of pointers to all instances of this ME. (R) (mandatory) (2 * V bytes,
+//			where V is the number of entries in the table.)
 //
 //		Support
+//			This attribute represents the support capability of this ME in the ONU's implementation. This
+//			attribute does not declare whether the OMCI implementation complies with the Recommendations,
+//			but whether it complies with the OMCI declaration itself. The following code points are defined.
+//
+//			1	Supported (supported as defined in this object)
+//
+//			2	Unsupported (OMCI returns error code if accessed)
+//
+//			3	Partially supported (some aspects of ME supported)
+//
+//			4	Ignored (OMCI supported, but underlying function is not)
+//
 //			(R) (mandatory) (1-byte)
 //
 type ManagedEntityMe struct {

@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslChannelConfigurationProfilePart2ClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL channel configuration profile part 2
-const XdslChannelConfigurationProfilePart2ClassID ClassID = ClassID(412)
+const XdslChannelConfigurationProfilePart2ClassID = ClassID(412) // 0x019c
 
 var xdslchannelconfigurationprofilepart2BME *ManagedEntityDefinition
 
-// XdslChannelConfigurationProfilePart2 (class ID #412)
+// XdslChannelConfigurationProfilePart2 (Class ID: #412 / 0x019c)
 //	This ME contains the channel configuration profile for an xDSL UNI. An instance of this ME is
 //	created and deleted by the OLT.
 //
@@ -45,9 +45,9 @@ var xdslchannelconfigurationprofilepart2BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the xDSL channel configuration
-//			profile. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the xDSL channel configuration profile. (R, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Minimum Expected Throughput For Retransmission Minetr_Rtx
 //			Minimum expected throughput for retransmission (MINETR_RTX): If retransmission is used in a
@@ -95,10 +95,10 @@ var xdslchannelconfigurationprofilepart2BME *ManagedEntityDefinition
 //			is given in clause 7.3.2.14 of [ITUT-G.997.1]. (R,-W) (mandatory) (1-bytes)
 //
 //		Shineratio_Rtx
-//			SHINERATIO_RTX: If retransmission is used in a given transmit direction, this parameter
-//			specifies the SHINE ratio. This ratio is defined as the integer value of this attribute
-//			multiplied by 0.001. The valid range of values is given in clause-7.3.2.15 of [ITU-T G.997.1].
-//			(R,-W) (mandatory) (1-bytes)
+//			If retransmission is used in a given transmit direction, this parameter specifies the SHINE
+//			ratio. This ratio is defined as the integer value of this attribute multiplied by 0.001. The
+//			valid range of values is given in clause-7.3.2.15 of [ITU-T G.997.1]. (R,-W) (mandatory)
+//			(1-bytes)
 //
 //		Minimum Impulse Noise Protection Against Rein For Retransmission Inpmin_Rein_Rtx
 //			Minimum impulse noise protection against REIN for retransmission (INPMIN_REIN_RTX): If

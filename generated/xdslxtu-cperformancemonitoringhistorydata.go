@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslXtuCPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL xTU-C performance monitoring history data
-const XdslXtuCPerformanceMonitoringHistoryDataClassID ClassID = ClassID(112)
+const XdslXtuCPerformanceMonitoringHistoryDataClassID = ClassID(112) // 0x0070
 
 var xdslxtucperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// XdslXtuCPerformanceMonitoringHistoryData (class ID #112)
+// XdslXtuCPerformanceMonitoringHistoryData (Class ID: #112 / 0x0070)
 //	This ME collects PM data on the xTUC to xTUR path as seen from the xTU-C. Instances of this ME
 //	are created and deleted by the OLT.
 //
@@ -42,29 +42,28 @@ var xdslxtucperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 and 2 MEs
 //			that contain PM threshold values. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Loss Of Frame Seconds
-//			Loss of frame seconds: (R) (mandatory) (2-bytes)
+//			(R) (mandatory) (2-bytes)
 //
 //		Loss Of Signal Seconds
-//			Loss of signal seconds: (R) (mandatory) (2-bytes)
+//			(R) (mandatory) (2-bytes)
 //
 //		Loss Of Link Seconds
-//			Loss of link seconds: (R) (mandatory) (2-bytes)
+//			(R) (mandatory) (2-bytes)
 //
 //		Loss Of Power Seconds
-//			Loss of power seconds: (R) (mandatory) (2-bytes)
+//			(R) (mandatory) (2-bytes)
 //
 //		Errored Seconds Es
 //			Errored seconds (ES): This attribute counts 1-s intervals with one or more CRC8 anomalies summed
@@ -72,48 +71,65 @@ var xdslxtucperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			SEF defects, or one or more LPR defects. (R) (mandatory) (2-bytes)
 //
 //		Severely Errored Seconds
+//			This attribute counts severely errored seconds (SES-L). An SES is declared if, during a 1-s
+//			interval, there were 18 or more CRC8 anomalies in one or more of the received bearer channels,
+//			or one or more LOS defects, or one or more SEF defects, or one or more LPR defects.
+//
+//			If the relevant Recommendation ([ITUT G.992.3], [ITUT G.992.5] or [ITUT G.993.2]) supports a 1-s
+//			normalized CRC-8 anomaly counter increment, the 1-s SES counter follows this value instead of
+//			counting CRC-8 anomalies directly.
+//
+//			If a common CRC is applied over multiple bearer channels, then each related CRC-8 anomaly is
+//			counted only once for the whole set of bearer channels over which the CRC is applied.
+//
 //			(R) (mandatory) (2-bytes)
 //
 //		Line Initializations
-//			Line initializations: This attribute counts the total number of full initializations attempted
-//			on the line, both successful and failed. (R) (mandatory) (2-bytes)
+//			This attribute counts the total number of full initializations attempted on the line, both
+//			successful and failed. (R) (mandatory) (2-bytes)
 //
 //		Failed Line Initializations
-//			Failed line initializations: This attribute counts the total number of failed full
-//			initializations during the accumulation period. A failed full initialization occurs when
-//			showtime is not reached at the end of the full initialization procedure. (R) (mandatory)
-//			(2-bytes)
+//			This attribute counts the total number of failed full initializations during the accumulation
+//			period. A failed full initialization occurs when showtime is not reached at the end of the full
+//			initialization procedure. (R) (mandatory) (2-bytes)
 //
 //		Short Initializations
-//			Short initializations: This attribute counts the total number of fast retrains or short
-//			initializations attempted on the line, successful and failed. Fast retrain is defined in [ITUT
-//			G.992.2]. Short initialization is defined in [ITUT-G.992.3] and [ITUT G.992.4]. (R) (optional)
-//			(2-bytes)
+//			This attribute counts the total number of fast retrains or short initializations attempted on
+//			the line, successful and failed. Fast retrain is defined in [ITUT G.992.2]. Short initialization
+//			is defined in [ITUT-G.992.3] and [ITUT G.992.4]. (R) (optional) (2-bytes)
 //
 //		Failed Short Initializations
+//			This attribute counts the total number of failed fast retrains or short initializations during
+//			the accumulation period, e.g., when:
+//
+//			-	a CRC error is detected;
+//
+//			-	a timeout occurs;
+//
+//			-	a fast retrain profile is unknown.
+//
 //			(R) (optional) (2-bytes)
 //
 //		Fec Seconds
-//			FEC seconds: This attribute counts seconds during which there was an FEC anomaly. (R)
-//			(mandatory) (2-bytes)
+//			This attribute counts seconds during which there was an FEC anomaly. (R) (mandatory) (2-bytes)
 //
 //		Unavailable Seconds
-//			Unavailable seconds: This attribute counts 1-s intervals during which the xDSL UNI is
-//			unavailable. The line becomes unavailable at the onset of 10 contiguous SES-Ls. The 10 SES-Ls
-//			are included in unavailable time. Once unavailable, the line becomes available at the onset of
-//			10-contiguous seconds that are not severely errored. The 10-s with no SESLs are excluded from
-//			unavailable time. Some attribute counts are inhibited during unavailability - see clause
-//			7.2.7.13 of [ITUT G.997.1]. (R) (mandatory) (2-bytes)
+//			This attribute counts 1-s intervals during which the xDSL UNI is unavailable. The line becomes
+//			unavailable at the onset of 10 contiguous SES-Ls. The 10 SES-Ls are included in unavailable
+//			time. Once unavailable, the line becomes available at the onset of 10-contiguous seconds that
+//			are not severely errored. The 10-s with no SESLs are excluded from unavailable time. Some
+//			attribute counts are inhibited during unavailability - see clause 7.2.7.13 of [ITUT G.997.1].
+//			(R) (mandatory) (2-bytes)
 //
 //		Sos Success Count, Near End
-//			SOS success count, near end: The SOS-SUCCESS-NE attribute is a count of the total number of
-//			successful SOS procedures initiated by the near-end xTU on the line during the accumulation
-//			period. Successful SOS is defined in clause-12.1.4 of [ITUT G.993.2]. (R) (optional) (2-bytes)
+//			The SOS-SUCCESS-NE attribute is a count of the total number of successful SOS procedures
+//			initiated by the near-end xTU on the line during the accumulation period. Successful SOS is
+//			defined in clause-12.1.4 of [ITUT G.993.2]. (R) (optional) (2-bytes)
 //
 //		Sos Success Count, Far End
-//			SOS success count, far end: The SOS-SUCCESS-FE attribute is a count of the total number of
-//			successful SOS procedures initiated by the far-end xTU on the line during the accumulation
-//			period. Successful SOS is defined in clause 12.1.4 of [ITUT-G.993.2]. (R) (optional) (2-bytes)
+//			The SOS-SUCCESS-FE attribute is a count of the total number of successful SOS procedures
+//			initiated by the far-end xTU on the line during the accumulation period. Successful SOS is
+//			defined in clause 12.1.4 of [ITUT-G.993.2]. (R) (optional) (2-bytes)
 //
 type XdslXtuCPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

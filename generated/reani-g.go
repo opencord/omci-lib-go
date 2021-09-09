@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // ReAniGClassID is the 16-bit ID for the OMCI
 // Managed entity RE ANI-G
-const ReAniGClassID ClassID = ClassID(313)
+const ReAniGClassID = ClassID(313) // 0x0139
 
 var reanigBME *ManagedEntityDefinition
 
-// ReAniG (class ID #313)
+// ReAniG (Class ID: #313 / 0x0139)
 //	This ME organizes data associated with each R'/S' physical interface of an RE if the RE supports
 //	OEO regeneration in either direction. The management ONU automatically creates one instance of
 //	this ME for each R'/S' physical port (uni- or bidirectional) as follows.
@@ -68,10 +68,17 @@ var reanigBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
+//			This attribute uniquely identifies each instance of this ME. Its value indicates the physical
+//			position of the R'/S' interface. The first byte is the slot ID (defined in clause 9.1.5). The
+//			second byte is the port ID. (R) (mandatory) (2-bytes)
+//
 //			NOTE 1 - This ME ID may be identical to that of an RE downstream amplifier if it shares the same
 //			physical slot and port.
 //
 //		Administrative State
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
+//
 //			NOTE 2 - When an RE supports multiple PONs, or protected access to a single PON, its primary
 //			ANI-G cannot be completely shut down, due to a loss of the management communications capability.
 //			Complete blocking of service and removal of power may nevertheless be appropriate for secondary
@@ -79,78 +86,88 @@ var reanigBME *ManagedEntityDefinition
 //			primary or secondary.
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Optical Signal Level
-//			Optical signal level: This attribute reports the current measurement of total downstream optical
-//			power. Its value is a 2s complement integer referred to 1-mW (i.e., dBm), with 0.002-dB
-//			granularity. (R) (optional) (2-bytes)
+//			This attribute reports the current measurement of total downstream optical power. Its value is a
+//			2s complement integer referred to 1-mW (i.e., dBm), with 0.002-dB granularity. (Coding -32768 to
+//			+32767, where 0x00 = 0-dBm, 0x03e8 = +2-dBm, etc.) (R) (optional) (2-bytes)
 //
 //		Lower Optical Threshold
-//			Lower optical threshold: This attribute specifies the optical level that the RE uses to declare
-//			the downstream low received optical power alarm. Valid values are  -127-dBm (coded as 254) to
-//			0-dBm (coded as 0) in 0.5-dB increments. The default value 0xFF selects the RE's internal
-//			policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the optical level that the RE uses to declare the downstream low
+//			received optical power alarm. Valid values are  -127-dBm (coded as 254) to 0-dBm (coded as 0) in
+//			0.5-dB increments. The default value 0xFF selects the RE's internal policy. (R,-W) (optional)
+//			(1-byte)
 //
 //		Upper Optical Threshold
-//			Upper optical threshold: This attribute specifies the optical level that the RE uses to declare
-//			the downstream high received optical power alarm. Valid values are  -127-dBm (coded as 254) to
-//			0-dBm (coded as 0) in 0.5 dB increments. The default value 0xFF selects the RE's internal
-//			policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the optical level that the RE uses to declare the downstream high
+//			received optical power alarm. Valid values are  -127-dBm (coded as 254) to 0-dBm (coded as 0) in
+//			0.5 dB increments. The default value 0xFF selects the RE's internal policy. (R,-W) (optional)
+//			(1-byte)
 //
 //		Transmit Optical Level
-//			Transmit optical level: This attribute reports the current measurement of mean optical launch
-//			power. Its value is a 2s complement integer referred to 1-mW (i.e., dBm), with 0.002-dB
-//			granularity. (R) (optional) (2-bytes)
+//			This attribute reports the current measurement of mean optical launch power. Its value is a 2s
+//			complement integer referred to 1-mW (i.e., dBm), with 0.002-dB granularity. (Coding -32768 to
+//			+32767, where 0x00 = 0-dBm, 0x03e8 = +2-dBm, etc.) (R) (optional) (2-bytes)
 //
 //		Lower Transmit Power Threshold
-//			Lower transmit power threshold: This attribute specifies the minimum mean optical launch power
-//			that the RE uses to declare the low transmit optical power alarm. Its value is a 2s-complement
-//			integer referred to 1-mW (i.e., dBm), with 0.5-dB granularity. The default value 0x7F selects
-//			the RE's internal policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the minimum mean optical launch power that the RE uses to declare the
+//			low transmit optical power alarm. Its value is a 2s-complement integer referred to 1-mW (i.e.,
+//			dBm), with 0.5-dB granularity. The default value 0x7F selects the RE's internal policy. (R,-W)
+//			(optional) (1-byte)
 //
 //		Upper Transmit Power Threshold
-//			Upper transmit power threshold: This attribute specifies the maximum mean optical launch power
-//			that the RE uses to declare the high transmit optical power alarm. Its value is a 2s-complement
-//			integer referred to 1-mW (i.e., dBm), with 0.5-dB granularity. The default value 0x7F selects
-//			the RE's internal policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the maximum mean optical launch power that the RE uses to declare the
+//			high transmit optical power alarm. Its value is a 2s-complement integer referred to 1-mW (i.e.,
+//			dBm), with 0.5-dB granularity. The default value 0x7F selects the RE's internal policy. (R,-W)
+//			(optional) (1-byte)
 //
 //		Usage Mode
+//			In a mid-span PON RE, an R'/S' interface may be used as the PON interface for the embedded
+//			management ONU or the uplink interface for an S'/R' interface. This attribute specifies the
+//			usage of the R'/S' interface. (R,-W) (mandatory) (1-byte)
+//
+//			0	Disable
+//
+//			1	This R'/S' interface is used as the uplink for the embedded management ONU
+//
+//			2	This R'/S' interface is used as the uplink for one or more PPTP RE UNI(s)
+//
 //			3	This R'/S' interface is used as the uplink for both the embedded management ONU and one or
 //			more PPTP RE UNI(s) (in a time division fashion).
 //
 //		Target Upstream Frequency
-//			Target upstream frequency: This attribute specifies the frequency of the converted upstream
-//			signal on the optical trunk line (OTL), in gigahertz. The converted frequency must conform to
-//			the frequency plan specified in [ITUT G.984.6]. The value 0 means that the upstream signal
-//			frequency remains the same as the original frequency; no frequency conversion is done. If the RE
-//			does not support provisionable upstream frequency (wavelength), this attribute should take the
-//			fixed value representing the RE's capability and the RE should deny attempts to set the value of
-//			the attribute. If the RE does support provisionable upstream frequency conversion, the default
-//			value of this attribute is 0. (R, W) (optional) (4 bytes).
+//			This attribute specifies the frequency of the converted upstream signal on the optical trunk
+//			line (OTL), in gigahertz. The converted frequency must conform to the frequency plan specified
+//			in [ITUT G.984.6]. The value 0 means that the upstream signal frequency remains the same as the
+//			original frequency; no frequency conversion is done. If the RE does not support provisionable
+//			upstream frequency (wavelength), this attribute should take the fixed value representing the
+//			RE's capability and the RE should deny attempts to set the value of the attribute. If the RE
+//			does support provisionable upstream frequency conversion, the default value of this attribute is
+//			0. (R, W) (optional) (4 bytes).
 //
 //		Target Downstream Frequency
-//			Target downstream frequency: This attribute specifies the frequency of the downstream signal
-//			received by the RE on the OTL, in gigahertz. The incoming frequency must conform to the
-//			frequency plan specified in [ITUT G.984.6]. The default value 0 means that the downstream
-//			frequency remains the same as its original frequency; no frequency conversion is done. If the RE
-//			does not support provisionable downstream frequency selectivity, this attribute should take the
-//			fixed value representing the RE's capability, and the RE should deny attempts to set the value
-//			of the attribute. If the RE does support provisionable downstream frequency selectivity, the
-//			default value of this attribute is 0. (R, W) (optional) (4 bytes).
+//			This attribute specifies the frequency of the downstream signal received by the RE on the OTL,
+//			in gigahertz. The incoming frequency must conform to the frequency plan specified in [ITUT
+//			G.984.6]. The default value 0 means that the downstream frequency remains the same as its
+//			original frequency; no frequency conversion is done. If the RE does not support provisionable
+//			downstream frequency selectivity, this attribute should take the fixed value representing the
+//			RE's capability, and the RE should deny attempts to set the value of the attribute. If the RE
+//			does support provisionable downstream frequency selectivity, the default value of this attribute
+//			is 0. (R, W) (optional) (4 bytes).
 //
 //		Upstream Signal Transmission Mode
-//			Upstream signal transmission mode: When true, this Boolean attribute enables conversion from
-//			burst mode to continuous mode. The default value false specifies burst mode upstream
-//			transmission. If the RE does not have the ability to convert from burst to continuous mode
-//			transmission, it should deny attempts to set this attribute to true. (R, W) (optional) (1 byte)
+//			When true, this Boolean attribute enables conversion from burst mode to continuous mode. The
+//			default value false specifies burst mode upstream transmission. If the RE does not have the
+//			ability to convert from burst to continuous mode transmission, it should deny attempts to set
+//			this attribute to true. (R, W) (optional) (1 byte)
 //
 type ReAniG struct {
 	ManagedEntityDefinition

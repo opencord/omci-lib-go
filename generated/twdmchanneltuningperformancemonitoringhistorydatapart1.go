@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // TwdmChannelTuningPerformanceMonitoringHistoryDataPart1ClassID is the 16-bit ID for the OMCI
 // Managed entity TWDM channel tuning performance monitoring history data part 1
-const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1ClassID ClassID = ClassID(449)
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1ClassID = ClassID(449) // 0x01c1
 
 var twdmchanneltuningperformancemonitoringhistorydatapart1BME *ManagedEntityDefinition
 
-// TwdmChannelTuningPerformanceMonitoringHistoryDataPart1 (class ID #449)
+// TwdmChannelTuningPerformanceMonitoringHistoryDataPart1 (Class ID: #449 / 0x01c1)
 //	This ME collects certain tuning-control-related PM data associated with the slot/circuit pack,
 //	hosting one or more ANI-G MEs, for a specific TWDM channel. Instances of this ME are created and
 //	deleted by the OLT.
@@ -48,27 +48,24 @@ var twdmchanneltuningperformancemonitoringhistorydatapart1BME *ManagedEntityDefi
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the TWDM channel ME. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the TWDM channel ME. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 and 2 MEs
 //			that contains PM threshold values. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Tuning Control Requests For Rx Only Or Rx And Tx
-//			Tuning control requests for Rx only or Rx and Tx: The counter of received Tuning_Control PLOAM
-//			messages with Request operation code that contain tuning instructions either for receiver only
-//			or for both receiver and transmitter. (R) (mandatory) (4-byte)
+//			The counter of received Tuning_Control PLOAM messages with Request operation code that contain
+//			tuning instructions either for receiver only or for both receiver and transmitter. (R)
+//			(mandatory) (4-byte)
 //
 //		Tuning Control Requests For Tx Only
-//			Tuning control requests for Tx only: The counter of received Tuning_Control PLOAM messages with
-//			Request operation code that contain tuning instructions for transmitter only. (R) (mandatory)
-//			(4-byte)
+//			The counter of received Tuning_Control PLOAM messages with Request operation code that contain
+//			tuning instructions for transmitter only. (R) (mandatory) (4-byte)
 //
 //		Tuning Control Requests Rejected_Int_Sfc
 //			Tuning control requests rejected/INT_SFC: The counter of transmitted Tuning_Response PLOAM
@@ -86,24 +83,20 @@ var twdmchanneltuningperformancemonitoringhistorydatapart1BME *ManagedEntityDefi
 //			wavelength channel inconsistency. (R) (mandatory) (4-byte)
 //
 //		Tuning Control Requests Fulfilled With Onu Reacquired At Target Channel
-//			Tuning control requests fulfilled with ONU reacquired at target channel: The counter of
-//			controlled tuning attempts for which an upstream tuning confirmation has been obtained in the
-//			target channel. (R) (mandatory) (4-byte)
+//			The counter of controlled tuning attempts for which an upstream tuning confirmation has been
+//			obtained in the target channel. (R) (mandatory) (4-byte)
 //
 //		Tuning Control Requests Failed Due To Target Ds Wavelength Channel Not Found
-//			Tuning control requests failed due to target DS wavelength channel not found: The counter of
-//			controlled tuning attempts that failed due to timer TO4 expiration in the DS Tuning state (O8)
-//			in the target channel. (R) (mandatory) (4-byte)
+//			The counter of controlled tuning attempts that failed due to timer TO4 expiration in the DS
+//			Tuning state (O8) in the target channel. (R) (mandatory) (4-byte)
 //
 //		Tuning Control Requests Failed Due To No Feedback In Target Ds Wavelength Channel
-//			Tuning control requests failed due to no feedback in target DS wavelength channel: The counter
-//			of controlled tuning attempts that failed due to timer TO5 expiration in the US Tuning state
-//			(O9) in the target channel. (R) (mandatory) (4-byte)
+//			The counter of controlled tuning attempts that failed due to timer TO5 expiration in the US
+//			Tuning state (O9) in the target channel. (R) (mandatory) (4-byte)
 //
 //		Tuning Control Requests Resolved With Onu Reacquired At Discretionary Channel
-//			Tuning control requests resolved with ONU reacquired at discretionary channel: The counter of
-//			controlled tuning attempts for which an upstream tuning confirmation has been obtained in the
-//			discretionary channel. (R) (mandatory) (4-byte)
+//			The counter of controlled tuning attempts for which an upstream tuning confirmation has been
+//			obtained in the discretionary channel. (R) (mandatory) (4-byte)
 //
 //		Tuning Control Requests Rollback_Com_Ds
 //			Tuning control requests Rollback/COM_DS: The counter of controlled tuning attempts that failed
@@ -123,9 +116,8 @@ var twdmchanneltuningperformancemonitoringhistorydatapart1BME *ManagedEntityDefi
 //			(mandatory) (4-byte)
 //
 //		Tuning Control Requests Failed With Onu Reactivation
-//			Tuning control requests failed with ONU reactivation: The counter of controlled tuning attempts
-//			that failed on any reason, with expiration of timers TO4 or TO5 causing the ONU transition into
-//			state O1. (R) (mandatory) (4-byte)
+//			The counter of controlled tuning attempts that failed on any reason, with expiration of timers
+//			TO4 or TO5 causing the ONU transition into state O1. (R) (mandatory) (4-byte)
 //
 type TwdmChannelTuningPerformanceMonitoringHistoryDataPart1 struct {
 	ManagedEntityDefinition

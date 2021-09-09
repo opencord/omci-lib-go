@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Ieee8021PMapperServiceProfileClassID is the 16-bit ID for the OMCI
 // Managed entity IEEE 802.1p mapper service profile
-const Ieee8021PMapperServiceProfileClassID ClassID = ClassID(130)
+const Ieee8021PMapperServiceProfileClassID = ClassID(130) // 0x0082
 
 var ieee8021pmapperserviceprofileBME *ManagedEntityDefinition
 
-// Ieee8021PMapperServiceProfile (class ID #130)
+// Ieee8021PMapperServiceProfile (Class ID: #130 / 0x0082)
 //	This ME associates the priorities of IEEE 802.1p [IEEE 802.1D] priority tagged frames with
 //	specific connections. This ME directs upstream traffic to the designated GEM ports. Downstream
 //	traffic arriving on any of the IEEE 802.1p mapper's GEM ports is directed to the mapper's root
@@ -48,11 +48,24 @@ var ieee8021pmapperserviceprofileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Tp Pointer
+//			This attribute points to an instance of the associated TP.
+//
+//			If the optional TP type attribute is not supported, the TP pointer indicates bridging mapping
+//			with the value 0xFFFF; the TP pointer may also point to a PPTP Ethernet UNI.
+//
+//			The TP type value 0 also indicates bridging mapping, and the TP pointer should be set to 0xFFFF.
+//
+//			In all other cases, the TP type is determined by the TP type attribute.
+//
 //			(R,-W, setbycreate) (mandatory) (2-bytes)
+//
+//			Each of the following eight attributes points to the GEM IW TP associated with the stated P-bit
+//			value. The null pointer 0xFFFF specifies that frames with the associated priority are to be
+//			discarded.
 //
 //		Interwork Tp Pointer For P_Bit Priority 0
 //			Interwork TP pointer for P-bit priority 0:	(R,-W, setbycreate) (mandatory) (2-bytes)
@@ -79,6 +92,16 @@ var ieee8021pmapperserviceprofileBME *ManagedEntityDefinition
 //			Interwork TP pointer for P-bit priority 7:	(R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Unmarked Frame Option
+//			This attribute specifies how the ONU should handle untagged Ethernet frames received across the
+//			associated interface. Although it does not alter the frame in any way, the ONU routes the frame
+//			as if it were tagged with P bits (PCP field) according to the following code points.
+//
+//			0	Derive implied PCP field from DSCP bits of received frame
+//
+//			1	Set implied PCP field to a fixed value specified by the default P-bit assumption attribute
+//
+//			(R,-W, setbycreate) (mandatory) (1-byte)
+//
 //			Untagged downstream frames are passed through the mapper transparently.
 //
 //		Dscp To P Bit Mapping
@@ -88,6 +111,13 @@ var ieee8021pmapperserviceprofileBME *ManagedEntityDefinition
 //			adopt the priority mechanism based on IP precedence, which needs only the three MSBs of the DSCP
 //			field.
 //
+//			DSCP to P-bit mapping: This attribute is valid when the unmarked frame option attribute is set
+//			to 0. The DSCP to P-bit attribute can be considered a bit string sequence of 64 3-bit groupings.
+//			The 64 sequence entries represent the possible values of the 6-bit DSCP field. Each 3-bit
+//			grouping specifies the P-bit value to which the associated DSCP value should be mapped. The
+//			unmarked frame is then directed to the GEM IW TP indicated by the interwork TP pointer mappings.
+//			(R,-W) (mandatory) (24-bytes)
+//
 //		Default P Bit Assumption
 //			Default P-bit assumption: This attribute is valid when the unmarked frame option attribute is
 //			set to 1. In its LSBs, the default Pbit assumption attribute contains the default PCP field to
@@ -95,6 +125,28 @@ var ieee8021pmapperserviceprofileBME *ManagedEntityDefinition
 //			pointer mappings. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Tp Type
+//			This attribute identifies the type of TP associated with the mapper.
+//
+//			0	Mapper used for bridging-mapping
+//
+//			1	Mapper directly associated with a PPTP Ethernet UNI
+//
+//			2	Mapper directly associated with an IP host config data or IPv6 host config data ME
+//
+//			3	Mapper directly associated with an Ethernet flow termination point
+//
+//			4	Mapper directly associated with a PPTP xDSL UNI
+//
+//			5	Reserved
+//
+//			6	Mapper directly associated with a PPTP MoCA UNI
+//
+//			7	Mapper directly associated with a virtual Ethernet interface point
+//
+//			8	Mapper directly associated with an IW VCC termination point
+//
+//			9	Mapper directly associated with an EFM bonding group
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
 type Ieee8021PMapperServiceProfile struct {

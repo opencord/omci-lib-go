@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XtuDataGatheringConfigurationClassID is the 16-bit ID for the OMCI
 // Managed entity xTU data gathering configuration
-const XtuDataGatheringConfigurationClassID ClassID = ClassID(413)
+const XtuDataGatheringConfigurationClassID = ClassID(413) // 0x019d
 
 var xtudatagatheringconfigurationBME *ManagedEntityDefinition
 
-// XtuDataGatheringConfiguration (class ID #413)
+// XtuDataGatheringConfiguration (Class ID: #413 / 0x019d)
 //	This ME defines configurations specific to data gathering.
 //
 //	An instance of this ME is created and deleted by the OLT.
@@ -42,9 +42,9 @@ var xtudatagatheringconfigurationBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1 ME.
-//			(R,-set-by-create) (mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R,-set-by-create) (mandatory)
+//			(2 bytes)
 //
 //		Logging Depth Event Percentage Per Event _ Vtu_O Logging_Depth_Event_Percentage_Oi Table
 //			Logging depth event percentage per event - VTU-O (LOGGING_DEPTH_EVENT_PERCENTAGE_Oi) table: This

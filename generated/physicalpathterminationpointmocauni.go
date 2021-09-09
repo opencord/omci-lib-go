@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PhysicalPathTerminationPointMocaUniClassID is the 16-bit ID for the OMCI
 // Managed entity Physical path termination point MoCA UNI
-const PhysicalPathTerminationPointMocaUniClassID ClassID = ClassID(162)
+const PhysicalPathTerminationPointMocaUniClassID = ClassID(162) // 0x00a2
 
 var physicalpathterminationpointmocauniBME *ManagedEntityDefinition
 
-// PhysicalPathTerminationPointMocaUni (class ID #162)
+// PhysicalPathTerminationPointMocaUni (Class ID: #162 / 0x00a2)
 //	This ME represents an MoCA UNI, where physical paths terminate and physical path level functions
 //	are performed.
 //
@@ -54,69 +54,83 @@ var physicalpathterminationpointmocauniBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. This 2-byte
-//			number is directly associated with the physical position of the UNI. The first byte is the slot
-//			ID (defined in clause 9.1.5). The second byte is the port ID, with the range 1..255. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. This 2-byte number is directly
+//			associated with the physical position of the UNI. The first byte is the slot ID (defined in
+//			clause 9.1.5). The second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
 //
 //		Loopback Configuration
+//			0	No loopback
+//
+//			3	Loopback3, loopback of downstream traffic after PHY transceiver, depicted in Figure 9.10.1-1.
+//
 //			Upon ME instantiation, the ONU sets this attribute to 0. (R,-W) (optional) (1-byte)
 //
+//			This attribute sets the MoCA loopback configuration. Note that normal bridge behaviour may
+//			defeat the loopback signal unless broadcast MAC addresses are used.
+//
 //		Administrative State
-//			Administrative state: This attribute locks (1) and unlocks (0) the functions performed by this
-//			ME. Administrative state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Max Frame Size
-//			Max frame size: This attribute denotes the maximum frame size allowed across this interface.
-//			Upon ME instantiation, the ONU sets this attribute to 1518. (R,-W) (mandatory) (2-bytes)
+//			This attribute denotes the maximum frame size allowed across this interface. Upon ME
+//			instantiation, the ONU sets this attribute to 1518. (R,-W) (mandatory) (2-bytes)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Pppoe Filter
-//			PPPoE filter: This attribute controls filtering of PPPoE packets on this MoCA port. When its
-//			value is 1, all packets other than PPPoE packets are discarded. The default 0 accepts packets of
-//			all types. (R,-W) (optional) (1-byte)
+//			This attribute controls filtering of PPPoE packets on this MoCA port. When its value is 1, all
+//			packets other than PPPoE packets are discarded. The default 0 accepts packets of all types.
+//			(R,-W) (optional) (1-byte)
 //
 //		Network Status
+//			This attribute indicates the networking state of the MoCA interface as follows.
+//
+//			0	The interface has not joined an MoCA network.
+//
+//			1	The interface has joined an MoCA network.
+//
+//			2	The interface has joined an MoCA network and is currently the network coordinator.
+//
 //			(R) (mandatory) (1-byte)
 //
 //		Password
-//			Password:	This attribute specifies the MoCA encryption key. It is an ASCII string of 17 decimal
-//			digits. Upon ME instantiation, the ONU sets this attribute to 17 null bytes. (R,-W) (mandatory)
+//			This attribute specifies the MoCA encryption key. It is an ASCII string of 17 decimal digits.
+//			Upon ME instantiation, the ONU sets this attribute to 17 null bytes. (R,-W) (mandatory)
 //			(17-bytes)
 //
 //		Privacy Enabled
-//			Privacy enabled: This attribute activates (1) link-layer security. The default value 0
-//			deactivates it. (R,-W) (mandatory) (1-byte)
+//			This attribute activates (1) link-layer security. The default value 0 deactivates it. (R,-W)
+//			(mandatory) (1-byte)
 //
 //		Minimum Bandwidth Alarm Threshold
-//			Minimum bandwidth alarm threshold: This attribute specifies the minimum desired PHY link
-//			bandwidth between two nodes. If the actual bandwidth is lower, an LL alarm is declared. Valid
-//			values are 0 to 0x0410 (260-Mbit/s) in 0.25-Mbit/s increments. The default value is 0x02D0
-//			(180-Mbit/s). The value 0 disables the threshold. (R,-W) (optional) (2-bytes)
+//			This attribute specifies the minimum desired PHY link bandwidth between two nodes. If the actual
+//			bandwidth is lower, an LL alarm is declared. Valid values are 0 to 0x0410 (260-Mbit/s) in
+//			0.25-Mbit/s increments. The default value is 0x02D0 (180-Mbit/s). The value 0 disables the
+//			threshold. (R,-W) (optional) (2-bytes)
 //
 //		Frequency Mask
-//			Frequency mask: This attribute is a bit map of the centre frequencies that the interface is
-//			permitted to use, where each bit represents a centre frequency. The LSB (b[1]) corresponds to
-//			centre frequency 800-MHz. The next significant bit (b[2]) corresponds to centre frequency
-//			825-MHz. The 28th bit (b[28]) corresponds to centre frequency 1500-MHz. The four MSBs are not
-//			used. (R,-W) (optional) (4-bytes)
+//			This attribute is a bit map of the centre frequencies that the interface is permitted to use,
+//			where each bit represents a centre frequency. The LSB (b[1]) corresponds to centre frequency
+//			800-MHz. The next significant bit (b[2]) corresponds to centre frequency 825-MHz. The 28th bit
+//			(b[28]) corresponds to centre frequency 1500-MHz. The four MSBs are not used. (R,-W) (optional)
+//			(4-bytes)
 //
 //		Rf Channel
-//			RF channel:	This attribute reports the frequency to which the MoCA interface is currently tuned,
-//			in megahertz. (R) (mandatory) (2-bytes)
+//			This attribute reports the frequency to which the MoCA interface is currently tuned, in
+//			megahertz. (R) (mandatory) (2-bytes)
 //
 //		Last Operational Frequency
-//			Last operational frequency: This attribute reports the frequency to which the MoCA interface was
-//			tuned when last operational, in megahertz. (R) (mandatory) (2-bytes)
+//			This attribute reports the frequency to which the MoCA interface was tuned when last
+//			operational, in megahertz. (R) (mandatory) (2-bytes)
 //
 type PhysicalPathTerminationPointMocaUni struct {
 	ManagedEntityDefinition

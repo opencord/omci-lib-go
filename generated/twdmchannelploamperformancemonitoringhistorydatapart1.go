@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // TwdmChannelPloamPerformanceMonitoringHistoryDataPart1ClassID is the 16-bit ID for the OMCI
 // Managed entity TWDM channel PLOAM performance monitoring history data part 1
-const TwdmChannelPloamPerformanceMonitoringHistoryDataPart1ClassID ClassID = ClassID(446)
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart1ClassID = ClassID(446) // 0x01be
 
 var twdmchannelploamperformancemonitoringhistorydatapart1BME *ManagedEntityDefinition
 
-// TwdmChannelPloamPerformanceMonitoringHistoryDataPart1 (class ID #446)
+// TwdmChannelPloamPerformanceMonitoringHistoryDataPart1 (Class ID: #446 / 0x01be)
 //	This ME collects certain PLOAM-related PM data associated with the slot/circuit pack, hosting
 //	one or more ANI-G MEs, for a specific TWDM channel. Instances of this ME are created and deleted
 //	by the OLT.
@@ -55,41 +55,36 @@ var twdmchannelploamperformancemonitoringhistorydatapart1BME *ManagedEntityDefin
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the TWDM channel ME. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the TWDM channel ME. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 and 2 MEs
 //			that contains PM threshold values. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Ploam Mic Errors
-//			PLOAM MIC errors: The counter of received PLOAM messages that remain unparsable due to MIC
-//			error. (R) (mandatory) (4-byte)
-//
-//		Downstream Ploam Message Count
-//			Downstream PLOAM message count: The counter of received broadcast and unicast PLOAM messages
-//			pertaining to the given ONU. (R) (mandatory) (4-byte)
-//
-//		Ranging_Time Message Count
-//			Ranging_Time message count: The counter of received Ranging_Time PLOAM messages. (R) (mandatory)
+//			The counter of received PLOAM messages that remain unparsable due to MIC error. (R) (mandatory)
 //			(4-byte)
 //
-//		Protection_Control Message Count
-//			Protection_Control message count: The counter of received Protection_Control PLOAM messages. (R)
+//		Downstream Ploam Message Count
+//			The counter of received broadcast and unicast PLOAM messages pertaining to the given ONU. (R)
 //			(mandatory) (4-byte)
 //
+//		Ranging_Time Message Count
+//			The counter of received Ranging_Time PLOAM messages. (R) (mandatory) (4-byte)
+//
+//		Protection_Control Message Count
+//			The counter of received Protection_Control PLOAM messages. (R) (mandatory) (4-byte)
+//
 //		Adjust_Tx_Wavelength Message Count
-//			Adjust_Tx_Wavelength message count: The counter of received Adjust_Tx_Wavelength PLOAM messages.
-//			(R) (mandatory) (4-byte)
+//			The counter of received Adjust_Tx_Wavelength PLOAM messages. (R) (mandatory) (4-byte)
 //
 //		Adjust_Tx_Wavelength Adjustment Amplitude
-//			Adjust_Tx_Wavelength adjustment amplitude: An estimator of the absolute value of the
-//			transmission wavelength adjustment. (R) (mandatory) (4-byte)
+//			An estimator of the absolute value of the transmission wavelength adjustment. (R) (mandatory)
+//			(4-byte)
 //
 type TwdmChannelPloamPerformanceMonitoringHistoryDataPart1 struct {
 	ManagedEntityDefinition
@@ -104,8 +99,8 @@ func init() {
 			Create,
 			Delete,
 			Get,
-			GetCurrentData,
 			Set,
+			GetCurrentData,
 		),
 		AllowedAttributeMask: 0xff00,
 		AttributeDefinitions: AttributeDefinitionMap{

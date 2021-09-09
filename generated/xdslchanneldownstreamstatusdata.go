@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslChannelDownstreamStatusDataClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL channel downstream status data
-const XdslChannelDownstreamStatusDataClassID ClassID = ClassID(102)
+const XdslChannelDownstreamStatusDataClassID = ClassID(102) // 0x0066
 
 var xdslchanneldownstreamstatusdataBME *ManagedEntityDefinition
 
-// XdslChannelDownstreamStatusData (class ID #102)
+// XdslChannelDownstreamStatusData (Class ID: #102 / 0x0066)
 //	This ME contains downstream channel status data for an xDSL UNI. The ONU automatically creates
 //	or deletes instances of this ME upon the creation or deletion of a PPTP xDSL UNI part 1.
 //
@@ -43,41 +43,39 @@ var xdslchanneldownstreamstatusdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The two MSBs of
-//			the first byte are the bearer channel ID. Excluding the first 2-bits of the first byte, the
-//			remaining part of the ME ID is identical to that of this ME's parent PPTP xDSL UNI part 1. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The two MSBs of the first byte are
+//			the bearer channel ID. Excluding the first 2-bits of the first byte, the remaining part of the
+//			ME ID is identical to that of this ME's parent PPTP xDSL UNI part 1. (R) (mandatory) (2-bytes)
 //
 //		Actual Interleaving Delay
-//			Actual interleaving delay: This attribute is the actual one-way interleaving delay introduced by
-//			the PMS-TC between the alpha and beta reference points, excluding delay in the L1 and L2 states.
-//			In the L1 and L2 states, the attribute contains the interleaving delay in the previous L0 state.
-//			For ADSL, this attribute is derived from the S and D attributes as cap(S*D)/4 ms, where S is the
-//			number of symbols per codeword, D is the interleaving depth and cap() denotes rounding to the
-//			next higher integer. For [ITU-T G.993.2], this attribute is computed according to the formula in
-//			clause 9.7 of [ITUT-G.993.2]. The actual interleaving delay is coded in milliseconds, rounded to
-//			the nearest millisecond. (R) (mandatory) (1-byte)
+//			This attribute is the actual one-way interleaving delay introduced by the PMS-TC between the
+//			alpha and beta reference points, excluding delay in the L1 and L2 states. In the L1 and L2
+//			states, the attribute contains the interleaving delay in the previous L0 state. For ADSL, this
+//			attribute is derived from the S and D attributes as cap(S*D)/4 ms, where S is the number of
+//			symbols per codeword, D is the interleaving depth and cap() denotes rounding to the next higher
+//			integer. For [ITU-T G.993.2], this attribute is computed according to the formula in clause 9.7
+//			of [ITUT-G.993.2]. The actual interleaving delay is coded in milliseconds, rounded to the
+//			nearest millisecond. (R) (mandatory) (1-byte)
 //
 //		Actual Data Rate
-//			Actual data rate: This parameter reports the actual net data rate of the bearer channel,
-//			excluding the rate in the L1 and L2 states. In the L1 or L2 state, the parameter contains the
-//			net data rate in the previous L0 state. The data rate is coded in bits per second. (R)
-//			(mandatory) (4-bytes)
+//			This parameter reports the actual net data rate of the bearer channel, excluding the rate in the
+//			L1 and L2 states. In the L1 or L2 state, the parameter contains the net data rate in the
+//			previous L0 state. The data rate is coded in bits per second. (R) (mandatory) (4-bytes)
 //
 //		Previous Data Rate
-//			Previous data rate: This parameter reports the previous net data rate of the bearer channel just
-//			before the latest rate change event occurred, excluding transitions between the L0 state and the
-//			L1 or L2 states. A rate change can occur at a power management state transition, e.g., at full
-//			or short initialization, fast retrain or power down, or at a dynamic rate adaptation. The rate
-//			is coded in bits per second (R) (mandatory) (4-bytes)
+//			This parameter reports the previous net data rate of the bearer channel just before the latest
+//			rate change event occurred, excluding transitions between the L0 state and the L1 or L2 states.
+//			A rate change can occur at a power management state transition, e.g., at full or short
+//			initialization, fast retrain or power down, or at a dynamic rate adaptation. The rate is coded
+//			in bits per second (R) (mandatory) (4-bytes)
 //
 //		Actual Impulse Noise Protection
-//			Actual impulse noise protection: The ACTINP attribute reports the actual INP on the bearer
-//			channel in the L0 state. In the L1 or L2 state, the attribute contains the INP in the previous
-//			L0 state. The value of this attribute is a number of DMT symbols, with a granularity of 0.1
-//			symbols. Its range is from 0 (0.0 symbols) to 254 (25.4 symbols). The special value 255
-//			indicates an ACTINP higher than 25.4. (R) (optional for [ITU-T G.992.1], mandatory for other
-//			xDSL Recommendations that support this attribute) (1-byte)
+//			The ACTINP attribute reports the actual INP on the bearer channel in the L0 state. In the L1 or
+//			L2 state, the attribute contains the INP in the previous L0 state. The value of this attribute
+//			is a number of DMT symbols, with a granularity of 0.1 symbols. Its range is from 0 (0.0 symbols)
+//			to 254 (25.4 symbols). The special value 255 indicates an ACTINP higher than 25.4. (R) (optional
+//			for [ITU-T G.992.1], mandatory for other xDSL Recommendations that support this attribute)
+//			(1-byte)
 //
 //		Actual Size Of Reed_Solomon Codeword
 //			Actual size of Reed-Solomon codeword: The NFEC attribute reports the actual Reed-Solomon
@@ -92,30 +90,28 @@ var xdslchanneldownstreamstatusdataBME *ManagedEntityDefinition
 //			Reed-Solomon coding. (R) (mandatory for ITUT-G.993.2 VDSL2, optional for others) (1-byte)
 //
 //		Actual Number Of Bits Per Symbol
-//			Actual number of bits per symbol: The LSYMB attribute reports the actual number of bits per
-//			symbol assigned to the latency path in which the bearer channel is transported, excluding
-//			trellis overhead. The value is coded in bits, and ranges from 0..65535. (R) (mandatory for [TU-T
-//			G.993.2 VDSL2, optional for others) (2-bytes)
+//			The LSYMB attribute reports the actual number of bits per symbol assigned to the latency path in
+//			which the bearer channel is transported, excluding trellis overhead. The value is coded in bits,
+//			and ranges from 0..65535. (R) (mandatory for [TU-T G.993.2 VDSL2, optional for others) (2-bytes)
 //
 //		Actual Interleaving Depth
-//			Actual interleaving depth: The INTLVDEPTH attribute reports the actual depth of the interleaver
-//			used in the latency path in which the bearer channel is transported. The value ranges from
-//			1..4096 in steps of 1. The value 1 indicates no interleaving. (R) (mandatory for ITU-T G.993.2
-//			VDSL2, optional for others) (2-bytes)
+//			The INTLVDEPTH attribute reports the actual depth of the interleaver used in the latency path in
+//			which the bearer channel is transported. The value ranges from 1..4096 in steps of 1. The value
+//			1 indicates no interleaving. (R) (mandatory for ITU-T G.993.2 VDSL2, optional for others)
+//			(2-bytes)
 //
 //		Actual Interleaving Block Length
-//			Actual interleaving block length: The INTLVBLOCK attribute reports the actual block length of
-//			the interleaver used in the latency path in which the bearer channel is transported. The value
-//			ranges from 4..255 in steps of 1. (R) (mandatory for ITU-T G.993.2 VDSL2, undefined for others)
-//			(1-byte)
+//			The INTLVBLOCK attribute reports the actual block length of the interleaver used in the latency
+//			path in which the bearer channel is transported. The value ranges from 4..255 in steps of 1. (R)
+//			(mandatory for ITU-T G.993.2 VDSL2, undefined for others) (1-byte)
 //
 //		Actual Latency Path
-//			Actual latency path: The LPATH attribute reports the index of the actual latency path in which
-//			the bearer channel is transported. Valid values are 0..3. In [ITUT-G.992.1], the fast path is
-//			mapped to latency index 0; the interleaved path to index 1. (R) (mandatory for ITU-T G.993.2
-//			VDSL2, optional for others) (1-byte)
+//			The LPATH attribute reports the index of the actual latency path in which the bearer channel is
+//			transported. Valid values are 0..3. In [ITUT-G.992.1], the fast path is mapped to latency index
+//			0; the interleaved path to index 1. (R) (mandatory for ITU-T G.993.2 VDSL2, optional for others)
+//			(1-byte)
 //
-//		Actual Impulse Noise Protection Against R Epetitive E Lectrical I Mpulse N Oise Actinp_Rein
+//		Actual Impulse Noise Protection Against Repetitive Electrical Impulse Noise Actinp_Rein
 //			Actual impulse noise protection against repetitive electrical impulse noise (ACTINP_REIN): If
 //			retransmission is used in a given transmit direction, this parameter reports the actual INP
 //			against REIN on the bearer channel. The INP of this attribute is equal to the integer value
@@ -147,7 +143,7 @@ func init() {
 			8:  Uint16Field("ActualInterleavingDepth", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
 			9:  ByteField("ActualInterleavingBlockLength", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
 			10: ByteField("ActualLatencyPath", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: ByteField("ActualImpulseNoiseProtectionAgainstREpetitiveELectricalIMpulseNOiseActinpRein", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			11: ByteField("ActualImpulseNoiseProtectionAgainstRepetitiveElectricalImpulseNoiseActinpRein", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

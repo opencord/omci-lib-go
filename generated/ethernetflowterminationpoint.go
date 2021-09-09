@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // EthernetFlowTerminationPointClassID is the 16-bit ID for the OMCI
 // Managed entity Ethernet flow termination point
-const EthernetFlowTerminationPointClassID ClassID = ClassID(286)
+const EthernetFlowTerminationPointClassID = ClassID(286) // 0x011e
 
 var ethernetflowterminationpointBME *ManagedEntityDefinition
 
-// EthernetFlowTerminationPoint (class ID #286)
+// EthernetFlowTerminationPoint (Class ID: #286 / 0x011e)
 //	The Ethernet flow TP contains the attributes necessary to originate and terminate Ethernet
 //	frames in the ONU. It is appropriate when transporting pseudowire services via layer-2.
 //	Instances of this ME are created and deleted by the OLT.
@@ -42,28 +42,39 @@ var ethernetflowterminationpointBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to a pseudowire TP ME. (R, setbycreate) (mandatory)
-//			(2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to a pseudowire TP ME. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Destination Mac
-//			Destination MAC: This attribute specifies the destination MAC address of upstream Ethernet
-//			frames. (R,-W, setbycreate) (mandatory) (6-bytes)
+//			This attribute specifies the destination MAC address of upstream Ethernet frames. (R,-W,
+//			setbycreate) (mandatory) (6-bytes)
 //
 //		Source Mac
-//			Source MAC: This attribute specifies the near-end MAC address. It is established by nonOMCI
-//			means (e.g., factory programmed into ONU flash memory) and is included here for information
-//			only. (R) (mandatory) (6-bytes)
+//			This attribute specifies the near-end MAC address. It is established by nonOMCI means (e.g.,
+//			factory programmed into ONU flash memory) and is included here for information only. (R)
+//			(mandatory) (6-bytes)
 //
 //		Tag Policy
+//			0	untagged frame
+//
+//			1	tagged frame
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
+//			This attribute specifies the tagging policy to be applied to upstream Ethernet frames.
+//
 //		Tci
-//			TCI:	If the tag policy calls for tagging of upstream Ethernet frames, this attribute specifies
-//			the tag control information, which includes the VLAN tag, P bits and CFI bit. (R,-W) (optional)
+//			If the tag policy calls for tagging of upstream Ethernet frames, this attribute specifies the
+//			tag control information, which includes the VLAN tag, P bits and CFI bit. (R,-W) (optional)
 //			(2-bytes)
 //
 //		Loopback
+//			This attribute sets the loopback configuration as follows.
+//
+//			0	No loopback
+//
+//			1	Loopback of downstream traffic at MAC client
+//
 //			(R,-W) (mandatory) (1-byte)
 //
 type EthernetFlowTerminationPoint struct {

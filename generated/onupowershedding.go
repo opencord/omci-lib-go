@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // OnuPowerSheddingClassID is the 16-bit ID for the OMCI
 // Managed entity ONU power shedding
-const OnuPowerSheddingClassID ClassID = ClassID(133)
+const OnuPowerSheddingClassID = ClassID(133) // 0x0085
 
 var onupowersheddingBME *ManagedEntityDefinition
 
-// OnuPowerShedding (class ID #133)
+// OnuPowerShedding (Class ID: #133 / 0x0085)
 //	This ME models the ONU's ability to shed services when the ONU goes into battery operation mode
 //	after AC power failure. Shedding classes are defined in the following table, which may span
 //	multiple circuit pack types. This feature works in conjunction with the power shed override
@@ -53,43 +53,72 @@ var onupowersheddingBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. There is only
-//			one instance, number 0. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. There is only one instance, number
+//			0. (R) (mandatory) (2-bytes)
 //
 //		Restore Power Timer Reset Interval
-//			Restore power timer reset interval: The time delay, in seconds, before resetting the power-
-//			shedding timers after full power restoration. Upon ME instantiation, the ONU sets this attribute
-//			to 0. (R,-W) (mandatory) (2-bytes)
+//			The time delay, in seconds, before resetting the power-shedding timers after full power
+//			restoration. Upon ME instantiation, the ONU sets this attribute to 0. (R,-W) (mandatory)
+//			(2-bytes)
+//
+//			For each class of service (CoS), an interval attribute is defined below. The value 0 disables
+//			power shedding, while the value 1 enables immediate power shedding, i.e., as soon as AC power
+//			fails. Other values specify the time, in seconds, to keep the service active after AC failure
+//			before shutting them down and shedding power. Upon ME instantiation, the ONU sets each of the
+//			interval attributes to 0.
 //
 //		Data Class Shedding Interval
-//			Data class shedding interval:	(R,-W) (mandatory) (2-bytes)
+//			(R,-W) (mandatory) (2-bytes)
 //
 //		Voice Class Shedding Interval
-//			Voice class shedding interval: This attribute only pertains to voice services that terminate on
-//			the ONU and are under the management control of the OMCI. 	(R,-W) (mandatory) (2-bytes)
+//			This attribute only pertains to voice services that terminate on the ONU and are under the
+//			management control of the OMCI. 	(R,-W) (mandatory) (2-bytes)
 //
 //		Video Overlay Class Shedding Interval
-//			Video overlay class shedding interval:	(R,-W) (mandatory) (2-bytes)
+//			(R,-W) (mandatory) (2-bytes)
 //
 //		Video Return Class Shedding Interval
-//			Video return class shedding interval:	(R,-W) (mandatory) (2-bytes)
+//			(R,-W) (mandatory) (2-bytes)
 //
 //		Digital Subscriber Line Class Shedding Interval
 //			Digital subscriber line (DSL) class shedding interval:	(R,-W) (mandatory) (2-bytes)
 //
 //		Atm Class Shedding Interval
-//			ATM class shedding interval:	(R,-W) (mandatory) (2-bytes)
+//			(R,-W) (mandatory) (2-bytes)
 //
 //		Ces Class Shedding Interval
-//			CES class shedding interval:	(R,-W) (mandatory) (2-bytes)
+//			(R,-W) (mandatory) (2-bytes)
 //
 //		Frame Class Shedding Interval
-//			Frame class shedding interval:	(R,-W) (mandatory) (2-bytes)
+//			(R,-W) (mandatory) (2-bytes)
 //
 //		Sdh_Sonet Class Shedding Interval
 //			Sdh-sonet class shedding interval:	(R,-W) (mandatory) (2-bytes)
 //
 //		Shedding Status
+//			Binary indication of power-shedding status for each shedding class. If this 2 byte field is
+//			depicted 0b ABCD EFGH IJKL MNOP, its bits are assigned as follows-
+//
+//			A	Data class
+//
+//			B	Voice class
+//
+//			C	Video overlay class
+//
+//			D	Video return class
+//
+//			E	DSL class
+//
+//			F	ATM class
+//
+//			G	CES class
+//
+//			H	Frame class
+//
+//			I	Sdh-sonet class
+//
+//			J..P	Reserved and set to 0
+//
 //			The ONU sets each bit to 1 when power shedding is active, and clears it to 0 when the service is
 //			restored. (R) (optional) (2-bytes)
 //

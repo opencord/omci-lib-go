@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // RtpPseudowireParametersClassID is the 16-bit ID for the OMCI
 // Managed entity RTP pseudowire parameters
-const RtpPseudowireParametersClassID ClassID = ClassID(283)
+const RtpPseudowireParametersClassID = ClassID(283) // 0x011b
 
 var rtppseudowireparametersBME *ManagedEntityDefinition
 
-// RtpPseudowireParameters (class ID #283)
+// RtpPseudowireParameters (Class ID: #283 / 0x011b)
 //	If a pseudowire service uses RTP, the RTP pseudowire parameters ME provides configuration
 //	information for the RTP layer. Instances of this ME are created and deleted by the OLT. The use
 //	of RTP on a pseudowire is optional, and is determined by the existence of the RTP pseudowire
@@ -43,43 +43,52 @@ var rtppseudowireparametersBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the pseudowire TP ME. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the pseudowire TP ME. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Clock Reference
-//			Clock reference: This attribute specifies the frequency of the common timing reference, in
-//			multiples of 8 kHz. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute specifies the frequency of the common timing reference, in multiples of 8 kHz.
+//			(R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Rtp Timestamp Mode
+//			This attribute determines the mode in which RTP timestamps are generated in the TDM to the PSN
+//			direction.
+//
+//			0	Unknown or not applicable.
+//
+//			1	Absolute. Timestamps are based on the timing of the incoming TDM signal.
+//
+//			2	Differential. Timestamps are based on the ONU's reference clock, which is understood to be
+//			stratum-traceable along with the reference clock at the far end.
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Ptype
-//			PTYPE:	This attribute specifies the RTP payload type in the TDM to the PSN direction. It
-//			comprises two 1-byte values. The first is for the payload channel, the second, for the optional
-//			separate signalling channel. Assignable PTYPEs lie in the dynamic range 96..127. If signalling
-//			is not transported in its own channel, the second value should be set to 0. (R,-W, setbycreate)
+//			This attribute specifies the RTP payload type in the TDM to the PSN direction. It comprises two
+//			1-byte values. The first is for the payload channel, the second, for the optional separate
+//			signalling channel. Assignable PTYPEs lie in the dynamic range 96..127. If signalling is not
+//			transported in its own channel, the second value should be set to 0. (R,-W, setbycreate)
 //			(mandatory) (2-bytes)
 //
 //		Ssrc
-//			SSRC:	This attribute specifies the RTP synchronization source in the TDM to the PSN direction.
-//			It comprises two 4-byte values. The first is for the payload channel, the second, for the
-//			optional separate signalling channel. If signalling is not transported in its own channel, the
-//			second value should be set to 0. (R,-W, setbycreate) (mandatory) (8-bytes)
+//			This attribute specifies the RTP synchronization source in the TDM to the PSN direction. It
+//			comprises two 4-byte values. The first is for the payload channel, the second, for the optional
+//			separate signalling channel. If signalling is not transported in its own channel, the second
+//			value should be set to 0. (R,-W, setbycreate) (mandatory) (8-bytes)
 //
 //		Expected Ptype
-//			Expected PTYPE: This attribute specifies the RTP payload type in the PSN to the TDM direction.
-//			The received payload type may be used to detect malformed packets. It comprises two 1-byte
-//			values. The first is for the payload channel, the second, for the optional separate signalling
-//			channel. To disable either or both of the check functions, set the corresponding value to its
-//			default value 0. (R,-W, setbycreate) (optional) (2-bytes)
+//			This attribute specifies the RTP payload type in the PSN to the TDM direction. The received
+//			payload type may be used to detect malformed packets. It comprises two 1-byte values. The first
+//			is for the payload channel, the second, for the optional separate signalling channel. To disable
+//			either or both of the check functions, set the corresponding value to its default value 0.
+//			(R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Expected Ssrc
-//			Expected SSRC: This attribute specifies the RTP synchronization source in the PSN to the TDM
-//			direction. The received SSRC may be used to detect misconnection (stray packets). It comprises
-//			two 4-byte values. The first is for the payload channel, the second, for the optional separate
-//			signalling channel. To disable either or both of the check functions, set the corresponding
-//			value to its default value 0. (R,-W, setbycreate) (optional) (8-bytes)
+//			This attribute specifies the RTP synchronization source in the PSN to the TDM direction. The
+//			received SSRC may be used to detect misconnection (stray packets). It comprises two 4-byte
+//			values. The first is for the payload channel, the second, for the optional separate signalling
+//			channel. To disable either or both of the check functions, set the corresponding value to its
+//			default value 0. (R,-W, setbycreate) (optional) (8-bytes)
 //
 type RtpPseudowireParameters struct {
 	ManagedEntityDefinition

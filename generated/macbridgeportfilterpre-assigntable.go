@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // MacBridgePortFilterPreAssignTableClassID is the 16-bit ID for the OMCI
 // Managed entity MAC bridge port filter pre-assign table
-const MacBridgePortFilterPreAssignTableClassID ClassID = ClassID(79)
+const MacBridgePortFilterPreAssignTableClassID = ClassID(79) // 0x004f
 
 var macbridgeportfilterpreassigntableBME *ManagedEntityDefinition
 
-// MacBridgePortFilterPreAssignTable (class ID #79)
+// MacBridgePortFilterPreAssignTable (Class ID: #79 / 0x004f)
 //	This ME provides an alternate approach to DA filtering from that supported through the MAC
 //	bridge port filter table data ME. This alternate approach is useful when all groups of addresses
 //	are stored beforehand in the ONU, and the MAC bridge port filter pre-assign table ME designates
@@ -45,37 +45,48 @@ var macbridgeportfilterpreassigntableBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the MAC bridge port configuration
-//			data ME. (R) (mandatory) (2-bytes)
+//			The following 10 attributes have similar definitions. Each permits the OLT to specify whether
+//			MAC DAs or Ethertypes of the named type are forwarded (0) or filtered (1). In each case, the
+//			initial value of the attribute is 0.
+//
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the MAC bridge port configuration data ME. (R) (mandatory)
+//			(2-bytes)
 //
 //		Ipv4 Multicast Filtering
-//			IPv4 multicast filtering:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Ipv6 Multicast Filtering
-//			IPv6 multicast filtering:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Ipv4 Broadcast Filtering
-//			IPv4 broadcast filtering:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Rarp Filtering
-//			RARP filtering:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Ipx Filtering
-//			IPX filtering:		(R,-W) (mandatory) (1-byte)
+//				(R,-W) (mandatory) (1-byte)
 //
 //		Netbeui Filtering
-//			NetBEUI filtering:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Appletalk Filtering
-//			AppleTalk filtering:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Bridge Management Information Filtering
+//			(R,-W) (mandatory) (1-byte)
+//
+//			Note that some destination MAC addresses should never be forwarded, considering the following
+//			rules of [IEEE 802.1D].
+//
+//			1	Addresses from 01.80.C2.00.00.00 to 01.80.C2.00.00.0F are reserved.
+//
 //			2	Addresses from 01.80.C2.00.00.20 to 01.80.C2.00.00.2F are used for generic attribute
 //			registration protocol (GARP) applications.
 //
 //		Arp Filtering
-//			ARP filtering:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Point_To_Point Protocol Over Ethernet Pppoe Broadcast Filtering
 //			Point-to-point protocol over Ethernet (PPPoE) broadcast filtering:	(R,-W) (mandatory) (1-byte)

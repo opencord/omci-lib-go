@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // MacBridgePortConfigurationDataClassID is the 16-bit ID for the OMCI
 // Managed entity MAC bridge port configuration data
-const MacBridgePortConfigurationDataClassID ClassID = ClassID(47)
+const MacBridgePortConfigurationDataClassID = ClassID(47) // 0x002f
 
 var macbridgeportconfigurationdataBME *ManagedEntityDefinition
 
-// MacBridgePortConfigurationData (class ID #47)
+// MacBridgePortConfigurationData (Class ID: #47 / 0x002f)
 //	This ME models a port on a MAC bridge. Instances of this ME are created and deleted by the OLT.
 //
 //	Relationships
@@ -40,62 +40,99 @@ var macbridgeportconfigurationdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Bridge Id Pointer
-//			Bridge ID pointer: This attribute points to an instance of the MAC bridge service profile.
-//			(R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute points to an instance of the MAC bridge service profile. (R,-W, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Port Num
-//			Port num:	This attribute is the bridge port number. It must be unique among all ports associated
-//			with a particular MAC bridge service profile. (R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute is the bridge port number. It must be unique among all ports associated with a
+//			particular MAC bridge service profile. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Tp Type
+//			This attribute identifies the type of TP associated with this MAC bridge port. Valid values are
+//			as follows.
+//
+//			1	Physical path termination point Ethernet UNI
+//
+//			2	Interworking virtual circuit connection (VCC) termination point
+//
+//			3	IEEE 802.1p mapper service profile
+//
+//			4	IP host config data or IPv6 host config data
+//
+//			5	GEM interworking termination point
+//
+//			6	Multicast GEM interworking termination point
+//
+//			7	Physical path termination point xDSL UNI part 1
+//
+//			8	Physical path termination point VDSL UNI
+//
+//			9	Ethernet flow termination point
+//
+//			10	Reserved
+//
+//			11	Virtual Ethernet interface point
+//
+//			12	Physical path termination point MoCA UNI
+//
+//			13	Ethernet in the first mile (EFM) bonding group
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Tp Pointer
 //			NOTE 1 - When the TP type is very high-speed digital subscriber line (VDSL) or xDSL, the two
 //			MSBs may be used to indicate a bearer channel.
 //
+//			This attribute points to the TP associated with this MAC bridge port. The TP type attribute
+//			indicates the type of the TP; this attribute contains its instance identifier (ME ID). (R,-W,
+//			setbycreate) (mandatory) (2-bytes)
+//
 //		Port Priority
-//			Port priority:	This attribute denotes the priority of the port for use in (rapid) spanning tree
-//			algorithms. The range is 0..255. (R,-W, setbycreate) (optional) (2-bytes)
+//			This attribute denotes the priority of the port for use in (rapid) spanning tree algorithms. The
+//			range is 0..255. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Port Path Cost
-//			Port path cost: This attribute specifies the contribution of the port to the path cost towards
-//			the spanning tree root bridge. The range is 1..65535. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute specifies the contribution of the port to the path cost towards the spanning tree
+//			root bridge. The range is 1..65535. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Port Spanning Tree Ind
-//			Port spanning tree ind: The Boolean value true enables (R)STP LAN topology change detection at
-//			this port. The value false disables topology change detection. (R,-W, setbycreate) (mandatory)
-//			(1-byte)
+//			The Boolean value true enables (R)STP LAN topology change detection at this port. The value
+//			false disables topology change detection. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Deprecated 1
-//			Deprecated 1: This attribute is not used. If present, it should be ignored by both the ONU and
-//			the OLT, except as necessary to comply with OMCI message definitions. (R,-W, setbycreate)
-//			(optional) (1-byte)
+//			This attribute is not used. If present, it should be ignored by both the ONU and the OLT, except
+//			as necessary to comply with OMCI message definitions. (R,-W, setbycreate) (optional) (1-byte)
 //
 //		Deprecated 2
-//			Deprecated 2: This attribute is not used. If present, it should be ignored by both the ONU and
-//			the OLT, except as necessary to comply with OMCI message definitions. (R,-W, setbycreate)
-//			(1-byte) (optional)
+//			This attribute is not used. If present, it should be ignored by both the ONU and the OLT, except
+//			as necessary to comply with OMCI message definitions. (R,-W, setbycreate) (1-byte) (optional)
 //
 //		Port Mac Address
-//			Port MAC address: If the TP associated with this port has a MAC address, this attribute
-//			specifies it. (R) (optional) (6-bytes)
+//			If the TP associated with this port has a MAC address, this attribute specifies it. (R)
+//			(optional) (6-bytes)
 //
 //		Outbound Td Pointer
-//			Outbound TD pointer: This attribute points to a traffic descriptor that limits the traffic rate
-//			leaving the MAC bridge. (R,-W) (optional) (2-byte)
+//			This attribute points to a traffic descriptor that limits the traffic rate leaving the MAC
+//			bridge. (R,-W) (optional) (2-byte)
 //
 //		Inbound Td Pointer
-//			Inbound TD pointer: This attribute points to a traffic descriptor that limits the traffic rate
-//			entering the MAC bridge. (R,-W) (optional) (2-byte)
+//			This attribute points to a traffic descriptor that limits the traffic rate entering the MAC
+//			bridge. (R,-W) (optional) (2-byte)
 //
 //		Mac Learning Depth
+//			This attribute specifies the maximum number of MAC addresses to be learned by this MAC bridge
+//			port. The default value 0 specifies that there is no administratively imposed limit. (R,-W,
+//			setbycreate) (optional) (1-byte)
+//
 //			NOTE 2 - If this attribute is not zero, its value overrides the value set in the MAC learning
 //			depth attribute of the MAC bridge service profile.
+//
+//		Lasp Id Pointer
+//			This attribute points to an instance of the LASP ME. (R,W, setbycreate) (optional) (2 bytes)
 //
 type MacBridgePortConfigurationData struct {
 	ManagedEntityDefinition
@@ -112,7 +149,7 @@ func init() {
 			Get,
 			Set,
 		),
-		AllowedAttributeMask: 0xfff8,
+		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
 			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
 			1:  Uint16Field("BridgeIdPointer", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
@@ -128,6 +165,7 @@ func init() {
 			11: Uint16Field("OutboundTdPointer", PointerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
 			12: Uint16Field("InboundTdPointer", PointerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
 			13: ByteField("MacLearningDepth", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
+			14: Uint16Field("LaspIdPointer", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 14),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

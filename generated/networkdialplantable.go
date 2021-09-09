@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // NetworkDialPlanTableClassID is the 16-bit ID for the OMCI
 // Managed entity Network dial plan table
-const NetworkDialPlanTableClassID ClassID = ClassID(145)
+const NetworkDialPlanTableClassID = ClassID(145) // 0x0091
 
 var networkdialplantableBME *ManagedEntityDefinition
 
-// NetworkDialPlanTable (class ID #145)
+// NetworkDialPlanTable (Class ID: #145 / 0x0091)
 //	The network dial plan table ME is optional for ONUs providing VoIP services. This ME is used to
 //	provision dial plans from the OLT. Instances of this ME are created and deleted by the OLT. If a
 //	non-OMCI interface is used to manage SIP for VoIP, this ME is unnecessary.
@@ -41,31 +41,62 @@ var networkdialplantableBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
-//
-//		Dial Plan Number
-//			Dial plan number: This attribute indicates the current number of dial plans in the dial plan
-//			table. (R) (mandatory) (2-bytes)
-//
-//		Dial Plan Table Max Size
-//			Dial plan table max size: This attribute defines the maximum number of dial plans that can be
-//			stored in the dial plan table. (R, setbycreate) (mandatory) (2-bytes)
-//
-//		Critical Dial Timeout
-//			Critical dial timeout: This attribute defines the critical dial timeout for digit map
-//			processing, in milliseconds. The recommended default value is 4000-ms. (R,-W, setbycreate)
-//			(mandatory) (2-bytes)
-//
-//		Partial Dial Timeout
-//			Partial dial timeout: This attribute defines the partial dial timeout for digit map processing,
-//			in milliseconds. The recommended default value is 16000-ms. (R,-W, setbycreate) (mandatory)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
 //			(2-bytes)
 //
+//		Dial Plan Number
+//			This attribute indicates the current number of dial plans in the dial plan table. (R)
+//			(mandatory) (2-bytes)
+//
+//		Dial Plan Table Max Size
+//			This attribute defines the maximum number of dial plans that can be stored in the dial plan
+//			table. (R, setbycreate) (mandatory) (2-bytes)
+//
+//		Critical Dial Timeout
+//			This attribute defines the critical dial timeout for digit map processing, in milliseconds. The
+//			recommended default value is 4000-ms. (R,-W, setbycreate) (mandatory) (2-bytes)
+//
+//		Partial Dial Timeout
+//			This attribute defines the partial dial timeout for digit map processing, in milliseconds. The
+//			recommended default value is 16000-ms. (R,-W, setbycreate) (mandatory) (2-bytes)
+//
 //		Dial Plan Format
+//			This attribute defines the dial plan format standard that is supported in the ONU for VoIP.
+//			Valid values include the following.
+//
+//			0	Not defined
+//
+//			1	ITU-T H.248 format with a specific plan (table entries define the dialling plan)
+//
+//			2	NCS format [b-PKT-SP-NCS ]
+//
+//			3	Vendor-specific format
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Dial Plan Table
+//			The table is the digit map that describes the dial plans used by the VoIP service, along with
+//			fields to manage the table. An example digit map is the string,
+//
+//			(0T|00T|[1-7]xxx|8xxxxxxx|#xxxxxxx|*xx|91xxxxxxxxxx|9011x.T)
+//
+//			Each row of the table comprises the following fields:
+//
+//			Dial plan ID: The row number, a unique identifier of a dial plan within the dial plan table
+//			(1-byte).
+//
+//			Action: Remove (0) or add (1) this plan (set action). When a dial plan is being removed, the
+//			dial plan token field is not used. (1-byte).
+//
+//			Dial plan token: The definition of the dial plan itself. In the previous example, tokens include
+//			the strings "0T" and "*xx". Unused trailing bytes may be padded with nulls or ASCII spaces.
+//			(28-bytes)
+//
+//			NOTE - Due to previously ambiguous documentation, implementations may vary. For
+//			interoperability, the OLT should write table entries as documented above, while it is encouraged
+//			for the ONU to accept any characters outside the formal grammar as delimiters and to accept the
+//			concatenation of rows as a single string that defines a digit map.
+//
 //			(R,-W) (mandatory) (30 * N bytes, where N is the number of dial plans)
 //
 type NetworkDialPlanTable struct {

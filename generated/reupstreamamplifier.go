@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // ReUpstreamAmplifierClassID is the 16-bit ID for the OMCI
 // Managed entity RE upstream amplifier
-const ReUpstreamAmplifierClassID ClassID = ClassID(315)
+const ReUpstreamAmplifierClassID = ClassID(315) // 0x013b
 
 var reupstreamamplifierBME *ManagedEntityDefinition
 
-// ReUpstreamAmplifier (class ID #315)
+// ReUpstreamAmplifier (Class ID: #315 / 0x013b)
 //	This ME organizes data associated with each upstream RE optical amplifier (OA) supported by the
 //	RE. The management ONU automatically creates one instance of this ME for each upstream OA as
 //	follows.
@@ -58,77 +58,91 @@ var reupstreamamplifierBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
+//			This attribute uniquely identifies each instance of this ME. Its value indicates the physical
+//			position of the upstream OA. The first byte is the slot ID (defined in clause 9.1.5). The second
+//			byte is the port ID. (R) (mandatory) (2-bytes)
+//
 //			NOTE 1 - This ME ID may be identical to that of a PPTP RE UNI if it shares the same physical
 //			slot and port.
 //
 //		Administrative State
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
+//
 //			NOTE 2 - Administrative lock of an RE upstream amplifier results in LOS from any downstream
 //			ONUs.
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Operational Mode
+//			This attribute indicates the operational mode as follows.
+//
+//			0	Constant gain
+//
+//			1	Constant output power
+//
+//			2	Autonomous
+//
 //			(R,-W) (mandatory) (1-byte)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Re Downstream Amplifier Pointer
-//			RE downstream amplifier pointer: This attribute points to an RE downstream amplifier instance.
-//			The default value is 0xFFFF, a null pointer. (R,-W) (mandatory) (2-bytes)
+//			This attribute points to an RE downstream amplifier instance. The default value is 0xFFFF, a
+//			null pointer. (R,-W) (mandatory) (2-bytes)
 //
 //		Total Optical Receive Signal Level Table
-//			Total optical receive signal level table: This table attribute reports a series of measurements
-//			of time-averaged input upstream optical signal power. The measurement circuit should have a
-//			temporal response similar to a simple 1 pole low pass filter, with an effective time constant on
-//			the order of a GTC frame time. Each table entry has a 2-byte frame counter field (most
-//			significant end), and a 2-byte power measurement field. The frame counter field contains the
-//			least significant 16-bits of the superframe counter received closest to the time of the
-//			measurement. The power measurement field is a 2s-complement integer referred to 1-mW (i.e.,
-//			dBm), with 0.002-dB granularity. The RE equipment should add entries to this table as frequently
-//			as is reasonable. The RE should clear the table once it is read by the OLT. (R) (optional) (4-*
-//			N-bytes, where N is the number of measurements present.)
+//			This table attribute reports a series of measurements of time-averaged input upstream optical
+//			signal power. The measurement circuit should have a temporal response similar to a simple 1 pole
+//			low pass filter, with an effective time constant on the order of a GTC frame time. Each table
+//			entry has a 2-byte frame counter field (most significant end), and a 2-byte power measurement
+//			field. The frame counter field contains the least significant 16-bits of the superframe counter
+//			received closest to the time of the measurement. The power measurement field is a 2s-complement
+//			integer referred to 1-mW (i.e., dBm), with 0.002-dB granularity. (Coding -32768 to +32767, where
+//			0x00 = 0-dBm, 0x03e8 = +2-dBm, etc.) The RE equipment should add entries to this table as
+//			frequently as is reasonable. The RE should clear the table once it is read by the OLT. (R)
+//			(optional) (4-* N-bytes, where N is the number of measurements present.)
 //
 //		Per Burst Receive Signal Level Table
-//			Per burst receive signal level table: This table attribute reports the most recent measurement
-//			of received burst upstream optical signal power. Each table entry has a 2-byte ONU-ID field
-//			(most significant end), and a 2-byte power measurement field. The power measurement field is a
-//			2s-complement integer referred to 1-mW (i.e.,-dBm), with 0.002-dB granularity. (R) (optional)
-//			(4-* N-bytes, where N is the number of distinct ONUs connected to the S'/R' interface.)
+//			This table attribute reports the most recent measurement of received burst upstream optical
+//			signal power. Each table entry has a 2-byte ONU-ID field (most significant end), and a 2-byte
+//			power measurement field. The power measurement field is a 2s-complement integer referred to 1-mW
+//			(i.e.,-dBm), with 0.002-dB granularity. (Coding -32768 to +32767, where 0x00 = 0-dBm, 0x03e8 =
+//			+2-dBm, etc.) (R) (optional) (4-* N-bytes, where N is the number of distinct ONUs connected to
+//			the S'/R' interface.)
 //
 //		Lower Receive Optical Threshold
-//			Lower receive optical threshold: This attribute specifies the optical level that the RE uses to
-//			declare the low received optical power alarm. Valid values are -127-dBm (coded as 254) to 0-dBm
-//			(coded as 0) in 0.5-dB increments. The default value 0xFF selects the RE's internal policy.
-//			(R,-W) (optional) (1-byte)
+//			This attribute specifies the optical level that the RE uses to declare the low received optical
+//			power alarm. Valid values are -127-dBm (coded as 254) to 0-dBm (coded as 0) in 0.5-dB
+//			increments. The default value 0xFF selects the RE's internal policy. (R,-W) (optional) (1-byte)
 //
 //		Upper Receive Optical Threshold
-//			Upper receive optical threshold: This attribute specifies the optical level that the RE uses to
-//			declare the high received optical power alarm. Valid values are -127-dBm (coded as 254) to 0-dBm
-//			(coded as 0) in 0.5-dB increments. The default value 0xFF selects the RE's internal policy.
-//			(R,-W) (optional) (1-byte)
+//			This attribute specifies the optical level that the RE uses to declare the high received optical
+//			power alarm. Valid values are -127-dBm (coded as 254) to 0-dBm (coded as 0) in 0.5-dB
+//			increments. The default value 0xFF selects the RE's internal policy. (R,-W) (optional) (1-byte)
 //
 //		Transmit Optical Signal Level
-//			Transmit optical signal level: This attribute reports the current measurement of the mean
-//			optical launch power of the upstream OA. Its value is a 2s-complement integer referred to 1-mW
-//			(i.e., dBm), with 0.002-dB granularity. (R) (optional) (2-bytes)
+//			This attribute reports the current measurement of the mean optical launch power of the upstream
+//			OA. Its value is a 2s-complement integer referred to 1-mW (i.e., dBm), with 0.002-dB
+//			granularity. (R) (optional) (2-bytes)
 //
 //		Lower Transmit Optical Threshold
-//			Lower transmit optical threshold: This attribute specifies the minimum mean optical launch power
-//			that the RE uses to declare the low transmit optical power alarm. Its value is a 2s-complement
-//			integer referred to 1-mW (i.e., dBm), with 0.5-dB granularity. The default value 0x7F selects
-//			the RE's internal policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the minimum mean optical launch power that the RE uses to declare the
+//			low transmit optical power alarm. Its value is a 2s-complement integer referred to 1-mW (i.e.,
+//			dBm), with 0.5-dB granularity. The default value 0x7F selects the RE's internal policy. (R,-W)
+//			(optional) (1-byte)
 //
 //		Upper Transmit Optical Threshold
-//			Upper transmit optical threshold: This attribute specifies the maximum mean optical launch power
-//			that the RE uses to declare the high transmit optical power alarm. Its value is a 2s complement
-//			integer referred to 1-mW (i.e., dBm), with 0.5-dB granularity. The default value 0x7F selects
-//			the RE's internal policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the maximum mean optical launch power that the RE uses to declare the
+//			high transmit optical power alarm. Its value is a 2s complement integer referred to 1-mW (i.e.,
+//			dBm), with 0.5-dB granularity. The default value 0x7F selects the RE's internal policy. (R,-W)
+//			(optional) (1-byte)
 //
 type ReUpstreamAmplifier struct {
 	ManagedEntityDefinition

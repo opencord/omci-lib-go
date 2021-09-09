@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslPsdMaskProfileClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL PSD mask profile
-const XdslPsdMaskProfileClassID ClassID = ClassID(110)
+const XdslPsdMaskProfileClassID = ClassID(110) // 0x006e
 
 var xdslpsdmaskprofileBME *ManagedEntityDefinition
 
-// XdslPsdMaskProfile (class ID #110)
+// XdslPsdMaskProfile (Class ID: #110 / 0x006e)
 //	This ME contains a PSD mask profile for an xDSL UNI. An instance of this ME is created and
 //	deleted by the OLT.
 //
@@ -41,13 +41,59 @@ var xdslpsdmaskprofileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The value 0 is
-//			reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The value 0 is reserved. (R,
+//			setbycreate) (mandatory) (2-bytes)
 //
 //		Psd Mask Table
+//			This attribute is a table that defines the PSD mask applicable at the U-C2 reference point
+//			(downstream) or the U-R2 reference point (upstream). This mask may impose PSD restrictions in
+//			addition to the limit PSD mask defined in the relevant Recommendations ([ITUT G.992.3], [ITUT
+//			G.992.5], [ITUT-G.993.2]).
+//
+//			NOTE - In [ITUT G.997.1], this attribute is called PSDMASKds (downstream) and PSDMASKus
+//			(upstream). In [ITUT G.993.2], this attribute is called MIBMASKds (downstream) and MIBMASKus
+//			(upstream). The ITU-T G.993.2 MIBMASKus does not include breakpoints to shape US0.
+//
+//			The PSD mask is specified through a set of breakpoints. Each breakpoint comprises a 2-byte
+//			subcarrier index t, with a subcarrier spacing of 4.3125-kHz, and a 1-byte PSD mask level at that
+//			subcarrier. The set of breakpoints can then be represented as [(t1, PSD1), (t2, PSD2), ..., (tN,
+//			PSDN)]. The PSD mask level is coded as 0 (0.0-dBm/Hz) to 190  (-95.0-dBm/Hz), in steps of 0.5
+//			dB.
+//
+//			The maximum number of downstream breakpoints is 32. In the upstream direction, the maximum
+//			number of breakpoints is 4 for [ITU-T G.992.3] and 16 for [ITU-T G.993.2]. The requirements for
+//			a valid set of breakpoints are defined in the relevant Recommendations ([ITUT G.992.3],
+//			[ITUT-G.992.5], [ITUT G.993.2]).
+//
+//			Each table entry in this attribute comprises:
+//
+//			-	an entry number field (1-byte, first entry numbered 1);
+//
+//			-	a subcarrier index field, denoted t (2-bytes);
+//
+//			-	a PSD mask level field (1-byte).
+//
+//			By default, the PSD mask table is empty. Setting a subcarrier entry with a valid PSD mask level
+//			implies insertion into the table or replacement of an existing entry. Setting an entry's PSD
+//			mask level to 0xFF implies deletion from the table.
+//
 //			(R,-W) (mandatory) (4 * N bytes where N is the number of breakpoints)
 //
 //		Mask Valid
+//			This Boolean attribute controls and reports the status of the PSD mask attribute.
+//
+//			As a status report, the value false indicates that the PSD mask represented in this ME has not
+//			been impressed on the DSL equipment. The value true indicates that the PSD mask represented in
+//			this ME has been impressed on the DSL equipment.
+//
+//			This attribute behaves as follows.
+//
+//			o	If the OLT changes any of the PSD mask table entries or sets mask valid false, then mask valid
+//			is false.
+//
+//			o	If mask valid is false and the OLT sets mask valid true, the ONU impresses the PSD mask data
+//			on the DSL equipment.
+//
 //			(R,-W) (mandatory) (1-byte)
 //
 type XdslPsdMaskProfile struct {

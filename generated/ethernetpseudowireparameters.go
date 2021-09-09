@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // EthernetPseudowireParametersClassID is the 16-bit ID for the OMCI
 // Managed entity Ethernet pseudowire parameters
-const EthernetPseudowireParametersClassID ClassID = ClassID(400)
+const EthernetPseudowireParametersClassID = ClassID(400) // 0x0190
 
 var ethernetpseudowireparametersBME *ManagedEntityDefinition
 
-// EthernetPseudowireParameters (class ID #400)
+// EthernetPseudowireParameters (Class ID: #400 / 0x0190)
 //	This ME contains the Ethernet pseudowire parameters. Instances of this ME are created and
 //	deleted by the OLT.
 //
@@ -40,14 +40,14 @@ var ethernetpseudowireparametersBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID:	This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PW Ethernet configuration data
-//			ME. (R, set-by-create) (mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PW Ethernet configuration data ME. (R, set-by-create)
+//			(mandatory) (2 bytes)
 //
 //		Mtu
-//			MTU:	This attribute identifies the maximum transmission unit (bytes) that can be received from
-//			the CPE in the upstream direction. Larger frames are discarded. (R, W, set-by-create)
-//			(mandatory) (2 bytes)
+//			This attribute identifies the maximum transmission unit (bytes) that can be received from the
+//			CPE in the upstream direction. Larger frames are discarded. (R, W, set-by-create) (mandatory) (2
+//			bytes)
 //
 type EthernetPseudowireParameters struct {
 	ManagedEntityDefinition

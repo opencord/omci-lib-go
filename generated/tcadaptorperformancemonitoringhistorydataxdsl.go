@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // TcAdaptorPerformanceMonitoringHistoryDataXdslClassID is the 16-bit ID for the OMCI
 // Managed entity TC adaptor performance monitoring history data xDSL
-const TcAdaptorPerformanceMonitoringHistoryDataXdslClassID ClassID = ClassID(116)
+const TcAdaptorPerformanceMonitoringHistoryDataXdslClassID = ClassID(116) // 0x0074
 
 var tcadaptorperformancemonitoringhistorydataxdslBME *ManagedEntityDefinition
 
-// TcAdaptorPerformanceMonitoringHistoryDataXdsl (class ID #116)
+// TcAdaptorPerformanceMonitoringHistoryDataXdsl (Class ID: #116 / 0x0074)
 //	This ME collects PM data of an xTUC to xTUR ATM data path. Instances of this ME are created and
 //	deleted by the OLT.
 //
@@ -42,13 +42,11 @@ var tcadaptorperformancemonitoringhistorydataxdslBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID:	This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1. (R) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data1/2 ID: This attribute points to an instance of the threshold data1 ME that

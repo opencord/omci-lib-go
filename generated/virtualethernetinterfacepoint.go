@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // VirtualEthernetInterfacePointClassID is the 16-bit ID for the OMCI
 // Managed entity Virtual Ethernet interface point
-const VirtualEthernetInterfacePointClassID ClassID = ClassID(329)
+const VirtualEthernetInterfacePointClassID = ClassID(329) // 0x0149
 
 var virtualethernetinterfacepointBME *ManagedEntityDefinition
 
-// VirtualEthernetInterfacePoint (class ID #329)
+// VirtualEthernetInterfacePoint (Class ID: #329 / 0x0149)
 //	This ME represents the data plane hand-off point in an ONU to a separate (non-OMCI) management
 //	domain. The VEIP is managed by the OMCI, and is potentially known to the non-OMCI management
 //	domain. One or more Ethernet traffic flows are present at this boundary.
@@ -49,26 +49,26 @@ var virtualethernetinterfacepointBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. When used
-//			independently of a cardholder and circuit pack, the ONU should assign IDs in the sequence 1, 2,
-//			.... When used in conjunction with a cardholder and circuit pack, this 2 byte number indicates
-//			the physical position of the VEIP. The first byte is the slot ID (defined in clause 9.1.5). The
-//			second byte is the port ID, with the range 1..255. The values 0 and 0xFFFF are reserved. (R)
-//			(mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. When used independently of a
+//			cardholder and circuit pack, the ONU should assign IDs in the sequence 1, 2, .... When used in
+//			conjunction with a cardholder and circuit pack, this 2 byte number indicates the physical
+//			position of the VEIP. The first byte is the slot ID (defined in clause 9.1.5). The second byte
+//			is the port ID, with the range 1..255. The values 0 and 0xFFFF are reserved. (R) (mandatory) (2
+//			bytes)
 //
 //		Administrative State
-//			Administrative state: This attribute locks (1) and unlocks (0) the functions performed by this
-//			ME. Administrative state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Interdomain Name
-//			Interdomain name: This attribute is a character string that provides an optional way to identify
-//			the VEIP to a non-OMCI management domain. The interface may also be identified by its ME ID,
-//			[b-IANA] assigned port and possibly other ways. If the vendor offers no information in this
-//			attribute, it should be set to a sequence of null bytes. (R,-W) (optional) (25-bytes)
+//			This attribute is a character string that provides an optional way to identify the VEIP to a
+//			non-OMCI management domain. The interface may also be identified by its ME ID,  [b-IANA]
+//			assigned port and possibly other ways. If the vendor offers no information in this attribute, it
+//			should be set to a sequence of null bytes. (R,-W) (optional) (25-bytes)
 //
 //		Tcp_Udp Pointer
 //			TCP/UDP pointer: This attribute points to an instance of the TCP/UDP config data ME, which
@@ -77,12 +77,12 @@ var virtualethernetinterfacepointBME *ManagedEntityDefinition
 //			or set to its default, a null pointer. (R,-W) (optional) (2-bytes)
 //
 //		Iana Assigned Port
-//			IANA assigned port: This attribute contains the TCP or UDP port value as assigned by  [b-IANA]
-//			for the management protocol associated with this virtual Ethernet interface. This attribute is
-//			to be regarded as a hint, not as a requirement that management communications use this port; the
-//			actual port and protocol are specified in the associated TCP/UDP config data ME. If no port has
-//			been assigned or if the management protocol is free to be chosen at run-time, this attribute
-//			should be set to 0xFFFF. (R) (mandatory) (2-bytes)
+//			This attribute contains the TCP or UDP port value as assigned by  [b-IANA] for the management
+//			protocol associated with this virtual Ethernet interface. This attribute is to be regarded as a
+//			hint, not as a requirement that management communications use this port; the actual port and
+//			protocol are specified in the associated TCP/UDP config data ME. If no port has been assigned or
+//			if the management protocol is free to be chosen at run-time, this attribute should be set to
+//			0xFFFF. (R) (mandatory) (2-bytes)
 //
 type VirtualEthernetInterfacePoint struct {
 	ManagedEntityDefinition

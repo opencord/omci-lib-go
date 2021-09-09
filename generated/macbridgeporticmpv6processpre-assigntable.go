@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // MacBridgePortIcmpv6ProcessPreAssignTableClassID is the 16-bit ID for the OMCI
 // Managed entity MAC bridge port ICMPv6 process pre-assign table
-const MacBridgePortIcmpv6ProcessPreAssignTableClassID ClassID = ClassID(348)
+const MacBridgePortIcmpv6ProcessPreAssignTableClassID = ClassID(348) // 0x015c
 
 var macbridgeporticmpv6processpreassigntableBME *ManagedEntityDefinition
 
-// MacBridgePortIcmpv6ProcessPreAssignTable (class ID #348)
+// MacBridgePortIcmpv6ProcessPreAssignTable (Class ID: #348 / 0x015c)
 //	This ME provides an approach to ICMPv6 message processing configuration to those ONUs that
 //	support IPv6 awareness. For every message, the MAC bridge port ICMPv6 process pre-assign table
 //	can designate a forward, discard or snoop operation. The ONU creates or deletes an instance of
@@ -47,39 +47,48 @@ var macbridgeporticmpv6processpreassigntableBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the MAC bridge port configuration
-//			data ME. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the MAC bridge port configuration data ME. (R) (mandatory)
+//			(2-bytes)
+//
+//			The following nine attributes have similar definitions. Each permits the OLT to specify ICMPv6
+//			as the next header in the IPv6 header and various types in the ICMPv6 header, and whether
+//			traffic of the specified type is forwarded, discarded or snooped, in upstream and downstream
+//			directions separately. The bits of each attribute are assigned as follows.
+//
+//			The initial value of each attribute is given in the last column of the table.
 //
 //		Icmpv6 Error Messages Processing
-//			ICMPv6 error messages processing:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Icmpv6 Informational Messages Processing
-//			ICMPv6 informational messages processing:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Router Solicitation Processing
-//			Router solicitation processing:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Router Advertisement Processing
-//			Router advertisement processing:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Neighbour Solicitation Processing
-//			Neighbour solicitation processing:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Neighbour Advertisement Processing
-//			Neighbour advertisement processing:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Redirect Processing
-//			Redirect processing:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 //		Multicast Listener Query Processing
+//			(R,-W) (mandatory) (1-byte)
+//
 //			NOTE - If the ONU participates in multicast services, MLD queries should be controlled through
 //			the multicast operations profile ME. In such a case, it is strongly recommended not to provision
 //			the downstream direction of the multicast listener query processing attribute to any value other
 //			than forwarding.
 //
 //		Unknown Icmpv6 Processing
-//			Unknown ICMPv6 processing:	(R,-W) (mandatory) (1-byte)
+//			(R,-W) (mandatory) (1-byte)
 //
 type MacBridgePortIcmpv6ProcessPreAssignTable struct {
 	ManagedEntityDefinition

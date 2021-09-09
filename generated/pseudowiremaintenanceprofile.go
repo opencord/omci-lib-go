@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PseudowireMaintenanceProfileClassID is the 16-bit ID for the OMCI
 // Managed entity Pseudowire maintenance profile
-const PseudowireMaintenanceProfileClassID ClassID = ClassID(284)
+const PseudowireMaintenanceProfileClassID = ClassID(284) // 0x011c
 
 var pseudowiremaintenanceprofileBME *ManagedEntityDefinition
 
-// PseudowireMaintenanceProfile (class ID #284)
+// PseudowireMaintenanceProfile (Class ID: #284 / 0x011c)
 //	The pseudowire maintenance profile permits the configuration of pseudowire service exception
 //	handling. It is created and deleted by the OLT.
 //
@@ -47,35 +47,66 @@ var pseudowiremaintenanceprofileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The value 0 is
-//			reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The value 0 is reserved. (R,
+//			setbycreate) (mandatory) (2-bytes)
 //
 //		Jitter Buffer Maximum Depth
-//			Jitter buffer maximum depth: This attribute specifies the desired maximum depth of the playout
-//			buffer in the PSN to the TDM direction. The value is expressed as a multiple of the 125-vs frame
-//			rate. The default value 0 selects the ONU's internal policy. (R,-W, setbycreate) (optional)
-//			(2-bytes)
+//			This attribute specifies the desired maximum depth of the playout buffer in the PSN to the TDM
+//			direction. The value is expressed as a multiple of the 125-vs frame rate. The default value 0
+//			selects the ONU's internal policy. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Jitter Buffer Desired Depth
-//			Jitter buffer desired depth: This attribute specifies the desired nominal fill depth of the
-//			playout buffer in the PSN to the TDM direction. The value is expressed as a multiple of the
-//			125-vs frame rate. The default value 0 selects the ONU's internal policy. (R,-W, setbycreate)
-//			(optional) (2-bytes)
+//			This attribute specifies the desired nominal fill depth of the playout buffer in the PSN to the
+//			TDM direction. The value is expressed as a multiple of the 125-vs frame rate. The default value
+//			0 selects the ONU's internal policy. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Fill Policy
+//			This attribute defines the payload bit pattern to be applied towards the TDM service if no
+//			payload packet is available to play out. The default value 0 specifies that the ONU apply its
+//			internal policy.
+//
+//			0	ONU default, vendor-specific (recommended: AIS for unstructured service, all 1s for structured
+//			service)
+//
+//			1	Play out AIS according to the service definition (for example, DS3 AIS)
+//
+//			2	Play out all 1s
+//
+//			3	Play out all 0s
+//
+//			4	Repeat the previous data
+//
+//			5	Play out DS1 idle (Appendix C of [b-ATIS-0600403])
+//
+//			6..15	Reserved for future standardization
+//
+//			16..255	Vendor-specific, not to be standardized
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
+//			Four pairs of alarm-related policy attributes, defined in the following, share common behaviour.
+//
+//			The alarm declaration policy attribute defines the anomaly rate that causes the corresponding
+//			alarm to be declared. It is an integer percentage between 1..100. If this density of anomalies
+//			occurs during the alarm onset soak interval, the alarm is declared. The default value 0 selects
+//			the ONU's internal policy.
+//
+//			The alarm clear policy attribute defines the anomaly rate that causes the corresponding alarm to
+//			be cleared. It is an integer percentage between 0..99. If no more than this density of anomalies
+//			occurs during the alarm clear soak interval, the alarm is cleared. The default value 255 selects
+//			the ONU's internal policy.
+//
 //		Misconnected Packets Declaration Policy
-//			Misconnected packets declaration policy: (R,-W, setbycreate) (optional) (1-byte)
+//			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		Misconnected Packets Clear Policy
-//			Misconnected packets clear policy: (R,-W, setbycreate) (optional) (1-byte)
+//			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		Loss Of Packets Declaration Policy
-//			Loss of packets declaration policy: (R,-W, setbycreate) (optional) (1-byte)
+//			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		Loss Of Packets Clear Policy
-//			Loss of packets clear policy: (R,-W, setbycreate) (optional) (1-byte)
+//			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		Buffer Overrun_Underrun Declaration Policy
 //			Buffer overrun/underrun declaration policy: (R,-W, setbycreate) (optional) (1-byte)
@@ -84,10 +115,10 @@ var pseudowiremaintenanceprofileBME *ManagedEntityDefinition
 //			Buffer overrun/underrun clear policy: (R,-W, setbycreate) (optional) (1-byte)
 //
 //		Malformed Packets Declaration Policy
-//			Malformed packets declaration policy: (R,-W, setbycreate) (optional) (1-byte)
+//			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		Malformed Packets Clear Policy
-//			Malformed packets clear policy: (R,-W, setbycreate) (optional) (1-byte)
+//			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		R_Bit Transmit Set Policy
 //			R-bit transmit set policy: This attribute defines the number of consecutive lost packets that
@@ -102,17 +133,36 @@ var pseudowiremaintenanceprofileBME *ManagedEntityDefinition
 //			setbycreate) (optional) (1-byte)
 //
 //		R_Bit Receive Policy
+//			R-bit receive policy: This attribute defines the action towards the N-*-64 TDM interface when
+//			remote failure is indicated on packets received from the PSN (either Rbit set or M-=-0b10 while
+//			the L bit is cleared).
+//
+//			0	Do nothing (recommended to be the default)
+//
+//			1	Play out service-specific RAI/REI/RDI code
+//
+//			2	Send channel idle signalling and idle channel payload to all DS0s comprising the service
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		L Bit Receive Policy
+//			This attribute defines the action towards the TDM interface when farend TDM failure is indicated
+//			on packets received from the PSN (L bit set).
+//
+//			0	Play out service-specific AIS (recommended to be the default)
+//
+//			1	Repeat last received packet
+//
+//			2	Send channel idle signalling and idle channel payload to all DS0s comprising the service
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		Ses Threshold
-//			SES threshold: Number of lost, malformed or otherwise unusable packets expected in the PSN to
-//			the TDM direction within a 1-s interval that causes an SES to be counted. Stray packets do not
-//			count towards an SES, nor do packets whose L bit is set at the far end. The value 0 specifies
-//			that the ONU uses its internal default, which is not necessarily the same as the recommended
-//			default value 3. (R, W, set-by-create) (optional) (2 bytes)
+//			Number of lost, malformed or otherwise unusable packets expected in the PSN to the TDM direction
+//			within a 1-s interval that causes an SES to be counted. Stray packets do not count towards an
+//			SES, nor do packets whose L bit is set at the far end. The value 0 specifies that the ONU uses
+//			its internal default, which is not necessarily the same as the recommended default value 3. (R,
+//			W, set-by-create) (optional) (2 bytes)
 //
 type PseudowireMaintenanceProfile struct {
 	ManagedEntityDefinition

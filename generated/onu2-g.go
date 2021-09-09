@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Onu2GClassID is the 16-bit ID for the OMCI
 // Managed entity ONU2-G
-const Onu2GClassID ClassID = ClassID(257)
+const Onu2GClassID = ClassID(257) // 0x0101
 
 var onu2gBME *ManagedEntityDefinition
 
-// Onu2G (class ID #257)
+// Onu2G (Class ID: #257 / 0x0101)
 //	This ME contains additional attributes associated with a PON ONU. The ONU automatically creates
 //	an instance of this ME. Its attributes are populated according to data within the ONU itself.
 //
@@ -42,46 +42,118 @@ var onu2gBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. There is only
-//			one instance, number 0. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. There is only one instance, number
+//			0. (R) (mandatory) (2-bytes)
 //
 //		Equipment Id
-//			Equipment ID: This attribute may be used to identify the specific type of ONU. In some
-//			environments, this attribute may include the common language equipment identification (CLEI)
-//			code. (R) (optional) (20-bytes)
+//			This attribute may be used to identify the specific type of ONU. In some environments, this
+//			attribute may include the common language equipment identification (CLEI) code. (R) (optional)
+//			(20-bytes)
 //
 //		Optical Network Unit Management And Control Channel Omcc Version
+//			0xA3	ITU-T G.988 (2012). Baseline message set only
+//
+//			0xB0	ITU-T G.988 (2010). Baseline and extended message set
+//
+//			0xB1	ITU-T G.988 Amd.1 (2011). Baseline and extended message set
+//
+//			0xB2	ITU-T G.988 Amd.2 (2012). Baseline and extended message set
+//
+//			0xB3	ITU-T G.988 (2012). Baseline and extended message set
+//
+//			0xB4	ITU-T G.988 Amd1 (2014) Baseline and extended message set
+//
+//			0xB5	Do not use
+//
 //			(R) (mandatory) (1-byte)
 //
+//			Optical network unit management and control channel (OMCC) version: This attribute identifies
+//			the version of the OMCC protocol being used by the ONU. This allows the OLT to manage a network
+//			with ONUs that support different OMCC versions. Release levels of [ITUT G.984.4] are supported
+//			with code points of the form 0x8y and 0x9y, where y is a hexadecimal digit in the range 0..F.
+//			Support for continuing revisions of this Recommendation is defined in the 0xAy and OxBy range.
+//
+//			NOTE 1 - The complete list of managed entities supported by an ONU cannot be derived from the
+//			OMCC version attribute. Refer to other ITUT-G.988 OMCI mechanisms for deriving this information
+//			(clause I.1.1.1 which describes the use of clauses 9.12.9 Managed entity and 9.12.10 Attribute
+//			ME for retrieval of ITU-T G.988 supported ME, and clause I.1.2 for discovering the ONU hardware
+//			and service configuration of the ONU through MIB uploads.)
+//
+//			NOTE 2 -  0xBz values greater than B5 are reserved to report new ITUT-G.988 Annex A message
+//			versions (relative to ITU-T G.988 (2014) Amd1).
+//
+//			0x80	ITU-T G.984.4 (06/04)
+//
+//			NOTE - For historical reasons, this code point may also appear in ONUs that support later
+//			versions of [ITU-T G.984.4].
+//
+//			0x81	ITU-T G.984.4 2004 Amd.1 (06/05)
+//
+//			0x82	ITU-T G.984.4 2004 Amd.2 (03/06)
+//
+//			0x83	ITU-T G.984.4 2004 Amd.3 (12/06)
+//
+//			0x84	ITU-T G.984.4 2008 (02/08)
+//
+//			0x85	ITU-T G.984.4 2008 Amd.1 (06/09)
+//
+//			0x86	ITU-T G.984.4 2008 Amd.2 (2009). Baseline message set only, without the extended message
+//			set option
+//
+//			0x96	ITU-T G.984.4 2008 Amd.2 (2009). Extended message set option, in addition to the baseline
+//			message set.
+//
+//			0xA0	ITU-T G.988 (2010). Baseline message set only, without the extended message set option
+//
+//			0xA1	ITU-T G.988 Amd.1 (2011). Baseline message set only
+//
+//			0xA2	ITU-T G.988 Amd.2 (2012). Baseline message set only
+//
 //		Vendor Product Code
-//			Vendor product code: This attribute contains a vendor-specific product code for the ONU. (R)
-//			(optional) (2-bytes)
+//			This attribute contains a vendor-specific product code for the ONU. (R) (optional) (2-bytes)
 //
 //		Security Capability
+//			This attribute advertises the security capabilities of the ONU. The following code points are
+//			defined:
+//
+//			0	Reserved
+//
+//			1	Advanced encryption standard-128 (AES-128) payload encryption supported
+//
+//			2..255	Reserved
+//
 //			(R) (mandatory) (1-byte)
 //
 //		Security Mode
+//			This attribute specifies the current security mode of the ONU. All secure GEM ports in an ONU
+//			must use the same security mode at any given time. The following code points are defined:
+//
+//			0	Reserved
+//
+//			1	AES-128 algorithm
+//
+//			2..255	Reserved
+//
 //			Upon ME instantiation, the ONU sets this attribute to 1, AES-128. Attribute value 1 does not
 //			imply that any channels are encrypted; that process is negotiated at the PLOAM layer. It only
 //			signifies that the advanced encryption standard (AES) with 128-bit keys is the security mode to
 //			be used on any channels that the OLT may choose to encrypt. (R,-W) (mandatory) (1-byte)
 //
 //		Total Priority Queue Number
-//			Total priority queue number: This attribute reports the total number of upstream priority queues
-//			that are not associated with a circuit pack, but with the ONU in its entirety. Upon ME
-//			instantiation, the ONU sets this attribute to the value that represents its capabilities. (R)
-//			(mandatory) (2-bytes)
+//			This attribute reports the total number of upstream priority queues that are not associated with
+//			a circuit pack, but with the ONU in its entirety. Upon ME instantiation, the ONU sets this
+//			attribute to the value that represents its capabilities. (R) (mandatory) (2-bytes)
 //
 //		Total Traffic Scheduler Number
-//			Total traffic scheduler number: This attribute reports the total number of traffic schedulers
-//			that are not associated with a circuit pack, but with the ONU in its entirety. The ONU supports
-//			null function, strict priority scheduling and weighted round robin (WRR) from the priority
-//			control and guarantee of minimum rate control points of view, respectively. If the ONU has no
-//			global traffic schedulers, this attribute is 0. (R) (mandatory) (1-byte)
+//			This attribute reports the total number of traffic schedulers that are not associated with a
+//			circuit pack, but with the ONU in its entirety. The ONU supports null function, strict priority
+//			scheduling and weighted round robin (WRR) from the priority control and guarantee of minimum
+//			rate control points of view, respectively. If the ONU has no global traffic schedulers, this
+//			attribute is 0. (R) (mandatory) (1-byte)
 //
 //		Deprecated
-//			Deprecated:	This attribute should always be set to 1 by the ONU and ignored by the OLT. (R)
-//			(mandatory) (1-byte)
+//			This attribute should always be set to 1 by the ONU and ignored by the OLT. (R) (mandatory)
+//			(1-byte)
 //
 //		Total Gem Port_Id Number
 //			Total GEM port-ID number: This attribute reports the total number of GEM port-IDs supported by
@@ -90,22 +162,52 @@ var onu2gBME *ManagedEntityDefinition
 //			(optional) (2-bytes)
 //
 //		Sysuptime
-//			SysUpTime:	This attribute counts 10 ms intervals since the ONU was last initialized. It rolls
-//			over to 0 when full (see [IETF RFC 1213]). (R) (optional) (4-bytes)
+//			This attribute counts 10 ms intervals since the ONU was last initialized. It rolls over to 0
+//			when full (see [IETF RFC 1213]). (R) (optional) (4-bytes)
 //
 //		Connectivity Capability
+//			This attribute indicates the Ethernet connectivity models that the ONU can support. The value 0
+//			indicates that the capability is not supported; 1 signifies support. The following code points
+//			are defined.
+//
+//			NOTE 1 - It is not implied that an ONU may not support other connectivity models.
+//
 //			(R) (optional) (2 bytes)
 //
 //		Current Connectivity Mode
 //			(R, W) (optional) (1 byte)
 //
+//			This attribute specifies the Ethernet connectivity model that the OLT wishes to use. The
+//			following code points are defined.
+//
+//			NOTE 2 - It is not implied that an ONU supports a given connectivity model only when that model
+//			is explicitly selected by this attribute. The ONU is free to support additional models at any
+//			and all times.
+//
 //		Quality Of Service Qos Configuration Flexibility
+//			Quality of service (QoS) configuration flexibility: This attribute reports whether various MEs
+//			in the ONU are fixed by the ONU's architecture or whether they are configurable. For backward
+//			compatibility, and if the ONU does not support this attribute, all such attributes are
+//			understood to be hard-wired. (R) (optional) (2-bytes)
+//
+//			Discussion:
+//
+//			To allow for the possibility that the OLT does not support flexible configuration, the ONU
+//			vendor must assure that the priority queues and traffic schedulers are configured in a
+//			meaningful and useful way by factory default, and that this default configuration is restored
+//			upon ONU initialization and MIB reset. The specifics of such a configuration are beyond the
+//			scope of this Recommendation.
+//
 //			The ME ID of both the T-CONT and traffic scheduler contains a slot number. Even when attributes
 //			in the above list are RW, it is never permitted to change the slot number in a reference. That
 //			is, configuration flexibility never extends across slots. It is also not permitted to change the
 //			directionality of an upstream queue to downstream or vice versa.
 //
 //		Priority Queue Scale Factor
+//			If this optional attribute is implemented, it specifies the scale factor of several attributes
+//			of the priority queue ME of clause-9.2.10. The default value of this attribute is 1. (R, W)
+//			(optional) (2-bytes)
+//
 //			NOTE 3 - Some legacy implementations may take the queue scale factor from the GEM block length
 //			attribute of the ANI-G ME. That option is discouraged in new implementations.
 //

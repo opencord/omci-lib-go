@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // VlanTaggingFilterDataClassID is the 16-bit ID for the OMCI
 // Managed entity VLAN tagging filter data
-const VlanTaggingFilterDataClassID ClassID = ClassID(84)
+const VlanTaggingFilterDataClassID = ClassID(84) // 0x0054
 
 var vlantaggingfilterdataBME *ManagedEntityDefinition
 
-// VlanTaggingFilterData (class ID #84)
+// VlanTaggingFilterData (Class ID: #84 / 0x0054)
 //	This ME organizes data associated with VLAN tagging. Instances of this ME are created and
 //	deleted by the OLT.
 //
@@ -42,23 +42,32 @@ var vlantaggingfilterdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the MAC bridge port configuration
-//			data ME. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the MAC bridge port configuration data ME. (R, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Vlan Filter List
-//			VLAN filter list: This attribute is a list of provisioned tag control information (TCI) values
-//			for the bridge port. A TCI, comprising user priority, canonical format indicator (CFI) and
-//			virtual local area network identifier (VID), is represented by 2-bytes. This attribute supports
-//			up to 12 VLAN entries. The first N are valid, where N is given by the number of entries
-//			attribute. (R,-W, setbycreate) (mandatory) (24-bytes)
+//			This attribute is a list of provisioned tag control information (TCI) values for the bridge
+//			port. A TCI, comprising user priority, canonical format indicator (CFI) and virtual local area
+//			network identifier (VID), is represented by 2-bytes. This attribute supports up to 12 VLAN
+//			entries. The first N are valid, where N is given by the number of entries attribute. (R,-W,
+//			setbycreate) (mandatory) (24-bytes)
 //
 //		Forward Operation
+//			When a frame passes through the MAC bridge port, it is processed according to the operation
+//			specified by this attribute, in accordance with Table-9.3.111. Figure 9.3.11-3 illustrates the
+//			treatment of frames according to the provisioned action possibilities. Tagged and untagged
+//			frames are treated separately, but both in accordance with Figure 9.3.11-3. While all forwarding
+//			operations are plausible, only actions 0x10 and 0x12 are necessary to construct a VLAN mapper
+//			and an 802.1p mapper, respectively. (R,-W, setbycreate) (mandatory) (1-byte)
+//
+//			Table 9.3.11-1 contains duplicate entries due to simplification of the original set of actions.
+//
 //			Table 9.3.11-1 and the actions listed are discussed in detail in the following.
 //
 //		Number Of Entries
-//			Number of entries: This attribute specifies the number of valid entries in the VLAN filter list.
-//			(R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute specifies the number of valid entries in the VLAN filter list. (R,-W,
+//			setbycreate) (mandatory) (1-byte)
 //
 type VlanTaggingFilterData struct {
 	ManagedEntityDefinition

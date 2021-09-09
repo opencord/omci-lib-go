@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // MacBridgeConfigurationDataClassID is the 16-bit ID for the OMCI
 // Managed entity MAC bridge configuration data
-const MacBridgeConfigurationDataClassID ClassID = ClassID(46)
+const MacBridgeConfigurationDataClassID = ClassID(46) // 0x002e
 
 var macbridgeconfigurationdataBME *ManagedEntityDefinition
 
-// MacBridgeConfigurationData (class ID #46)
+// MacBridgeConfigurationData (Class ID: #46 / 0x002e)
 //	This ME organizes status data associated with a MAC bridge. The ONU automatically creates or
 //	deletes an instance of this ME upon the creation or deletion of a MAC bridge service profile.
 //
@@ -40,45 +40,46 @@ var macbridgeconfigurationdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the MAC bridge service profile. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the MAC bridge service profile. (R) (mandatory) (2-bytes)
 //
 //		Bridge Mac Address
-//			Bridge MAC address: This attribute indicates the MAC address used by the bridge. The ONU sets
-//			this attribute to a value based on criteria beyond the scope of this Recommendation, e.g.,
-//			factory settings. (R) (mandatory) (6-bytes)
+//			This attribute indicates the MAC address used by the bridge. The ONU sets this attribute to a
+//			value based on criteria beyond the scope of this Recommendation, e.g., factory settings. (R)
+//			(mandatory) (6-bytes)
 //
 //		Bridge Priority
-//			Bridge priority: This attribute reports the priority of the bridge. The ONU copies this
-//			attribute from the priority attribute of the associated MAC bridge service profile. The value of
-//			this attribute changes with updates to the MAC bridge service profile priority attribute. (R)
-//			(mandatory) (2-bytes)
+//			This attribute reports the priority of the bridge. The ONU copies this attribute from the
+//			priority attribute of the associated MAC bridge service profile. The value of this attribute
+//			changes with updates to the MAC bridge service profile priority attribute. (R) (mandatory)
+//			(2-bytes)
 //
 //		Designated Root
-//			Designated root: This attribute identifies the bridge at the root of the spanning tree. It
-//			comprises bridge priority (2-bytes) and MAC address (6-bytes). (R) (mandatory) (8-bytes)
+//			This attribute identifies the bridge at the root of the spanning tree. It comprises bridge
+//			priority (2-bytes) and MAC address (6-bytes). (R) (mandatory) (8-bytes)
 //
 //		Root Path Cost
-//			Root path cost: This attribute reports the cost of the best path to the root as seen from this
-//			bridge. Upon ME instantiation, the ONU sets this attribute to 0. (R) (mandatory) (4-bytes)
+//			This attribute reports the cost of the best path to the root as seen from this bridge. Upon ME
+//			instantiation, the ONU sets this attribute to 0. (R) (mandatory) (4-bytes)
 //
 //		Bridge Port Count
-//			Bridge port count: This attribute records the number of ports linked to this bridge. (R)
-//			(mandatory) (1-byte)
+//			This attribute records the number of ports linked to this bridge. (R) (mandatory) (1-byte)
 //
 //		Root Port Num
-//			Root port num: This attribute contains the port number that has the lowest cost from the bridge
-//			to the root bridge. The value 0 means that this bridge is itself the root. Upon ME
-//			instantiation, the ONU sets this attribute to 0. (R) (mandatory) (2-bytes)
+//			This attribute contains the port number that has the lowest cost from the bridge to the root
+//			bridge. The value 0 means that this bridge is itself the root. Upon ME instantiation, the ONU
+//			sets this attribute to 0. (R) (mandatory) (2-bytes)
 //
 //		Hello Time
 //			NOTE - [IEEE 802.1D] specifies the compatibility range for hello time to be 1..2-s.
 //
+//			This attribute is the hello time received from the designated root, the interval (in 256ths of a
+//			second) between HELLO packets. Its range is 0x0100 to 0x0A00 (1..10-s). (R) (optional) (2-bytes)
+//
 //		Forward Delay
-//			Forward delay: This attribute is the forwarding delay time received from the designated root (in
-//			256ths of a second). Its range is 0x0400 to 0x1E00 (4..30-s) in accordance with [IEEE 802.1D].
-//			(R) (optional) (2-bytes)
+//			This attribute is the forwarding delay time received from the designated root (in 256ths of a
+//			second). Its range is 0x0400 to 0x1E00 (4..30-s) in accordance with [IEEE 802.1D]. (R)
+//			(optional) (2-bytes)
 //
 type MacBridgeConfigurationData struct {
 	ManagedEntityDefinition

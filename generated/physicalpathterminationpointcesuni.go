@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PhysicalPathTerminationPointCesUniClassID is the 16-bit ID for the OMCI
 // Managed entity Physical path termination point CES UNI
-const PhysicalPathTerminationPointCesUniClassID ClassID = ClassID(12)
+const PhysicalPathTerminationPointCesUniClassID = ClassID(12) // 0x000c
 
 var physicalpathterminationpointcesuniBME *ManagedEntityDefinition
 
-// PhysicalPathTerminationPointCesUni (class ID #12)
+// PhysicalPathTerminationPointCesUni (Class ID: #12 / 0x000c)
 //	This ME represents the point at a CES UNI in the ONU where the physical path terminates and
 //	physical level functions are performed.
 //
@@ -55,60 +55,157 @@ var physicalpathterminationpointcesuniBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. This 2 byte
-//			number indicates the physical position of the UNI. The first byte is the slot ID (defined in
-//			clause 9.1.5). The second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. This 2 byte number indicates the
+//			physical position of the UNI. The first byte is the slot ID (defined in clause 9.1.5). The
+//			second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
 //
 //		Expected Type
+//			1 to 254	One of the values from Table-9.1.5-1 that is compatible with a CES circuit pack
+//
 //			Upon ME instantiation, the ONU sets this attribute to 0. (R,-W) (mandatory) (1-byte)
 //
+//			The following coding is used for this attribute-
+//
+//			0	Autosense
+//
 //		Sensed Type
-//			Sensed type:	If the value of expected type is not 0, then the value of sensed type equals the
-//			value of expected type. If expected type-= 0, then the value of sensed type is one of the
-//			compatible values from Table-9.1.5-1. Upon ME instantiation, the ONU sets this attribute to 0 or
-//			to the value that reflects the physically present equipment. (R) (mandatory if the ONU supports
-//			circuit packs with configurable interface types, e.g., C1.5/2/6.3) (1-byte)
+//			If the value of expected type is not 0, then the value of sensed type equals the value of
+//			expected type. If expected type-= 0, then the value of sensed type is one of the compatible
+//			values from Table-9.1.5-1. Upon ME instantiation, the ONU sets this attribute to 0 or to the
+//			value that reflects the physically present equipment. (R) (mandatory if the ONU supports circuit
+//			packs with configurable interface types, e.g., C1.5/2/6.3) (1-byte)
 //
 //		Ces Loopback Configuration
+//			This attribute specifies and reports the loopback configuration of the physical interface.
+//
+//			0	No loopback
+//
+//			1	Payload loopback
+//
+//			2	Line loopback
+//
+//			3	Operations system-directed (OS-directed) loopback 1 (loopback from/to PON side)
+//
+//			4	OS-directed loopback 2 (loopback from/to CES UNI side)
+//
+//			5	OS-directed loopback 3 (loopback of both PON side and CES UNI side)
+//
+//			6	Manual button-directed loopback [read only (RO)]
+//
+//			7	Network-side code inband-directed loopback (RO)
+//
+//			8	SmartJack-directed loopback (RO)
+//
+//			9	Network-side code inband-directed loopback (armed; RO)
+//
+//			10	Remote-line loopback via facility data link (FDL)
+//
+//			11	Remote-line loopback via inband code
+//
+//			12	Remote-payload loopback
+//
 //			Upon ME instantiation, the ONU sets this attribute to 0. (R,-W) (mandatory) (1-byte)
 //
 //		Administrative State
-//			Administrative state: This attribute locks (1) and unlocks (0) the functions performed by this
-//			ME. Administrative state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Framing
+//			6	Basic framing with CRC-4: clause 2.3.3 of [ITU-T G.704]
+//
+//			7	Basic framing with TS16 multiframe
+//
+//			8	Basic framing with CRC-4 and TS16 multiframe
+//
 //			Upon ME instantiation, the ONU sets this attribute to a value that reflects the vendor's
 //			default. (R,-W) (optional) (1-byte)
 //
+//			This attribute specifies the framing structure.
+//
+//			These code points are for use with DS1 services. Code point 2 may also be used for an unframed
+//			E1 service.
+//
+//			0	Extended superframe
+//
+//			1	Superframe
+//
+//			2	Unframed
+//
+//			3	ITUT-G.704
+//
+//			NOTE - [ITUT G.704] describes both SF and ESF framing for DS1 signals. This code point is
+//			retained for backward compatibility, but its meaning is undefined.
+//
+//			4	JT-G.704
+//
+//			The following code points are for use with E1 services.
+//
+//			5	Basic framing: clause 2.3.2 of [ITU-T G.704]
+//
 //		Encoding
+//			This attribute specifies the line coding scheme. Valid values are as follows.
+//
+//			0	B8ZS
+//
+//			1	AMI
+//
+//			2	HDB3
+//
+//			3	B3ZS
+//
 //			Upon ME instantiation, the ONU sets this attribute to 0. (R,-W) (mandatory for DS1 and DS3
 //			interfaces) (1-byte)
 //
 //		Line Length
-//			Line length:	This attribute specifies the length of the twisted pair cable from a DS1 physical
-//			UNI to the DSX-1 cross-connect point or the length of coaxial cable from a DS3 physical UNI to
-//			the DSX-3 cross-connect point. Valid values are given in Table 9.8.1-1. Upon ME instantiation
-//			for a DS1 interface, the ONU assigns the value 0 for non-power feed type DS1 and the value 6 for
-//			power feed type DS1. Upon ME instantiation for a DS3 interface, the ONU sets this attribute to
-//			0x0F. (R,-W) (optional) (1-byte)
+//			This attribute specifies the length of the twisted pair cable from a DS1 physical UNI to the
+//			DSX-1 cross-connect point or the length of coaxial cable from a DS3 physical UNI to the DSX-3
+//			cross-connect point. Valid values are given in Table 9.8.1-1. Upon ME instantiation for a DS1
+//			interface, the ONU assigns the value 0 for non-power feed type DS1 and the value 6 for power
+//			feed type DS1. Upon ME instantiation for a DS3 interface, the ONU sets this attribute to 0x0F.
+//			(R,-W) (optional) (1-byte)
 //
 //		Ds1 Mode
+//			This attribute specifies the mode of a DS1. Valid values are as follows.
+//
 //			In the event of conflicting values between this attribute and the (also optional) line length
 //			attribute, the line length attribute is taken to be valid. This permits the separation of line
 //			build-out (LBO) and power settings from smart jack and FDL behaviour. Upon ME instantiation, the
 //			ONU sets this attribute to 0. (R,-W) (optional) (1-byte)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Line Type
+//			This attribute specifies the line type used in a DS3 or E3 application or when the sensed type
+//			of the PPTP is configurable. Valid values are as follows.
+//
+//			0	Other
+//
+//			1	ds3 m23
+//
+//			2	ds3 syntran
+//
+//			3	ds3 Cbit parity
+//
+//			4	ds3 clear channel
+//
+//			5	e3 framed
+//
+//			6	e3 plcp
+//
+//			7	DS1
+//
+//			8	E1
+//
+//			9	J1
+//
 //			(R,-W) (mandatory for DS3, E3 and multi-configuration interfaces, not applicable to other
 //			interfaces) (1-byte)
 //

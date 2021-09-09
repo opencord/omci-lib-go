@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // MulticastSubscriberConfigInfoClassID is the 16-bit ID for the OMCI
 // Managed entity Multicast subscriber config info
-const MulticastSubscriberConfigInfoClassID ClassID = ClassID(310)
+const MulticastSubscriberConfigInfoClassID = ClassID(310) // 0x0136
 
 var multicastsubscriberconfiginfoBME *ManagedEntityDefinition
 
-// MulticastSubscriberConfigInfo (class ID #310)
+// MulticastSubscriberConfigInfo (Class ID: #310 / 0x0136)
 //	This ME organizes data associated with multicast management at subscriber ports of IEEE-802.1
 //	bridges, including IEEE-802.1p mappers when the provisioning model is mapper-based rather than
 //	bridge-based. Instances of this ME are created and deleted by the OLT. Because of backward
@@ -51,42 +51,117 @@ var multicastsubscriberconfiginfoBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the MAC bridge port configuration
-//			data or IEEE-802.1p mapper ME. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the MAC bridge port configuration data or IEEE-802.1p mapper
+//			ME. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Me Type
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
+//			This attribute indicates the type of the ME implicitly linked by the ME ID attribute.
+//
+//			0	MAC bridge port config data
+//
+//			1	IEEE-802.1p mapper service profile
+//
 //		Multicast Operations Profile Pointer
-//			Multicast operations profile pointer: This attribute points to an instance of the multicast
-//			operations profile. This attribute is ignored by the ONU if a non-empty multicast service
-//			package table attribute is present. (R,W, set-by-create) (mandatory) (2 bytes)
+//			This attribute points to an instance of the multicast operations profile. This attribute is
+//			ignored by the ONU if a non-empty multicast service package table attribute is present. (R,W,
+//			set-by-create) (mandatory) (2 bytes)
 //
 //		Max Simultaneous Groups
-//			Max simultaneous groups: This attribute specifies the maximum number of dynamic multicast groups
-//			that may be replicated to the client port at any one time. The recommended default value 0
-//			specifies that no administrative limit is to be imposed. (R,-W, setbycreate) (optional)
-//			(2-bytes)
+//			This attribute specifies the maximum number of dynamic multicast groups that may be replicated
+//			to the client port at any one time. The recommended default value 0 specifies that no
+//			administrative limit is to be imposed. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Max Multicast Bandwidth
-//			Max multicast bandwidth: This attribute specifies the maximum imputed dynamic bandwidth, in
-//			bytes per second, that may be delivered to the client port at any one time. The recommended
-//			default value 0 specifies that no administrative limit is to be imposed. (R,-W, setbycreate)
-//			(optional) (4-bytes)
+//			This attribute specifies the maximum imputed dynamic bandwidth, in bytes per second, that may be
+//			delivered to the client port at any one time. The recommended default value 0 specifies that no
+//			administrative limit is to be imposed. (R,-W, setbycreate) (optional) (4-bytes)
 //
 //		Bandwidth Enforcement
-//			Bandwidth enforcement: The recommended default value of this Boolean attribute is false, and
-//			specifies that attempts to exceed the max multicast bandwidth be counted but honoured. The value
-//			true specifies that such attempts be counted and denied. The imputed bandwidth value is taken
-//			from the dynamic access control list table, both for a new join request and for pre-existing
-//			groups. (R,-W, setbycreate) (optional) (1-byte)
+//			The recommended default value of this Boolean attribute is false, and specifies that attempts to
+//			exceed the max multicast bandwidth be counted but honoured. The value true specifies that such
+//			attempts be counted and denied. The imputed bandwidth value is taken from the dynamic access
+//			control list table, both for a new join request and for pre-existing groups. (R,-W, setbycreate)
+//			(optional) (1-byte)
 //
 //		Multicast Service Package Table
+//			This attribute is a list that specifies one or more multicast service packages. When the ONU
+//			receives an IGMP/MLD join request, it searches the multicast service package table in row key
+//			order, matching the VID (UNI) field (several rows can share the same VID). For each VID (UNI)
+//			match, the multicast operations profile pointer is used to access the ME that contains the
+//			attributes associated with the service package. The search stops when all requested multicast
+//			groups have been found and dealt with.
+//
+//			Each list entry is a vector of six components as follow.
+//
+//			-	Table control (2-bytes)
+//
+//			The first 2-bytes of each entry contain a key into the table. It is the responsibility of the
+//			OLT to assign and track table keys and content. Since row keys are created by the OLT, they may
+//			be densely or sparsely packed.
+//
+//			The two MSBs of this field determine the meaning of a set operation. These bits are returned as
+//			00 during get next operations.
+//
+//			Bits 14..11 are reserved. Bits 10..1 are the row key itself.
+//
+//			-	VID (UNI). The value in this field is compared with the VID of upstream IGMP/MLD messages, and
+//			is used to decide whether to honour a join request. (2 bytes)
+//
+//			Values:
+//
+//			0..4095 - Matched against the VID of the IGMP/MLD message. 0 indicates a priority-tagged
+//			message, whose P bits are ignored.
+//
+//			4096 - Matches untagged IGMP/MLD messages only.
+//
+//			4097 - Matches tagged messages only, but ignores the value of the VID.
+//
+//			0xFFFF - Unspecified.
+//
+//			The VID (UNI) comparison occurs prior to any action defined by the upstream IGMP tag control
+//			attribute in an associated multicast operations profile (or alternatively, before any
+//			modification by a possible (extended) VLAN tagging operation configuration data ME).
+//
+//			-	Max simultaneous groups. This field specifies the maximum number of dynamic multicast groups
+//			that may be replicated to the client port at any one time, for the multicast service package
+//			that is associated with this row. The value 0 specifies that no administrative limit is to be
+//			imposed. (2-bytes)
+//
+//			-	Max multicast bandwidth. This field specifies the maximum imputed dynamic bandwidth, in bytes
+//			per second, that may be delivered to the client port at any one time, for the multicast service
+//			package that is associated with this row. The value 0 specifies that no administrative limit is
+//			to be imposed. (4-bytes)
+//
+//			NOTE - The port is also constrained by the global max simultaneous groups and max multicast
+//			bandwidth attributes of the multicast subscriber config info ME.
+//
+//			-	Multicast operations profile pointer. This field contains the ME ID of the multicast
+//			operations profile ME associated with this service package. (2 bytes)
+//
+//			-	Reserved (8 bytes)
+//
 //			(R,-W) (optional) (20N bytes, where N is the number of entries in the table)
 //
 //		Allowed Preview Groups Table
 //			Each list entry begins with a table control field:
+//
+//			This attribute is a list that specifies the preview groups that are currently allowed for the
+//			UNI associated with this ME. It is intended to support paid viewing of a multicast group that
+//			may or may not have been previewed.
+//
+//			When an IGMP/MLD join request is received, the order of search precedence is as follows.
+//
+//			1. Multicast operations profile(s), fully authorized groups
+//
+//			2. This attribute, the allowed preview groups table
+//
+//			3. Multicast operations profile(s), preview-only groups
+//
+//			If the first match is a group listed in this attribute, the ONU forwards the group to the UNI
+//			until the group is removed from this list or until the subscriber leaves the group.
 //
 type MulticastSubscriberConfigInfo struct {
 	ManagedEntityDefinition

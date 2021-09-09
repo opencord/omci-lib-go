@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // MgcConfigDataClassID is the 16-bit ID for the OMCI
 // Managed entity MGC config data
-const MgcConfigDataClassID ClassID = ClassID(155)
+const MgcConfigDataClassID = ClassID(155) // 0x009b
 
 var mgcconfigdataBME *ManagedEntityDefinition
 
-// MgcConfigData (class ID #155)
+// MgcConfigData (Class ID: #155 / 0x009b)
 //	The MGC config data ME defines the MGC configuration associated with an MG subscriber. It is
 //	conditionally required for ONUs that support ITU-T H.248 VoIP services. If a non-OMCI interface
 //	is used to manage VoIP signalling, this ME is unnecessary.
@@ -43,63 +43,69 @@ var mgcconfigdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Primary Mgc
-//			Primary MGC: This attribute points to a network address ME that contains the name (IP-address or
-//			resolved name) of the primary MGC that controls the signalling messages. The port is optional
-//			and defaults to 2944 for text message formats and 2955 for binary message formats. (R,-W,
+//			This attribute points to a network address ME that contains the name (IP-address or resolved
+//			name) of the primary MGC that controls the signalling messages. The port is optional and
+//			defaults to 2944 for text message formats and 2955 for binary message formats. (R,-W,
 //			setbycreate) (mandatory) (2-bytes)
 //
 //		Secondary Mgc
-//			Secondary MGC: This attribute points to a network address ME that contains the name (IP-address
-//			or resolved name) of the secondary or backup MGC that controls the signalling messages. The port
-//			is optional and defaults to 2944 for text message formats and 2955 for binary message formats.
-//			(R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute points to a network address ME that contains the name (IP-address or resolved
+//			name) of the secondary or backup MGC that controls the signalling messages. The port is optional
+//			and defaults to 2944 for text message formats and 2955 for binary message formats. (R,-W,
+//			setbycreate) (mandatory) (2-bytes)
 //
 //		Tcp_Udp Pointer
 //			TCP/UDP pointer: This attribute points to the TCP/UDP config data ME to be used for
 //			communication with the MGC. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Version
-//			Version:	This integer attribute reports the version of the Megaco protocol in use. The ONU
-//			should deny an attempt by the OLT to set or create a value that it does not support. The value 0
-//			indicates that no particular version is specified. (R,-W, setbycreate) (mandatory) (1-byte)
+//			This integer attribute reports the version of the Megaco protocol in use. The ONU should deny an
+//			attempt by the OLT to set or create a value that it does not support. The value 0 indicates that
+//			no particular version is specified. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Message Format
+//			This attribute defines the message format. Valid values are as follows.
+//
+//			0	Text long
+//
+//			1	Text short
+//
+//			2	Binary
+//
 //			The default value is recommended to be 0. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Maximum Retry Time
-//			Maximum retry time: This attribute specifies the maximum retry time for MGC transactions, in
-//			seconds. The default value 0 specifies vendor-specific implementation. (R,-W) (optional)
-//			(2-bytes)
+//			This attribute specifies the maximum retry time for MGC transactions, in seconds. The default
+//			value 0 specifies vendor-specific implementation. (R,-W) (optional) (2-bytes)
 //
 //		Maximum Retry Attempts
-//			Maximum retry attempts: This attribute specifies the maximum number of times a message is
-//			retransmitted to the MGC. The recommended default value 0 specifies vendor-specific
-//			implementation. (R,-W, setbycreate) (optional) (2-bytes)
+//			This attribute specifies the maximum number of times a message is retransmitted to the MGC. The
+//			recommended default value 0 specifies vendor-specific implementation. (R,-W, setbycreate)
+//			(optional) (2-bytes)
 //
 //		Service Change Delay
-//			Service change delay: This attribute specifies the service status delay time for changes in line
-//			service status. This attribute is specified in seconds. The default value 0 specifies no delay.
-//			(R,-W) (optional) (2-bytes)
+//			This attribute specifies the service status delay time for changes in line service status. This
+//			attribute is specified in seconds. The default value 0 specifies no delay. (R,-W) (optional)
+//			(2-bytes)
 //
 //		Termination Id Base
-//			Termination ID base: This attribute specifies the base string for the ITU-T H.248 physical
-//			termination ID(s) for this ONU. This string is intended to uniquely identify an ONU. Vendor-
-//			specific termination identifiers (port IDs) are optionally added to this string to uniquely
-//			identify a termination on a specific ONU. (R,-W) (optional) (25-bytes)
+//			This attribute specifies the base string for the ITU-T H.248 physical termination ID(s) for this
+//			ONU. This string is intended to uniquely identify an ONU. Vendor-specific termination
+//			identifiers (port IDs) are optionally added to this string to uniquely identify a termination on
+//			a specific ONU. (R,-W) (optional) (25-bytes)
 //
 //		Softswitch
-//			Softswitch:	This attribute identifies the gateway softswitch vendor. The format is four ASCII
-//			coded alphabetic characters [A..Z] as defined in [ATIS0300220]. A value of four null bytes
-//			indicates an unknown or unspecified vendor. (R,-W, setbycreate) (mandatory) (4-bytes)
+//			This attribute identifies the gateway softswitch vendor. The format is four ASCII coded
+//			alphabetic characters [A..Z] as defined in [ATIS0300220]. A value of four null bytes indicates
+//			an unknown or unspecified vendor. (R,-W, setbycreate) (mandatory) (4-bytes)
 //
 //		Message Id Pointer
-//			Message ID pointer: This attribute points to a large string whose value specifies the message
-//			identifier string for ITU-T H.248 messages originated by the ONU. (R, W, setbycreate) (optional)
-//			(2 bytes)
+//			This attribute points to a large string whose value specifies the message identifier string for
+//			ITU-T H.248 messages originated by the ONU. (R, W, setbycreate) (optional) (2 bytes)
 //
 type MgcConfigData struct {
 	ManagedEntityDefinition

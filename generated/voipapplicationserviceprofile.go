@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // VoipApplicationServiceProfileClassID is the 16-bit ID for the OMCI
 // Managed entity VoIP application service profile
-const VoipApplicationServiceProfileClassID ClassID = ClassID(146)
+const VoipApplicationServiceProfileClassID = ClassID(146) // 0x0092
 
 var voipapplicationserviceprofileBME *ManagedEntityDefinition
 
-// VoipApplicationServiceProfile (class ID #146)
+// VoipApplicationServiceProfile (Class ID: #146 / 0x0092)
 //	The VoIP application service profile defines attributes of calling features used in conjunction
 //	with a VoIP line service. It is optional for ONUs that support VoIP services. If a non-OMCI
 //	interface is used to manage SIP for VoIP, this ME is unnecessary.
@@ -44,43 +44,125 @@ var voipapplicationserviceprofileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			Managed entity ID:-This attribute uniquely identifies each instance of this ME. (R,-setbycreate)
+//			(mandatory) (2 bytes)
 //
 //		Cid Features
-//			The recommended default value is 0x00. (R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute contains a bit map of caller ID features. Except as noted, the bit value 0
+//			disables the feature; 1 enables it.
+//
+//			0x01	Calling number
+//
+//			0x02	Calling name
+//
+//			0x04	CID blocking (both number and name)
+//
+//			0x08	CID number - Permanent presentation status for number (0 = public, 1 = private)
+//
+//			0x10	CID name - Permanent presentation status for name  (0 = public, 1 = private)
+//
+//			0x20	Anonymous CID blocking (ACR). It may not be possible to support this in the ONU.
+//
+//			0x40..0x80	Not used
+//
+//			The recommended default value is 0x00. (R, W, setbycreate) (mandatory) (1-byte)
 //
 //		Call Waiting Features
 //			The recommended default value is 0x00. (R,-W, setbycreate) (mandatory) (1-byte)
 //
+//			This attribute contains a bit map of call waiting features. The bit value 0 disables the
+//			feature; 1 enables it.
+//
+//			0x01	Call waiting
+//
+//			0x02	Caller ID announcement
+//
+//			0x04..0x80	Not used
+//
 //		Call Progress Or Transfer Features
-//			The recommended default value is 0x0000. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute is a bit map of call processing features. The bit value 0 disables the feature; 1
+//			enables it.
+//
+//			0x0001	3way
+//
+//			0x0002	Call transfer
+//
+//			0x0004	Call hold
+//
+//			0x0008	Call park
+//
+//			0x0010	Do not disturb
+//
+//			0x0020	Flash on emergency service call (flash is to be processed during an emergency service
+//			call)
+//
+//			0x0040	Emergency service originating hold (determines whether call clearing is to be performed
+//			on on-hook during an emergency service call)
+//
+//			0x0080	6way
+//
+//			0x0100..0x8000	Not used
+//
+//			The recommended default value is 0x0000. (R, W, setbycreate) (mandatory) (2-bytes)
 //
 //		Call Presentation Features
+//			This attribute is a bit map of call presentation features. The bit value 0 disables the feature;
+//			1 enables it.
+//
+//			0x0001	Message waiting indication splash ring
+//
+//			0x0002	Message waiting indication special dial tone
+//
+//			0x0004	Message waiting indication visual indication
+//
+//			0x0008	Call forwarding indication
+//
+//			0x0010	DC voltage based visual message waiting indicator (vmwi) (e.g., neon lamp on a phone to
+//			indicate a message waiting).  For backwards compatibility reasons, the value 0x0010 is a
+//			companion value to 0x0004. If an ONU does not support DC voltage vmwi, the ONU uses other
+//			existing vmwi methods. If the ONU supports DC voltage vmwi and needs to apply DC voltage to turn
+//			on the phone lamp (to indicate message waiting), the values 0x0004 and 0x0010 are set.
+//
+//			0x0020..0x8000	Not used
+//
 //			The recommended default value is 0x0000. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Direct Connect Feature
-//			The recommended default value is 0x00. (R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute is a bit map of characteristics associated with the direct connect feature. The
+//			bit value 0 disables the feature; 1 enables it.
+//
+//			0x01	Direct connect feature enabled
+//
+//			0x02	Dial tone feature delay option
+//
+//			The recommended default value is 0x00. (R, W, setbycreate) (mandatory) (1-byte)
 //
 //		Direct Connect Uri Pointer
-//			Direct connect URI pointer: This attribute points to a network address ME that specifies the URI
-//			of the direct connect. If this attribute is set to a null pointer, no URI is defined. (R,-W,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute points to a network address ME that specifies the URI of the direct connect. If
+//			this attribute is set to a null pointer, no URI is defined. (R, W, setbycreate) (mandatory) (2
+//			bytes)
 //
 //		Bridged Line Agent Uri Pointer
-//			Bridged line agent URI pointer: This attribute points to a network address ME that specifies the
-//			URI of the bridged line agent. If this attribute is set to a null pointer, no URI is defined.
-//			(R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute points to a network address ME that specifies the URI of the bridged line agent.
+//			If this attribute is set to a null pointer, no URI is defined. (R, W, setbycreate) (mandatory)
+//			(2 bytes)
 //
 //		Conference Factory Uri Pointer
-//			Conference factory URI pointer: This attribute points to a network address ME that specifies the
-//			URI of the conference factory. If this attribute is set to a null pointer, no URI is defined.
-//			(R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute points to a network address ME that specifies the URI of the conference factory.
+//			If this attribute is set to a null pointer, no URI is defined. (R, W, setbycreate) (mandatory)
+//			(2 bytes)
 //
-//		Dial Tone Feature Delay_ W Armline Timer New
+//		Dial Tone Feature Delay_Warmline Timer New
 //			Dial tone feature delay/warmline timer (new): This attribute defines the warmline timer/dial
 //			tone feature delay timer (seconds). The default value 0 specifies vendor-specific
-//			implementation. (R,-W) (optional) (2-bytes)
+//			implementation. (R, W) (optional) (2 bytes)
+//
+//		Ip Host Pointer
+//			This attribute points to the IP host config data or IPv6 host config data ME associated with
+//			this VoIP config data ME. This attribute is only relevant when the VoIP configuration method
+//			used attribute of this ME is set to configuration file retrieval (2) OR IETF sipping config
+//			framework (4). Upon instantiation ONU sets this value to NULL (0xFFFF) pointer. (R, W)
+//			(optional) (2 bytes)
 //
 type VoipApplicationServiceProfile struct {
 	ManagedEntityDefinition
@@ -97,18 +179,19 @@ func init() {
 			Get,
 			Set,
 		),
-		AllowedAttributeMask: 0xff80,
+		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: ByteField("CidFeatures", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: ByteField("CallWaitingFeatures", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: Uint16Field("CallProgressOrTransferFeatures", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4: Uint16Field("CallPresentationFeatures", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5: ByteField("DirectConnectFeature", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6: Uint16Field("DirectConnectUriPointer", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7: Uint16Field("BridgedLineAgentUriPointer", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8: Uint16Field("ConferenceFactoryUriPointer", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9: Uint16Field("DialToneFeatureDelayWArmlineTimerNew", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField("CidFeatures", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField("CallWaitingFeatures", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint16Field("CallProgressOrTransferFeatures", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint16Field("CallPresentationFeatures", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  ByteField("DirectConnectFeature", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  Uint16Field("DirectConnectUriPointer", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  Uint16Field("BridgedLineAgentUriPointer", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  Uint16Field("ConferenceFactoryUriPointer", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  Uint16Field("DialToneFeatureDelayWarmlineTimerNew", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: Uint16Field("IpHostPointer", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

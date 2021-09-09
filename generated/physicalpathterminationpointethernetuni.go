@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PhysicalPathTerminationPointEthernetUniClassID is the 16-bit ID for the OMCI
 // Managed entity Physical path termination point Ethernet UNI
-const PhysicalPathTerminationPointEthernetUniClassID ClassID = ClassID(11)
+const PhysicalPathTerminationPointEthernetUniClassID = ClassID(11) // 0x000b
 
 var physicalpathterminationpointethernetuniBME *ManagedEntityDefinition
 
-// PhysicalPathTerminationPointEthernetUni (class ID #11)
+// PhysicalPathTerminationPointEthernetUni (Class ID: #11 / 0x000b)
 //	This ME represents the point at an Ethernet UNI where the physical path terminates and Ethernet
 //	physical level functions are performed.
 //
@@ -55,66 +55,136 @@ var physicalpathterminationpointethernetuniBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. This 2 byte
-//			number indicates the physical position of the UNI. The first byte is the slot ID (defined in
-//			clause 9.1.5). The second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. This 2 byte number indicates the
+//			physical position of the UNI. The first byte is the slot ID (defined in clause 9.1.5). The
+//			second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
 //
 //		Expected Type
+//			This attribute supports pre-provisioning. It is coded as follows:
+//
+//			0	Autosense
+//
+//			1 to 254	One of the values from Table-9.1.5-1 that is compatible with an Ethernet circuit pack
+//
 //			Upon ME instantiation, the ONU sets this attribute to 0. (R,-W) (mandatory) (1-byte)
 //
 //		Sensed Type
+//			When a circuit pack is present, this attribute represents its type as one of the values from
+//			Table-9.1.5-1. If the value of the expected type is not 0, then the value of the sensed type
+//			should be the same as the value of the expected type. Upon ME instantiation, the ONU sets this
+//			attribute to 0. See also the note in the following AVC table.
+//
 //			(R) (mandatory if the ONU supports circuit packs with configurable interface types, e.g., 10/100
 //			BASE-T card) (1-byte)
 //
 //		Auto Detection Configuration
+//			This attribute sets the following Ethernet port configuration.
+//
 //			Upon ME instantiation, the ONU sets this attribute to 0. (R,-W) (mandatory for interfaces with
 //			autodetection options) (1-byte)
 //
 //		Ethernet Loopback Configuration
+//			This attribute sets the following Ethernet loopback configuration.
+//
+//			0	No loopback
+//
+//			3	Loop 3, loopback of downstream traffic after PHY transceiver. Loop-3 is depicted in Figure
+//			9.5.1-1.
+//
+//			Note that normal bridge behaviour may defeat the loopback signal unless broadcast MAC addresses
+//			are used. Although it does not reach the physical interface, [IEEE 802.1ag] loopback is
+//			preferred.
+//
 //			Upon ME instantiation, the ONU sets this attribute to 0. (R,-W) (mandatory) (1-byte)
 //
 //		Administrative State
-//			Administrative state: This attribute locks (1) and unlocks (0) the functions performed by this
-//			ME. Administrative state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Configuration Ind
+//			This attribute indicates the configuration status of the Ethernet UNI.
+//
+//			0x01	10BASE-T full duplex
+//
+//			0x02	100BASE-T full duplex
+//
+//			0x03	Gigabit Ethernet full duplex
+//
+//			0x04	10Gb/s Ethernet full duplex
+//
+//			0x05	2.5Gb/s Ethernet full duplex
+//
+//			0x06	5Gb/s Ethernet full duplex
+//
+//			0x07	25Gb/s Ethernet full duplex
+//
+//			0x08	40Gb/s Ethernet full duplex
+//
+//			0x11	10BASE-T half duplex
+//
+//			0x12	100BASE-T half duplex
+//
+//			0x13	Gigabit Ethernet half duplex
+//
 //			The value 0 indicates that the configuration status is unknown (e.g., Ethernet link is not
 //			established or the circuit pack is not yet installed). Upon ME instantiation, the ONU sets this
 //			attribute to 0. (R) (mandatory) (1-byte)
 //
 //		Max Frame Size
-//			Max frame size: This attribute denotes the maximum frame size allowed across this interface.
-//			Upon ME instantiation, the ONU sets the attribute to 1518. (R,-W) (mandatory for G-PON, optional
-//			for ITU-T G.986 systems) (2 bytes)
+//			This attribute denotes the maximum frame size allowed across this interface. Upon ME
+//			instantiation, the ONU sets the attribute to 1518. (R,-W) (mandatory for G-PON, optional for
+//			ITU-T G.986 systems) (2 bytes)
 //
 //		Dte Or Dce Ind
+//			This attribute specifies the following Ethernet interface wiring.
+//
+//			0	DCE or MDI-X (default).
+//
+//			1	DTE or MDI.
+//
+//			2	Automatic selection
+//
 //			(R,-W) (mandatory) (1-byte)
 //
 //		Pause Time
-//			Pause time:	This attribute allows the PPTP to ask the subscriber terminal to temporarily suspend
-//			sending data. Units are in pause quanta (1 pause quantum is 512 bit times of the particular
+//			This attribute allows the PPTP to ask the subscriber terminal to temporarily suspend sending
+//			data. Units are in pause quanta (1 pause quantum is 512 bit times of the particular
 //			implementation). Values: 0..0xFFFF. Upon ME instantiation, the ONU sets this attribute to 0.
 //			(R,-W) (optional) (2-bytes)
 //
 //		Bridged Or Ip Ind
+//			This attribute specifies whether the Ethernet interface is bridged or derived from an IP router
+//			function.
+//
+//			0	Bridged
+//
+//			1	IP router
+//
+//			2	Depends on the parent circuit pack. 2 means that the circuit pack's bridged or IP ind
+//			attribute is either 0 or 1.
+//
 //			Upon ME instantiation, the ONU sets this attribute to 2. (R,-W) (optional) (1-byte)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Pppoe Filter
-//			PPPoE filter: This attribute controls filtering of PPPoE packets on this Ethernet port. The
-//			value 0 allows packets of all types. The value 1 discards everything but PPPoE packets. The
-//			default value is 0. (R,-W) (optional) (1-byte)
+//			This attribute controls filtering of PPPoE packets on this Ethernet port. The value 0 allows
+//			packets of all types. The value 1 discards everything but PPPoE packets. The default value is 0.
+//			(R,-W) (optional) (1-byte)
 //
 //		Power Control
+//			This attribute controls whether power is provided to an external equipment over the Ethernet
+//			PPTP. The value 1 enables power over the Ethernet port. The default value 0 disables power feed.
+//			(R,-W) (optional) (1-byte)
+//
 //			NOTE - This attribute is the equivalent of the acPSEAdminControl variable defined in clause
 //			30.9.1.2.1 of [IEEE 802.3]. Other variables related to PoE appear in the PoE control ME.
 //

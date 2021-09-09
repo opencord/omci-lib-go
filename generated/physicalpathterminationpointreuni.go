@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PhysicalPathTerminationPointReUniClassID is the 16-bit ID for the OMCI
 // Managed entity Physical path termination point RE UNI
-const PhysicalPathTerminationPointReUniClassID ClassID = ClassID(314)
+const PhysicalPathTerminationPointReUniClassID = ClassID(314) // 0x013a
 
 var physicalpathterminationpointreuniBME *ManagedEntityDefinition
 
-// PhysicalPathTerminationPointReUni (class ID #314)
+// PhysicalPathTerminationPointReUni (Class ID: #314 / 0x013a)
 //	This ME represents an S'/R' interface in a mid-span PON RE that supports OEO regeneration in at
 //	least one direction, where physical paths terminate and physical path level functions are
 //	performed (transmit or receive).
@@ -71,80 +71,108 @@ var physicalpathterminationpointreuniBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
+//			This attribute uniquely identifies each instance of this ME. This 2-byte number indicates the
+//			physical position of the UNI. The first byte is the slot ID (defined in clause 9.1.5). The
+//			second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
+//
 //			NOTE 1 - This ME ID may be identical to that of an RE upstream amplifier if it shares the same
 //			physical slot and port.
 //
 //		Administrative State
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
+//
 //			NOTE 2 - Administrative lock of a PPTP RE UNI results in loss of signal to any downstream ONUs.
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Re Ani_G Pointer
 //			RE ANI-G pointer: This attribute points to an RE ANI-G instance. (R,-W) (mandatory) (2-bytes)
 //
 //		Total Optical Receive Signal Level Table
-//			Total optical receive signal level table: This table attribute reports a series of measurements
-//			of time averaged received upstream optical signal power. The measurement circuit should have a
-//			temporal response similar to a simple 1-pole low pass filter, with an effective time constant of
-//			the order of a GTC frame time. Each table entry has a 2-byte frame counter field (most
-//			significant end), and a 2-byte power measurement field. The frame counter field contains the
-//			least significant 16-bits of the superframe counter received closest to the time of the
-//			measurement. The power measurement field is a 2s complement integer referred to 1-mW (i.e.,
-//			dBm), with 0.002-dB granularity. The RE equipment should add entries to this table as frequently
-//			as is reasonable. The RE should clear the table once it is read by the OLT. (R) (optional) (4-*
-//			N-bytes, where N is the number of measurements present.)
+//			This table attribute reports a series of measurements of time averaged received upstream optical
+//			signal power. The measurement circuit should have a temporal response similar to a simple 1-pole
+//			low pass filter, with an effective time constant of the order of a GTC frame time. Each table
+//			entry has a 2-byte frame counter field (most significant end), and a 2-byte power measurement
+//			field. The frame counter field contains the least significant 16-bits of the superframe counter
+//			received closest to the time of the measurement. The power measurement field is a 2s complement
+//			integer referred to 1-mW (i.e., dBm), with 0.002-dB granularity. (Coding -32768 to +32767, where
+//			0x00 = 0-dBm, 0x03e8 = +2-dBm, etc.) The RE equipment should add entries to this table as
+//			frequently as is reasonable. The RE should clear the table once it is read by the OLT. (R)
+//			(optional) (4-* N-bytes, where N is the number of measurements present.)
 //
 //		Per Burst Receive Signal Level Table
-//			Per burst receive signal level table: This table attribute reports the most recent measurement
-//			of received burst upstream optical signal power. Each table entry has a 2-byte ONU-ID field
-//			(most significant end), and a 2-byte power measurement field. The power measurement field is a
-//			2s complement integer referred to 1-mW (i.e.,-dBm), with 0.002-dB granularity. (R) (optional)
-//			(4-* N-bytes, where N is the number of distinct ONUs connected to the S'/R' interface.)
+//			This table attribute reports the most recent measurement of received burst upstream optical
+//			signal power. Each table entry has a 2-byte ONU-ID field (most significant end), and a 2-byte
+//			power measurement field. The power measurement field is a 2s complement integer referred to 1-mW
+//			(i.e.,-dBm), with 0.002-dB granularity. (Coding -32768 to +32767, where 0x00 = 0-dBm, 0x03e8 =
+//			+2-dBm, etc.) (R) (optional) (4-* N-bytes, where N is the number of distinct ONUs connected to
+//			the S'/R' interface.)
 //
 //		Lower Receive Optical Threshold
-//			Lower receive optical threshold: This attribute specifies the optical level that the RE uses to
-//			declare the burst mode low received optical power alarm. Valid values are  -127-dBm (coded as
-//			254) to 0-dBm (coded as 0) in 0.5-dB increments. The default value 0xFF selects the RE's
-//			internal policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the optical level that the RE uses to declare the burst mode low
+//			received optical power alarm. Valid values are  -127-dBm (coded as 254) to 0-dBm (coded as 0) in
+//			0.5-dB increments. The default value 0xFF selects the RE's internal policy. (R,-W) (optional)
+//			(1-byte)
 //
 //		Upper Receive Optical Threshold
-//			Upper receive optical threshold: This attribute specifies the optical level that the RE uses to
-//			declare the burst mode high optical power alarm. Valid values are  -127-dBm (coded as 254) to
-//			0-dBm (coded as 0) in 0.5-dB increments. The default value 0xFF selects the RE's internal
-//			policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the optical level that the RE uses to declare the burst mode high
+//			optical power alarm. Valid values are  -127-dBm (coded as 254) to 0-dBm (coded as 0) in 0.5-dB
+//			increments. The default value 0xFF selects the RE's internal policy. (R,-W) (optional) (1-byte)
 //
 //		Transmit Optical Level
-//			Transmit optical level: This attribute reports the current measurement of the downstream mean
-//			optical launch power. Its value is a 2s complement integer referred to 1-mW (i.e., dBm), with
-//			0.002-dB granularity. (R) (optional) (2-bytes)
+//			This attribute reports the current measurement of the downstream mean optical launch power. Its
+//			value is a 2s complement integer referred to 1-mW (i.e., dBm), with 0.002-dB granularity. (R)
+//			(optional) (2-bytes)
 //
 //		Lower Transmit Power Threshold
-//			Lower transmit power threshold: This attribute specifies the downstream minimum mean optical
-//			launch power at the S'/R' interface that the RE uses to declare the low transmit optical power
-//			alarm. Its value is a 2s complement integer referred to 1-mW (i.e., dBm), with 0.5-dB
-//			granularity. The default value 0x7F selects the RE's internal policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the downstream minimum mean optical launch power at the S'/R' interface
+//			that the RE uses to declare the low transmit optical power alarm. Its value is a 2s complement
+//			integer referred to 1-mW (i.e., dBm), with 0.5-dB granularity. The default value 0x7F selects
+//			the RE's internal policy. (R,-W) (optional) (1-byte)
 //
 //		Upper Transmit Power Threshold
-//			Upper transmit power threshold: This attribute specifies the downstream maximum mean optical
-//			launch power at the S'/R' interface that the RE uses to declare the high transmit optical power
-//			alarm. Its value is a 2s complement integer referred to 1-mW (i.e., dBm), with 0.5-dB
-//			granularity. The default value 0x7F selects the RE's internal policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the downstream maximum mean optical launch power at the S'/R' interface
+//			that the RE uses to declare the high transmit optical power alarm. Its value is a 2s complement
+//			integer referred to 1-mW (i.e., dBm), with 0.5-dB granularity. The default value 0x7F selects
+//			the RE's internal policy. (R,-W) (optional) (1-byte)
 //
-//		A Dditional Preamble
-//			Additional preamble: This attribute indicates the number of bytes of PLOu preamble that are
-//			unavoidably consumed while passing the RE. (R) (mandatory) (1-byte)
+//		Additional Preamble
+//			This attribute indicates the number of bytes of PLOu preamble that are unavoidably consumed
+//			while passing the RE. (R) (mandatory) (1-byte)
 //
-//		A Dditional Guard Time
-//			Additional guard time: This attribute indicates the number of bytes of extra guard time that are
-//			needed to ensure correct operation with the RE. (R) (mandatory) (1-byte)
+//		Additional Guard Time
+//			This attribute indicates the number of bytes of extra guard time that are needed to ensure
+//			correct operation with the RE. (R) (mandatory) (1-byte)
+//
+//		Connected Onus Table
+//			s attribute is used to pass ONU ID information of the connected ONUs per RE UNI. The get, get
+//			next sequence must be used with this attribute since its size is unspecified. Upon ME
+//			instantiation, this attribute is an empty list.
+//
+//			Each entry contains:
+//
+//			- ONU ID (2-bytes)
+//
+//			(R) (optional) (2N bytes, where N is the number of-ONUs)
+//
+//		Clear Onu Table
+//			the attribute is used to notify RE to clear the entire Connected ONUs table by OLT. The OLT must
+//			insure that the ONU IDs have been retrieved before clearing the table, or loss of data may
+//			occur.
+//
+//			When the value of the byte is set to 1, the RE clears the entire Connected ONUs table and resets
+//			the byte to 0.
+//
+//			(W) (optional) (1 byte)
 //
 type PhysicalPathTerminationPointReUni struct {
 	ManagedEntityDefinition
@@ -160,7 +188,7 @@ func init() {
 			GetNext,
 			Set,
 		),
-		AllowedAttributeMask: 0xfffc,
+		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
 			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
 			1:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
@@ -175,8 +203,10 @@ func init() {
 			10: Uint16Field("TransmitOpticalLevel", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
 			11: ByteField("LowerTransmitPowerThreshold", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
 			12: ByteField("UpperTransmitPowerThreshold", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: ByteField("ADditionalPreamble", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: ByteField("ADditionalGuardTime", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			13: ByteField("AdditionalPreamble", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: ByteField("AdditionalGuardTime", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: TableField("ConnectedOnusTable", TableAttributeType, 0x0002, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, true, false, 15),
+			16: TableField("ClearOnuTable", TableAttributeType, 0x0001, TableInfo{nil, 1}, mapset.NewSetWith(Write), false, true, false, 16),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Dot1XPortExtensionPackageClassID is the 16-bit ID for the OMCI
 // Managed entity Dot1X port extension package
-const Dot1XPortExtensionPackageClassID ClassID = ClassID(290)
+const Dot1XPortExtensionPackageClassID = ClassID(290) // 0x0122
 
 var dot1xportextensionpackageBME *ManagedEntityDefinition
 
-// Dot1XPortExtensionPackage (class ID #290)
+// Dot1XPortExtensionPackage (Class ID: #290 / 0x0122)
 //	An instance of this ME represents a set of attributes that control a port's IEEE 802.1X
 //	operation. It is created and deleted autonomously by the ONU upon the creation or deletion of a
 //	PPTP that supports [IEEE 802.1X] authentication of customer premises equipment (CPE).
@@ -42,54 +42,110 @@ var dot1xportextensionpackageBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute provides a unique number for each instance of this ME. Its
-//			value is the same as that of its associated PPTP (i.e., slot and port number). (R) (mandatory)
-//			(2-bytes)
+//			This attribute provides a unique number for each instance of this ME. Its value is the same as
+//			that of its associated PPTP (i.e., slot and port number). (R) (mandatory) (2-bytes)
 //
 //		Dot1X Enable
-//			Dot1x enable: If true, this Boolean attribute forces the associated port to authenticate via
-//			[IEEE 802.1X] as a precondition of normal service. The default value false does not impose IEEE
-//			802.1X authentication on the associated port. (R,-W) (mandatory) (1-byte)
+//			If true, this Boolean attribute forces the associated port to authenticate via [IEEE 802.1X] as
+//			a precondition of normal service. The default value false does not impose IEEE 802.1X
+//			authentication on the associated port. (R,-W) (mandatory) (1-byte)
 //
 //		Action Register
+//			This attribute defines a set of actions that can be performed on the associated port. The act of
+//			writing to the register causes the specified action.
+//
+//			1	Force re-authentication - this opcode initiates an IEEE-802.1X reauthentication conversation
+//			with the associated port. The port remains in its current authorization state until the
+//			conversation concludes.
+//
+//			2	Force unauthenticated - this opcode initiates an IEEE-802.1X authentication conversation whose
+//			outcome is predestined to fail, thereby disabling normal Ethernet service on the port. The
+//			port's provisioning is not changed, such that upon re-initialization, a new IEEE-802.1X
+//			conversation may restore service without prejudice.
+//
+//			3	Force authenticated - this opcode initiates an IEEE-802.1X authentication conversation whose
+//			outcome is predestined to succeed, thereby unconditionally enabling normal Ethernet service on
+//			the port. The port's provisioning is not changed, such that upon re-initialization, a new
+//			IEEE-802.1X conversation is required.
+//
 //			(W) (mandatory) (1-byte)
 //
 //		Authenticator Pae State
+//			4	Authenticated
+//
+//			5	Aborting
+//
+//			6	Held
+//
+//			7	Force auth
+//
+//			8	Force unauth
+//
+//			9	Restart
+//
 //			(R) (optional) (1-byte)
 //
+//			This attribute returns the value of the port's PAE state. States are further described in [IEEE
+//			802.1X]. Values are coded as follows.
+//
+//			0	Initialize
+//
+//			1	Disconnected
+//
+//			2	Connecting
+//
+//			3	Authenticating
+//
 //		Backend Authentication State
+//			This attribute returns the value of the port's back-end authentication state. States are further
+//			described in [IEEE 802.1X]. Values are coded as follows.
+//
+//			0	Request
+//
+//			1	Response
+//
+//			2	Success
+//
+//			3	Fail
+//
+//			4	Timeout
+//
+//			5	Idle
+//
+//			6	Initialize
+//
+//			7	Ignore
+//
 //			(R) (optional) (1-byte)
 //
 //		Admin Controlled Directions
-//			Admin controlled directions: This attribute controls the directionality of the port's
-//			authentication requirement. The default value 0 indicates that control is imposed in both
-//			directions. The value 1 indicates that control is imposed only on traffic from the subscriber
-//			towards the network. (R,-W) (optional) (1-byte)
+//			This attribute controls the directionality of the port's authentication requirement. The default
+//			value 0 indicates that control is imposed in both directions. The value 1 indicates that control
+//			is imposed only on traffic from the subscriber towards the network. (R,-W) (optional) (1-byte)
 //
 //		Operational Controlled Directions
-//			Operational controlled directions: This attribute indicates the directionality of the port's
-//			current authentication state. The value 0 indicates that control is imposed in both directions.
-//			The value 1 indicates that control is imposed only on traffic from the subscriber towards the
-//			network. (R) (optional) (1-byte)
+//			This attribute indicates the directionality of the port's current authentication state. The
+//			value 0 indicates that control is imposed in both directions. The value 1 indicates that control
+//			is imposed only on traffic from the subscriber towards the network. (R) (optional) (1-byte)
 //
 //		Authenticator Controlled Port Status
-//			Authenticator controlled port status: This attribute indicates whether the controlled port is
-//			currently authorized (1) or unauthorized (2). (R) (optional) (1-byte)
+//			This attribute indicates whether the controlled port is currently authorized (1) or unauthorized
+//			(2). (R) (optional) (1-byte)
 //
 //		Quiet Period
-//			Quiet period: This attribute specifies the interval between EAP request/identity invitations
-//			sent to the peer. Other events such as carrier present or EAPOL start frames from the peer may
-//			trigger an EAP request/identity frame from the ONU at any time; this attribute controls the
-//			ONU's periodic behaviour in the absence of these other inputs. It is expressed in seconds.
-//			(R,-W) (optional) (2-bytes)
+//			This attribute specifies the interval between EAP request/identity invitations sent to the peer.
+//			Other events such as carrier present or EAPOL start frames from the peer may trigger an EAP
+//			request/identity frame from the ONU at any time; this attribute controls the ONU's periodic
+//			behaviour in the absence of these other inputs. It is expressed in seconds. (R,-W) (optional)
+//			(2-bytes)
 //
 //		Server Timeout Period
-//			Server timeout period: This attribute specifies the time the ONU will wait for a response from
-//			the radius server before timing out. Within this maximum interval, the ONU may initiate several
-//			retransmissions with exponentially increasing delay. Upon timeout, the ONU may try another
-//			radius server if there is one, or invoke the fallback policy, if no alternate radius servers are
-//			available. Server timeout is expressed in seconds, with a default value of 30 and a maximum
-//			value of 65535. (R,-W) (optional) (2-bytes)
+//			This attribute specifies the time the ONU will wait for a response from the radius server before
+//			timing out. Within this maximum interval, the ONU may initiate several retransmissions with
+//			exponentially increasing delay. Upon timeout, the ONU may try another radius server if there is
+//			one, or invoke the fallback policy, if no alternate radius servers are available. Server timeout
+//			is expressed in seconds, with a default value of 30 and a maximum value of 65535. (R,-W)
+//			(optional) (2-bytes)
 //
 //		Re_Authentication Period
 //			Re-authentication period: This attribute records the re-authentication interval specified by the
@@ -102,9 +158,9 @@ var dot1xportextensionpackageBME *ManagedEntityDefinition
 //			only meaningful after a port has been authenticated. (R) (optional) (1-byte)
 //
 //		Key Transmission Enabled
-//			Key transmission enabled: This Boolean attribute indicates whether key transmission is enabled
-//			(true) or not (false). This feature is not required; the parameter is listed here for
-//			completeness vis-`a-vis [IEEE 802.1X]. (R,-W) (optional) (1-byte)
+//			This Boolean attribute indicates whether key transmission is enabled (true) or not (false). This
+//			feature is not required; the parameter is listed here for completeness vis-`a-vis [IEEE 802.1X].
+//			(R,-W) (optional) (1-byte)
 //
 type Dot1XPortExtensionPackage struct {
 	ManagedEntityDefinition

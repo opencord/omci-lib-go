@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PriorityQueueClassID is the 16-bit ID for the OMCI
 // Managed entity Priority queue
-const PriorityQueueClassID ClassID = ClassID(277)
+const PriorityQueueClassID = ClassID(277) // 0x0115
 
 var priorityqueueBME *ManagedEntityDefinition
 
-// PriorityQueue (class ID #277)
+// PriorityQueue (Class ID: #277 / 0x0115)
 //	NOTE 1 - In [ITU-T G.984.4], this is called a priority queue-G.
 //
 //	This ME specifies the priority queue used by a GEM port network CTP in the upstream direction.
@@ -90,39 +90,66 @@ var priorityqueueBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The MSB
-//			represents the direction (1: upstream, 0:-downstream). The 15 LSBs represent a queue ID. The
-//			queue ID is numbered in ascending order by the ONU itself. It is strongly encouraged that the
-//			queue ID be formulated to simplify finding related queues. One way to do this is to number the
-//			queues such that the related port attributes are in ascending order (for the downstream and
-//			upstream queues separately). The range of downstream queue ids is 0 to 0x7FFF and the range of
-//			upstream queue ids is 0x8000 to 0xFFFF. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The MSB represents the direction
+//			(1: upstream, 0:-downstream). The 15 LSBs represent a queue ID. The queue ID is numbered in
+//			ascending order by the ONU itself. It is strongly encouraged that the queue ID be formulated to
+//			simplify finding related queues. One way to do this is to number the queues such that the
+//			related port attributes are in ascending order (for the downstream and upstream queues
+//			separately). The range of downstream queue ids is 0 to 0x7FFF and the range of upstream queue
+//			ids is 0x8000 to 0xFFFF. (R) (mandatory) (2-bytes)
 //
 //		Queue Configuration Option
-//			Queue configuration option: This attribute identifies the buffer partitioning policy. The value
-//			1 means that several queues share one buffer of maximum queue size, while the value 0 means that
-//			each queue has an individual buffer of maximum queue size. (R) (mandatory) (1-byte)
+//			This attribute identifies the buffer partitioning policy. The value 1 means that several queues
+//			share one buffer of maximum queue size, while the value 0 means that each queue has an
+//			individual buffer of maximum queue size. (R) (mandatory) (1-byte)
 //
 //		Maximum Queue Size
+//			This attribute specifies the maximum size of the queue, in bytes, scaled by the priority queue
+//			scale factor attribute of the ONU2G. (R) (mandatory) (2 bytes)
+//
 //			NOTE 2 - In this and the other similar attributes of the priority queue ME, some legacy
 //			implementations may take the queue scale factor from the GEM block length attribute of the ANI-G
 //			ME. This option is discouraged in new implementations.
 //
 //		Allocated Queue Size
-//			Allocated queue size: This attribute identifies the allocated size of this queue, in bytes,
-//			scaled by the priority queue scale factor attribute of the ONU2G. (R, W) (mandatory) (2 bytes)
+//			This attribute identifies the allocated size of this queue, in bytes, scaled by the priority
+//			queue scale factor attribute of the ONU2G. (R, W) (mandatory) (2 bytes)
 //
 //		Discard_Block Counter Reset Interval
 //			Discard-block counter reset interval: This attribute represents the interval in milliseconds at
 //			which the counter resets itself. (R,-W) (optional) (2-bytes)
 //
 //		Threshold Value For Discarded Blocks Due To Buffer Overflow
-//			Threshold value for discarded blocks due to buffer overflow: This attribute specifies the
-//			threshold for the number of bytes (scaled by the priority queue scale factor attribute of the
-//			ONU2G) discarded on this queue due to buffer overflow. Its value controls the declaration of the
-//			block loss alarm. (R, W) (optional) (2-bytes)
+//			This attribute specifies the threshold for the number of bytes (scaled by the priority queue
+//			scale factor attribute of the ONU2G) discarded on this queue due to buffer overflow. Its value
+//			controls the declaration of the block loss alarm. (R, W) (optional) (2-bytes)
 //
 //		Related Port
+//			This attribute represents the slot, port/T-CONT and priority information associated with the
+//			instance of priority queue ME. This attribute comprises 4-bytes.
+//
+//			In the upstream direction, the first 2-bytes are the ME ID of the associated T-CONT, the first
+//			byte of which is a slot number, the second byte a T-CONT number. In the downstream direction,
+//			the first byte is the slot number and the second byte is the port number of the queue's
+//			destination port.
+//
+//			The last 2-bytes represent the priority of this queue. The range of priority is 0 to 0x0FFF. The
+//			value 0 indicates the highest priority and 0x0FFF indicates the lowest priority. The priority
+//			field is meaningful if multiple priority queues are associated with a T-CONT or traffic
+//			scheduler whose scheduling discipline is strict priority.
+//
+//			(R, W) (mandatory) (4 bytes)
+//
+//			NOTE 3 - If flexible port configuration is supported, the related port attribute is meaningful
+//			only if the traffic scheduler pointer attribute value is null. Otherwise, the related port
+//			attribute is ignored.
+//
+//			NOTE 4 - The related port attribute is read-only, unless otherwise specified by the QoS
+//			configuration flexibility attribute of the ONU2-G ME. If port flexibility is supported, the
+//			second byte, the port or T-CONT number, may be changed. If priority flexibility is supported,
+//			the third and fourth bytes may be changed. The OMCI set command must contain 4-bytes to match
+//			the attribute size, but the ONU must ignore all bytes that are not specified to be flexible.
+//
 //			If flexible configuration is not supported, the ONU should reject an attempt to set the related
 //			port with a parameter error result-reason code.
 //
@@ -130,59 +157,90 @@ var priorityqueueBME *ManagedEntityDefinition
 //			The ONU should reject an attempt to violate these conditions with a parameter error result-
 //			reason code.
 //
+//			This attribute points to the traffic scheduler ME instance that is associated with this priority
+//			queue. This pointer is used when this priority queue is connected with a traffic scheduler. The
+//			default value is a null pointer (0). (R, W) (mandatory) (2 bytes)
+//
+//			NOTE 5 - When the QoS configuration flexibility attribute of the ONU2-G ME allows flexible
+//			assignment of the traffic scheduler, the OLT may configure the traffic scheduler pointer to
+//			refer to any traffic scheduler in the same slot.
+//
+//			If traffic scheduler flexibility is not permitted by the QoS configuration flexibility
+//			attribute, the OLT may use the traffic scheduler pointer attribute only by pointing to another
+//			traffic scheduler ME that is associated with the same T-CONT as the priority queue itself.
+//
 //		Weight
-//			Weight:	This attribute represents weight for WRR scheduling. At a given priority level, capacity
-//			is distributed to non-empty queues in proportion to their weights. In the upstream direction,
-//			this weight is meaningful if several priority queues are associated with a traffic scheduler or
+//			This attribute represents weight for WRR scheduling. At a given priority level, capacity is
+//			distributed to non-empty queues in proportion to their weights. In the upstream direction, this
+//			weight is meaningful if several priority queues are associated with a traffic scheduler or
 //			T-CONT whose policy is WRR. In the downstream direction, this weight is used by a UNI in a WRR
 //			fashion. Upon ME instantiation, the ONU sets this attribute to 1. (R,-W) (mandatory) (1-byte)
 //
 //		Back Pressure Operation
-//			Back pressure operation: This attribute enables (0) or disables (1) back pressure operation. Its
-//			default value is 0. (R,-W) (mandatory) (2-bytes)
+//			This attribute enables (0) or disables (1) back pressure operation. Its default value is 0.
+//			(R,-W) (mandatory) (2-bytes)
 //
 //		Back Pressure Time
-//			Back pressure time: This attribute specifies the duration in microseconds of the backpressure
-//			signal. It can be used as a pause time for an Ethernet UNI. Upon ME instantiation, the ONU sets
-//			this attribute to 0. (R,-W) (mandatory) (4-bytes)
+//			This attribute specifies the duration in microseconds of the backpressure signal. It can be used
+//			as a pause time for an Ethernet UNI. Upon ME instantiation, the ONU sets this attribute to 0.
+//			(R,-W) (mandatory) (4-bytes)
 //
 //		Back Pressure Occur Queue Threshold
-//			Back pressure occur queue threshold: This attribute identifies the threshold queue occupancy, in
-//			bytes, scaled by the priority queue scale factor attribute of the ONU2G, to start sending a
-//			back-pressure signal. (R, W) (mandatory) (2-bytes)
+//			This attribute identifies the threshold queue occupancy, in bytes, scaled by the priority queue
+//			scale factor attribute of the ONU2G, to start sending a back-pressure signal. (R, W) (mandatory)
+//			(2-bytes)
 //
 //		Back Pressure Clear Queue Threshold
-//			Back pressure clear queue threshold: This attribute identifies the threshold queue occupancy, in
-//			bytes, scaled by the priority queue scale factor attribute of the ONU2G, to stop sending a back-
-//			pressure signal. (R, W) (mandatory) (2-bytes)
+//			This attribute identifies the threshold queue occupancy, in bytes, scaled by the priority queue
+//			scale factor attribute of the ONU2G, to stop sending a back-pressure signal. (R, W) (mandatory)
+//			(2-bytes)
 //
 //		Packet Drop Queue Thresholds
-//			Packet drop queue thresholds: This attribute is a composite of four 2-byte values, a minimum and
-//			a maximum threshold, measured in bytes, scaled by the priority queue scale factor attribute of
-//			the ONU2-G, for green and yellow packets. The first value is the minimum green threshold, the
-//			queue occupancy below which all green packets are admitted to the queue. The second value is the
-//			maximum green threshold, the queue occupancy at or above which all green packets are discarded.
-//			The third value is the minimum yellow threshold, the queue occupancy below which all yellow
-//			packets are admitted to the queue. The fourth value is the maximum yellow threshold, the queue
-//			occupancy at or above which all yellow packets are discarded. The default is that all thresholds
-//			take the value of the maximum queue size. (R,-W) (optional) (8-bytes)
+//			This attribute is a composite of four 2-byte values, a minimum and a maximum threshold, measured
+//			in bytes, scaled by the priority queue scale factor attribute of the ONU2-G, for green and
+//			yellow packets. The first value is the minimum green threshold, the queue occupancy below which
+//			all green packets are admitted to the queue. The second value is the maximum green threshold,
+//			the queue occupancy at or above which all green packets are discarded. The third value is the
+//			minimum yellow threshold, the queue occupancy below which all yellow packets are admitted to the
+//			queue. The fourth value is the maximum yellow threshold, the queue occupancy at or above which
+//			all yellow packets are discarded. The default is that all thresholds take the value of the
+//			maximum queue size. (R,-W) (optional) (8-bytes)
 //
 //		Packet Drop Max_P
-//			Packet drop max_p: This attribute is a composite of two 1-byte values, the probability of
-//			dropping a coloured packet when the queue occupancy lies just below the maximum threshold for
-//			packets of that colour. The first value is the green packet max_p, and the second value is the
-//			yellow packet max_p. The probability, max_p, is determined by adding one to the unsigned value
-//			(0..255) of this attribute and dividing the result by 256. The default for each value is 255.
-//			(R,-W) (optional) (2-bytes)
+//			This attribute is a composite of two 1-byte values, the probability of dropping a coloured
+//			packet when the queue occupancy lies just below the maximum threshold for packets of that
+//			colour. The first value is the green packet max_p, and the second value is the yellow packet
+//			max_p. The probability, max_p, is determined by adding one to the unsigned value (0..255) of
+//			this attribute and dividing the result by 256. The default for each value is 255. (R,-W)
+//			(optional) (2-bytes)
 //
 //		Queue Drop W_Q
-//			Queue drop w_q: This attribute determines the averaging coefficient, w_q, as described in
-//			[b-Floyd]. The averaging coefficient, w_q, is equal to 2Queue_drop_w_q. For example, when queue
-//			drop_w_q has the value 9, the averaging coefficient, w_q, is 1/512-= 0.001-9. The default value
-//			is 9. (R,-W) (optional) (1-byte)
+//			This attribute determines the averaging coefficient, w_q, as described in [b-Floyd]. The
+//			averaging coefficient, w_q, is equal to 2Queue_drop_w_q. For example, when queue drop_w_q has
+//			the value 9, the averaging coefficient, w_q, is 1/512-= 0.001-9. The default value is 9. (R,-W)
+//			(optional) (1-byte)
 //
 //		Drop Precedence Colour Marking
+//			6	PCP 5P3D [IEEE 802.1ad]
+//
+//			7	DSCP AF class [IETF RFC 2597]
+//
 //			(R,-W) (optional) (1-byte)
+//
+//			This attribute specifies how drop precedence is marked on ingress packets to the priority queue.
+//			The default value is 0.
+//
+//			0	No marking (treat all packets as green)
+//
+//			1	Internal marking (from traffic descriptor ME)
+//
+//			2	DEI [IEEE 802.1ad]
+//
+//			3	PCP 8P0D [IEEE 802.1ad]
+//
+//			4	PCP 7P1D [IEEE 802.1ad]
+//
+//			5	PCP 6P2D [IEEE 802.1ad]
 //
 type PriorityQueue struct {
 	ManagedEntityDefinition

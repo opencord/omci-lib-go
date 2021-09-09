@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // ReDownstreamAmplifierClassID is the 16-bit ID for the OMCI
 // Managed entity RE downstream amplifier
-const ReDownstreamAmplifierClassID ClassID = ClassID(316)
+const ReDownstreamAmplifierClassID = ClassID(316) // 0x013c
 
 var redownstreamamplifierBME *ManagedEntityDefinition
 
-// ReDownstreamAmplifier (class ID #316)
+// ReDownstreamAmplifier (Class ID: #316 / 0x013c)
 //	This ME organizes data associated with each OA for downstream data supported by the RE. The
 //	management ONU automatically creates one instance of this ME for each downstream OA as follows.
 //
@@ -57,10 +57,17 @@ var redownstreamamplifierBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
+//			This attribute uniquely identifies each instance of this ME. Its value indicates the physical
+//			position of the downstream OA. The first byte is the slot ID (defined in clause 9.1.5 of [ITU-T
+//			G.984.4]). The second byte is the port ID. (R) (mandatory) (2-bytes)
+//
 //			NOTE 1 - This ME ID may be identical to that of an RE ANI-G if it shares the same physical slot-
 //			port.
 //
 //		Administrative State
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
+//
 //			NOTE 2- When an RE supports multiple PONs, or protected access to a single PON, its primary
 //			ANI-G cannot be completely shut down, due to a loss of the management communications capability.
 //			Complete blocking of service and removal of power may nevertheless be appropriate for secondary
@@ -69,59 +76,67 @@ var redownstreamamplifierBME *ManagedEntityDefinition
 //			downstream amplifier, be it either primary or secondary.
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Operational Mode
+//			This attribute indicates the operational mode as follows.
+//
+//			0	Constant gain
+//
+//			1	Constant output power
+//
+//			2	Autonomous
+//
 //			(R,W) (mandatory) (1-byte)
 //
 //		Input Optical Signal Level
-//			Input optical signal level: This attribute reports the current measurement of the input optical
-//			signal power of the downstream OA. Its value is a 2s-complement integer referred to 1-mW (i.e.,
-//			dBm), with 0.002-dB granularity. (R) (optional) (2-bytes)
+//			This attribute reports the current measurement of the input optical signal power of the
+//			downstream OA. Its value is a 2s-complement integer referred to 1-mW (i.e., dBm), with 0.002-dB
+//			granularity. (Coding -32768 to +32767, where 0x00 = 0-dBm, 0x03e8 = +2-dBm, etc.) (R) (optional)
+//			(2-bytes)
 //
 //		Lower Input Optical Threshold
-//			Lower input optical threshold: This attribute specifies the optical level the RE uses to declare
-//			the low received optical power alarm. Valid values are -127-dBm (coded as 254) to 0-dBm (coded
-//			as 0) in 0.5-dB increments. The default value 0xFF selects the RE's internal policy. (R,-W)
-//			(optional) (1-byte)
+//			This attribute specifies the optical level the RE uses to declare the low received optical power
+//			alarm. Valid values are -127-dBm (coded as 254) to 0-dBm (coded as 0) in 0.5-dB increments. The
+//			default value 0xFF selects the RE's internal policy. (R,-W) (optional) (1-byte)
 //
 //		Upper Input Optical Threshold
-//			Upper input optical threshold: This attribute specifies the optical level the RE uses to declare
-//			the high received optical power alarm. Valid values are -127-dBm (coded as 254) to 0-dBm (coded
-//			as 0) in 0.5-dB increments. The default value 0xFF selects the RE's internal policy. (R,-W)
-//			(optional) (1-byte)
+//			This attribute specifies the optical level the RE uses to declare the high received optical
+//			power alarm. Valid values are -127-dBm (coded as 254) to 0-dBm (coded as 0) in 0.5-dB
+//			increments. The default value 0xFF selects the RE's internal policy. (R,-W) (optional) (1-byte)
 //
 //		Output Optical Signal Level
-//			Output optical signal level: This attribute reports the current measurement of the mean optical
-//			launch power of the downstream OA. Its value is a 2s-complement integer referred to 1-mW (i.e.,
-//			dBm), with 0.002-dB granularity. (R) (optional) (2-bytes)
+//			This attribute reports the current measurement of the mean optical launch power of the
+//			downstream OA. Its value is a 2s-complement integer referred to 1-mW (i.e., dBm), with 0.002-dB
+//			granularity. (Coding -32768 to +32767, where 0x00 = 0-dBm, 0x03e8 = +2-dBm, etc.) (R) (optional)
+//			(2-bytes)
 //
 //		Lower Output Optical Threshold
-//			Lower output optical threshold: This attribute specifies the minimum mean optical launch power
-//			that the RE uses to declare the low transmit optical power alarm. Its value is a 2s complement
-//			integer referred to 1-mW (i.e., dBm), with 0.5-dB granularity. The default value 0x7F selects
-//			the RE's internal policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the minimum mean optical launch power that the RE uses to declare the
+//			low transmit optical power alarm. Its value is a 2s complement integer referred to 1-mW (i.e.,
+//			dBm), with 0.5-dB granularity. The default value 0x7F selects the RE's internal policy. (R,-W)
+//			(optional) (1-byte)
 //
 //		Upper Output Optical Threshold
-//			Upper output optical threshold: This attribute specifies the maximum mean optical launch power
-//			that the RE uses to declare the high transmit optical power alarm. Its value is a 2s complement
-//			integer referred to 1-mW (i.e., dBm), with 0.5-dB granularity. The default value 0x7F selects
-//			the RE's internal policy. (R,-W) (optional) (1-byte)
+//			This attribute specifies the maximum mean optical launch power that the RE uses to declare the
+//			high transmit optical power alarm. Its value is a 2s complement integer referred to 1-mW (i.e.,
+//			dBm), with 0.5-dB granularity. The default value 0x7F selects the RE's internal policy. (R,-W)
+//			(optional) (1-byte)
 //
 //		R'S' Splitter Coupling Ratio
-//			R'S' splitter coupling ratio: This attribute reports the coupling ratio of the splitter at the
-//			R'/S' interface that connects the embedded management ONU and the amplifiers to the OTL. Valid
-//			values are 99:1 (coded as 99-decimal) to 1:99 (coded as 1 decimal), where the first value is the
-//			value encoded and is the percentage of the optical signal connected to the amplifier. The
-//			default value 0xFF indicates that there is no splitter connected to this upstream/downstream
-//			amplifier pair. (R) (optional) (1-byte)
+//			This attribute reports the coupling ratio of the splitter at the R'/S' interface that connects
+//			the embedded management ONU and the amplifiers to the OTL. Valid values are 99:1 (coded as
+//			99-decimal) to 1:99 (coded as 1 decimal), where the first value is the value encoded and is the
+//			percentage of the optical signal connected to the amplifier. The default value 0xFF indicates
+//			that there is no splitter connected to this upstream/downstream amplifier pair. (R) (optional)
+//			(1-byte)
 //
 type ReDownstreamAmplifier struct {
 	ManagedEntityDefinition

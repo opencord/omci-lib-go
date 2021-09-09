@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // MacBridgePerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity MAC bridge performance monitoring history data
-const MacBridgePerformanceMonitoringHistoryDataClassID ClassID = ClassID(51)
+const MacBridgePerformanceMonitoringHistoryDataClassID = ClassID(51) // 0x0033
 
 var macbridgeperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// MacBridgePerformanceMonitoringHistoryData (class ID #51)
+// MacBridgePerformanceMonitoringHistoryData (Class ID: #51 / 0x0033)
 //	This ME collects PM data associated with a MAC bridge. Instances of this ME are created and
 //	deleted by the OLT.
 //
@@ -42,13 +42,12 @@ var macbridgeperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the MAC bridge service profile. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the MAC bridge service profile. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -57,11 +56,10 @@ var macbridgeperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Bridge Learning Entry Discard Count
-//			Bridge learning entry discard count: This attribute counts forwarding database entries that have
-//			been or would have been learned, but were discarded or replaced due to a lack of space in the
-//			database table. When used with the MAC learning depth attribute of the MAC bridge service
-//			profile, the bridge learning entry discard count may be particularly useful in detecting MAC
-//			spoofing attempts. (R) (mandatory) (4-bytes)
+//			This attribute counts forwarding database entries that have been or would have been learned, but
+//			were discarded or replaced due to a lack of space in the database table. When used with the MAC
+//			learning depth attribute of the MAC bridge service profile, the bridge learning entry discard
+//			count may be particularly useful in detecting MAC spoofing attempts. (R) (mandatory) (4-bytes)
 //
 type MacBridgePerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

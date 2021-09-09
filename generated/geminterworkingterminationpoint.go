@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // GemInterworkingTerminationPointClassID is the 16-bit ID for the OMCI
 // Managed entity GEM interworking termination point
-const GemInterworkingTerminationPointClassID ClassID = ClassID(266)
+const GemInterworkingTerminationPointClassID = ClassID(266) // 0x010a
 
 var geminterworkingterminationpointBME *ManagedEntityDefinition
 
-// GemInterworkingTerminationPoint (class ID #266)
+// GemInterworkingTerminationPoint (Class ID: #266 / 0x010a)
 //	An instance of this ME represents a point in the ONU where the IW of a bearer service (usually
 //	Ethernet) to the GEM layer takes place. At this point, GEM packets are generated from the bearer
 //	bit stream (e.g., Ethernet) or the bearer bit stream is reconstructed from GEM packets.
@@ -44,36 +44,105 @@ var geminterworkingterminationpointBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Gem Port Network Ctp Connectivity Pointer
-//			GEM port network CTP connectivity pointer: This attribute points to an instance of the GEM port
-//			network CTP. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute points to an instance of the GEM port network CTP. (R,-W, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Interworking Option
+//			This attribute identifies the type of non-GEM function that is being interworked. The options
+//			are as follows.
+//
+//			0	Circuit-emulated TDM
+//
+//			1	MAC bridged LAN
+//
+//			2	Reserved
+//
+//			3	Reserved
+//
+//			4	Video return path
+//
+//			5	IEEE 802.1p mapper
+//
+//			6	Downstream broadcast
+//
+//			7	MPLS PW TDM service
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Service Profile Pointer
+//			This attribute points to an instance of a service profile:
+//
+//			CES service profile	if IW option-=-0
+//
+//			MAC bridge service profile	if IW option-=-1
+//
+//			Video return path service profile	if IW option-=-4
+//
+//			IEEE 802.1p mapper service profile	if IW option-=-5
+//
+//			Null pointer	if IW option-=-6
+//
+//			CES service profile	if IW option-=-7
+//
+//			(R,-W, setbycreate) (mandatory) (2-bytes)
+//
 //			NOTE - The video return path (VRP) service profile is defined in [ITU-T G.984.4].
 //
 //		Interworking Termination Point Pointer
+//			This attribute is used for the CES and IEEE 802.1p mapper service without a MAC bridge.
+//			Depending on the service provided, it points to the associated instance of the following MEs:
+//
+//			PPTP CES UNI
+//
+//			Logical N * 64 kbit/s sub-port CTP
+//
+//			PPTP Ethernet UNI
+//
 //			In all other GEM services, the relationship between the related service TP and this GEM IW TP is
 //			derived from other ME relations; this attribute is set to a null pointer and not used. (R,-W,
 //			setbycreate) (mandatory) (2-bytes)
 //
 //		Pptp Counter
-//			PPTP counter: This value reports the number of PPTP ME instances associated with this GEM IW TP.
-//			(R) (optional) (1-byte)
+//			This value reports the number of PPTP ME instances associated with this GEM IW TP. (R)
+//			(optional) (1-byte)
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Gal Profile Pointer
+//			5	GAL Ethernet profile for IEEE 802.1p mapper
+//
+//			6	Null pointer
+//
+//			7	Null pointer
+//
 //			(R,-W, setbycreate) (mandatory) (2-bytes)
 //
+//			This attribute points to an instance of the GAL profile. The relationship between the IW option
+//			and the related GAL profile is as follows.
+//
+//			Interworking option	GAL profile type
+//
+//			0	Null pointer
+//
+//			1	GAL Ethernet profile
+//
+//			3	GAL Ethernet profile for data service
+//
+//			4	GAL Ethernet profile for video return path
+//
 //		Gal Loopback Configuration
+//			This attribute sets the loopback configuration when using GEM mode:
+//
+//			0	No loopback
+//
+//			1	Loopback of downstream traffic after GAL
+//
 //			The default value of this attribute is 0. When the IW option is 6 (downstream broadcast), this
 //			attribute is not used. (R,-W) (mandatory) (1-byte)
 //

@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // TwdmChannelTuningPerformanceMonitoringHistoryDataPart3ClassID is the 16-bit ID for the OMCI
 // Managed entity TWDM channel tuning performance monitoring history data part 3
-const TwdmChannelTuningPerformanceMonitoringHistoryDataPart3ClassID ClassID = ClassID(451)
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart3ClassID = ClassID(451) // 0x01c3
 
 var twdmchanneltuningperformancemonitoringhistorydatapart3BME *ManagedEntityDefinition
 
-// TwdmChannelTuningPerformanceMonitoringHistoryDataPart3 (class ID #451)
+// TwdmChannelTuningPerformanceMonitoringHistoryDataPart3 (Class ID: #451 / 0x01c3)
 //	This ME collects remaining tuning-control-related PM data associated with the slot/circuit pack,
 //	hosting one or more ANI-G MEs, for a specific TWDM channel. Instances of this ME are created and
 //	deleted by the OLT.
@@ -47,13 +47,11 @@ var twdmchanneltuningperformancemonitoringhistorydatapart3BME *ManagedEntityDefi
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the TWDM channel ME. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the TWDM channel ME. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 and 2 MEs
@@ -113,8 +111,8 @@ func init() {
 			Create,
 			Delete,
 			Get,
-			GetCurrentData,
 			Set,
+			GetCurrentData,
 		),
 		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{

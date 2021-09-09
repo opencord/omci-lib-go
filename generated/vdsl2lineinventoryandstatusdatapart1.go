@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Vdsl2LineInventoryAndStatusDataPart1ClassID is the 16-bit ID for the OMCI
 // Managed entity VDSL2 line inventory and status data part 1
-const Vdsl2LineInventoryAndStatusDataPart1ClassID ClassID = ClassID(168)
+const Vdsl2LineInventoryAndStatusDataPart1ClassID = ClassID(168) // 0x00a8
 
 var vdsl2lineinventoryandstatusdatapart1BME *ManagedEntityDefinition
 
-// Vdsl2LineInventoryAndStatusDataPart1 (class ID #168)
+// Vdsl2LineInventoryAndStatusDataPart1 (Class ID: #168 / 0x00a8)
 //	This ME extends the xDSL line configuration MEs. The ME name was chosen because its attributes
 //	were initially unique to ITU-T G.993.2 VDSL2. Due to continuing standards development, some
 //	attributes - and therefore this ME - have also become applicable to other Recommendations,
@@ -47,9 +47,8 @@ var vdsl2lineinventoryandstatusdatapart1BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R) (mandatory) (2-bytes)
 //
 //		Vdsl2 Transmission System Capability Xtu C
 //			VDSL2 transmission system capability xTUC: This attribute extends the xTU-C transmission system
@@ -57,48 +56,105 @@ var vdsl2lineinventoryandstatusdatapart1BME *ManagedEntityDefinition
 //			capabilities. It is defined by bits 57..64 of Table 9.7.12-1. (R) (mandatory) (1-byte)
 //
 //		Vdsl2 Transmission System
-//			VDSL2 transmission system: This attribute reports the transmission system in use. It extends the
-//			xDSL transmission system attribute of the xDSL line inventory and status data part 2 ME with a
-//			byte that includes VDSL2 capabilities currently in use. It is defined by bits 57..64 of Table
-//			9.7.12-1. (R) (mandatory) (1-byte)
+//			This attribute reports the transmission system in use. It extends the xDSL transmission system
+//			attribute of the xDSL line inventory and status data part 2 ME with a byte that includes VDSL2
+//			capabilities currently in use. It is defined by bits 57..64 of Table 9.7.12-1. (R) (mandatory)
+//			(1-byte)
 //
 //		Vdsl2 Profile
+//			This attribute identifies the profile in use. It is a bit map (0 if not allowed, 1 if allowed)
+//			with the following definition:
+//
+//			Bit	Meaning
+//
+//			1 (LSB)	ITU-T G.993.2 profile 8a
+//
+//			2	ITU-T G.993.2 profile 8b
+//
+//			3	ITU-T G.993.2 profile 8c
+//
+//			4	ITU-T G.993.2 profile 8d
+//
+//			5	ITU-T G.993.2 profile 12a
+//
+//			6	ITU-T G.993.2 profile 12b
+//
+//			7	ITU-T G.993.2 profile 17a
+//
+//			8	ITU-T G.993.2 profile 30a
+//
 //			(R) (mandatory) (1-byte)
 //
 //		Vdsl2 Limit Psd Mask And Bandplan
-//			VDSL2 limit PSD mask and bandplan: This attribute defines the limit PSD mask and band plan in
-//			use. It is a bit map as defined by Table 9.7.6-1. (R) (mandatory) (8-bytes)
+//			This attribute defines the limit PSD mask and band plan in use. It is a bit map as defined by
+//			Table 9.7.6-1. (R) (mandatory) (8-bytes)
 //
 //		Vdsl2 Us0 Psd Mask
-//			VDSL2 US0 PSD mask: This attribute defines the US0 PSD mask in use. It is a bit map as defined
-//			by Table 9.7.62. (R) (mandatory) (4-bytes)
+//			This attribute defines the US0 PSD mask in use. It is a bit map as defined by Table 9.7.62. (R)
+//			(mandatory) (4-bytes)
 //
 //		Actsnrmodeds
+//			This attribute indicates whether transmitter-referred virtual noise is active on the line in the
+//			downstream direction.
+//
+//			1	Virtual noise inactive
+//
+//			2	Virtual noise active
+//
 //			(R) (mandatory) (1-byte)
+//
+//			The following four attributes have similar definitions. In each case, valid attribute values are
+//			1, 2, 4, 8. In ADSL applications, the corresponding value is fixed at 1, and therefore need not
+//			be specified. For VDSL2, it is equal to the size of the subcarrier group used to compute these
+//			attributes (see clause-11.4.1 of [ITUT G.993.2]).
 //
 //		Hlingds
-//			HLINGds:	This attribute contains the number of subcarriers per group used to report HLINpsds.
-//			(R) (mandatory) (1-byte)
+//			This attribute contains the number of subcarriers per group used to report HLINpsds. (R)
+//			(mandatory) (1-byte)
 //
 //		Hloggds
-//			HLOGGds:	This attribute contains the number of subcarriers per group used to report HLOGpsds.
-//			(R) (mandatory) (1-byte)
+//			This attribute contains the number of subcarriers per group used to report HLOGpsds. (R)
+//			(mandatory) (1-byte)
 //
 //		Qlngds
-//			QLNGds:	This attribute contains the number of subcarriers per group used to report QLNpsds. (R)
+//			This attribute contains the number of subcarriers per group used to report QLNpsds. (R)
 //			(mandatory) (1-byte)
 //
 //		Snrgds
-//			SNRGds:	This attribute contains the number of subcarriers per group used to report SNRpsds. (R)
+//			This attribute contains the number of subcarriers per group used to report SNRpsds. (R)
 //			(mandatory) (1-byte)
 //
 //		Mrefpsdds Table
+//			The downstream medley reference PSD table contains the set of breakpoints exchanged in the
+//			MREFPSDds fields of the O-PRM message of [ITU-T G.993.2].
+//
+//			The format is similar to that specified for the PSD descriptor in [ITUT-G.993.2]. In [ITU-T
+//			G.993.2], the first byte gives the size of the table, each entry of which is 3-bytes. In the
+//			OMCI definition, the first byte is omitted because the size of the table is known from the
+//			response to the get command.
+//
 //			(R) (mandatory) (3 * N bytes, where N is the number of breakpoints)
 //
 //		Trellisds
+//			0	Trellis not used
+//
+//			1	Trellis used
+//
 //			(R) (mandatory for ITU-T G.993.2 VDSL2, optional for others) (1-byte)
 //
+//			This attribute reports whether trellis coding is in use in the downstream direction.
+//
 //		Actual Rate Adaptation Mode Downstream
+//			The ACT-RA-MODEds attribute indicates the actual active RA mode in the downstream direction.
+//
+//			1	MANUAL
+//
+//			2	AT_INIT
+//
+//			3	DYNAMIC
+//
+//			4	DYNAMIC with SOS ([ITU-T G.993.2] only)
+//
 //			(R) (optional) (1-byte)
 //
 //		Actual Impulse Noise Protection Robust Operations Channel Roc Downstream
@@ -108,9 +164,9 @@ var vdsl2lineinventoryandstatusdatapart1BME *ManagedEntityDefinition
 //			values and usage are given in clause 7.5.1.34.1 of [ITUT-G.997.1]. (R) (optional) (1-byte)
 //
 //		Snr Margin Roc Downstream
-//			SNR margin ROC downstream: The SNRM-ROC-ds attribute reports the actual signal-to-noise margin
-//			of the ROC in the downstream direction. Its value ranges from 0 (-64.0-dB) to 1270 (+63.0-dB).
-//			The special value 0xFFFF indicates that the attribute is out of range. (R) (optional) (2-bytes)
+//			The SNRM-ROC-ds attribute reports the actual signal-to-noise margin of the ROC in the downstream
+//			direction. Its value ranges from 0 (-64.0-dB) to 1270 (+63.0-dB). The special value 0xFFFF
+//			indicates that the attribute is out of range. (R) (optional) (2-bytes)
 //
 type Vdsl2LineInventoryAndStatusDataPart1 struct {
 	ManagedEntityDefinition

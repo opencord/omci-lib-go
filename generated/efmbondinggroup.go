@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // EfmBondingGroupClassID is the 16-bit ID for the OMCI
 // Managed entity EFM bonding group
-const EfmBondingGroupClassID ClassID = ClassID(418)
+const EfmBondingGroupClassID = ClassID(418) // 0x01a2
 
 var efmbondinggroupBME *ManagedEntityDefinition
 
-// EfmBondingGroup (class ID #418)
+// EfmBondingGroup (Class ID: #418 / 0x01a2)
 //	The EFM bonding group represents a group of links that are bonded. In [IEEE 802.3], a bonding
 //	group is known as a PAF [physical medium entity (PME) aggregation function] and a link is known
 //	as a PME instance of this ME are created and deleted by the OLT.
@@ -41,28 +41,44 @@ var efmbondinggroupBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The value 0 is
-//			reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The value 0 is reserved. (R,
+//			setbycreate) (mandatory) (2-bytes)
 //
 //		Group Id
-//			Group ID: This attribute is the unique number representing this bonding group. See clause
-//			C.3.1.1 of [ITU-T G.998.2]. (R,-W, setbycreate) (mandatory) (6-bytes)
+//			This attribute is the unique number representing this bonding group. See clause C.3.1.1 of
+//			[ITU-T G.998.2]. (R,-W, setbycreate) (mandatory) (6-bytes)
 //
 //		Minimum Upstream Group Rate
-//			Minimum upstream group rate: This attribute sets the minimum upstream group rate, in bits per
-//			second, for this EFM Group. This attribute is used to determine the group US rate low alarm
-//			status. The group US rate low alarm means that the aggregate upstream rate of all active links
-//			associated with this group is less than the minimum upstream group rate. The default value for
-//			this rate is zero. (R,-W) (mandatory, setbycreate) (4-bytes)
+//			This attribute sets the minimum upstream group rate, in bits per second, for this EFM Group.
+//			This attribute is used to determine the group US rate low alarm status. The group US rate low
+//			alarm means that the aggregate upstream rate of all active links associated with this group is
+//			less than the minimum upstream group rate. The default value for this rate is zero. (R,-W)
+//			(mandatory, setbycreate) (4-bytes)
 //
 //		Minimum Downstream Group Rate
-//			Minimum downstream group rate: This attribute sets the minimum downstream group rate, in bits
-//			per second, for this EFM Group. This attribute is used to determine the group DS rate low alarm
-//			status. The group DS rate low alarm means that the aggregate downstream rate of all active links
-//			associated with this group is less than the minimum downstream group rate. The default value for
-//			this rate is zero. (R,-W) (mandatory) (4-bytes, setbycreate)
+//			This attribute sets the minimum downstream group rate, in bits per second, for this EFM Group.
+//			This attribute is used to determine the group DS rate low alarm status. The group DS rate low
+//			alarm means that the aggregate downstream rate of all active links associated with this group is
+//			less than the minimum downstream group rate. The default value for this rate is zero. (R,-W)
+//			(mandatory) (4-bytes, setbycreate)
 //
 //		Group Alarm Enable
+//			This bit mapped attribute enables the various group alarms. A bit value of 1 means "enable".
+//
+//			Bit	Meaning
+//
+//			1 (LSB)	Group down
+//
+//			2	Group partial
+//
+//			3	Group US rate low
+//
+//			4	Group DS rate low
+//
+//			5	4x rate ratio
+//
+//			6-8	Reserved
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 type EfmBondingGroup struct {

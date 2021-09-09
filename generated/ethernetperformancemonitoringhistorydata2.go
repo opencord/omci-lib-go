@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // EthernetPerformanceMonitoringHistoryData2ClassID is the 16-bit ID for the OMCI
 // Managed entity Ethernet performance monitoring history data 2
-const EthernetPerformanceMonitoringHistoryData2ClassID ClassID = ClassID(89)
+const EthernetPerformanceMonitoringHistoryData2ClassID = ClassID(89) // 0x0059
 
 var ethernetperformancemonitoringhistorydata2BME *ManagedEntityDefinition
 
-// EthernetPerformanceMonitoringHistoryData2 (class ID #89)
+// EthernetPerformanceMonitoringHistoryData2 (Class ID: #89 / 0x0059)
 //	This ME collects additional PM data for a physical Ethernet interface. Instances of this ME are
 //	created and deleted by the OLT.
 //
@@ -43,13 +43,12 @@ var ethernetperformancemonitoringhistorydata2BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP Ethernet UNI. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP Ethernet UNI. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -57,8 +56,8 @@ var ethernetperformancemonitoringhistorydata2BME *ManagedEntityDefinition
 //			data 2 ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Pppoe Filtered Frame Counter
-//			PPPoE filtered frame counter: This attribute counts the number of frames discarded due to PPPoE
-//			filtering. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of frames discarded due to PPPoE filtering. (R) (mandatory)
+//			(4-bytes)
 //
 type EthernetPerformanceMonitoringHistoryData2 struct {
 	ManagedEntityDefinition

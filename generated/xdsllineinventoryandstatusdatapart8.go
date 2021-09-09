@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslLineInventoryAndStatusDataPart8ClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL line inventory and status data part 8
-const XdslLineInventoryAndStatusDataPart8ClassID ClassID = ClassID(414)
+const XdslLineInventoryAndStatusDataPart8ClassID = ClassID(414) // 0x019e
 
 var xdsllineinventoryandstatusdatapart8BME *ManagedEntityDefinition
 
-// XdslLineInventoryAndStatusDataPart8 (class ID #414)
+// XdslLineInventoryAndStatusDataPart8 (Class ID: #414 / 0x019e)
 //	This ME extends the attributes defined in the xDSL line inventory and status data parts-1..4.
 //
 //	Relationships
@@ -41,9 +41,8 @@ var xdsllineinventoryandstatusdatapart8BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R) (mandatory) (2-bytes)
 //
 //		Retransmission Used Downstream Rtx_Usedds
 //			Retransmission used downstream (RTX_USEDds): This parameter specifies whether [ITU-T G.998.4]
@@ -56,6 +55,10 @@ var xdsllineinventoryandstatusdatapart8BME *ManagedEntityDefinition
 //			range of values is given in clause 7.5.1.38 of [ITU-T G.997.1]. (R) (mandatory) (1 byte)
 //
 //		Date_Time_Stamping Of Near_End Test Parameters Stamp_Test_Ne
+//			Date/time-stamping of near-end test parameters (STAMP-TEST-NE): This parameter indicates the
+//			date/time when the near-end test parameters that can change during showtime were last updated.
+//			See clause 7.5.1.36.3 of [ITUT-G.997.1]. The format of this parameter is as follows.
+//
 //			(R) (optional) (7-bytes)
 //
 //		Date_Time_Stamping Of Far_End Test Parameters Stamp_Test_Fe

@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // MulticastGemInterworkingTerminationPointClassID is the 16-bit ID for the OMCI
 // Managed entity Multicast GEM interworking termination point
-const MulticastGemInterworkingTerminationPointClassID ClassID = ClassID(281)
+const MulticastGemInterworkingTerminationPointClassID = ClassID(281) // 0x0119
 
 var multicastgeminterworkingterminationpointBME *ManagedEntityDefinition
 
-// MulticastGemInterworkingTerminationPoint (class ID #281)
+// MulticastGemInterworkingTerminationPoint (Class ID: #281 / 0x0119)
 //	An instance of this ME represents a point in a G-PON ONU where a multicast service interworks
 //	with the GEM layer. At this point, a multicast bit stream is reconstructed from GEM packets.
 //
@@ -88,46 +88,98 @@ var multicastgeminterworkingterminationpointBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The value 0xFFFF
-//			is reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The value 0xFFFF is reserved. (R,
+//			setbycreate) (mandatory) (2-bytes)
 //
 //		Gem Port Network Ctp Connectivity Pointer
-//			GEM port network CTP connectivity pointer: This attribute points to an instance of the GEM port
-//			network CTP that is associated with this multicast GEM IW TP. (R,-W, setbycreate) (mandatory)
-//			(2-bytes)
+//			This attribute points to an instance of the GEM port network CTP that is associated with this
+//			multicast GEM IW TP. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Interworking Option
+//			3	Reserved
+//
+//			5	IEEE 802.1p mapper
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
+//			This attribute identifies the type of non-GEM function that is being interworked. The option can
+//			be as follows.
+//
+//			0	This value is a "no-op" or "don't care". It should be used when the multicast GEM IW TP is
+//			associated with several functions of different types. It can optionally be used in all cases,
+//			since the necessary information is available elsewhere. The previous code points are retained
+//			for backward compatibility:
+//
+//			1	MAC bridged LAN
+//
 //		Service Profile Pointer
-//			Service profile pointer: This attribute is set to 0 and not used. For backward compatibility, it
-//			may also be set to point to a MAC bridge service profile or IEEE 802.1p mapper service profile.
-//			(R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute is set to 0 and not used. For backward compatibility, it may also be set to point
+//			to a MAC bridge service profile or IEEE 802.1p mapper service profile. (R,-W, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Not Used 1
-//			Not used 1:	This attribute is set to 0 and not used. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute is set to 0 and not used. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Pptp Counter
-//			PPTP counter: This attribute represents the number of instances of PPTP MEs associated with this
-//			instance of the multicast GEM IW TP. This attribute conveys no information that is not available
-//			elsewhere; it may be set to 0xFF and not used. (R) (optional) (1-byte)
+//			This attribute represents the number of instances of PPTP MEs associated with this instance of
+//			the multicast GEM IW TP. This attribute conveys no information that is not available elsewhere;
+//			it may be set to 0xFF and not used. (R) (optional) (1-byte)
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Gal Profile Pointer
-//			GAL profile pointer: This attribute is set to 0 and not used. For backward compatibility, it may
-//			also be set to point to a GAL Ethernet profile. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute is set to 0 and not used. For backward compatibility, it may also be set to point
+//			to a GAL Ethernet profile. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Not Used 2
-//			Not used 2:	This attribute is set to 0 and not used. (R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute is set to 0 and not used. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Ipv4 Multicast Address Table
-//			IPv4 multicast address table: This attribute maps IP multicast addresses to PON layer addresses.
-//			Each entry contains the following.
+//			This attribute maps IP multicast addresses to PON layer addresses. Each entry contains the
+//			following.
+//
+//			GEM port-ID		2-bytes
+//
+//			Secondary key		2-bytes
+//
+//			IP multicast DA range start		4-bytes
+//
+//			IP multicast DA range stop		4-bytes
+//
+//			The first four bytes of each entry are treated as a key into the list. The secondary key allows
+//			the table to contain more than a single range for a given GEM port.
+//
+//			A set action to a particular value overwrites any existing entry with the same first four bytes.
+//			If the last eight bytes of a set command are all zero, that entry is deleted from the list, as
+//			the IP address 0.0.0.0 is not valid.
+//
+//			(R,-W) (mandatory) (12N bytes, where N is the number of entries in the list.)
 //
 //		Ipv6 Multicast Address Table
+//			This attribute maps IPv6 multicast DAs to PON layer addresses. Each entry contains:
+//
+//			GEM port-ID	2-bytes
+//
+//			Secondary key	2-bytes
+//
+//			Least significant bytes,
+//
+//			IP multicast DA range start	4-bytes
+//
+//			Least significant bytes,
+//
+//			IP multicast DA range stop	4-bytes
+//
+//			Most significant bytes, IP DA	12-bytes
+//
+//			The first four bytes of each entry are treated as a key into the list. The secondary key allows
+//			the table to contain more than a single range for a given GEM port.
+//
+//			A set action to a particular value overwrites any existing entry with the same first four bytes.
+//			If the last 20 bytes of a set command are all zero, that entry is deleted from the list.
+//
 //			(R,-W) (optional) (24N bytes, where N is the number of entries in the list.)
 //
 type MulticastGemInterworkingTerminationPoint struct {

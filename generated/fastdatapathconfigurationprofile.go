@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // FastDataPathConfigurationProfileClassID is the 16-bit ID for the OMCI
 // Managed entity FAST data path configuration profile
-const FastDataPathConfigurationProfileClassID ClassID = ClassID(433)
+const FastDataPathConfigurationProfileClassID = ClassID(433) // 0x01b1
 
 var fastdatapathconfigurationprofileBME *ManagedEntityDefinition
 
-// FastDataPathConfigurationProfile (class ID #433)
+// FastDataPathConfigurationProfile (Class ID: #433 / 0x01b1)
 //	This ME contains FAST the data path configuration profile for an xDSL UNI. An instance of this
 //	ME is created and deleted by the OLT.
 //
@@ -41,8 +41,8 @@ var fastdatapathconfigurationprofileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The value 0 is
-//			reserved. (R, set-by-create) (mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. The value 0 is reserved. (R, set-
+//			by-create) (mandatory) (2 bytes)
 //
 //		Tps_Tc Testmode Tps_Testmode
 //			TPS-TC testmode (TPS_TESTMODE): This Boolean attribute specifies whether the TPSTC test mode

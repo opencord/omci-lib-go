@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // VoipMediaProfileClassID is the 16-bit ID for the OMCI
 // Managed entity VoIP media profile
-const VoipMediaProfileClassID ClassID = ClassID(142)
+const VoipMediaProfileClassID = ClassID(142) // 0x008e
 
 var voipmediaprofileBME *ManagedEntityDefinition
 
-// VoipMediaProfile (class ID #142)
+// VoipMediaProfile (Class ID: #142 / 0x008e)
 //	The VoIP media profile ME contains settings that apply to VoIP voice encoding. This entity is
 //	conditionally required for ONUs that offer VoIP services. If a non-OMCI interface is used to
 //	manage VoIP signalling, this ME is unnecessary.
@@ -44,17 +44,26 @@ var voipmediaprofileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Fax Mode
+//			Selects the fax mode; values are as follows.
+//
+//			0	Passthru
+//
+//			1	ITU-T T.38
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Voice Service Profile Pointer
-//			Voice service profile pointer: Pointer to a voice service profile, which defines parameters such
-//			as jitter buffering and echo cancellation. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			Pointer to a voice service profile, which defines parameters such as jitter buffering and echo
+//			cancellation. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Codec Selection 1st Order
+//			Codec selection (1st order): This attribute specifies codec selection as defined by [IETF-
+//			RFC-3551].
+//
 //			(R,-W, set-by-create) (mandatory) (1-byte)
 //
 //		Packet Period Selection 1st Order
@@ -65,6 +74,9 @@ var voipmediaprofileBME *ManagedEntityDefinition
 //		Silence Suppression 1st Order
 //			Silence suppression (1st order): This attribute specifies whether silence suppression is on or
 //			off. Valid values are 0-= off and 1-= on. (R,-W, set-by-create) (mandatory) (1-byte)
+//
+//			Three more groups of three attributes are defined, with definitions identical to the preceding
+//			three:
 //
 //		Codec Selection 2nd Order
 //			Codec selection (2nd order):	(R,-W, setbycreate) (mandatory) (1-byte)
@@ -94,13 +106,13 @@ var voipmediaprofileBME *ManagedEntityDefinition
 //			Silence suppression (4th order):	(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Oob Dtmf
-//			OOB DTMF:	This attribute specifies out-of-band DMTF carriage. When enabled (1), DTMF signals are
-//			carried out of band via RTP or the associated signalling protocol. When disabled (0), DTMF tones
-//			are carried in the PCM stream. (R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute specifies out-of-band DMTF carriage. When enabled (1), DTMF signals are carried
+//			out of band via RTP or the associated signalling protocol. When disabled (0), DTMF tones are
+//			carried in the PCM stream. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Rtp Profile Pointer
-//			RTP profile pointer: This attribute points to the associated RTP profile data ME. (R,-W,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute points to the associated RTP profile data ME. (R,-W, setbycreate) (mandatory)
+//			(2-bytes)
 //
 type VoipMediaProfile struct {
 	ManagedEntityDefinition

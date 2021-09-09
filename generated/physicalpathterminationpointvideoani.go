@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PhysicalPathTerminationPointVideoAniClassID is the 16-bit ID for the OMCI
 // Managed entity Physical path termination point video ANI
-const PhysicalPathTerminationPointVideoAniClassID ClassID = ClassID(90)
+const PhysicalPathTerminationPointVideoAniClassID = ClassID(90) // 0x005a
 
 var physicalpathterminationpointvideoaniBME *ManagedEntityDefinition
 
-// PhysicalPathTerminationPointVideoAni (class ID #90)
+// PhysicalPathTerminationPointVideoAni (Class ID: #90 / 0x005a)
 //	This ME represents an RF video ANI in the ONU, where physical paths terminate and physical path
 //	level functions are performed.
 //
@@ -55,69 +55,182 @@ var physicalpathterminationpointvideoaniBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. This 2-byte
-//			number indicates the physical position of the ANI. The first byte is the slot ID (defined in
-//			clause 9.1.5). The second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. This 2-byte number indicates the
+//			physical position of the ANI. The first byte is the slot ID (defined in clause 9.1.5). The
+//			second byte is the port ID, with the range 1..255. (R) (mandatory) (2-bytes)
 //
 //		Administrative State
-//			Administrative state: This attribute locks (1) and unlocks (0) the functions performed by this
-//			ME. Administrative state is further described in clause-A.1.6. (R,-W) (mandatory) (1-byte)
+//			This attribute locks (1) and unlocks (0) the functions performed by this ME. Administrative
+//			state is further described in clause-A.1.6. (R,-W) (mandatory) (1-byte)
 //
 //		Operational State
-//			Operational state: This attribute indicates whether the ME is capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute indicates whether the ME is capable of performing its function. Valid values are
+//			enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Frequency Range Low
+//			This attribute indicates the lower of the two possible frequency ranges supported. Different
+//			frequency ranges are indicated by code points:
+//
+//			0	No low band
+//
+//			1	50..550 MHz
+//
+//			2	50..750 MHz
+//
+//			3	50..870 MHz
+//
+//			4..255	Reserved
+//
 //			(R) (mandatory) (1-byte)
 //
 //		Frequency Range High
+//			This attribute indicates the higher of the two frequency ranges supported. Different frequency
+//			ranges are indicated by code points:
+//
+//			0	No high band
+//
+//			1	550..750 MHz
+//
+//			2	550..870 MHz
+//
+//			3	950..2050 MHz
+//
+//			4	2150..3250 MHz
+//
+//			5	950..3250 MHz
+//
+//			6..255	Reserved
+//
 //			(R) (mandatory) (1-byte)
 //
 //		Signal Capability
+//			0	No signal level measurement capability
+//
+//			1	Total optical power level
+//
+//			2	Fixed frequency pilot tone power level
+//
+//			3	Total optical power level and fixed frequency pilot tone power level
+//
+//			4	Variable frequency pilot tone power level
+//
+//			5	Total optical power level and variable frequency pilot tone power level
+//
+//			6	Broadband RF power level
+//
+//			7	Total optical power level and broadband RF power level
+//
+//			8..255	Reserved
+//
 //			(R) (mandatory) (1-byte)
 //
+//			This attribute indicates the capability of the ONU to measure the video signal level.
+//			Capabilities are indicated by code points, as follows.
+//
 //		Optical Signal Level
+//			This attribute is an unsigned integer that returns the current measurement of the total optical
+//			signal level. The unit of this attribute is decibel-microwatt optical.
+//
+//			o	If signal capability-= 0, 2, 4 or 6, this attribute is undefined.
+//
+//			o	If signal capability-=1, 3, 5 or 7, this attribute describes the total optical power that is
+//			generating photocurrent on the receiver.
+//
 //			(R) (optional) (1-byte)
 //
 //		Pilot Signal Level
+//			This attribute indicates the current measurement of the pilot signal level or broadband RF
+//			level. The unit of this attribute is decibel-microvolt at the RF video service port.
+//
+//			o	If signal capability-= 0 or 1, then this attribute is undefined.
+//
+//			o	If signal capability-= 2, 3, 4 or 5, this attribute reports the pilot signal level at the
+//			output of the video UNI.
+//
+//			o	If signal capability-= 6 or 7, this attribute reports the total RF power level at the output
+//			of the video UNI.
+//
 //			(R) (optional) (1-byte)
 //
 //		Signal Level Min
-//			Signal level min: This attribute indicates the minimum optical RF power per channel that results
-//			in a CNR of 47-dBc for a channel of 4.5 MHz bandwidth at a receive optical power of -5-dBm. The
-//			unit of this attribute is decibel-microwatt optical. (R) (mandatory) (1-byte)
+//			This attribute indicates the minimum optical RF power per channel that results in a CNR of
+//			47-dBc for a channel of 4.5 MHz bandwidth at a receive optical power of -5-dBm. The unit of this
+//			attribute is decibel-microwatt optical. (R) (mandatory) (1-byte)
 //
 //		Signal Level Max
-//			Signal level max: This attribute indicates the maximum optical RF power per channel that results
-//			in a CTB of -57-dBc for an 80-channel ensemble of carriers at a perchannel optical modulation
-//			index (OMI) of 3.5%. The unit of this attribute is decibel-microwatt optical. (R) (mandatory)
-//			(1-byte)
+//			This attribute indicates the maximum optical RF power per channel that results in a CTB of
+//			-57-dBc for an 80-channel ensemble of carriers at a perchannel optical modulation index (OMI) of
+//			3.5%. The unit of this attribute is decibel-microwatt optical. (R) (mandatory) (1-byte)
 //
 //		Pilot Frequency
+//			This attribute specifies the frequency of the pilot channel receiver. The unit of this attribute
+//			is hertz.
+//
+//			o	If signal capability-= 0, 1, 6 or 7, this attribute is undefined.
+//
+//			o	If signal capability-= 2 or 3, this attribute is functionally RO.
+//
+//			o	If signal capability-= 4 or 5, this attribute is RW.
+//
 //			(R,-W) (optional) (4-bytes)
 //
 //		Agc Mode
+//			This attribute allows the discovery and configuration of the ONU's AGC capabilities. The
+//			attribute contains a code point for several AGC types. The ONU displays the currently used AGC
+//			mode. The OLT can discover new modes via the set command; the ONU denies attempts to set an
+//			unsupported mode. The code points are as follows.
+//
+//			0	No AGC
+//
+//			1	Broadband RF AGC
+//
+//			2	Optical AGC
+//
+//			3..255	Reserved
+//
 //			(R,-W) (optional) (1-byte)
 //
 //		Agc Setting
+//			This attribute indicates the measurement offset that the ONU should use in AGC. The attribute
+//			has a step size of 0.1-dB, represented as a signed integer.
+//
+//			The theoretical nominal RF signal is 80 channels of NTSC video, each with a per-channel OMI of
+//			3.5%. An ONU presented with such a signal should produce its specified output when this
+//			attribute is set to zero.
+//
+//			If total optical power is used for AGC, this attribute provides the OMI offset for any NTSC
+//			carriers present from the theoretical 3.5% value. For example, if the actual signal uses an OMI
+//			of 7.0% per channel (3-dB higher), then the ONU should be given an AGC setting of 30 (coded
+//			0x1E).
+//
+//			If broadband RF power is used for AGC, this attribute provides the total power offset for any
+//			NTSC carriers present from the theoretical 80-channel value. For example, if an actual signal
+//			contains 40 NTSC channels (3-dB lower), then the ONU should be given an AGC setting of -30
+//			(coded 0xE2).
+//
 //			(R,-W) (optional) (1-byte)
 //
 //		Video Lower Optical Threshold
+//			This attribute specifies the optical level used to declare the video OOR low alarm. Valid values
+//			are -12 to +6-dBm in 0.1-dB increments, represented as a 2s complement integer. (Coding -120 to
+//			+60, where 0x00-= 0-dBm, 0x88-= -12.0 dBm, etc.) Upon ME instantiation, the ONU sets this
+//			attribute to 0xA1 (-9.5-dBm). (R,-W) (optional) (1-byte)
+//
 //			NOTE - Because the power measurement returned in the optical signal level attribute has a
 //			resolution of 1-dB, it is possible that the measured value could appear to be in-range, even
 //			though an out-of-range alarm has been declared against a threshold with 0.1-dB resolution.
 //
 //		Video Upper Optical Threshold
-//			Video upper optical threshold: This attribute specifies the optical level used to declare the
-//			video OOR high alarm. Valid values are -12 to +6-dBm in 0.1-dB increments, represented as a 2s
-//			complement integer. (Coding -120 to +60, 0x00-= 0-dBm, 0x88-= -12.0-dBm, etc.) Upon ME
-//			instantiation, the ONU sets this attribute to 0x19 (+2.5-dBm). (R,-W) (optional) (1-byte)
+//			This attribute specifies the optical level used to declare the video OOR high alarm. Valid
+//			values are -12 to +6-dBm in 0.1-dB increments, represented as a 2s complement integer. (Coding
+//			-120 to +60, 0x00-= 0-dBm, 0x88-= -12.0-dBm, etc.) Upon ME instantiation, the ONU sets this
+//			attribute to 0x19 (+2.5-dBm). (R,-W) (optional) (1-byte)
 //
 type PhysicalPathTerminationPointVideoAni struct {
 	ManagedEntityDefinition

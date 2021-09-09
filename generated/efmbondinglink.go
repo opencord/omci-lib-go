@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // EfmBondingLinkClassID is the 16-bit ID for the OMCI
 // Managed entity EFM bonding link
-const EfmBondingLinkClassID ClassID = ClassID(419)
+const EfmBondingLinkClassID = ClassID(419) // 0x01a3
 
 var efmbondinglinkBME *ManagedEntityDefinition
 
-// EfmBondingLink (class ID #419)
+// EfmBondingLink (Class ID: #419 / 0x01a3)
 //	The EFM bonding link represents a link that can be bonded with other links to form a group. In
 //	[IEEE 802.3], a bonding group is known as a PAF and a link is known as a PME. Instances of this
 //	ME are created and deleted by the OLT.
@@ -41,17 +41,30 @@ var efmbondinglinkBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
+//			This attribute uniquely identifies each instance of this ME. The two MSBs of the first byte are
+//			the bearer channel ID. Excluding the first 2-bits of the first byte, the remaining part of the
+//			ME ID is identical to that of this ME's parent PPTP xDSL UNI part 1.
+//
 //			NOTE - This attribute has the same meaning as the Stream ID in clause C.3.1.2 of [ITU-T
 //			G.998.2], except that it cannot be changed. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Associated Group Me Id
-//			Associated group ME ID: This attribute is the ME ID of the bonding group to which this link is
-//			associated. Changing this attribute moves the link from one group to another. Setting this
-//			attribute to an ME ID that has not yet been provisioned will result in this link being placed in
-//			a single-link group that contains only this link. The default value for this attribute is the
-//			null pointer, 0xFFFF. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			This attribute is the ME ID of the bonding group to which this link is associated. Changing this
+//			attribute moves the link from one group to another. Setting this attribute to an ME ID that has
+//			not yet been provisioned will result in this link being placed in a single-link group that
+//			contains only this link. The default value for this attribute is the null pointer, 0xFFFF.
+//			(R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Link Alarm Enable
+//			This bit mapped attribute enables the group down and group partial alarms. A bit value of 1
+//			means "enable".
+//
+//			Bit	Meaning
+//
+//			1 (LSB)	Link down
+//
+//			2-8	Reserved
+//
 //			(R,-W, setbycreate) (mandatory) (1-bytes)
 //
 type EfmBondingLink struct {

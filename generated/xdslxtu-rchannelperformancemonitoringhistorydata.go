@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslXtuRChannelPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL xTU-R channel performance monitoring history data
-const XdslXtuRChannelPerformanceMonitoringHistoryDataClassID ClassID = ClassID(115)
+const XdslXtuRChannelPerformanceMonitoringHistoryDataClassID = ClassID(115) // 0x0073
 
 var xdslxturchannelperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// XdslXtuRChannelPerformanceMonitoringHistoryData (class ID #115)
+// XdslXtuRChannelPerformanceMonitoringHistoryData (Class ID: #115 / 0x0073)
 //	This ME collects PM data of the xTUC to xTUR channel as seen from the xTU-R. Instances of this
 //	ME are created and deleted by the OLT.
 //
@@ -43,14 +43,13 @@ var xdslxturchannelperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The two MSBs of
-//			the first byte are the bearer channel ID. Excluding the first 2-bits of the first byte, the
-//			remaining part of the ME ID is identical to that of this ME's parent PPTP xDSL UNI part 1. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The two MSBs of the first byte are
+//			the bearer channel ID. Excluding the first 2-bits of the first byte, the remaining part of the
+//			ME ID is identical to that of this ME's parent PPTP xDSL UNI part 1. (R, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -58,31 +57,28 @@ var xdslxturchannelperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			data 2 ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Corrected Blocks
-//			Corrected blocks: This attribute counts blocks received with errors that were corrected on this
-//			channel. (R) (mandatory) (4-bytes)
-//
-//		Uncorrected Blocks
-//			Uncorrected blocks: This attribute counts blocks received with uncorrectable errors on this
-//			channel. (R) (mandatory) (4-bytes)
-//
-//		Transmitted Blocks
-//			Transmitted blocks: This attribute counts encoded blocks transmitted on this channel. (R)
+//			This attribute counts blocks received with errors that were corrected on this channel. (R)
 //			(mandatory) (4-bytes)
 //
-//		Received Blocks
-//			Received blocks: This attribute counts encoded blocks received on this channel. (R) (mandatory)
+//		Uncorrected Blocks
+//			This attribute counts blocks received with uncorrectable errors on this channel. (R) (mandatory)
 //			(4-bytes)
 //
+//		Transmitted Blocks
+//			This attribute counts encoded blocks transmitted on this channel. (R) (mandatory) (4-bytes)
+//
+//		Received Blocks
+//			This attribute counts encoded blocks received on this channel. (R) (mandatory) (4-bytes)
+//
 //		Code Violations
-//			Code violations: This attribute counts FEBE anomalies reported in the downstream bearer channel.
-//			If the CRC is applied over multiple bearer channels, then each related FEBE anomaly increments
-//			each of the counters related to the individual bearer channels. (R) (mandatory) (2-bytes)
+//			This attribute counts FEBE anomalies reported in the downstream bearer channel. If the CRC is
+//			applied over multiple bearer channels, then each related FEBE anomaly increments each of the
+//			counters related to the individual bearer channels. (R) (mandatory) (2-bytes)
 //
 //		Forward Error Corrections
-//			Forward error corrections: This attribute counts FFEC anomalies reported in the downstream
-//			bearer channel. If FEC is applied over multiple bearer channels, each related FFEC anomaly
-//			increments each of the counters related to the individual bearer channels. (R) (mandatory)
-//			(2-bytes)
+//			This attribute counts FFEC anomalies reported in the downstream bearer channel. If FEC is
+//			applied over multiple bearer channels, each related FFEC anomaly increments each of the counters
+//			related to the individual bearer channels. (R) (mandatory) (2-bytes)
 //
 type XdslXtuRChannelPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

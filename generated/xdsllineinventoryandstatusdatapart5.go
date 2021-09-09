@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslLineInventoryAndStatusDataPart5ClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL line inventory and status data part 5
-const XdslLineInventoryAndStatusDataPart5ClassID ClassID = ClassID(325)
+const XdslLineInventoryAndStatusDataPart5ClassID = ClassID(325) // 0x0145
 
 var xdsllineinventoryandstatusdatapart5BME *ManagedEntityDefinition
 
-// XdslLineInventoryAndStatusDataPart5 (class ID #325)
+// XdslLineInventoryAndStatusDataPart5 (Class ID: #325 / 0x0145)
 //	This ME extends the attributes defined in the xDSL line inventory and status data parts 1..4.
 //	This ME reports FEXT and NEXT attributes, and pertains to Annex C of [ITUT G.992.3] (ADSL2) and
 //	Annex C of [ITUT G.992.5] (ADSL2plus).
@@ -43,107 +43,98 @@ var xdsllineinventoryandstatusdatapart5BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R) (mandatory) (2-bytes)
 //
 //		Fext Downstream Snr Margin
-//			FEXT downstream SNR margin: The FEXT SNRMds attribute is the downstream SNR margin measured
-//			during FEXTR duration at the ATU-R. The attribute value ranges from 0 (-64.0-dB) to 1270
-//			(+63.0-dB). The special value 0xFFFF indicates that the attribute is out of range. (R)
-//			(mandatory) (2-bytes)
+//			The FEXT SNRMds attribute is the downstream SNR margin measured during FEXTR duration at the
+//			ATU-R. The attribute value ranges from 0 (-64.0-dB) to 1270 (+63.0-dB). The special value 0xFFFF
+//			indicates that the attribute is out of range. (R) (mandatory) (2-bytes)
 //
 //		Next Downstream Snr Margin
-//			NEXT downstream SNR margin: The NEXT SNRMds attribute is the downstream SNR margin measured
-//			during NEXTR duration at the ATU-R. The attribute value ranges from 0 (-64.0-dB) to 1270
-//			(+63.0-dB). The special value 0xFFFF indicates that the attribute is out of range. (R)
-//			(mandatory) (2-bytes)
+//			The NEXT SNRMds attribute is the downstream SNR margin measured during NEXTR duration at the
+//			ATU-R. The attribute value ranges from 0 (-64.0-dB) to 1270 (+63.0-dB). The special value 0xFFFF
+//			indicates that the attribute is out of range. (R) (mandatory) (2-bytes)
 //
 //		Fext Upstream Snr Margin
-//			FEXT upstream SNR margin: The FEXT SNRMus attribute is the upstream SNR margin (see clause
-//			7.5.1.16 of [ITUT G.997.1]) measured during FEXTC duration at the ATU-C. The attribute value
-//			ranges from 0 (-64.0-dB) to 1270 (+63.0-dB). The special value 0xFFFF indicates that the
-//			attribute is out of range. (R) (mandatory) (2-bytes)
+//			The FEXT SNRMus attribute is the upstream SNR margin (see clause 7.5.1.16 of [ITUT G.997.1])
+//			measured during FEXTC duration at the ATU-C. The attribute value ranges from 0 (-64.0-dB) to
+//			1270 (+63.0-dB). The special value 0xFFFF indicates that the attribute is out of range. (R)
+//			(mandatory) (2-bytes)
 //
 //		Next Upstream Snr Margin
-//			NEXT upstream SNR margin: The NEXT SNRMus attribute is the upstream SNR margin (see clause
-//			7.5.1.16 of [ITUT-G.997.1]) measured during NEXTC duration at the ATU-C. The attribute value
-//			ranges from 0 (-64.0-dB) to 1270 (+63.0-dB). The special value 0xFFFF indicates that the
-//			attribute is out of range. (R) (mandatory) (2-bytes)
+//			The NEXT SNRMus attribute is the upstream SNR margin (see clause 7.5.1.16 of [ITUT-G.997.1])
+//			measured during NEXTC duration at the ATU-C. The attribute value ranges from 0 (-64.0-dB) to
+//			1270 (+63.0-dB). The special value 0xFFFF indicates that the attribute is out of range. (R)
+//			(mandatory) (2-bytes)
 //
 //		Fext Downstream Maximum Attainable Data Rate
-//			FEXT downstream maximum attainable data rate: The FEXT ATTNDRds attribute is the maximum
-//			downstream net data rate calculated from FEXT downstream SNR(f) (see clause 7.5.1.28.3.1 of
-//			[ITUT G.997.1]). The rate is coded in bits per second. (R) (mandatory) (4-bytes)
+//			The FEXT ATTNDRds attribute is the maximum downstream net data rate calculated from FEXT
+//			downstream SNR(f) (see clause 7.5.1.28.3.1 of [ITUT G.997.1]). The rate is coded in bits per
+//			second. (R) (mandatory) (4-bytes)
 //
 //		Next Downstream Maximum Attainable Data Rate
-//			NEXT downstream maximum attainable data rate: The NEXT ATTNDRds attribute is the maximum
-//			downstream net data rate calculated from NEXT downstream SNR(f) (see clause 7.5.1.28.3.2 of
-//			[ITUT G.997.1]). The rate is coded in bits per second. (R) (mandatory) (4-bytes)
+//			The NEXT ATTNDRds attribute is the maximum downstream net data rate calculated from NEXT
+//			downstream SNR(f) (see clause 7.5.1.28.3.2 of [ITUT G.997.1]). The rate is coded in bits per
+//			second. (R) (mandatory) (4-bytes)
 //
 //		Fext Upstream Maximum Attainable Data Rate
-//			FEXT upstream maximum attainable data rate: The FEXT ATTNDRus attribute is the maximum upstream
-//			net data rate calculated from FEXT upstream SNR(f) (see clause 7.5.1.28.6.1 of [ITUT G.997.1]).
-//			The rate is coded in bits per second. (R) (mandatory) (4-bytes)
+//			The FEXT ATTNDRus attribute is the maximum upstream net data rate calculated from FEXT upstream
+//			SNR(f) (see clause 7.5.1.28.6.1 of [ITUT G.997.1]). The rate is coded in bits per second. (R)
+//			(mandatory) (4-bytes)
 //
 //		Next Upstream Maximum Attainable Data Rate
-//			NEXT upstream maximum attainable data rate: The NEXT ATTNDRus attribute is the maximum upstream
-//			net data rate calculated from NEXT upstream SNR(f) (see clause 7.5.1.28.6.2 of [ITUT G.997.1]).
-//			The rate is coded in bits per second. (R) (mandatory) (4-bytes)
+//			The NEXT ATTNDRus attribute is the maximum upstream net data rate calculated from NEXT upstream
+//			SNR(f) (see clause 7.5.1.28.6.2 of [ITUT G.997.1]). The rate is coded in bits per second. (R)
+//			(mandatory) (4-bytes)
 //
 //		Fext Downstream Actual Power Spectral Density
-//			FEXT downstream actual power spectral density: The FEXT ACTPSDds attribute is the average
-//			downstream transmit PSD over the used subcarriers (see clause-7.5.1.21.1 of [ITUT G.997.1])
-//			calculated from the REFPSDds and RMSGIds for FEXTR duration. The attribute value ranges from 0
-//			(-90.0-dBm/Hz) to 900 (0.0-dBm/Hz). The special value 0xFFFF indicates that the parameter is out
-//			of range. (R) (mandatory) (2-bytes)
+//			The FEXT ACTPSDds attribute is the average downstream transmit PSD over the used subcarriers
+//			(see clause-7.5.1.21.1 of [ITUT G.997.1]) calculated from the REFPSDds and RMSGIds for FEXTR
+//			duration. The attribute value ranges from 0  (-90.0-dBm/Hz) to 900 (0.0-dBm/Hz). The special
+//			value 0xFFFF indicates that the parameter is out of range. (R) (mandatory) (2-bytes)
 //
 //		Next Downstream Actual Power Spectral Density
-//			NEXT downstream actual power spectral density: The NEXT ACTPSDds attribute is the average
-//			downstream transmit PSD over the used subcarriers (see clause-7.5.1.21.2 of [ITUT G.997.1])
-//			calculated from the REFPSDds and RMSGIds for NEXTR duration. The attribute value ranges from 0
-//			(-90.0-dBm/Hz) to 900 (0.0-dBm/Hz). The special value 0xFFFF indicates that the parameter is out
-//			of range. (R) (mandatory) (2-bytes)
+//			The NEXT ACTPSDds attribute is the average downstream transmit PSD over the used subcarriers
+//			(see clause-7.5.1.21.2 of [ITUT G.997.1]) calculated from the REFPSDds and RMSGIds for NEXTR
+//			duration. The attribute value ranges from 0  (-90.0-dBm/Hz) to 900 (0.0-dBm/Hz). The special
+//			value 0xFFFF indicates that the parameter is out of range. (R) (mandatory) (2-bytes)
 //
 //		Fext Upstream Actual Power Spectral Density
-//			FEXT upstream actual power spectral density: The FEXT ACTPSDus attribute is the average upstream
-//			transmit PSD over the used subcarriers (see clause-7.5.1.22.1 of [ITUT G.997.1]) calculated from
-//			the REFPSDus and RMSGIus for FEXTC duration. The attribute value ranges from 0 (-90.0-dBm/Hz) to
-//			900 (0.0-dBm/Hz). The special value 0xFFFF indicates that the parameter is out of range. (R)
-//			(mandatory) (2-bytes)
+//			The FEXT ACTPSDus attribute is the average upstream transmit PSD over the used subcarriers (see
+//			clause-7.5.1.22.1 of [ITUT G.997.1]) calculated from the REFPSDus and RMSGIus for FEXTC
+//			duration. The attribute value ranges from 0 (-90.0-dBm/Hz) to 900 (0.0-dBm/Hz). The special
+//			value 0xFFFF indicates that the parameter is out of range. (R) (mandatory) (2-bytes)
 //
 //		Next Upstream Actual Power Spectral Density
-//			NEXT upstream actual power spectral density: The NEXT ACTPSDus attribute is the average upstream
-//			transmit PSD over the used subcarriers (see clause-7.5.1.22.2 of [ITUT G.997.1]) calculated from
-//			the REFPSDus and RMSGIus for NEXTC duration. The attribute value ranges from 0 (-90.0-dBm/Hz) to
-//			900 (0.0-dBm/Hz). The special value 0xFFFF indicates that the parameter is out of range. (R)
-//			(mandatory) (2-bytes)
+//			The NEXT ACTPSDus attribute is the average upstream transmit PSD over the used subcarriers (see
+//			clause-7.5.1.22.2 of [ITUT G.997.1]) calculated from the REFPSDus and RMSGIus for NEXTC
+//			duration. The attribute value ranges from 0 (-90.0-dBm/Hz) to 900 (0.0-dBm/Hz). The special
+//			value 0xFFFF indicates that the parameter is out of range. (R) (mandatory) (2-bytes)
 //
 //		Fext Downstream Actual Aggregate Transmit Power
-//			FEXT downstream actual aggregate transmit power: The FEXT ACTATPds attribute is the total amount
-//			of transmit power (see clause 7.5.1.24.1 of [ITUT G.997.1]) calculated from PSDds measured
-//			during FEXTR duration at the ATU-R. The attribute value ranges from 0 (-31.0-dBm) to 620
-//			(+31.0-dBm). The special value 0xFFFF indicates that the parameter is out of range. (R)
-//			(mandatory) (2-bytes)
+//			The FEXT ACTATPds attribute is the total amount of transmit power (see clause 7.5.1.24.1 of
+//			[ITUT G.997.1]) calculated from PSDds measured during FEXTR duration at the ATU-R. The attribute
+//			value ranges from 0 (-31.0-dBm) to 620 (+31.0-dBm). The special value 0xFFFF indicates that the
+//			parameter is out of range. (R) (mandatory) (2-bytes)
 //
 //		Next Downstream Actual Aggregate Transmit Power
-//			NEXT downstream actual aggregate transmit power: The NEXT ACTATPds attribute is the total amount
-//			of transmit power (see clause 7.5.1.24.2 of [ITUT G.997.1]) calculated from PSDds measured
-//			during NEXTR duration at the ATU-R. The attribute value ranges from 0 (-31.0-dBm) to 620
-//			(+31.0-dBm). The special value 0xFFFF indicates that the parameter is out of range. (R)
-//			(mandatory) (2-bytes)
+//			The NEXT ACTATPds attribute is the total amount of transmit power (see clause 7.5.1.24.2 of
+//			[ITUT G.997.1]) calculated from PSDds measured during NEXTR duration at the ATU-R. The attribute
+//			value ranges from 0 (-31.0-dBm) to 620 (+31.0-dBm). The special value 0xFFFF indicates that the
+//			parameter is out of range. (R) (mandatory) (2-bytes)
 //
 //		Fext Upstream Actual Aggregate Transmit Power
-//			FEXT upstream actual aggregate transmit power: The FEXT ACTATPus attribute is the total transmit
-//			power (see clause 7.5.1.25.1 of [ITUT G.997.1]) calculated from PSDus measured during FEXTC
-//			duration at the ATU-C. The attribute value ranges from 0 (-31.0-dBm) to 620 (+31.0-dBm). The
-//			special value 0xFFFF indicates that the parameter is out of range. (R) (mandatory) (2-bytes)
+//			The FEXT ACTATPus attribute is the total transmit power (see clause 7.5.1.25.1 of [ITUT
+//			G.997.1]) calculated from PSDus measured during FEXTC duration at the ATU-C. The attribute value
+//			ranges from 0 (-31.0-dBm) to 620 (+31.0-dBm). The special value 0xFFFF indicates that the
+//			parameter is out of range. (R) (mandatory) (2-bytes)
 //
 //		Next Upstream Actual Aggregate Transmit Power
-//			NEXT upstream actual aggregate transmit power: The NEXT ACTATPus attribute is the total transmit
-//			power (see clause 7.5.1.25.2 of [ITUT G.997.1]) calculated from PSDus measured during NEXTC
-//			duration at the ATU-C. The attribute value ranges from 0 (-31.0-dBm) to 620 (+31.0-dBm). The
-//			special value 0xFFFF indicates that the parameter is out of range. (R) (mandatory) (2-bytes)
+//			The NEXT ACTATPus attribute is the total transmit power (see clause 7.5.1.25.2 of [ITUT
+//			G.997.1]) calculated from PSDus measured during NEXTC duration at the ATU-C. The attribute value
+//			ranges from 0 (-31.0-dBm) to 620 (+31.0-dBm). The special value 0xFFFF indicates that the
+//			parameter is out of range. (R) (mandatory) (2-bytes)
 //
 type XdslLineInventoryAndStatusDataPart5 struct {
 	ManagedEntityDefinition

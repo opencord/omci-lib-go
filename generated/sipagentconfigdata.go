@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // SipAgentConfigDataClassID is the 16-bit ID for the OMCI
 // Managed entity SIP agent config data
-const SipAgentConfigDataClassID ClassID = ClassID(150)
+const SipAgentConfigDataClassID = ClassID(150) // 0x0096
 
 var sipagentconfigdataBME *ManagedEntityDefinition
 
-// SipAgentConfigData (class ID #150)
+// SipAgentConfigData (Class ID: #150 / 0x0096)
 //	The SIP agent config data ME models a SIP signalling agent. It defines the configuration
 //	necessary to establish communication for signalling between the SIP user agent (UA) and a SIP
 //	server.
@@ -49,35 +49,31 @@ var sipagentconfigdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Proxy Server Address Pointer
-//			Proxy server address pointer: This attribute points to a large string ME that contains the name
-//			(IP address or URI) of the SIP proxy server for SIP signalling messages. (R,-W, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute points to a large string ME that contains the name (IP address or URI) of the SIP
+//			proxy server for SIP signalling messages. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Outbound Proxy Address Pointer
-//			Outbound proxy address pointer: An outbound SIP proxy may or may not be required within a given
-//			network. If an outbound SIP proxy is used, the outbound proxy address pointer attribute must be
-//			set to point to a valid large string ME that contains the name (IP address or URI) of the
-//			outbound proxy server for SIP signalling messages. If an outbound SIP proxy is not used, the
-//			outbound proxy address pointer attribute must be set to a null pointer. (R,-W, setbycreate)
-//			(mandatory) (2-bytes)
+//			An outbound SIP proxy may or may not be required within a given network. If an outbound SIP
+//			proxy is used, the outbound proxy address pointer attribute must be set to point to a valid
+//			large string ME that contains the name (IP address or URI) of the outbound proxy server for SIP
+//			signalling messages. If an outbound SIP proxy is not used, the outbound proxy address pointer
+//			attribute must be set to a null pointer. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Primary Sip Dns
-//			Primary SIP DNS: This attribute specifies the primary SIP DNS IP address. If the value of this
-//			attribute is 0, the primary DNS server is defined in the corresponding IP host config data or
-//			IPv6 host config data ME. If the value is non-zero, it takes precedence over the primary DNS
-//			server defined in the IP host config data or IPv6 host config data ME. (R,-W, set-by-create)
-//			(mandatory) (4-bytes)
+//			This attribute specifies the primary SIP DNS IP address. If the value of this attribute is 0,
+//			the primary DNS server is defined in the corresponding IP host config data or IPv6 host config
+//			data ME. If the value is non-zero, it takes precedence over the primary DNS server defined in
+//			the IP host config data or IPv6 host config data ME. (R,-W, set-by-create) (mandatory) (4-bytes)
 //
 //		Secondary Sip Dns
-//			Secondary SIP DNS: This attribute specifies the secondary SIP DNS IP address. If the value of
-//			this attribute is 0, the secondary DNS server is defined in the corresponding IP host config
-//			data or IPv6 host config data ME. If the value is non-zero, it takes precedence over the
-//			secondary DNS server defined in the IP host config data or IPv6 host config data ME. (R,-W, set-
-//			by-create) (mandatory) (4-bytes)
+//			This attribute specifies the secondary SIP DNS IP address. If the value of this attribute is 0,
+//			the secondary DNS server is defined in the corresponding IP host config data or IPv6 host config
+//			data ME. If the value is non-zero, it takes precedence over the secondary DNS server defined in
+//			the IP host config data or IPv6 host config data ME. (R,-W, set-by-create) (mandatory) (4-bytes)
 //
 //		Tcp_Udp Pointer
 //			TCP/UDP pointer: This pointer associates the SIP agent with the TCP/UDP config data ME to be
@@ -85,53 +81,85 @@ var sipagentconfigdataBME *ManagedEntityDefinition
 //			(mandatory) (2-bytes)
 //
 //		Sip Reg Exp Time
-//			SIP reg exp time: This attribute specifies the SIP registration expiration time in seconds. If
-//			its value is 0, the SIP agent does not add an expiration time to the registration requests and
-//			does not perform reregistration. The default value is 3600-s. (R,-W) (mandatory) (4-bytes)
+//			This attribute specifies the SIP registration expiration time in seconds. If its value is 0, the
+//			SIP agent does not add an expiration time to the registration requests and does not perform
+//			reregistration. The default value is 3600-s. (R,-W) (mandatory) (4-bytes)
 //
 //		Sip Rereg Head Start Time
-//			SIP rereg head start time: This attribute specifies the time in seconds prior to timeout that
-//			causes the SIP agent to start the re-registration process. The default value is 360-s. (R,-W)
-//			(mandatory) (4-bytes)
+//			This attribute specifies the time in seconds prior to timeout that causes the SIP agent to start
+//			the re-registration process. The default value is 360-s. (R,-W) (mandatory) (4-bytes)
 //
 //		Host Part Uri
-//			Host part URI: This attribute points to a large string ME that contains the host or domain part
-//			of the SIP address of record for users connected to this ONU. A null pointer indicates that the
-//			current address in the IP host config ME is to be used. (R,-W, setbycreate) (mandatory)
-//			(2-bytes)
+//			This attribute points to a large string ME that contains the host or domain part of the SIP
+//			address of record for users connected to this ONU. A null pointer indicates that the current
+//			address in the IP host config ME is to be used. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Sip Status
+//			5	Failed - Timeout
+//
+//			6	Redundant, offline: this instance of the SIP agent config data occupies the role of a
+//			redundant server, and is not presently in use.
+//
 //			(R) (mandatory) (1-byte)
 //
+//			This attribute shows the current status of the SIP agent. Values are as follows.
+//
+//			0	Ok/initial
+//
+//			1	Connected
+//
+//			2	Failed - ICMP error
+//
+//			3	Failed - Malformed response
+//
+//			4	Failed - Inadequate info response
+//
 //		Sip Registrar
-//			SIP registrar: This attribute points to a network address ME that contains the name (IP address
-//			or resolved name) of the registrar server for SIP signalling messages. Examples: "10.10.10.10"
-//			and "proxy.voip.net". (R,-W, set-by-create) (mandatory) (2-bytes)
+//			This attribute points to a network address ME that contains the name (IP address or resolved
+//			name) of the registrar server for SIP signalling messages. Examples: "10.10.10.10" and
+//			"proxy.voip.net". (R,-W, set-by-create) (mandatory) (2-bytes)
 //
 //		Softswitch
-//			Softswitch:	This attribute identifies the SIP gateway softswitch vendor. The format is four
-//			ASCII coded alphabetic characters [A..Z] as defined in [ATIS0300220]. A value of four null bytes
-//			indicates an unknown or unspecified vendor. (R,-W, setbycreate) (mandatory) (4-bytes)
+//			This attribute identifies the SIP gateway softswitch vendor. The format is four ASCII coded
+//			alphabetic characters [A..Z] as defined in [ATIS0300220]. A value of four null bytes indicates
+//			an unknown or unspecified vendor. (R,-W, setbycreate) (mandatory) (4-bytes)
 //
 //		Sip Response Table
+//			This attribute specifies the tone and text to be presented to the subscriber upon receipt of
+//			various SIP messages (normally 4xx, 5xx, 6xx message codes). The table is a sequence of entries,
+//			each of which is defined as follows.
+//
+//			SIP response code (2 bytes): This field is the value of the SIP message code. It also serves as
+//			the index into the SIP response table. When a set operation is performed with the value 0 in
+//			this field, the table is cleared.
+//
+//			Tone (1 byte): This field specifies one of the tones in the tone pattern table of the associated
+//			voice service profile. The specified tone is played to the subscriber.
+//
+//			Text message (2 bytes): This field is a pointer to a large string that contains a message to be
+//			displayed to the subscriber. If the value of this field is a null pointer, text pre-associated
+//			with the tone may be displayed, or no text at all.
+//
+//			(R, W) (optional) (N * 5 bytes)
+//
 //			NOTE 2 - This model assumes that SIP response tones and text are common to all POTS lines that
 //			share a given SIP agent.
 //
 //		Sip Option Transmit Control
-//			SIP option transmit control: This Boolean attribute specifies that the ONU is (true) or is not
-//			(false) enabled to transmit SIP options. The default value is recommended to be false. (R, W,
-//			setbycreate) (optional) (1 byte)
+//			This Boolean attribute specifies that the ONU is (true) or is not (false) enabled to transmit
+//			SIP options. The default value is recommended to be false. (R, W, setbycreate) (optional) (1
+//			byte)
 //
 //		Sip Uri Format
-//			SIP URI format: This attribute specifies the format of the URI in outgoing SIP messages. The
-//			recommended default value 0 specifies TEL URIs; the value 1 specifies SIP URIs. Other values are
-//			reserved. (R, W, setbycreate) (optional) (1 byte)
+//			This attribute specifies the format of the URI in outgoing SIP messages. The recommended default
+//			value 0 specifies TEL URIs; the value 1 specifies SIP URIs. Other values are reserved. (R, W,
+//			setbycreate) (optional) (1 byte)
 //
 //		Redundant Sip Agent Pointer
-//			Redundant SIP agent pointer: This attribute points to another SIP agent config data ME, which is
-//			understood to provide redundancy. The initial SIP agent is determined by the pointer from the
-//			SIP user data ME. It is the manager's responsibility to provision a group of redundant SIP
-//			agents with mutually consistent attributes. (R, W, setbycreate) (optional) (2 bytes)
+//			This attribute points to another SIP agent config data ME, which is understood to provide
+//			redundancy. The initial SIP agent is determined by the pointer from the SIP user data ME. It is
+//			the manager's responsibility to provision a group of redundant SIP agents with mutually
+//			consistent attributes. (R, W, setbycreate) (optional) (2 bytes)
 //
 type SipAgentConfigData struct {
 	ManagedEntityDefinition

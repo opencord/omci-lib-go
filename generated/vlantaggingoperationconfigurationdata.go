@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // VlanTaggingOperationConfigurationDataClassID is the 16-bit ID for the OMCI
 // Managed entity VLAN tagging operation configuration data
-const VlanTaggingOperationConfigurationDataClassID ClassID = ClassID(78)
+const VlanTaggingOperationConfigurationDataClassID = ClassID(78) // 0x004e
 
 var vlantaggingoperationconfigurationdataBME *ManagedEntityDefinition
 
-// VlanTaggingOperationConfigurationData (class ID #78)
+// VlanTaggingOperationConfigurationData (Class ID: #78 / 0x004e)
 //	This ME organizes data associated with VLAN tagging. Instances of this ME are created and
 //	deleted by the OLT.
 //
@@ -51,29 +51,89 @@ var vlantaggingoperationconfigurationdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. When the
-//			optional association type attribute is 0 or undefined, this attribute's value is the same as the
-//			ID of the ME with which this VLAN tagging operation configuration data instance is associated,
-//			which may be either a PPTP Ethernet UNI or an IP host config data or an IPv6 host config data
-//			ME. Otherwise, the value of the ME ID is unconstrained except by the need to be unique. (R, set-
-//			by-create) (mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. When the optional association type
+//			attribute is 0 or undefined, this attribute's value is the same as the ID of the ME with which
+//			this VLAN tagging operation configuration data instance is associated, which may be either a
+//			PPTP Ethernet UNI or an IP host config data or an IPv6 host config data ME. Otherwise, the value
+//			of the ME ID is unconstrained except by the need to be unique. (R, set-by-create) (mandatory) (2
+//			bytes)
 //
 //		Upstream Vlan Tagging Operation Mode
+//			This attribute controls upstream VLAN tagging. Valid values are as follows.
+//
+//			0	Upstream frame is sent as is, regardless of tag.
+//
+//			1	The upstream frame is tagged, whether or not the received frame was tagged. A tagged frame's
+//			TCI is overwritten with the upstream VLAN tag TCI value. An untagged frame is prepended with a
+//			tag whose values are taken from the upstream VLAN tag TCI value attribute.
+//
+//			2	A tag is prepended to the upstream frame, whether or not the received frame was tagged. If the
+//			received frame is tagged, a second tag (Q-in-Q) is added to the frame. If the received frame is
+//			not tagged, a tag is attached to the frame. The added tag is defined by the upstream VLAN tag
+//			TCI value attribute.
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Upstream Vlan Tag Tci Value
-//			Upstream VLAN tag TCI value: This attribute specifies the TCI for upstream VLAN tagging. It is
-//			used when the upstream VLAN tagging operation mode is 1 or 2. (R,-W, setbycreate) (mandatory)
-//			(2-bytes)
+//			This attribute specifies the TCI for upstream VLAN tagging. It is used when the upstream VLAN
+//			tagging operation mode is 1 or 2. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Downstream Vlan Tagging Operation Mode
+//			This attribute controls downstream VLAN tagging. Valid values are as follows.
+//
+//			0	Downstream frame is sent as is, regardless of tag.
+//
+//			1	If the received frame is tagged, the outer tag is stripped. An untagged frame is forwarded
+//			unchanged.
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Association Type
+//			This attribute specifies the type of ME that is associated with this VLAN tagging operation
+//			configuration data ME. Values are assigned in accordance with the following list.
+//
+//			0	(Default) Physical path termination point Ethernet UNI (for backward compatibility, may also
+//			be an IP host config data ME; they must not have the same ME ID). The associated ME instance is
+//			implicit; its identifier is the same as that of this VLAN tagging operation configuration data.
+//
+//			1	IP host config data or IPv6 host config data
+//
+//			2	IEEE 802.1p mapper service profile
+//
+//			3	MAC bridge port configuration data
+//
+//			4	Physical path termination point xDSL UNI
+//
+//			5	GEM IW termination point
+//
+//			6	Multicast GEM IW termination point
+//
+//			7	Physical path termination point MoCA UNI
+//
+//			8	Reserved
+//
+//			9	Ethernet flow termination point
+//
+//			10	Physical path termination point Ethernet UNI
+//
+//			11	Virtual Ethernet interface point
+//
+//			12	MPLS pseudowire termination point
+//
+//			13	EFM bonding group
+//
 //			The associated ME instance is identified by the associated ME pointer. (R,-W, setbycreate)
 //			(optional) (1-byte)
 //
 //		Associated Me Pointer
+//			When the association type attribute is non-zero, this attribute points to the ME with which this
+//			VLAN tagging operation configuration data ME is associated. Otherwise, this attribute is
+//			undefined, and the association is implicit through the ME ID. (R,-W, setbycreate) (optional)
+//			(2-bytes)
+//
+//			NOTE 2 - Implicit association is retained for legacy compatibility. Explicit pointers are
+//			preferred for new implementations.
+//
 //			NOTE 3 - When the association type is xDSL, the two MSBs may be used to indicate a bearer
 //			channel.
 //

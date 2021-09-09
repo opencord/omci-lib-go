@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // FecPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity FEC performance monitoring history data
-const FecPerformanceMonitoringHistoryDataClassID ClassID = ClassID(312)
+const FecPerformanceMonitoringHistoryDataClassID = ClassID(312) // 0x0138
 
 var fecperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// FecPerformanceMonitoringHistoryData (class ID #312)
+// FecPerformanceMonitoringHistoryData (Class ID: #312 / 0x0138)
 //	This ME collects PM data associated with PON downstream forward error correction (FEC) counters.
 //	Instances of this ME are created and deleted by the OLT.
 //
@@ -43,13 +43,12 @@ var fecperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the ANI-G or a TWDM channel. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the ANI-G or a TWDM channel. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -57,23 +56,22 @@ var fecperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			data 2 ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Corrected Bytes
-//			Corrected bytes: This attribute counts the number of bytes that were corrected by the FEC
-//			function. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of bytes that were corrected by the FEC function. (R)
+//			(mandatory) (4-bytes)
 //
 //		Corrected Code Words
-//			Corrected code words: This attribute counts the code words that were corrected by the FEC
-//			function. (R) (mandatory) (4-bytes)
+//			This attribute counts the code words that were corrected by the FEC function. (R) (mandatory)
+//			(4-bytes)
 //
 //		Uncorrectable Code Words
-//			Uncorrectable code words: This attribute counts errored code words that could not be corrected
-//			by the FEC function. (R) (mandatory) (4-bytes)
+//			This attribute counts errored code words that could not be corrected by the FEC function. (R)
+//			(mandatory) (4-bytes)
 //
 //		Total Code Words
-//			Total code words: This attribute counts the total received code words. (R) (mandatory) (4-bytes)
+//			This attribute counts the total received code words. (R) (mandatory) (4-bytes)
 //
 //		Fec Seconds
-//			FEC seconds:	This attribute counts seconds during which there was an FEC anomaly. (R)
-//			(mandatory) (2-bytes)
+//			This attribute counts seconds during which there was an FEC anomaly. (R) (mandatory) (2-bytes)
 //
 type FecPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

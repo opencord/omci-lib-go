@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // VoipConfigDataClassID is the 16-bit ID for the OMCI
 // Managed entity VoIP config data
-const VoipConfigDataClassID ClassID = ClassID(138)
+const VoipConfigDataClassID = ClassID(138) // 0x008a
 
 var voipconfigdataBME *ManagedEntityDefinition
 
-// VoipConfigData (class ID #138)
+// VoipConfigData (Class ID: #138 / 0x008a)
 //	The VoIP configuration data ME defines the configuration for VoIP in the ONU. The OLT uses this
 //	ME to discover the VoIP signalling protocols and configuration methods supported by this ONU.
 //	The OLT then uses this ME to select the desired signalling protocol and configuration method.
@@ -44,38 +44,107 @@ var voipconfigdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. There is only
-//			one instance, number 0. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. There is only one instance, number
+//			0. (R) (mandatory) (2-bytes)
 //
 //		Available Signalling Protocols
+//			This attribute is a bit map that defines the VoIP signalling protocols supported in the ONU. The
+//			bit value 1 specifies that the ONU supports the associated protocol.
+//
+//			1	(LSB)	SIP
+//
+//			2	ITU-T H.248
+//
+//			3	MGCP
+//
 //			(R) (mandatory) (1-byte)
 //
 //		Signalling Protocol Used
+//			0xFF	Selected by non-OMCI management interface
+//
 //			(R,-W) (mandatory) (1-byte)
 //
+//			This attribute specifies the VoIP signalling protocol to use. Only one type of protocol is
+//			allowed at a time. Valid values are:
+//
+//			0	None
+//
+//			1	SIP
+//
+//			2	ITU-T H.248
+//
+//			3	MGCP
+//
 //		Available Voip Configuration Methods
+//			This attribute is a bit map that indicates the capabilities of the ONU with regard to VoIP
+//			service configuration. The bit value 1 specifies that the ONU supports the associated
+//			capability.
+//
+//			1 (LSB)	ONU capable of using the OMCI to configure its VoIP services.
+//
+//			2	ONU capable of working with configuration file retrieval to configure its VoIP services.
+//
+//			3	ONU capable of working with [BBF TR-069] to configure its VoIP services.
+//
+//			4	ONU capable of working with IETF sipping config framework to configure its VoIP services.
+//
 //			Bits 5..24 are reserved by ITU-T. Bits 25..32 are reserved for proprietary vendor configuration
 //			capabilities. (R) (mandatory) (4-bytes)
 //
 //		Voip Configuration Method Used
+//			Specifies which method is used to configure the ONU's VoIP service.
+//
+//			0	Do not configure - ONU default
+//
+//			1	OMCI
+//
+//			2	Configuration file retrieval
+//
+//			3	BBF TR-069
+//
+//			4	IETF sipping config framework
+//
+//			5..240	Reserved by ITU-T
+//
+//			241..255	Reserved for proprietary vendor configuration methods
+//
 //			(R,-W) (mandatory) (1-byte)
 //
 //		Voip Configuration Address Pointer
+//			If this attribute is set to any value other than a null pointer, it points to a network address
+//			ME, which indicates the address of the server to contact using the method indicated in the VoIP
+//			configuration method used attribute. This attribute is only relevant for non-OMCI configuration
+//			methods.
+//
+//			If this attribute is set to a null pointer, no address is defined by this attribute. However,
+//			the address may be defined by other methods, such as deriving it from the ONU identifier
+//			attribute of the IP host config data ME and using a well-known URI schema.
+//
 //			The default value is 0xFFFF (R,-W) (mandatory) (2-bytes)
 //
 //		Voip Configuration State
+//			Indicates the status of the ONU VoIP service.
+//
+//			0	Inactive: configuration retrieval has not been attempted
+//
+//			1	Active: configuration was retrieved
+//
+//			2	Initializing: configuration is now being retrieved
+//
+//			3	Fault: configuration retrieval process failed
+//
 //			Other values are reserved. At ME instantiation, the ONU sets this attribute to 0. (R)
 //			(mandatory) (1-byte)
 //
 //		Retrieve Profile
-//			Retrieve profile: This attribute provides a means by which the ONU may be notified that a new
-//			VoIP profile should be retrieved. By setting this attribute, the OLT triggers the ONU to
-//			retrieve a new profile. The actual value in the set action is ignored because it is the action
-//			of setting that is important. (W) (mandatory) (1-byte)
+//			This attribute provides a means by which the ONU may be notified that a new VoIP profile should
+//			be retrieved. By setting this attribute, the OLT triggers the ONU to retrieve a new profile. The
+//			actual value in the set action is ignored because it is the action of setting that is important.
+//			(W) (mandatory) (1-byte)
 //
 //		Profile Version
-//			Profile version: This attribute is a character string that identifies the version of the last
-//			retrieved profile. (R) (mandatory) (25-bytes)
+//			This attribute is a character string that identifies the version of the last retrieved profile.
+//			(R) (mandatory) (25-bytes)
 //
 type VoipConfigData struct {
 	ManagedEntityDefinition

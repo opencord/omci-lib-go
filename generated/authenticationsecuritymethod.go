@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // AuthenticationSecurityMethodClassID is the 16-bit ID for the OMCI
 // Managed entity Authentication security method
-const AuthenticationSecurityMethodClassID ClassID = ClassID(148)
+const AuthenticationSecurityMethodClassID = ClassID(148) // 0x0094
 
 var authenticationsecuritymethodBME *ManagedEntityDefinition
 
-// AuthenticationSecurityMethod (class ID #148)
+// AuthenticationSecurityMethod (Class ID: #148 / 0x0094)
 //	The authentication security method defines the user ID and password configuration to establish a
 //	session between a client and a server. This object may be used in the role of the client or
 //	server. An instance of this ME is created by the OLT if authenticated communication is
@@ -43,25 +43,37 @@ var authenticationsecuritymethodBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The value 0xFFFF
-//			is reserved. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The value 0xFFFF is reserved. (R,
+//			setbycreate) (mandatory) (2-bytes)
 //
 //		Validation Scheme
+//			This attribute specifies the validation scheme used when the ONU validates a challenge.
+//			Validation schemes are defined as follows.
+//
+//			0	Validation disabled
+//
+//			1	Validate using MD5 digest authentication as defined in [IETF-RFC-2617] (recommended)
+//
+//			3	Validate using basic authentication as defined in [IETF RFC 2617]
+//
 //			(R,-W) (mandatory) (1-byte)
 //
 //		Username 1
-//			Username 1:	This string attribute is the user name. If the string is shorter than 25-bytes, it
-//			must be null terminated (Note). (R,-W) (mandatory) (25-bytes)
+//			This string attribute is the user name. If the string is shorter than 25-bytes, it must be null
+//			terminated (Note). (R,-W) (mandatory) (25-bytes)
 //
 //		Password
-//			Password:	This string attribute is the password. If the string is shorter than 25-bytes, it must
-//			be null terminated. (R,-W) (mandatory) (25-bytes)
+//			This string attribute is the password. If the string is shorter than 25-bytes, it must be null
+//			terminated. (R,-W) (mandatory) (25-bytes)
 //
 //		Realm
-//			Realm:	This string attribute specifies the realm used in digest authentication. If the string is
+//			This string attribute specifies the realm used in digest authentication. If the string is
 //			shorter than 25-bytes, it must be null terminated. (R,-W) (mandatory) (25-bytes)
 //
 //		Username 2
+//			This string attribute allows for continuation of the user name beyond 25-characters (Note). Its
+//			default value is a null string. (R,-W) (optional) (25-bytes)
+//
 //			NOTE - The total username is the concatenation of the username 1 and username 2 attributes if
 //			and only if: a) username 1 comprises 25 non-null characters; b) username 2 is supported by the
 //			ONU; and c) username 2 contains a leading non-null character string. Otherwise, the total

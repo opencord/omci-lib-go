@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // VoipFeatureAccessCodesClassID is the 16-bit ID for the OMCI
 // Managed entity VoIP feature access codes
-const VoipFeatureAccessCodesClassID ClassID = ClassID(147)
+const VoipFeatureAccessCodesClassID = ClassID(147) // 0x0093
 
 var voipfeatureaccesscodesBME *ManagedEntityDefinition
 
-// VoipFeatureAccessCodes (class ID #147)
+// VoipFeatureAccessCodes (Class ID: #147 / 0x0093)
 //	The VoIP feature access codes ME defines administrable feature access codes for the VoIP
 //	subscriber. It is optional for ONUs that support VoIP services. If a non-OMCI interface is used
 //	to manage VoIP signalling, this ME is unnecessary.
@@ -44,44 +44,47 @@ var voipfeatureaccesscodesBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R) (mandatory)
-//			(2-bytes)
+//			The remaining attributes are access codes for the features mentioned in their names. Each
+//			attribute is a string of characters from the set {0..9, *, #}, with trailing nulls in any unused
+//			bytes.
+//
+//			This attribute uniquely identifies each instance of this ME. (R) (mandatory) (2-bytes)
 //
 //		Cancel Call Waiting
-//			Cancel call waiting:	(R,-W) (optional) (5-bytes)
+//			(R,-W) (optional) (5-bytes)
 //
 //		Call Hold
-//			Call hold:		(R,-W) (optional) (5-bytes)
+//				(R,-W) (optional) (5-bytes)
 //
 //		Call Park
-//			Call park:		(R,-W) (optional) (5-bytes)
+//				(R,-W) (optional) (5-bytes)
 //
 //		Caller Id Activate
-//			Caller ID activate:	(R,-W) (optional) (5-bytes)
+//			(R,-W) (optional) (5-bytes)
 //
 //		Caller Id Deactivate
-//			Caller ID deactivate:	(R,-W) (optional) (5-bytes)
+//			(R,-W) (optional) (5-bytes)
 //
 //		Do Not Disturb Activation
-//			Do not disturb activation:	(R,-W) (optional) (5-bytes)
+//			(R,-W) (optional) (5-bytes)
 //
 //		Do Not Disturb Deactivation
-//			Do not disturb deactivation:	(R,-W) (optional) (5-bytes)
+//			(R,-W) (optional) (5-bytes)
 //
 //		Do Not Disturb Pin Change
-//			Do not disturb PIN change:	(R,-W) (optional) (5-bytes)
+//			(R,-W) (optional) (5-bytes)
 //
 //		Emergency Service Number
-//			Emergency service number:	(R,-W) (optional) (5-bytes)
+//			(R,-W) (optional) (5-bytes)
 //
 //		Intercom Service
-//			Intercom service:	(R,-W) (optional) (5-bytes)
+//			(R,-W) (optional) (5-bytes)
 //
 //		Unattended_Blind Call Transfer
 //			Unattended/blind call transfer:	(R, W) (optional) (5 bytes)
 //
 //		Attended Call Transfer
-//			Attended call transfer:	(R, W) (optional) (5 bytes)
+//			(R, W) (optional) (5 bytes)
 //
 type VoipFeatureAccessCodes struct {
 	ManagedEntityDefinition

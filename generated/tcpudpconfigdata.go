@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // TcpUdpConfigDataClassID is the 16-bit ID for the OMCI
 // Managed entity TCP/UDP config data
-const TcpUdpConfigDataClassID ClassID = ClassID(136)
+const TcpUdpConfigDataClassID = ClassID(136) // 0x0088
 
 var tcpudpconfigdataBME *ManagedEntityDefinition
 
-// TcpUdpConfigData (class ID #136)
+// TcpUdpConfigData (Class ID: #136 / 0x0088)
 //	The TCP/UDP config data ME configures services based on the transmission control protocol (TCP)
 //	and user datagram protocol (UDP) that are offered from an IP host. If a non-OMCI interface is
 //	used to manage an IP service, this ME is unnecessary; the non-OMCI interface supplies the
@@ -45,17 +45,16 @@ var tcpudpconfigdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. It is
-//			recommended that the ME ID be the same as the port number. (R, setbycreate) (mandatory)
-//			(2-bytes)
+//			This attribute uniquely identifies each instance of this ME. It is recommended that the ME ID be
+//			the same as the port number. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Port Id
-//			Port ID:	This attribute specifies the port number that offers the TCP/UDP service. (R,-W,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute specifies the port number that offers the TCP/UDP service. (R,-W, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Protocol
-//			Protocol:	This attribute specifies the protocol type as defined by [b-IANA] (protocol numbers),
-//			for example UDP (0x11). (R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute specifies the protocol type as defined by [b-IANA] (protocol numbers), for
+//			example UDP (0x11). (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Tos_Diffserv Field
 //			TOS/diffserv field: This attribute specifies the value of the TOS/diffserv field of the IPv4
@@ -64,9 +63,9 @@ var tcpudpconfigdataBME *ManagedEntityDefinition
 //			points). (R,-W, set-by-create) (mandatory) (1-byte)
 //
 //		Ip Host Pointer
-//			IP host pointer: This attribute points to the IP host config data or IPv6 host config data ME
-//			associated with this TCP/UDP data. Any number of ports and protocols may be associated with an
-//			IP host. (R, W, set-by-create) (mandatory) (2 bytes)
+//			This attribute points to the IP host config data or IPv6 host config data ME associated with
+//			this TCP/UDP data. Any number of ports and protocols may be associated with an IP host. (R, W,
+//			set-by-create) (mandatory) (2 bytes)
 //
 type TcpUdpConfigData struct {
 	ManagedEntityDefinition

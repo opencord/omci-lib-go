@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslSubcarrierMaskingDownstreamProfileClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL subcarrier masking downstream profile
-const XdslSubcarrierMaskingDownstreamProfileClassID ClassID = ClassID(108)
+const XdslSubcarrierMaskingDownstreamProfileClassID = ClassID(108) // 0x006c
 
 var xdslsubcarriermaskingdownstreamprofileBME *ManagedEntityDefinition
 
-// XdslSubcarrierMaskingDownstreamProfile (class ID #108)
+// XdslSubcarrierMaskingDownstreamProfile (Class ID: #108 / 0x006c)
 //	This ME contains the subcarrier masking downstream profile for an xDSL UNI. Instances of this ME
 //	are created and deleted by the OLT.
 //
@@ -41,25 +41,49 @@ var xdslsubcarriermaskingdownstreamprofileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. The value 0 is
-//			reserved. (R, set-by-create) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. The value 0 is reserved. (R, set-
+//			by-create) (mandatory) (2-bytes)
+//
+//			The four following attributes are bit maps that represent downstream mask values for subcarriers
+//			1..128 (mask 1) through 385..512 (mask 4). The MSB of the first byte corresponds to the lowest
+//			numbered subcarrier, and the LSB of the last byte corresponds to the highest. Each bit position
+//			defines whether the corresponding downstream subcarrier is masked (1) or not masked (0).
+//
+//			The number of xDSL subcarriers, downstream (NSCds) is the highest numbered subcarrier that can
+//			be transmitted in the downstream direction. For [ITUT-G.992.3], [ITUT-G.992.4] and
+//			[ITUT-G.992.5], it is defined in the corresponding Recommendation. For [ITUT-G.992.1], NSCds =
+//			256 and for [ITUT-G.992.2], NSCds-= 128.
 //
 //		Downstream Subcarrier Mask 1
-//			Downstream subcarrier mask 1: Subcarriers 1 to 128. (R,-W, set-by-create) (mandatory) (16-bytes)
+//			Subcarriers 1 to 128. (R,-W, set-by-create) (mandatory) (16-bytes)
 //
 //		Downstream Subcarrier Mask 2
-//			Downstream subcarrier mask 2: Subcarriers 129 to 256. (R,-W) (mandatory for modems that support
-//			NSCds-> 128) (16-bytes)
+//			Subcarriers 129 to 256. (R,-W) (mandatory for modems that support NSCds-> 128) (16-bytes)
 //
 //		Downstream Subcarrier Mask 3
-//			Downstream subcarrier mask 3: Subcarriers 257 to 384. (R,-W) (mandatory for modems that support
-//			NSCds-> 256) (16-bytes)
+//			Subcarriers 257 to 384. (R,-W) (mandatory for modems that support NSCds-> 256) (16-bytes)
 //
 //		Downstream Subcarrier Mask 4
-//			Downstream subcarrier mask 4: Subcarriers 385 to 512. (R,-W) (mandatory for modems that support
-//			NSCds-> 384) (16-bytes)
+//			Subcarriers 385 to 512. (R,-W) (mandatory for modems that support NSCds-> 384) (16-bytes)
 //
 //		Mask Valid
+//			This Boolean attribute controls and reports the operational status of the downstream subcarrier
+//			mask attributes.
+//
+//			If this attribute is true (1), the downstream subcarrier mask represented in this ME has been
+//			impressed on the DSL equipment.
+//
+//			If this attribute is false (0), the downstream subcarrier mask represented in this ME has not
+//			been impressed on the DSL equipment. The default value is false.
+//
+//			The value of this attribute can be modified by the ONU and OLT, as follows.
+//
+//			o	If the OLT changes any of the four mask attributes or sets mask valid false, then mask valid
+//			is false.
+//
+//			o	If mask valid is false and the OLT sets mask valid true, the ONU impresses the downstream
+//			subcarrier mask data on to the DSL equipment.
+//
 //			(R,-W) (mandatory) (1-byte)
 //
 type XdslSubcarrierMaskingDownstreamProfile struct {

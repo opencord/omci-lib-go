@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // CallControlPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity Call control performance monitoring history data
-const CallControlPerformanceMonitoringHistoryDataClassID ClassID = ClassID(140)
+const CallControlPerformanceMonitoringHistoryDataClassID = ClassID(140) // 0x008c
 
 var callcontrolperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// CallControlPerformanceMonitoringHistoryData (class ID #140)
+// CallControlPerformanceMonitoringHistoryData (Class ID: #140 / 0x008c)
 //	This ME collects PM data related to the call control channel. Instances of this ME are created
 //	and deleted by the OLT.
 //
@@ -42,13 +42,11 @@ var callcontrolperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP POTS UNI. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP POTS UNI. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -56,22 +54,21 @@ var callcontrolperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			data 2 ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Call Setup Failures
-//			Call setup failures: This attribute counts call set-up failures. (R) (mandatory) (4-bytes)
+//			This attribute counts call set-up failures. (R) (mandatory) (4-bytes)
 //
 //		Call Setup Timer
-//			Call setup timer: This attribute is a high water-mark that records the longest duration of a
-//			single call set-up detected during this interval. Time is measured in milliseconds from the time
-//			an initial set-up was requested by the subscriber until the time at which a response was
-//			provided to the subscriber in the form of busy tone, audible ring tone, etc. (R) (mandatory)
-//			(4-bytes)
+//			This attribute is a high water-mark that records the longest duration of a single call set-up
+//			detected during this interval. Time is measured in milliseconds from the time an initial set-up
+//			was requested by the subscriber until the time at which a response was provided to the
+//			subscriber in the form of busy tone, audible ring tone, etc. (R) (mandatory) (4-bytes)
 //
 //		Call Terminate Failures
-//			Call terminate failures: This attribute counts the number of calls that were terminated with
-//			cause. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of calls that were terminated with cause. (R) (mandatory)
+//			(4-bytes)
 //
 //		Analog Port Releases
-//			Analog port releases: This attribute counts the number of analogue port releases without
-//			dialling detected (abandoned calls). (R) (mandatory) (4-bytes)
+//			This attribute counts the number of analogue port releases without dialling detected (abandoned
+//			calls). (R) (mandatory) (4-bytes)
 //
 //		Analog Port Off_Hook Timer
 //			Analog port off-hook timer: This attribute is a high water-mark that records the longest period

@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Vdsl2LineConfigurationExtensions3ClassID is the 16-bit ID for the OMCI
 // Managed entity VDSL2 line configuration extensions 3
-const Vdsl2LineConfigurationExtensions3ClassID ClassID = ClassID(410)
+const Vdsl2LineConfigurationExtensions3ClassID = ClassID(410) // 0x019a
 
 var vdsl2lineconfigurationextensions3BME *ManagedEntityDefinition
 
-// Vdsl2LineConfigurationExtensions3 (class ID #410)
+// Vdsl2LineConfigurationExtensions3 (Class ID: #410 / 0x019a)
 //	This ME extends the xDSL line configuration MEs.
 //
 //	An instance of this ME is created and deleted by the OLT.
@@ -43,57 +43,55 @@ var vdsl2lineconfigurationextensions3BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. All xDSL and
-//			VDSL2 line configuration profiles and extensions that pertain to a given PPTP xDSL UNI must
-//			share a common ME ID. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. All xDSL and VDSL2 line
+//			configuration profiles and extensions that pertain to a given PPTP xDSL UNI must share a common
+//			ME ID. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Ripolicyds
-//			RIPOLICYds: This attribute indicates which policy shall be applied to determine the triggers for
-//			re-initialization in the downstream direction. A valid range of values is given in clause
+//			This attribute indicates which policy shall be applied to determine the triggers for re-
+//			initialization in the downstream direction. A valid range of values is given in clause
 //			7.3.1.1.12.1 of [ITU-T G.997.1]. (R,-W) (optional) (1-byte)
 //
 //		Ripolicyus
-//			RIPOLICYus: This attribute indicates which policy shall be applied to determine the triggers for
-//			re-initialization in the upstream direction. A valid range of values is given in clause
+//			This attribute indicates which policy shall be applied to determine the triggers for re-
+//			initialization in the upstream direction. A valid range of values is given in clause
 //			7.3.1.1.12.2 of [ITU-T G.997.1]. (R,-W) (optional) (1-byte)
 //
 //		Reinit_Time_Thresholdds
-//			REINIT_TIME_THRESHOLDds: This attribute indicates defines the downstream threshold for re-
-//			initialization based on SES, to be used by the VTU receiver when re-initialization policy 1 is
-//			used in downstream. A valid range of values is given in clause 7.3.1.1.13.1 of [ITU-T G.997.1].
-//			(R,-W) (optional) (1-byte)
+//			This attribute indicates defines the downstream threshold for re-initialization based on SES, to
+//			be used by the VTU receiver when re-initialization policy 1 is used in downstream. A valid range
+//			of values is given in clause 7.3.1.1.13.1 of [ITU-T G.997.1]. (R,-W) (optional) (1-byte)
 //
 //		Reinit_Time_Thresholdus
-//			REINIT_TIME_THRESHOLDus: This attribute indicates defines the upstream threshold for re-
-//			initialization based on SES, to be used by the VTU receiver when reinitialization policy 1 is
-//			used in upstream. A valid range of values is given in clause 7.3.1.1.13.2 of [ITU-T G.997.1].
-//			(R,-W) (optional) (1-byte)
+//			This attribute indicates defines the upstream threshold for re-initialization based on SES, to
+//			be used by the VTU receiver when reinitialization policy 1 is used in upstream. A valid range of
+//			values is given in clause 7.3.1.1.13.2 of [ITU-T G.997.1]. (R,-W) (optional) (1-byte)
 //
 //		Rxrefvnsfus
-//			RXREFVNSFus: If SNRM_MODE = 4, this attribute defines the upstream receiver-referred virtual
-//			noise scaling factor. The attribute value ranges from 0  (-64.0-dBm) to 255 (+63.5-dBm) - see
-//			clause 7.3.1.7.5 of [ITU-T G.997.1]. (R,-W) (optional) (1-byte)
+//			If SNRM_MODE = 4, this attribute defines the upstream receiver-referred virtual noise scaling
+//			factor. The attribute value ranges from 0  (-64.0-dBm) to 255 (+63.5-dBm) - see clause 7.3.1.7.5
+//			of [ITU-T G.997.1]. (R,-W) (optional) (1-byte)
 //
 //		Txrefvnsfds
-//			TXREFVNSFds: If SNRM_MODE = 4, this attribute defines the downstream transmitter referred
-//			virtual noise scaling factor. The attribute value ranges from 0  (-64.0-dBm) to 255 (+63.5-dBm)
-//			- see clause 7.3.1.7.6 of [ITU-T G.997.1]. (R,-W) (optional) (1-byte)
+//			If SNRM_MODE = 4, this attribute defines the downstream transmitter referred virtual noise
+//			scaling factor. The attribute value ranges from 0  (-64.0-dBm) to 255 (+63.5-dBm) - see clause
+//			7.3.1.7.6 of [ITU-T G.997.1]. (R,-W) (optional) (1-byte)
 //
 //		Rtx_Modeds
-//			RTX_MODEds: This attribute controls the mode of operation of [ITU-T G.998.4] retransmission in
-//			the downstream direction. A valid range of values is given in clause 7.3.1.11 of [ITU-T
-//			G.997.1]. (R,-W) (mandatory) (1-byte)
-//
-//		Rtx_Modeus
-//			RTX_MODEus: This attribute controls the mode of operation of [ITU-T G.998.4] retransmission in
-//			the upstream direction. A valid range of values is given in clause 7.3.1.11 of [ITU-T G.997.1].
+//			This attribute controls the mode of operation of [ITU-T G.998.4] retransmission in the
+//			downstream direction. A valid range of values is given in clause 7.3.1.11 of [ITU-T G.997.1].
 //			(R,-W) (mandatory) (1-byte)
 //
+//		Rtx_Modeus
+//			This attribute controls the mode of operation of [ITU-T G.998.4] retransmission in the upstream
+//			direction. A valid range of values is given in clause 7.3.1.11 of [ITU-T G.997.1]. (R,-W)
+//			(mandatory) (1-byte)
+//
 //		Leftr_Thresh
-//			LEFTR_THRESH: If retransmission is used in a given transmit direction, LEFTR_THRESH specifies
-//			the threshold for declaring a near-end ''leftr'' defect. LEFTR_THRESH is equal to the integer
-//			value of this attribute multiplied by 0.01. Valid values and usage are given in clause 7.3.1.12
-//			of [ITU-T G.997.1]. (R,-W) (mandatory) (1-byte)
+//			If retransmission is used in a given transmit direction, LEFTR_THRESH specifies the threshold
+//			for declaring a near-end ''leftr'' defect. LEFTR_THRESH is equal to the integer value of this
+//			attribute multiplied by 0.01. Valid values and usage are given in clause 7.3.1.12 of [ITU-T
+//			G.997.1]. (R,-W) (mandatory) (1-byte)
 //
 //		Maxdelayoctet_Split Parameter Mdosplit
 //			MAXDELAYOCTET-split parameter (MDOSPLIT): This attribute defines the percentage of the

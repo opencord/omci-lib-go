@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // CesServiceProfileClassID is the 16-bit ID for the OMCI
 // Managed entity CES service profile
-const CesServiceProfileClassID ClassID = ClassID(21)
+const CesServiceProfileClassID = ClassID(21) // 0x0015
 
 var cesserviceprofileBME *ManagedEntityDefinition
 
-// CesServiceProfile (class ID #21)
+// CesServiceProfile (Class ID: #21 / 0x0015)
 //	NOTE - In [ITU-T G.984.4], this ME is called a CES service profile-G.
 //
 //	An instance of this ME organizes data that describe the CES service functions of the ONU.
@@ -42,16 +42,29 @@ var cesserviceprofileBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
-//
-//		Ces Buffered Cdv Tolerance
-//			CES buffered CDV tolerance: This attribute represents the duration of user data that must be
-//			buffered by the CES IW entity to offset packet delay variation. It is expressed in 10-us
-//			increments. 75 (750-vs) is suggested as a default value. (R,-W, setbycreate) (mandatory)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
 //			(2-bytes)
 //
+//		Ces Buffered Cdv Tolerance
+//			This attribute represents the duration of user data that must be buffered by the CES IW entity
+//			to offset packet delay variation. It is expressed in 10-us increments. 75 (750-vs) is suggested
+//			as a default value. (R,-W, setbycreate) (mandatory) (2-bytes)
+//
 //		Channel Associated Signalling Cas
+//			Channel associated signalling (CAS): This attribute selects the signalling format. It applies to
+//			structured interfaces only. For unstructured interfaces, this value, if present, must be set to
+//			the default 0. Valid values are as follows.
+//
+//			0	Basic
+//
+//			1	E1 CAS
+//
+//			2	SF CAS
+//
+//			3	DS1 ESF CAS
+//
+//			4	J2 CAS
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
 type CesServiceProfile struct {

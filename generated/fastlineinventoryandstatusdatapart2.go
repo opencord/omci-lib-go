@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // FastLineInventoryAndStatusDataPart2ClassID is the 16-bit ID for the OMCI
 // Managed entity FAST line inventory and status data part 2
-const FastLineInventoryAndStatusDataPart2ClassID ClassID = ClassID(436)
+const FastLineInventoryAndStatusDataPart2ClassID = ClassID(436) // 0x01b4
 
 var fastlineinventoryandstatusdatapart2BME *ManagedEntityDefinition
 
-// FastLineInventoryAndStatusDataPart2 (class ID #436)
+// FastLineInventoryAndStatusDataPart2 (Class ID: #436 / 0x01b4)
 //	This ME contains part 3 of the FAST line inventory and status data with attributes specific to
 //	[ITU T G.997.2]. The ONU automatically creates or deletes an instance of this ME upon the
 //	creation or deletion of a PPTP xDSL UNI part 1.
@@ -43,11 +43,15 @@ var fastlineinventoryandstatusdatapart2BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1. (R) (mandatory) (2-bytes)
 //
 //		Date_Time_Stamping Of Last Successful Downstream Fra Operation Stamp_Frads
+//			Date/time-stamping of last successful downstream FRA operation (STAMP-FRAds): This attribute
+//			reports the date/time of the last successful FTU-R initiated FRA execution that has modified the
+//			bits allocation. See clause 7.10.14.5 of [ITUT-G.997.2]. The format of this parameter is as
+//			follows:
+//
 //			(R) (optional) (7 bytes)
 //
 //		Date_Time_Stamping Of Last Successful Upstream Fra Operation Stamp_Fraus

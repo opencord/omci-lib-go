@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // VpPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity VP performance monitoring history data
-const VpPerformanceMonitoringHistoryDataClassID ClassID = ClassID(62)
+const VpPerformanceMonitoringHistoryDataClassID = ClassID(62) // 0x003e
 
 var vpperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// VpPerformanceMonitoringHistoryData (class ID #62)
+// VpPerformanceMonitoringHistoryData (Class ID: #62 / 0x003e)
 //	This ME collects PM data associated with a VP network CTP. Instances of this ME are created and
 //	deleted by the OLT.
 //
@@ -41,13 +41,11 @@ var vpperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the VP network CTP. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the VP network CTP. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -66,8 +64,7 @@ var vpperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			buffer overflows. It records only loss of high priority cells. (R) (mandatory) (2-bytes)
 //
 //		Misinserted Cells
-//			Misinserted cells: This attribute counts cells that are misrouted to a monitored VP. (R)
-//			(mandatory) (2-bytes)
+//			This attribute counts cells that are misrouted to a monitored VP. (R) (mandatory) (2-bytes)
 //
 //		Transmitted C_= 0 _ 1 Cells
 //			Transmitted C-= 0-+ 1 cells: This attribute counts cells originated by the transmitting end

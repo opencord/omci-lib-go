@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PwAtmConfigurationDataClassID is the 16-bit ID for the OMCI
 // Managed entity PW ATM configuration data
-const PwAtmConfigurationDataClassID ClassID = ClassID(337)
+const PwAtmConfigurationDataClassID = ClassID(337) // 0x0151
 
 var pwatmconfigurationdataBME *ManagedEntityDefinition
 
-// PwAtmConfigurationData (class ID #337)
+// PwAtmConfigurationData (Class ID: #337 / 0x0151)
 //	This ME contains generic configuration data for an ATM pseudowire. Definitions of attributes are
 //	from PW-ATM-MIB [IETF RFC 5605]. Instances of this ME are created and deleted by the OLT.
 //
@@ -42,20 +42,26 @@ var pwatmconfigurationdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R,
-//			setbycreate)-(mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate)-(mandatory) (2
+//			bytes)
 //
 //		Tp Type
+//			This attribute specifies the type of the underlying transport layer. (R, W, setbycreate)
+//			(mandatory) (1 byte)
+//
+//			0	MPLS pseudowire termination point
+//
+//			1	Ethernet flow termination point
+//
 //			2	TCP/UDP config data
 //
 //		Transport Tp Pointer
-//			Transport TP pointer: This attribute points to an associated instance of the transport layer TP,
-//			whose type is specified by the TP type attribute. (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute points to an associated instance of the transport layer TP, whose type is
+//			specified by the TP type attribute. (R, W, setbycreate) (mandatory) (2 bytes)
 //
 //		Pptp Atm Uni Pointer
-//			PPTP ATM UNI pointer: This attribute points to an associated instance of the ITU-T G.983.2 PPTP
-//			ATM UNI. Refer to [ITUT G.983.2] for the definition of the target ME. (R, W, setbycreate)
-//			(mandatory) (2 bytes)
+//			This attribute points to an associated instance of the ITU-T G.983.2 PPTP ATM UNI. Refer to
+//			[ITUT G.983.2] for the definition of the target ME. (R, W, setbycreate) (mandatory) (2 bytes)
 //
 //		Max C Ell C Oncatenation
 //			Max cell concatenation: This attribute specifies the maximum number of ATM cells that can be
@@ -69,6 +75,14 @@ var pwatmconfigurationdataBME *ManagedEntityDefinition
 //			default. (R, W, set-by-create) (optional) (2 bytes)
 //
 //		Atm Cell Loss Priority Clp Qos Mapping
+//			ATM cell loss priority (CLP) QoS mapping: This attribute specifies whether the CLP bits should
+//			be considered when setting the value in the QoS fields of the encapsulating protocol (e.g., TC
+//			fields of the MPLS label stack).
+//
+//			1	ATM CLP bits mapping to QoS fields of the encapsulating protocol
+//
+//			2	Not applicable
+//
 //			The value 0 specifies that the ONU uses its internal default. (R, W, setbycreate) (optional) (1
 //			byte)
 //
@@ -76,8 +90,138 @@ var pwatmconfigurationdataBME *ManagedEntityDefinition
 //			The value 0 specifies that the ONU uses its internal default. (R, W, setbycreate) (optional) (1
 //			byte)
 //
+//			This attribute specifies whether a packet is transmitted in the upstream direction based on
+//			timeout expiration for collecting cells. The actual handling of the timeout is implementation
+//			specific; as such, this attribute may be changed at any time with proper consideration of the
+//			traffic disruption effect.
+//
+//			1	Disabled. The ONU does not generate packets based on timeout cells.
+//
+//			2	Enabled. The ONU generates packets based on timeout cells.
+//
 //		Pw Atm Mapping Table
+//			12	ATM one-to-one VCC cell mode
+//
+//			13	ATM one-to-one VPC cell mode
+//
+//			14	ATM AAL5 PDU VCC transport
+//
+//			Each entry contains:
+//
+//			Entry number: (1-byte), the index of this row. A set operation with all fields zero has the
+//			effect of clearing the table. A set operation with a non-zero entry number and all other fields
+//			zero, has the effect of deleting one row.
+//
+//			Upstream VPI: (2 bytes)
+//
+//			The VPI value of this ATM PW at the UNI. When pseudowire type-= ATM transparent cell transport
+//			(3), this field is ignored.
+//
+//			Upstream VCI: (2 bytes)
+//
+//			The VCI value of this ATM PW at the UNI. When pseudowire type-= ATM transparent cell transport
+//			(3), or in virtual path (VP) cases, this field is ignored.
+//
+//			Upstream traffic descriptor profile pointer: (2 bytes)
+//
+//			A pointer to an instance of an ITU-T G.983.2 traffic descriptor profile ME that contains the
+//			traffic parameters used for the ATM upstream traffic. Refer to clause 7.5.2 of [ITUT-G.983.2]
+//			for the definition of this class of MEs. A null pointer indicates BE.
+//
+//			Upstream mapped VPI: (2 bytes)
+//
+//			The VPI value of the upstream MPLS ATM PW. This field is valid when the pseudowire type is as
+//			follows.
+//
+//			9	ATM n-to-one VCC cell transport
+//
+//			10	ATM n-to-one VPC cell transport
+//
+//			12	ATM one-to-one VCC cell mode
+//
+//			13	ATM one-to-one VPC cell mode
+//
+//			This field is not used for other pseudowire types.
+//
+//			Upstream mapped VCI: (2 bytes)
+//
+//			The VCI value of the upstream MPLS ATM PW. This field is valid when the pseudowire type is as
+//			follows.
+//
+//			9	ATM n-to-one VCC cell transport
+//
+//			10	ATM n-to-one VPC cell transport
+//
+//			12	ATM one-to-one VCC cell mode
+//
+//			13	ATM one-to-one VPC cell mode
+//
+//			This field is not used for other pseudowire types.
+//
+//			Downstream VPI: (2 bytes)
+//
+//			The downstream VPI value of this MPLS ATM PW. When pseudowire type-= ATM transparent cell
+//			transport (3), this field is ignored.
+//
+//			Downstream VCI: (2 bytes)
+//
+//			The downstream VCI value of this MPLS ATM PW. When pseudowire type-= ATM transparent cell
+//			transport (3) or in the VP case, this field is ignored.
+//
+//			Downstream traffic descriptor profile pointer: (2 bytes)
+//
+//			A pointer to an instance of an ITU-T G.983.2 traffic descriptor profile ME that contains the
+//			traffic parameters used for the ATM downstream traffic. Refer to clause 7.5.2 of [ITUT-G.983.2]
+//			for definition of this class of MEs. A null pointer indicates BE.
+//
+//			Downstream mapped VPI: (2 bytes)
+//
+//			The VPI value of this ATM PW at the UNI. This field is valid when the pseudowire type is as
+//			follows.
+//
+//			9	ATM n-to-one VCC cell transport
+//
+//			10	ATM n-to-one VPC cell transport
+//
+//			12	ATM one-to-one VCC cell mode
+//
+//			13	ATM one-to-one VPC cell mode
+//
+//			This field is not used for other pseudowire types.
+//
+//			Downstream mapped VCI: (2 bytes)
+//
+//			The VCI value of this ATM PW at the UNI. This field is valid when the pseudowire type is as
+//			follows.
+//
+//			9	ATM n-to-one VCC cell transport
+//
+//			10	ATM n-to-one VPC cell transport
+//
+//			12	ATM one-to-one VCC cell mode
+//
+//			13	ATM one-to-one VPC cell mode
+//
+//			This field is not used for other pseudowire types.
+//
 //			(R,-W) (mandatory) (21N bytes, where N is the number of entries in the list)
+//
+//			This attribute lists ATM VPI/VCI mapping entries in both the upstream and downstream directions.
+//			In the upstream direction, ATM cells that match no entry's upstream VPI (and conditionally VCI)
+//			values are discarded; conversely in the downstream direction. Upon ME instantiation, the ONU
+//			sets this attribute to an empty table, which discards all cells in both directions.
+//
+//			The table can contain up to N entries when the pseudowire type is equal to one of the following:
+//
+//			9 	ATM n-to-one VCC cell transport
+//
+//			10	ATM n-to-one VPC cell transport
+//
+//			The table contains only one entry when the pseudowire type is equal to one of the following.
+//
+//			2 	ATM AAL5 SDU VCC transport
+//
+//			3 	ATM transparent cell transport
 //
 type PwAtmConfigurationData struct {
 	ManagedEntityDefinition

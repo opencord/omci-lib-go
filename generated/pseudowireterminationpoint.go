@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PseudowireTerminationPointClassID is the 16-bit ID for the OMCI
 // Managed entity Pseudowire termination point
-const PseudowireTerminationPointClassID ClassID = ClassID(282)
+const PseudowireTerminationPointClassID = ClassID(282) // 0x011a
 
 var pseudowireterminationpointBME *ManagedEntityDefinition
 
-// PseudowireTerminationPoint (class ID #282)
+// PseudowireTerminationPoint (Class ID: #282 / 0x011a)
 //	The pseudowire TP supports packetized (rather than TDM) transport of TDM services, transported
 //	either directly over Ethernet, over UDP/IP or over MPLS. Instances of this ME are created and
 //	deleted by the OLT.
@@ -41,22 +41,45 @@ var pseudowireterminationpointBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Underlying Transport
+//			2	MPLS
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
+//			Underlying transport:
+//
+//			0	Ethernet, MEF 8
+//
+//			1	UDP/IP
+//
 //		Service Type
+//			This attribute specifies the basic service type, either a transparent bit pipe or an
+//			encapsulation that recognizes the underlying structure of the payload.
+//
+//			0	Basic unstructured (also known as structure agnostic)
+//
+//			1	Octet-aligned unstructured, structure agnostic. Applicable only to DS1, a mode in which each
+//			frame of 193 bits is encapsulated in 25 bytes with 7 padding bits.
+//
+//			2	Structured (structure-locked)
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Signalling
+//			1	CAS, to be carried in the same packet stream as the payload
+//
+//			2	CAS, to be carried in a separate signalling channel
+//
 //			(R,-W, setbycreate) (mandatory for structured service type) (1-byte)
 //
+//				0	No signalling visible at this layer
+//
 //		Tdm Uni Pointer
-//			TDM UNI pointer: If service type-= structured, this attribute points to a logical N-* 64-kbit/s
-//			subport CTP. Otherwise, this attribute points to a PPTP CES UNI. (R,-W, setbycreate) (mandatory)
-//			(2-bytes)
+//			If service type-= structured, this attribute points to a logical N-* 64-kbit/s subport CTP.
+//			Otherwise, this attribute points to a PPTP CES UNI. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		North_Side Pointer
 //			North-side pointer: When the pseudowire service is transported via IP, as indicated by the
@@ -70,36 +93,91 @@ var pseudowireterminationpointBME *ManagedEntityDefinition
 //			A null pointer is appropriate if the pseudowire is not transported via IP. (R,-W, setbycreate)
 //			(mandatory for IP transport) (2-bytes)
 //
+//			Far-end IP info: When the pseudowire service is transported via IP, this attribute points to a
+//			large string ME that contains the URI of the far-end TP, e.g.,
+//
+//			udp://192.168.100.221:5000
+//
+//			udp://pwe3srvr.int.example.net:2222
+//
 //		Payload Size
+//			Number of payload bytes per packet. Valid only if service type-= basic unstructured or octet-
+//			aligned unstructured. Valid choices depend on the TDM service, but must include the following.
+//			Other choices are at the vendor's discretion.
+//
+//			DS1	192
+//
+//			DS1	200, required only if an octet-aligned unstructured service is supported
+//
+//			E1	256
+//
+//			DS3	1024
+//
+//			E3	1024
+//
 //			(R,-W, setbycreate) (mandatory for unstructured service) (2-bytes)
 //
 //		Payload Encapsulation Delay
+//			Number of 125-us frames to be encapsulated in each pseudowire packet. Valid only if service
+//			type-= structured. The minimum set of choices for various TDM services is listed in the
+//			following table, and is affected by the possible presence of in-band signalling. Other choices
+//			are at the vendor's discretion.
+//
 //			(R,-W, setbycreate) (mandatory for structured service) (1-byte)
 //
 //		Timing Mode
 //			(R,-W) (mandatory) (1-byte)
 //
+//			This attribute selects the timing mode of the TDM service. If RTP is used, this attribute must
+//			be set to be consistent with the value of the RTP timestamp mode attribute in the RTP pseudowire
+//			parameters ME, or its equivalent, at the far end.
+//
+//			0	Network timing (default)
+//
+//			1	Differential timing
+//
+//			2	Adaptive timing
+//
+//			3	Loop timing: local TDM transmit clock derived from local TDM receive stream
+//
 //		Transmit Circuit Id
+//			This attribute is a pair of emulated circuit ID (ECID) values that the ONU transmits in the
+//			direction from the TDM termination towards the packet-switched network (PSN). MEF 8 ECIDs lie in
+//			the range 1..1048575 (220-- 1). To allow for the possibility of other transport (L2TP) in the
+//			future, each ECID is allocated 4-bytes.
+//
+//			The first value is used for the payload ECID; the second is used for the optional separate
+//			signalling ECID. The first ECID is required for all MEF 8 pseudowires; the second is required
+//			only if signalling is to be carried in a distinct channel. If signalling is not present, or is
+//			carried in the same channel as the payload, the second ECID should be set to 0.
+//
 //			(R,-W) (mandatory for MEF 8 transport) (8-bytes)
 //
 //		Expected Circuit Id
+//			This attribute is a pair of ECID values that the ONU can expect in the direction from the PSN
+//			towards the TDM termination. Checking ECIDs may be a way to detect circuit misconnection. MEF 8
+//			ECIDs lie in the range 1..1048575 (220-- 1). To allow for the possibility of other transport
+//			(L2TP) in the future, each ECID is allocated 4-bytes.
+//
+//			The first value is used for the payload ECID; the second is used for the optional separate
+//			signalling ECID. In both cases, the default value 0 indicates that no ECID checking is expected.
+//
 //			(R,-W) (optional for MEF 8 transport) (8-bytes)
 //
 //		Received Circuit Id
-//			Received circuit ID: This attribute indicates the actual ECID(s) received on the payload and
-//			signalling channels, respectively. It may be used for diagnostic purposes. (R) (optional for MEF
-//			8 transport) (8-bytes)
+//			This attribute indicates the actual ECID(s) received on the payload and signalling channels,
+//			respectively. It may be used for diagnostic purposes. (R) (optional for MEF 8 transport)
+//			(8-bytes)
 //
 //		Exception Policy
-//			Exception policy: This attribute points to an instance of the pseudowire maintenance profile ME.
-//			If the pointer has its default value 0, the ONU's internal defaults apply. (R,-W) (optional)
-//			(2-bytes)
+//			This attribute points to an instance of the pseudowire maintenance profile ME. If the pointer
+//			has its default value 0, the ONU's internal defaults apply. (R,-W) (optional) (2-bytes)
 //
 //		Arc
-//			ARC:	See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 //		Arc Interval
-//			ARC interval: See clause A.1.4.3. (R,-W) (optional) (1-byte)
+//			See clause A.1.4.3. (R,-W) (optional) (1-byte)
 //
 type PseudowireTerminationPoint struct {
 	ManagedEntityDefinition

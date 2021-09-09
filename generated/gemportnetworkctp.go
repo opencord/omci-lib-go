@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // GemPortNetworkCtpClassID is the 16-bit ID for the OMCI
 // Managed entity GEM port network CTP
-const GemPortNetworkCtpClassID ClassID = ClassID(268)
+const GemPortNetworkCtpClassID = ClassID(268) // 0x010c
 
 var gemportnetworkctpBME *ManagedEntityDefinition
 
-// GemPortNetworkCtp (class ID #268)
+// GemPortNetworkCtp (Class ID: #268 / 0x010c)
 //	This ME represents the termination of a GEM port on an ONU. This ME aggregates connectivity
 //	functionality from the network view and alarms from the network element view as well as
 //	artefacts from trails.
@@ -56,10 +56,13 @@ var gemportnetworkctpBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Port_Id
+//			Port-ID:	This attribute is the port-ID of the GEM port associated with this CTP. (RWSC)
+//			(mandatory) (2-bytes)
+//
 //			NOTE 1 - While nothing forbids the existence of several GEM port network CTPs with the same
 //			port-ID value, downstream traffic is modelled as being delivered to all such GEM port network
 //			CTPs. Be aware of potential difficulties associated with defining downstream flows and
@@ -70,38 +73,73 @@ var gemportnetworkctpBME *ManagedEntityDefinition
 //			(2-bytes)
 //
 //		Direction
-//			Direction:	This attribute specifies whether the GEM port is used for UNI-to-ANI (1), ANI-to-UNI
-//			(2), or bidirectional (3) connection. (R,-W, setbycreate) (mandatory) (1-byte)
+//			This attribute specifies whether the GEM port is used for UNI-to-ANI (1), ANI-to-UNI (2), or
+//			bidirectional (3) connection. (R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Traffic Management Pointer For Upstream
-//			Traffic management pointer for upstream: If the traffic management option attribute in the ONU-G
-//			ME is 0 (priority controlled) or 2 (priority and rate controlled), this pointer specifies the
-//			priority queue ME serving this GEM port network CTP. If the traffic management option attribute
-//			is 1 (rate controlled), this attribute redundantly points to the TCONT serving this GEM port
-//			network CTP. (R,-W, setbycreate) (mandatory) (2-bytes)
+//			If the traffic management option attribute in the ONU-G ME is 0 (priority controlled) or 2
+//			(priority and rate controlled), this pointer specifies the priority queue ME serving this GEM
+//			port network CTP. If the traffic management option attribute is 1 (rate controlled), this
+//			attribute redundantly points to the TCONT serving this GEM port network CTP. (R,-W, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Traffic Descriptor Profile Pointer For Upstream
 //			See also Appendix II.
 //
+//			This attribute points to the instance of the traffic descriptor ME that contains the upstream
+//			traffic parameters for this GEM port network CTP. This attribute is used when the traffic
+//			management option attribute in the ONU-G ME is 1 (rate controlled), specifying the PIR/PBS to
+//			which the upstream traffic is shaped. This attribute is also used when the traffic management
+//			option attribute in the ONU-G ME is 2 (priority and rate controlled), specifying the
+//			CIR/CBS/PIR/PBS to which the upstream traffic is policed. (R,-W, setbycreate) (optional)
+//			(2-bytes)
+//
 //		Uni Counter
-//			UNI counter: This attribute reports the number of instances of UNI-G ME associated with this GEM
-//			port network CTP. (R) (optional) (1-byte)
+//			This attribute reports the number of instances of UNI-G ME associated with this GEM port network
+//			CTP. (R) (optional) (1-byte)
 //
 //		Priority Queue Pointer For Down Stream
+//			Priority queue pointer for downstream: This attribute points to the instance of the priority
+//			queue used for this GEM port network CTP in the downstream direction. It is the responsibility
+//			of the OLT to provision the downstream pointer in a way that is consistent with the bridge and
+//			mapper connectivity. If the pointer is null, downstream queueing is determined by other
+//			mechanisms in the ONU. (R,-W, setbycreate) (mandatory) (2-bytes)
+//
 //			NOTE 2 - If the GEM port network CTP is associated with more than one UNI (downstream
 //			multicast), the downstream priority queue pointer defines a pattern (e.g., queue number 3 for a
 //			given UNI) to be replicated (i.e., to queue number 3) at the other affected UNIs.
 //
 //		Encryption State
-//			Encryption state: This attribute indicates the current state of the GEM port network CTP's
-//			encryption. Legal values are defined to be the same as those of the security mode attribute of
-//			the ONU2-G, with the exception that attribute value 0 indicates an unencrypted GEM port. (R)
-//			(optional) (1-byte)
+//			This attribute indicates the current state of the GEM port network CTP's encryption. Legal
+//			values are defined to be the same as those of the security mode attribute of the ONU2-G, with
+//			the exception that attribute value 0 indicates an unencrypted GEM port. (R) (optional) (1-byte)
 //
 //		Traffic Descriptor Profile Pointer For Downstream
+//			This attribute points to the instance of the traffic descriptor ME that contains the downstream
+//			traffic parameters for this GEM port network CTP. This attribute is used when the traffic
+//			management option attribute in the ONU-G ME is 1 (rate controlled), specifying the PIR/PBS to
+//			which the downstream traffic is shaped. This attribute is also used when the traffic management
+//			option attribute in the ONU-G ME is 2 (priority and rate controlled), specifying the
+//			CIR/CBS/PIR/PBS to which the downstream traffic is policed. (R,-W, setbycreate) (optional)
+//			(2-bytes)
+//
 //			See also Appendix II.
 //
 //		Encryption Key Ring
+//			This attribute is defined in ITU-T G.987 systems only. It specifies whether the associated GEM
+//			port is encrypted, and if so, which key ring it uses. (R, W, setbycreate) (optional) (1 byte)
+//
+//			0	(default) No encryption. The downstream key index is ignored, and upstream traffic is
+//			transmitted with key index 0.
+//
+//			1	Unicast payload encryption in both directions. Keys are generated by the ONU and transmitted
+//			to the OLT via the PLOAM channel.
+//
+//			2	Broadcast (multicast) encryption. Keys are generated by the OLT and distributed via the OMCI.
+//
+//			3	Unicast encryption, downstream only. Keys are generated by the ONU and transmitted to the OLT
+//			via the PLOAM channel.
+//
 //			Other values are reserved.
 //
 type GemPortNetworkCtp struct {

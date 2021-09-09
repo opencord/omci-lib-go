@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // MacBridgePortDesignationDataClassID is the 16-bit ID for the OMCI
 // Managed entity MAC bridge port designation data
-const MacBridgePortDesignationDataClassID ClassID = ClassID(48)
+const MacBridgePortDesignationDataClassID = ClassID(48) // 0x0030
 
 var macbridgeportdesignationdataBME *ManagedEntityDefinition
 
-// MacBridgePortDesignationData (class ID #48)
+// MacBridgePortDesignationData (Class ID: #48 / 0x0030)
 //	This ME records data associated with a bridge port. The ONU automatically creates or deletes an
 //	instance of this managed entity upon the creation or deletion of a MAC bridge port configuration
 //	data ME.
@@ -41,14 +41,51 @@ var macbridgeportdesignationdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the MAC bridge port configuration
-//			data. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the MAC bridge port configuration data. (R) (mandatory)
+//			(2-bytes)
 //
 //		Designated Bridge Root Cost Port
+//			This attribute contains the designated root, designated cost, designated bridge and designated
+//			port, which are some of the outputs of the read port parameters operation defined in clause
+//			14.8.2.1 of [IEEE-802.1D]:
+//
+//			o	identifier of the designated bridge for the port's segment (8-bytes);
+//
+//			o	bridge identifier of the root transmitted by the designated bridge for the segment (8-bytes);
+//
+//			o	port number of the designated port on the designated bridge considered to be part of this
+//			port's segment (4-bytes);
+//
+//			o	path cost contribution of the designated port to this port's segment (4-bytes).
+//
 //			Upon ME instantiation, the ONU sets this attribute to 0. (R) (mandatory) (24-bytes)
 //
 //		Port State
+//			This attribute provides status information on the port. Valid values include the following.
+//
+//			0	Disabled
+//
+//			1	Listening
+//
+//			2	Learning
+//
+//			3	Forwarding
+//
+//			4	Blocking
+//
+//			5	Linkdown
+//
+//			6	(R)Stp_off
+//
+//			in accordance with [IEEE 802.1D]. (R) (mandatory) (1-byte)
+//
+//			NOTE - The value linkdown is introduced to denote the port status when the Ethernet link state
+//			is down. This value distinguishes the case where Ethernet is physically down from the case where
+//			Ethernet is administratively locked, the latter being denoted by disabled. Be aware that this
+//			terminology violates the ITUT convention that disabled is an operational state, not
+//			administrative.
+//
 //			The value (R)stp_off is introduced to denote the port status where the (rapid) spanning tree
 //			protocol has been disabled by setting the port spanning tree ind attribute of the MAC bridge
 //			port configuration data to false, and the Ethernet link state is up. This value distinguishes

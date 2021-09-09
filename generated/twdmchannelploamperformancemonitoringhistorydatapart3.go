@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // TwdmChannelPloamPerformanceMonitoringHistoryDataPart3ClassID is the 16-bit ID for the OMCI
 // Managed entity TWDM channel PLOAM performance monitoring history data part 3
-const TwdmChannelPloamPerformanceMonitoringHistoryDataPart3ClassID ClassID = ClassID(448)
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart3ClassID = ClassID(448) // 0x01c0
 
 var twdmchannelploamperformancemonitoringhistorydatapart3BME *ManagedEntityDefinition
 
-// TwdmChannelPloamPerformanceMonitoringHistoryDataPart3 (class ID #448)
+// TwdmChannelPloamPerformanceMonitoringHistoryDataPart3 (Class ID: #448 / 0x01c0)
 //	This ME collects remaining PLOAM-related PM data associated with the slot/circuit pack, hosting
 //	one or more ANI-G MEs, for a specific TWDM channel. Instances of this ME are created and deleted
 //	by the OLT.
@@ -46,21 +46,19 @@ var twdmchannelploamperformancemonitoringhistorydatapart3BME *ManagedEntityDefin
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the TWDM channel ME. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the TWDM channel ME. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 and 2 MEs
 //			that contains PM threshold values. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Upstream Ploam Message Count
-//			Upstream PLOAM message count: The aggregate counter of PLOAM messages, other than AK PLOAM MT,
-//			transmitted by the given ONU. (R) (mandatory) (4-byte)
+//			The aggregate counter of PLOAM messages, other than AK PLOAM MT, transmitted by the given ONU.
+//			(R) (mandatory) (4-byte)
 //
 //		Serial_Number_Onu In_Band Message Count
 //			Serial_Number_ONU (in-band) message count: The counter of transmitted in-band Serial_Number_ONU
@@ -71,20 +69,16 @@ var twdmchannelploamperformancemonitoringhistorydatapart3BME *ManagedEntityDefin
 //			control channel (AMCC) Serial_Number_ONU PLOAM messages. (R) (mandatory) (4-byte)
 //
 //		Registration Message Count
-//			Registration message count: The counter of transmitted Registration PLOAM messages. (R)
-//			(mandatory) (4-byte)
+//			The counter of transmitted Registration PLOAM messages. (R) (mandatory) (4-byte)
 //
 //		Key_Report Message Count
-//			Key_Report message count: The counter of transmitted Key_Report PLOAM messages. (R) (mandatory)
-//			(4-byte)
+//			The counter of transmitted Key_Report PLOAM messages. (R) (mandatory) (4-byte)
 //
 //		Acknowledgement Message Count
-//			Acknowledgement message count: The counter of transmitted Registration PLOAM messages. (R)
-//			(mandatory) (4-byte)
+//			The counter of transmitted Registration PLOAM messages. (R) (mandatory) (4-byte)
 //
 //		Sleep_Request Message Count
-//			Sleep_Request message count: The counter of transmitted Sleep_Request PLOAM messages. (R)
-//			(mandatory) (4-byte)
+//			The counter of transmitted Sleep_Request PLOAM messages. (R) (mandatory) (4-byte)
 //
 //		Tuning_Response Ack_Nack Message Count
 //			Tuning_Response (ACK/NACK) message count: The counter of transmitted Tuning_Response PLOAM
@@ -95,13 +89,11 @@ var twdmchannelploamperformancemonitoringhistorydatapart3BME *ManagedEntityDefin
 //			PLOAM messages with Complete_u/Rollback operation code. (R) (mandatory) (4-byte)
 //
 //		Power_Consumption_Report Message Count
-//			Power_Consumption_Report message count: The counter of transmitted Power_Consumption_Report
-//			PLOAM messages. (R) (mandatory) (4-byte)
+//			The counter of transmitted Power_Consumption_Report PLOAM messages. (R) (mandatory) (4-byte)
 //
 //		Change_Power_Level Parameter Error Count
-//			Change_Power_Level parameter error count: The counter of transmitted Acknowledgement PLOAM
-//			messages with Parameter Error completion code in response to Change_Power_Level PLOAM message.
-//			(R) (mandatory) (4-byte)
+//			The counter of transmitted Acknowledgement PLOAM messages with Parameter Error completion code
+//			in response to Change_Power_Level PLOAM message. (R) (mandatory) (4-byte)
 //
 type TwdmChannelPloamPerformanceMonitoringHistoryDataPart3 struct {
 	ManagedEntityDefinition
@@ -116,8 +108,8 @@ func init() {
 			Create,
 			Delete,
 			Get,
-			GetCurrentData,
 			Set,
+			GetCurrentData,
 		),
 		AllowedAttributeMask: 0xfff8,
 		AttributeDefinitions: AttributeDefinitionMap{

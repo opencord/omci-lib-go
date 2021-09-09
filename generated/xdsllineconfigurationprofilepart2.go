@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslLineConfigurationProfilePart2ClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL line configuration profile part 2
-const XdslLineConfigurationProfilePart2ClassID ClassID = ClassID(105)
+const XdslLineConfigurationProfilePart2ClassID = ClassID(105) // 0x0069
 
 var xdsllineconfigurationprofilepart2BME *ManagedEntityDefinition
 
-// XdslLineConfigurationProfilePart2 (class ID #105)
+// XdslLineConfigurationProfilePart2 (Class ID: #105 / 0x0069)
 //	The overall xDSL line configuration profile is modelled in several parts, all of which are
 //	associated together through a common ME ID (the client PPTP xDSL UNI part 1 has a single
 //	pointer, which refers to the entire set of line configuration profile parts).
@@ -41,48 +41,54 @@ var xdsllineconfigurationprofilepart2BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. All xDSL and
-//			VDSL2 line configuration profiles and extensions that pertain to a given PPTP xDSL UNI must
-//			share a common ME ID. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. All xDSL and VDSL2 line
+//			configuration profiles and extensions that pertain to a given PPTP xDSL UNI must share a common
+//			ME ID. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Downstream Minimum Time Interval For Upshift Rate Adaptation
-//			Downstream minimum time interval for upshift rate adaptation: This parameter defines the
-//			interval during which the downstream noise margin must remain above the downstream upshift noise
-//			margin before the xTU-R attempts to increase the downstream net data rate. Its value ranges from
-//			0 to 16383-s. (R,-W, setbycreate) (optional) (2-bytes)
+//			This parameter defines the interval during which the downstream noise margin must remain above
+//			the downstream upshift noise margin before the xTU-R attempts to increase the downstream net
+//			data rate. Its value ranges from 0 to 16383-s. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Upstream Minimum Time Interval For Upshift Rate Adaptation
-//			Upstream minimum time interval for upshift rate adaptation: This parameter defines the interval
-//			during which the upstream noise margin must remain above the upstream upshift noise margin
-//			before the xTU-C attempts to increase the upstream net data rate. Its value ranges from 0 to
-//			16383-s. (R,-W, setbycreate) (optional) (2-bytes)
+//			This parameter defines the interval during which the upstream noise margin must remain above the
+//			upstream upshift noise margin before the xTU-C attempts to increase the upstream net data rate.
+//			Its value ranges from 0 to 16383-s. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Downstream Downshift Noise Margin
-//			Downstream downshift noise margin: If the downstream noise margin is below the downstream
-//			downshift noise margin and remains there for more than the downstream minimum time interval for
-//			downshift rate adaptation, the xTU-R attempts to decrease the downstream net data rate. This
-//			attribute's value ranges from 0 (0.0 dB) to 310 (31.0 dB). (R,-W, setbycreate) (optional)
-//			(2-bytes)
+//			If the downstream noise margin is below the downstream downshift noise margin and remains there
+//			for more than the downstream minimum time interval for downshift rate adaptation, the xTU-R
+//			attempts to decrease the downstream net data rate. This attribute's value ranges from 0 (0.0 dB)
+//			to 310 (31.0 dB). (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Upstream Downshift Noise Margin
-//			Upstream downshift noise margin: If the upstream noise margin is below the upstream downshift
-//			noise margin and remains there for more than the upstream minimum time interval for downshift
-//			rate adaptation, the xTUC attempts to decrease the upstream net data rate. This attribute's
-//			value ranges from 0 (0.0 dB) to 310 (31.0 dB). (R,-W, setbycreate) (optional) (2-bytes)
+//			If the upstream noise margin is below the upstream downshift noise margin and remains there for
+//			more than the upstream minimum time interval for downshift rate adaptation, the xTUC attempts to
+//			decrease the upstream net data rate. This attribute's value ranges from 0 (0.0 dB) to 310 (31.0
+//			dB). (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Downstream Minimum Time Interval For Downshift Rate Adaptation
-//			Downstream minimum time interval for downshift rate adaptation: This parameter defines the
-//			interval during which the downstream noise margin must remain below the downstream downshift
-//			noise margin before the xTU-R attempts to decrease the downstream net data rate. Its value
-//			ranges from 0 to 16383-s. (R,-W, setbycreate) (optional) (2-bytes)
+//			This parameter defines the interval during which the downstream noise margin must remain below
+//			the downstream downshift noise margin before the xTU-R attempts to decrease the downstream net
+//			data rate. Its value ranges from 0 to 16383-s. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Upstream Minimum Time Interval For Downshift Rate Adaptation
-//			Upstream minimum time interval for downshift rate adaptation: This parameter defines the
-//			interval during which the upstream noise margin must remain below the upstream downshift noise
-//			margin before the xTU-C attempts to decrease the upstream net data rate. Its value ranges from 0
-//			to 16383-s. (R,-W, setbycreate) (optional) (2-bytes)
+//			This parameter defines the interval during which the upstream noise margin must remain below the
+//			upstream downshift noise margin before the xTU-C attempts to decrease the upstream net data
+//			rate. Its value ranges from 0 to 16383-s. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Xtu Impedance State Forced
+//			This parameter forces the impedance state of the xTU-C. It applies only to the T/S interface,
+//			and is deprecated in the OMCI, which stands proxy for the Q interface. It is only valid for
+//			Annex A of [ITUT G.992.3], Annex A of [ITUT G.992.4] and Annex A of [ITUT G.992.5]. It is
+//			defined as follows.
+//
+//			1	Force the xTU-C to the disabled state.
+//
+//			2	Force the xTU-C to the inactive state.
+//
+//			3	Force the xTU-C to the active state.
+//
 //			(R,-W, setbycreate) (optional) (1-byte)
 //
 //		L0_Time
@@ -97,30 +103,30 @@ var xdsllineconfigurationprofilepart2BME *ManagedEntityDefinition
 //			W, setbycreate) (mandatory) (1 byte)
 //
 //		Downstream Maximum Nominal Power Spectral Density
-//			Downstream maximum nominal power spectral density: This attribute specifies the maximum nominal
-//			transmit PSD in the downstream direction during initialization and showtime. A single
-//			MAXNOMPSDds attribute is defined per mode enabled in the xTSE line configuration attribute. It
-//			is only valid for [ITUT-G.992.3], [ITUT-G.992.4] and [ITUT-G.992.5]. Its value ranges from 0
-//			(60.0-dBm/Hz) to 300 (-30-dBm/Hz). (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute specifies the maximum nominal transmit PSD in the downstream direction during
+//			initialization and showtime. A single MAXNOMPSDds attribute is defined per mode enabled in the
+//			xTSE line configuration attribute. It is only valid for [ITUT-G.992.3], [ITUT-G.992.4] and
+//			[ITUT-G.992.5]. Its value ranges from 0 (60.0-dBm/Hz) to 300 (-30-dBm/Hz). (R, W, setbycreate)
+//			(mandatory) (2 bytes)
 //
 //		Upstream Maximum Nominal Power Spectral Density
-//			Upstream maximum nominal power spectral density: This attribute specifies the maximum nominal
-//			transmit PSD in the upstream direction during initialization and showtime. A single MAXNOMPSDus
-//			attribute is defined per mode enabled in the xTSE line configuration attribute. It is only valid
-//			for [ITUT-G.992.3], [ITUT-G.992.4] and [ITUT-G.993.2]. Its value ranges from 0 (-60.0-dBm/Hz) to
-//			300 (-30-dBm/Hz). (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute specifies the maximum nominal transmit PSD in the upstream direction during
+//			initialization and showtime. A single MAXNOMPSDus attribute is defined per mode enabled in the
+//			xTSE line configuration attribute. It is only valid for [ITUT-G.992.3], [ITUT-G.992.4] and
+//			[ITUT-G.993.2]. Its value ranges from 0 (-60.0-dBm/Hz) to 300 (-30-dBm/Hz). (R, W, setbycreate)
+//			(mandatory) (2 bytes)
 //
 //		Downstream Maximum Nominal Aggregate Transmit Power
-//			Downstream maximum nominal aggregate transmit power: This attribute specifies the maximum
-//			nominal aggregate transmit power in the downstream direction during initialization and showtime.
-//			It is only valid for [ITUT-G.992.3], [ITUT-G.992.4], [ITUT-G.992.5] and [ITUT-G.993.2]. Its
-//			value ranges from 0 (0.0-dBm) to 255 (25.5-dBm). (R, W, setbycreate) (mandatory) (1-byte)
+//			This attribute specifies the maximum nominal aggregate transmit power in the downstream
+//			direction during initialization and showtime. It is only valid for [ITUT-G.992.3],
+//			[ITUT-G.992.4], [ITUT-G.992.5] and [ITUT-G.993.2]. Its value ranges from 0 (0.0-dBm) to 255
+//			(25.5-dBm). (R, W, setbycreate) (mandatory) (1-byte)
 //
 //		Upstream Maximum Nominal Aggregate Transmit Power
-//			Upstream maximum nominal aggregate transmit power: This parameter specifies the maximum nominal
-//			aggregate transmit power in the upstream direction during initialization and showtime. It is
-//			only valid for [ITUT-G.992.3], [ITUT-G.992.4] and [ITUT-G.992.5]. Its value ranges from 0
-//			(0.0-dBm) to 255 (25.5-dBm). (R, W, setbycreate) (mandatory) (1 byte)
+//			This parameter specifies the maximum nominal aggregate transmit power in the upstream direction
+//			during initialization and showtime. It is only valid for [ITUT-G.992.3], [ITUT-G.992.4] and
+//			[ITUT-G.992.5]. Its value ranges from 0 (0.0-dBm) to 255 (25.5-dBm). (R, W, setbycreate)
+//			(mandatory) (1 byte)
 //
 //		Upstream Maximum Aggregate_Receive Power
 //			Upstream maximum aggregate-receive power: This parameter specifies the maximum upstream
@@ -132,9 +138,9 @@ var xdsllineconfigurationprofilepart2BME *ManagedEntityDefinition
 //			power limit is to be applied. (R, W setbycreate) (mandatory) (2 bytes)
 //
 //		Vdsl2 Transmission System Enabling
-//			VDSL2 transmission system enabling: This configuration attribute extends the transmission system
-//			coding types to be allowed by the xTU-C. It is a bit map, defined as octet 8 (bits 57..64) in
-//			Table-9.7.12-1. (R, W, setbycreate) (optional) (1 byte)
+//			This configuration attribute extends the transmission system coding types to be allowed by the
+//			xTU-C. It is a bit map, defined as octet 8 (bits 57..64) in Table-9.7.12-1. (R, W, setbycreate)
+//			(optional) (1 byte)
 //
 type XdslLineConfigurationProfilePart2 struct {
 	ManagedEntityDefinition
@@ -167,7 +173,7 @@ func init() {
 			11: Uint16Field("UpstreamMaximumNominalPowerSpectralDensity", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 11),
 			12: ByteField("DownstreamMaximumNominalAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 12),
 			13: ByteField("UpstreamMaximumNominalAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 13),
-			14: Uint16Field("UpstreamMaximumAggregateReceivePower", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			14: Uint16Field("UpstreamMaximumAggregateReceivePower", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 14),
 			15: ByteField("Vdsl2TransmissionSystemEnabling", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 15),
 		},
 		Access:  CreatedByOlt,

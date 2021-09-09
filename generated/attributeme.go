@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // AttributeMeClassID is the 16-bit ID for the OMCI
 // Managed entity Attribute ME
-const AttributeMeClassID ClassID = ClassID(289)
+const AttributeMeClassID = ClassID(289) // 0x0121
 
 var attributemeBME *ManagedEntityDefinition
 
-// AttributeMe (class ID #289)
+// AttributeMe (Class ID: #289 / 0x0121)
 //	This ME describes a particular attribute type that is supported by the ONU. This ME is not
 //	included in an MIB upload.
 //
@@ -41,48 +41,90 @@ var attributemeBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. This number is
-//			the same as the one that appears in the attributes table in the ME. Only one instance of each
-//			unique attribute need be created. The ONU can assign attribute numbering as it pleases, out of
-//			the pool of 64K IDs; however, it is suggested that the numbering follow a rational scheme to aid
-//			human readability. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. This number is the same as the one
+//			that appears in the attributes table in the ME. Only one instance of each unique attribute need
+//			be created. The ONU can assign attribute numbering as it pleases, out of the pool of 64K IDs;
+//			however, it is suggested that the numbering follow a rational scheme to aid human readability.
+//			(R) (mandatory) (2-bytes)
 //
 //		Name
-//			Name:	This attribute contains a 25-byte mnemonic tag for the attribute. Strings shorter than
-//			25-bytes are padded with null characters. (R) (mandatory) (25-bytes)
+//			This attribute contains a 25-byte mnemonic tag for the attribute. Strings shorter than 25-bytes
+//			are padded with null characters. (R) (mandatory) (25-bytes)
 //
 //		Size
-//			Size:	This attribute contains the size of the attribute, in bytes. The value 0 indicates that
-//			the attribute can have a variable/unknown size. (R) (mandatory) (2-bytes)
+//			This attribute contains the size of the attribute, in bytes. The value 0 indicates that the
+//			attribute can have a variable/unknown size. (R) (mandatory) (2-bytes)
 //
 //		Access
+//			This attribute represents the OMCI access characteristics of the attribute. The following code
+//			points are defined.
+//
+//			1	Read
+//
+//			2	Write
+//
+//			3	Read, write
+//
+//			5	Read, setbycreate
+//
+//			6	Write, setbycreate
+//
+//			7	Read, write, setbycreate
+//
 //			(R) (mandatory) (1-byte)
 //
 //		Format
+//			This attribute represents the format of the attribute. The following code points are defined.
+//
+//			1	Pointer
+//
+//			2	Bit field
+//
+//			3	Signed integer
+//
+//			4	Unsigned integer
+//
+//			5	String
+//
+//			6	Enumeration (that is, a set of defined code points)
+//
+//			7	Table
+//
 //			(R) (mandatory) (1-byte)
 //
 //		Lower Limit
-//			Lower limit:	This attribute provides the lowest value for the attribute. Valid for numeric types
-//			(pointer, signed integer, unsigned integer) only. For attributes smaller than 4-bytes, the
-//			desired numeric value is expressed in 4-byte representation (for example, the 2s complement
-//			1-byte integer 0xFE is expressed as 0xFFFF-FFFE; the unsigned 1-byte integer 0xFE is expressed
-//			as 0x0000-00FE). (R) (mandatory) (4-bytes)
+//			This attribute provides the lowest value for the attribute. Valid for numeric types (pointer,
+//			signed integer, unsigned integer) only. For attributes smaller than 4-bytes, the desired numeric
+//			value is expressed in 4-byte representation (for example, the 2s complement 1-byte integer 0xFE
+//			is expressed as 0xFFFF-FFFE; the unsigned 1-byte integer 0xFE is expressed as 0x0000-00FE). (R)
+//			(mandatory) (4-bytes)
 //
 //		Upper Limit
-//			Upper limit:	This attribute provides the highest value for the attribute. It has the same
-//			validity and format as the lower limit attribute. (R) (mandatory) (4-bytes)
+//			This attribute provides the highest value for the attribute. It has the same validity and format
+//			as the lower limit attribute. (R) (mandatory) (4-bytes)
 //
 //		Bit Field
-//			Bit field:	This attribute is a mask of the supported bits in a bit field attribute, valid for
-//			bit field type only. A 1 in any position signifies that its code point is supported, while 0
-//			indicates that it is not supported. For bit fields smaller than 4-bytes, the attribute is
-//			aligned at the least significant end of the mask. (R) (mandatory) (4-bytes)
+//			This attribute is a mask of the supported bits in a bit field attribute, valid for bit field
+//			type only. A 1 in any position signifies that its code point is supported, while 0 indicates
+//			that it is not supported. For bit fields smaller than 4-bytes, the attribute is aligned at the
+//			least significant end of the mask. (R) (mandatory) (4-bytes)
 //
 //		Code Points Table
-//			Code points table: This attribute lists the code points supported by an enumerated attribute.
-//			(R) (mandatory) (2 * Q bytes, where Q is the number of entries in the table.)
+//			This attribute lists the code points supported by an enumerated attribute. (R) (mandatory) (2 *
+//			Q bytes, where Q is the number of entries in the table.)
 //
 //		Support
+//			This attribute represents the level of support of the attribute (same notation as the attribute
+//			of the same name in the ME). The following code points are defined.
+//
+//			1	Fully supported (supported as defined in this object)
+//
+//			2	Unsupported (OMCI returns an error code if accessed)
+//
+//			3	Partially supported (some aspects of attribute supported)
+//
+//			4	Ignored (OMCI supported, but underlying function is not)
+//
 //			(R) (mandatory) (1-byte)
 //
 type AttributeMe struct {

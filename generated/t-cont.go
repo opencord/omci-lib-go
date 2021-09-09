@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // TContClassID is the 16-bit ID for the OMCI
 // Managed entity T-CONT
-const TContClassID ClassID = ClassID(262)
+const TContClassID = ClassID(262) // 0x0106
 
 var tcontBME *ManagedEntityDefinition
 
-// TCont (class ID #262)
+// TCont (Class ID: #262 / 0x0106)
 //	An instance of the traffic container ME T-CONT represents a logical connection group associated
 //	with a G-PON PLOAM layer alloc-ID. A T-CONT can accommodate GEM packets in priority queues or
 //	traffic schedulers that exist in the GEM layer.
@@ -58,11 +58,11 @@ var tcontBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. This 2-byte
-//			number indicates the physical capability that realizes the TCONT. It may be represented as
-//			0xSSBB, where SS indicates the slot ID that contains this T-CONT (0 for the ONU as a whole), and
-//			BB is the TCONT ID, numbered by the ONU itself. T-CONTs are numbered in ascending order, with
-//			the range 0..255 in each slot. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. This 2-byte number indicates the
+//			physical capability that realizes the TCONT. It may be represented as 0xSSBB, where SS indicates
+//			the slot ID that contains this T-CONT (0 for the ONU as a whole), and BB is the TCONT ID,
+//			numbered by the ONU itself. T-CONTs are numbered in ascending order, with the range 0..255 in
+//			each slot. (R) (mandatory) (2-bytes)
 //
 //		Alloc_Id
 //			Alloc-ID:	This attribute links the T-CONT with the alloc-ID assigned by the OLT in the
@@ -73,10 +73,20 @@ var tcontBME *ManagedEntityDefinition
 //			(mandatory) (2-bytes)
 //
 //		Deprecated
-//			Deprecated:	The ONU should set this attribute to the value 1, and the OLT should ignore it. (R)
-//			(mandatory) (1-byte)
+//			The ONU should set this attribute to the value 1, and the OLT should ignore it. (R) (mandatory)
+//			(1-byte)
 //
 //		Policy
+//			This attribute indicates the T-CONT's traffic scheduling policy. Valid values:
+//
+//			0	Null
+//
+//			1	Strict priority
+//
+//			2	WRR - Weighted round robin
+//
+//			(R, W) (mandatory) (1 byte)
+//
 //			NOTE - This attribute is read-only, unless otherwise specified by the QoS configuration
 //			flexibility attribute of the ONU2-G ME. If flexible configuration is not supported, the ONU
 //			should reject an attempt to set it with a parameter error result-reason code.

@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // GemPortNetworkCtpPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity GEM port network CTP performance monitoring history data
-const GemPortNetworkCtpPerformanceMonitoringHistoryDataClassID ClassID = ClassID(341)
+const GemPortNetworkCtpPerformanceMonitoringHistoryDataClassID = ClassID(341) // 0x0155
 
 var gemportnetworkctpperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// GemPortNetworkCtpPerformanceMonitoringHistoryData (class ID #341)
+// GemPortNetworkCtpPerformanceMonitoringHistoryData (Class ID: #341 / 0x0155)
 //	This ME collects GEM frame PM data associated with a GEM port network CTP. Instances of this ME
 //	are created and deleted by the OLT.
 //
@@ -51,13 +51,12 @@ var gemportnetworkctpperformancemonitoringhistorydataBME *ManagedEntityDefinitio
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the GEM port network CTP. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the GEM port network CTP. (R, setbycreate) (mandatory)
+//			(2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -65,25 +64,32 @@ var gemportnetworkctpperformancemonitoringhistorydataBME *ManagedEntityDefinitio
 //			data 2 ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Transmitted Gem Frames
-//			Transmitted GEM frames: This attribute counts GEM frames transmitted on the monitored GEM port.
-//			(R) (mandatory) (4-bytes)
+//			This attribute counts GEM frames transmitted on the monitored GEM port. (R) (mandatory)
+//			(4-bytes)
 //
 //		Received Gem Frames
-//			Received GEM frames: This attribute counts GEM frames received correctly on the monitored GEM
-//			port. A correctly received GEM frame is one that does not contain uncorrectable errors and has a
-//			valid header error check (HEC). (R) (mandatory) (4-bytes)
+//			This attribute counts GEM frames received correctly on the monitored GEM port. A correctly
+//			received GEM frame is one that does not contain uncorrectable errors and has a valid header
+//			error check (HEC). (R) (mandatory) (4-bytes)
 //
 //		Received Payload Bytes
-//			Received payload bytes: This attribute counts user payload bytes received on the monitored GEM
-//			port. (R) (mandatory) (8-bytes)
+//			This attribute counts user payload bytes received on the monitored GEM port. (R) (mandatory)
+//			(8-bytes)
 //
 //		Transmitted Payload Bytes
-//			Transmitted payload bytes: This attribute counts user payload bytes transmitted on the monitored
-//			GEM port. (R) (mandatory) (8-bytes)
+//			This attribute counts user payload bytes transmitted on the monitored GEM port. (R) (mandatory)
+//			(8-bytes)
 //
 //		Encryption Key Errors
+//			NOTE 3 - GEM PM ignores idle GEM frames.
+//
 //			NOTE 4 - GEM PM counts each non-idle GEM frame, whether it contains an entire user frame or only
 //			a fragment of a user frame.
+//
+//			This attribute is defined in ITU-T G.987 systems only. It counts GEM frames with erroneous
+//			encryption key indexes. If the GEM port is not encrypted, this attribute counts any frame with a
+//			key index not equal to 0. If the GEM port is encrypted, this attribute counts any frame whose
+//			key index specifies a key that is not known to the ONU. (R) (optional) (4-bytes)
 //
 type GemPortNetworkCtpPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

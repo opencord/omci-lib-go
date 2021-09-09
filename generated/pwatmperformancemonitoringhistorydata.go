@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PwAtmPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity PW ATM performance monitoring history data
-const PwAtmPerformanceMonitoringHistoryDataClassID ClassID = ClassID(338)
+const PwAtmPerformanceMonitoringHistoryDataClassID = ClassID(338) // 0x0152
 
 var pwatmperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// PwAtmPerformanceMonitoringHistoryData (class ID #338)
+// PwAtmPerformanceMonitoringHistoryData (Class ID: #338 / 0x0152)
 //	This ME collects PM data associated with an ATM pseudowire. Instances of this ME are created and
 //	deleted by the OLT.
 //
@@ -42,13 +42,12 @@ var pwatmperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to the instance of the PW ATM configuration data ME.
-//			(R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to the instance of the PW ATM configuration data ME. (R, setbycreate)
+//			(mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -56,31 +55,30 @@ var pwatmperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			data 2 ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Downstream Missing Packets Counter
-//			Downstream missing packets counter: This attribute counts missing packets, as detected via
-//			control word sequence number gaps. (R) (mandatory) (4-bytes)
+//			This attribute counts missing packets, as detected via control word sequence number gaps. (R)
+//			(mandatory) (4-bytes)
 //
 //		Downstream Reordered Packets Counter
-//			Downstream reordered packets counter: This attribute counts packets detected out of sequence via
-//			the control word sequence number, but successfully reordered. Some implementations may not
-//			support this feature. (R) (optional) (4-bytes)
-//
-//		Downstream Misordered Packets Counter
-//			Downstream misordered packets counter: This attribute counts packets detected out of order via
-//			the control word sequence numbers. (R) (mandatory) (4-bytes)
-//
-//		Upstream Timeout Packets Counter
-//			Upstream timeout packets counter: This attribute counts packets transmitted due to timeout
-//			expiration while attempting to collect cells. (R) (mandatory) (4-bytes)
-//
-//		Upstream Transmitted Cells Counter
-//			Upstream transmitted cells counter: This attribute counts transmitted cells. (R) (mandatory)
+//			This attribute counts packets detected out of sequence via the control word sequence number, but
+//			successfully reordered. Some implementations may not support this feature. (R) (optional)
 //			(4-bytes)
 //
+//		Downstream Misordered Packets Counter
+//			This attribute counts packets detected out of order via the control word sequence numbers. (R)
+//			(mandatory) (4-bytes)
+//
+//		Upstream Timeout Packets Counter
+//			This attribute counts packets transmitted due to timeout expiration while attempting to collect
+//			cells. (R) (mandatory) (4-bytes)
+//
+//		Upstream Transmitted Cells Counter
+//			This attribute counts transmitted cells. (R) (mandatory) (4-bytes)
+//
 //		Upstream Dropped Cells Counter
-//			Upstream dropped cells counter: This attribute counts dropped cells. (R) (mandatory) (4-bytes)
+//			This attribute counts dropped cells. (R) (mandatory) (4-bytes)
 //
 //		Upstream Received Cells Counter
-//			Upstream received cells counter: This attribute counts received cells. (R) (mandatory) (4-bytes)
+//			This attribute counts received cells. (R) (mandatory) (4-bytes)
 //
 type PwAtmPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

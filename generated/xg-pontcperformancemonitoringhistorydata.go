@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XgPonTcPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity XG-PON TC performance monitoring history data
-const XgPonTcPerformanceMonitoringHistoryDataClassID ClassID = ClassID(344)
+const XgPonTcPerformanceMonitoringHistoryDataClassID = ClassID(344) // 0x0158
 
 var xgpontcperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// XgPonTcPerformanceMonitoringHistoryData (class ID #344)
+// XgPonTcPerformanceMonitoringHistoryData (Class ID: #344 / 0x0158)
 //	This ME collects PM data associated with the XG-PON TC layer.
 //
 //	For a complete discussion of generic PM architecture, refer to clause I.4.
@@ -41,30 +41,27 @@ var xgpontcperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the ANI-G. (R, set-by-create)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the ANI-G. (R, set-by-create) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
 //			contains PM threshold values. (R,-W, set-by-create) (mandatory) (2-bytes)
 //
 //		Psbd Hec Error Count
-//			PSBd HEC error count: This attribute counts HEC errors in any of the fields of the downstream
-//			physical sync block. (R) (optional) (4-bytes)
-//
-//		Xgtc Hec Error Count
-//			XGTC HEC error count: This attribute counts HEC errors detected in the XGTC header. In [ITU-T
-//			G.9807.1], this attribute is used for framing sublayer (FS) HEC error count management. (R)
+//			This attribute counts HEC errors in any of the fields of the downstream physical sync block. (R)
 //			(optional) (4-bytes)
 //
+//		Xgtc Hec Error Count
+//			This attribute counts HEC errors detected in the XGTC header. In [ITU-T G.9807.1], this
+//			attribute is used for framing sublayer (FS) HEC error count management. (R) (optional) (4-bytes)
+//
 //		Unknown Profile Count
-//			Unknown profile count: This attribute counts the number of grants received whose specified
-//			profile was not known to the ONU. (R) (optional) (4-bytes)
+//			This attribute counts the number of grants received whose specified profile was not known to the
+//			ONU. (R) (optional) (4-bytes)
 //
 //		Transmitted Xg_Pon Encapsulation Method Xgem Frames
 //			Transmitted XG-PON encapsulation method (XGEM) frames: This attribute counts the number of non-
@@ -72,20 +69,35 @@ var xgpontcperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			XGEM frame and is counted as such. (R) (mandatory) (4 bytes)
 //
 //		Fragment Xgem Frames
-//			Fragment XGEM frames: This attribute counts the number of XGEM frames that represent fragmented
-//			SDUs, as indicated by the LF bit-= 0. (R) (optional) (4-bytes)
+//			This attribute counts the number of XGEM frames that represent fragmented SDUs, as indicated by
+//			the LF bit-= 0. (R) (optional) (4-bytes)
 //
 //		Xgem Hec Lost Words Count
-//			XGEM HEC lost words count: This attribute counts the number of 4-byte words lost because of an
-//			XGEM frame HEC error. In general, all XGTC payload following the error is lost, until the next
-//			PSBd event. (R) (optional) (4 bytes)
+//			This attribute counts the number of 4-byte words lost because of an XGEM frame HEC error. In
+//			general, all XGTC payload following the error is lost, until the next PSBd event. (R) (optional)
+//			(4 bytes)
 //
 //		Xgem Key Errors
+//			This attribute counts the number of downstream XGEM frames received with an invalid key
+//			specification. The key may be invalid for several reasons, among which are:
+//
+//			a)	GEM port provisioned for clear text and key index not equal to 00;
+//
+//			b)	no multicast key of the specified key index has been provided via the OMCI for a multicast
+//			GEM port;
+//
+//			c)	no unicast key of the specified key index has been successfully negotiated (see clause 15.5
+//			of [ITU-T G.987.3] or clause C.15.5 of [ITU-T G.9807.1] for key negotiation state machine);
+//
+//			d)	GEM port specified to be encrypted and key index-= 00;
+//
+//			e)	key index-= 11, a reserved value.
+//
 //			(R) (mandatory) (4 bytes)
 //
 //		Xgem Hec Error Count
-//			XGEM HEC error count: This attribute counts the number of instances of an XGEM frame HEC error.
-//			(R) (mandatory) (4 bytes)
+//			This attribute counts the number of instances of an XGEM frame HEC error. (R) (mandatory) (4
+//			bytes)
 //
 //		Transmitted Bytes In Non_Idle Xgem Frames
 //			Transmitted bytes in non-idle XGEM frames: This attribute counts the number of transmitted bytes
@@ -100,12 +112,11 @@ var xgpontcperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			transitions from O5.1 to O6. (R) (optional) (4-bytes)
 //
 //		Lods Event Restored Count
-//			LODS event restored count: This attribute counts the number of LODS cleared events. (R)
-//			(optional) (4-bytes)
+//			This attribute counts the number of LODS cleared events. (R) (optional) (4-bytes)
 //
 //		Onu Reactivation By Lods Events
-//			ONU reactivation by LODS events: This attribute counts the number of LODS events resulting in
-//			ONU reactivation without synchronization being reacquired. (R) (optional) (4-bytes)
+//			This attribute counts the number of LODS events resulting in ONU reactivation without
+//			synchronization being reacquired. (R) (optional) (4-bytes)
 //
 type XgPonTcPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Dot1AgChassisManagementInfoClassID is the 16-bit ID for the OMCI
 // Managed entity Dot1ag chassis-management info
-const Dot1AgChassisManagementInfoClassID ClassID = ClassID(306)
+const Dot1AgChassisManagementInfoClassID = ClassID(306) // 0x0132
 
 var dot1agchassismanagementinfoBME *ManagedEntityDefinition
 
-// Dot1AgChassisManagementInfo (class ID #306)
+// Dot1AgChassisManagementInfo (Class ID: #306 / 0x0132)
 //	This ME represents the system-level chassis ID or management address for [IEEE-802.1ag] CFM
 //	messages, and potentially for other IEEE 802-based functions. Although [IEEE-802.1AB] allows for
 //	several management addresses (synonyms in different formats or with granularity to the component

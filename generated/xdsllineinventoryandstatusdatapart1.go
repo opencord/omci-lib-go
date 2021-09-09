@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // XdslLineInventoryAndStatusDataPart1ClassID is the 16-bit ID for the OMCI
 // Managed entity xDSL line inventory and status data part 1
-const XdslLineInventoryAndStatusDataPart1ClassID ClassID = ClassID(100)
+const XdslLineInventoryAndStatusDataPart1ClassID = ClassID(100) // 0x0064
 
 var xdsllineinventoryandstatusdatapart1BME *ManagedEntityDefinition
 
-// XdslLineInventoryAndStatusDataPart1 (class ID #100)
+// XdslLineInventoryAndStatusDataPart1 (Class ID: #100 / 0x0064)
 //	This ME contains part 1 of the line inventory and status data for an xDSL UNI. The ONU
 //	automatically creates or deletes an instance of this ME upon the creation or deletion of a PPTP
 //	xDSL UNI part 1.
@@ -41,9 +41,8 @@ var xdsllineinventoryandstatusdatapart1BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1. (R) (mandatory) (2-bytes)
 //
 //		Xtu_C G.994.1 Vendor Id
 //			xTU-C G.994.1 vendor ID: This is the vendor ID as inserted by the xTU-C in the ITUT-G.994.1 CL
@@ -118,15 +117,50 @@ var xdsllineinventoryandstatusdatapart1BME *ManagedEntityDefinition
 //			combination with [ITU-T G.994.1] and the system vendor ID. (R) (mandatory) (4-bytes)
 //
 //		Xtu_C Transmission System Capability
+//			xTU-C transmission system capability: This attribute lists xTUC transmission system
+//			capabilities. It is a bit map, defined in Table 9.7.12-1. (R) (mandatory) (7-bytes)
+//
 //			NOTE 1 - This attribute is only 7-bytes long. An eighth byte identifying VDSL2 capabilities is
 //			defined in the VDSL2 line inventory and status data part 1 ME.
 //
 //		Xtu_R Transmission System Capability
+//			xTU-R transmission system capability: This attribute lists xTUR transmission system
+//			capabilities. It is a bit map, defined in Table 9.7.121. (R) (mandatory) (7-bytes)
+//
 //			NOTE 2 - This attribute is only 7-bytes long. An eighth byte identifying VDSL2 capabilities is
 //			defined in the VDSL2 line inventory and status data part 2 ME.
 //
 //		Initialization Success_Failure Cause
 //			(R) (mandatory) (1-byte)
+//
+//			Initialization success/failure cause: This parameter represents the success or failure cause of
+//			the last full initialization performed on the line. It is coded as follows.
+//
+//			0	Successful
+//
+//			1	Configuration error
+//
+//			This error occurs with inconsistencies in configuration parameters, e.g., when the line is
+//			initialized in an xDSL transmission system whose xTU does not support the configured maximum
+//			delay or the configured minimum or maximum data rate for one or more bearer channels.
+//
+//			2	Configuration not feasible on the line
+//
+//			This error occurs if the minimum data rate cannot be achieved on the line with the minimum noise
+//			margin, maximum PSD level, maximum delay and maximum bit error ratio for one or more bearer
+//			channels.
+//
+//			3	Communication problem
+//
+//			This error occurs, for example, due to corrupted messages, bad syntax messages, if no common
+//			mode can be selected in the ITUT-G.994.1 handshake procedure or due to a timeout.
+//
+//			4	No peer xTU detected
+//
+//			This error occurs if the peer xTU is not powered or not connected or if the line is too long to
+//			allow detection of a peer xTU.
+//
+//			5	Any other or unknown initialization failure cause.
 //
 type XdslLineInventoryAndStatusDataPart1 struct {
 	ManagedEntityDefinition

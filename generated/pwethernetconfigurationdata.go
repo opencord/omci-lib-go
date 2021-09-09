@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PwEthernetConfigurationDataClassID is the 16-bit ID for the OMCI
 // Managed entity PW Ethernet configuration data
-const PwEthernetConfigurationDataClassID ClassID = ClassID(339)
+const PwEthernetConfigurationDataClassID = ClassID(339) // 0x0153
 
 var pwethernetconfigurationdataBME *ManagedEntityDefinition
 
-// PwEthernetConfigurationData (class ID #339)
+// PwEthernetConfigurationData (Class ID: #339 / 0x0153)
 //	This ME contains the Ethernet pseudowire configuration data. Instances of this ME are created
 //	and deleted by the OLT.
 //
@@ -41,19 +41,36 @@ var pwethernetconfigurationdataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. (R,
-//			setbycreate)-(mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. (R, setbycreate)-(mandatory) (2
+//			bytes)
 //
 //		Mpls Pseudowire Tp Pointer
-//			MPLS pseudowire TP pointer: This attribute points to an instance of the MPLS pseudowire TP ME
-//			associated with this ME. (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute points to an instance of the MPLS pseudowire TP ME associated with this ME. (R,
+//			W, setbycreate) (mandatory) (2 bytes)
 //
 //		Tp Type
+//			This attribute identifies the type of UNI associated with this Ethernet PW. Valid values are as
+//			follows.
+//
+//			1	Physical path termination point Ethernet UNI
+//
+//			3	IEEE 802.1p mapper service profile
+//
+//			7	Physical path termination point xDSL UNI part 1
+//
+//			11	Virtual Ethernet interface point
+//
+//			12	Physical path termination point MoCA UNI
+//
+//			13	MAC bridge port configuration data
+//
+//			Other values are reserved
+//
 //			(R,-W, setbycreate) (mandatory) (1-byte)
 //
 //		Uni Pointer
-//			UNI pointer: This attribute points to the associated instance of a UNI-side ME. The type of UNI
-//			is determined by the TP type attribute. (R, W, setbycreate) (mandatory) (2 bytes)
+//			This attribute points to the associated instance of a UNI-side ME. The type of UNI is determined
+//			by the TP type attribute. (R, W, setbycreate) (mandatory) (2 bytes)
 //
 type PwEthernetConfigurationData struct {
 	ManagedEntityDefinition

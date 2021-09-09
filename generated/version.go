@@ -46,27 +46,27 @@ func init() {
 	Versions = append(Versions,
 		VersionInfo{
 			Name:       "parser",
-			Version:    "0.15.11",
-			CreateTime: 1628604119.344936,
-			ItuDocName: "T-REC-G.988-201711-I!!MSW-E.docx",
-			SHA256:     "96ffc8bca6f70175c8e281e87e1cf21662d07a7502ebf595c5c3180a9972b9ac",
+			Version:    "0.15.12",
+			CreateTime: 1630609253.7051146,
+			ItuDocName: "T-REC-G.988-202003-I!Amd3!MSW-E.docx",
+			SHA256:     "084f5265bc090ca882fe45f6844d1ce368c218e52c77795060b7643240885469",
 		})
 
 	Versions = append(Versions,
 		VersionInfo{
 			Name:       "pre-parser",
-			Version:    "0.15.9",
-			CreateTime: 1626359259.9888368,
-			ItuDocName: "T-REC-G.988-201711-I!!MSW-E.docx",
-			SHA256:     "96ffc8bca6f70175c8e281e87e1cf21662d07a7502ebf595c5c3180a9972b9ac",
+			Version:    "0.15.12",
+			CreateTime: 1628800053.665055,
+			ItuDocName: "T-REC-G.988-202003-I!Amd3!MSW-E.docx",
+			SHA256:     "084f5265bc090ca882fe45f6844d1ce368c218e52c77795060b7643240885469",
 		})
 
 	Versions = append(Versions,
 		VersionInfo{
 			Name:       "code-generator",
-			Version:    "0.15.11",
-			CreateTime: 1628606750.5555656,
-			ItuDocName: "T-REC-G.988-201711-I!!MSW-E.docx",
-			SHA256:     "96ffc8bca6f70175c8e281e87e1cf21662d07a7502ebf595c5c3180a9972b9ac",
+			Version:    "0.15.12",
+			CreateTime: 1631115478.0461376,
+			ItuDocName: "T-REC-G.988-202003-I!Amd3!MSW-E.docx",
+			SHA256:     "084f5265bc090ca882fe45f6844d1ce368c218e52c77795060b7643240885469",
 		})
 }

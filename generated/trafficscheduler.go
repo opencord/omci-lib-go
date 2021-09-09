@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // TrafficSchedulerClassID is the 16-bit ID for the OMCI
 // Managed entity Traffic scheduler
-const TrafficSchedulerClassID ClassID = ClassID(278)
+const TrafficSchedulerClassID = ClassID(278) // 0x0116
 
 var trafficschedulerBME *ManagedEntityDefinition
 
-// TrafficScheduler (class ID #278)
+// TrafficScheduler (Class ID: #278 / 0x0116)
 //	NOTE 1 - In [ITU-T G.984.4], this ME is called a traffic scheduler-G.
 //
 //	An instance of this ME represents a logical object that can control upstream GEM packets. A
@@ -50,31 +50,57 @@ var trafficschedulerBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. This 2-byte
-//			number indicates the physical capability that realizes the traffic scheduler. The first byte is
-//			the slot ID of the circuit pack with which this traffic scheduler is associated. For a traffic
-//			scheduler that is not associated with a circuit pack, the first byte is 0xFF. The second byte is
-//			the traffic scheduler id, assigned by the ONU itself. Traffic schedulers are numbered in
-//			ascending order with the range 0..0xFF in each circuit pack or in the ONU core. (R) (mandatory)
-//			(2-bytes)
+//			This attribute uniquely identifies each instance of this ME. This 2-byte number indicates the
+//			physical capability that realizes the traffic scheduler. The first byte is the slot ID of the
+//			circuit pack with which this traffic scheduler is associated. For a traffic scheduler that is
+//			not associated with a circuit pack, the first byte is 0xFF. The second byte is the traffic
+//			scheduler id, assigned by the ONU itself. Traffic schedulers are numbered in ascending order
+//			with the range 0..0xFF in each circuit pack or in the ONU core. (R) (mandatory) (2-bytes)
 //
 //		T_Cont Pointer
+//			T-CONT pointer: This attribute points to the T-CONT ME instance associated with this traffic
+//			scheduler. This pointer is used when this traffic scheduler is connected to the T-CONT directly;
+//			It is null (0) otherwise. (R, W) (mandatory) (2 bytes)
+//
 //			NOTE 2 - This attribute is read-only unless otherwise specified by the QoS configuration
 //			flexibility attribute of the ONU2-G ME. If flexible configuration is not supported, the ONU
 //			should reject an attempt to set the TCONT pointer attribute with a parameter error result-reason
 //			code.
 //
 //		Traffic Scheduler Pointer
-//			Traffic scheduler pointer: This attribute points to another traffic scheduler ME instance that
-//			may serve this traffic scheduler. This pointer is used when this traffic scheduler is connected
-//			to another traffic scheduler; it is null (0) otherwise. (R) (mandatory) (2-bytes)
+//			This attribute points to another traffic scheduler ME instance that may serve this traffic
+//			scheduler. This pointer is used when this traffic scheduler is connected to another traffic
+//			scheduler; it is null (0) otherwise. (R) (mandatory) (2-bytes)
 //
 //		Policy
+//			This attribute represents scheduling policy. Valid values include:
+//
+//			0	Null
+//
+//			1	Strict priority
+//
+//			2	WRR (weighted round robin)
+//
+//			The traffic scheduler derives priority or weight values for its tributary traffic schedulers or
+//			priority queues from the tributary MEs themselves.
+//
+//			(R, W) (mandatory) (1 byte)
+//
 //			NOTE 3 - This attribute is read-only unless otherwise specified by the QoS configuration
 //			flexibility attribute of the ONU2-G ME. If flexible configuration is not supported, the ONU
 //			should reject an attempt to set the policy attribute with a parameter error result-reason code.
 //
 //		Priority_Weight
+//			Priority/weight: This attribute represents the priority for strict priority scheduling or the
+//			weight for WRR scheduling. This value is used by the next upstream ME, as indicated by the
+//			T-CONT pointer attribute or traffic scheduler pointer attribute.
+//
+//			If the indicated pointer has policy-=-strict priority, this value is interpreted as a priority
+//			(0 is the highest priority, 255 the lowest).
+//
+//			If the indicated pointer has policy-=-WRR, this value is interpreted as a weight. Higher values
+//			receive more bandwidth.
+//
 //			Upon ME instantiation, the ONU sets this attribute to 0. (R,-W) (mandatory) (1-byte)
 //
 type TrafficScheduler struct {

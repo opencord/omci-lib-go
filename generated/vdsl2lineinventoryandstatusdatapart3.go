@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Vdsl2LineInventoryAndStatusDataPart3ClassID is the 16-bit ID for the OMCI
 // Managed entity VDSL2 line inventory and status data part 3
-const Vdsl2LineInventoryAndStatusDataPart3ClassID ClassID = ClassID(170)
+const Vdsl2LineInventoryAndStatusDataPart3ClassID = ClassID(170) // 0x00aa
 
 var vdsl2lineinventoryandstatusdatapart3BME *ManagedEntityDefinition
 
-// Vdsl2LineInventoryAndStatusDataPart3 (class ID #170)
+// Vdsl2LineInventoryAndStatusDataPart3 (Class ID: #170 / 0x00aa)
 //	This ME extends the other xDSL line inventory and status data MEs with attributes specific to
 //	VDSL2. This ME contains per-band attributes for both directions. These same attributes are
 //	defined in the xDSL line inventory and status data part 2 ME, but only for a single band. [ITUT
@@ -45,51 +45,110 @@ var vdsl2lineinventoryandstatusdatapart3BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1 ME. (R) (mandatory) (2-bytes)
+//
+//		Upstream Bands Count
+//			This attribute reports the number of upstream bands. It can be used to filter the upstream
+//			attributes. All upstream attributes are arrays of per-band entries, of which the first upstream
+//			bands count are populated. The contents of the arrays for unused frequency bands are
+//			unspecified. The original attributes were allocated for as many as four upstream bands, US0, 1,
+//			2, 3; optional extended attributes have been added to accommodate the possibility that five
+//			upstream bands may be needed. (R) (mandatory) (1-byte)
+//
+//		Downstream Bands Count
+//			This attribute reports the number of downstream bands. It can be used to filter the downstream
+//			attributes. All downstream attributes are arrays of per-band entries, of which the first
+//			downstream bands count are populated. The contents of the arrays for unused frequency bands are
+//			unspecified. The original attributes were allocated for as many as three downstream bands, DS1,
+//			2, 3; optional extended attributes have been added to accommodate the possibility that five
+//			downstream bands may be needed. (R) (mandatory) (1-byte)
 //
 //		Downstream Line Attenuation Per Band
-//			Downstream line attenuation per band: The LATNds attribute is defined per usable band. It is the
-//			squared magnitude of the channel characteristics function, H(f), averaged over this band, and
-//			measured during loop diagnostic mode and initialization. The exact definition is included in the
-//			relevant xDSL Recommendation. The upstream line attenuation per band ranges from 0 (0.0-dB) to
-//			1270 (+127.0-dB). The special value 0xFFFF indicates that the line attenuation per band is out
-//			of the range to be represented. (R) (mandatory) (3-bands * 2-bytes-=-6-bytes)
+//			The LATNds attribute is defined per usable band. It is the squared magnitude of the channel
+//			characteristics function, H(f), averaged over this band, and measured during loop diagnostic
+//			mode and initialization. The exact definition is included in the relevant xDSL Recommendation.
+//			The upstream line attenuation per band ranges from 0 (0.0-dB) to 1270 (+127.0-dB). The special
+//			value 0xFFFF indicates that the line attenuation per band is out of the range to be represented.
+//			(R) (mandatory) (3-bands * 2-bytes-=-6-bytes)
 //
 //		Upstream Line Attenuation Per Band
-//			Upstream line attenuation per band: The LATNus attribute is defined per usable band. It is the
-//			squared magnitude of the channel characteristics function H(f) averaged over this band, and
-//			measured during loop diagnostic mode and initialization. The exact definition is included in the
-//			relevant xDSL Recommendation. The upstream line attenuation per band ranges from 0 (0.0-dB) to
-//			1270 (+127.0-dB). The special value 0xFFFF indicates that line attenuation per band is out of
-//			range to be represented. (R) (mandatory) (4-bands * 2-bytes-=-8-bytes)
+//			The LATNus attribute is defined per usable band. It is the squared magnitude of the channel
+//			characteristics function H(f) averaged over this band, and measured during loop diagnostic mode
+//			and initialization. The exact definition is included in the relevant xDSL Recommendation. The
+//			upstream line attenuation per band ranges from 0 (0.0-dB) to 1270 (+127.0-dB). The special value
+//			0xFFFF indicates that line attenuation per band is out of range to be represented. (R)
+//			(mandatory) (4-bands * 2-bytes-=-8-bytes)
 //
 //		Downstream Signal Attenuation Per Band
+//			The SATNds attribute is defined per usable band. It is the measured difference in the total
+//			power transmitted in this band by the xTUC and the total power received by the xTUR during loop
+//			diagnostic mode, initialization and showtime. The exact definition is included in the relevant
+//			xDSL Recommendation. The downstream signal attenuation per band ranges from 0 (0.0-dB) to 1270
+//			(+127.0-dB). The special value 0xFFFF indicates that the signal attenuation per band is out of
+//			the range to be represented. (R) (mandatory) (3 bands * 2-bytes-=-6-bytes)
+//
 //			NOTE 1 - During showtime, only a subset of the subcarriers may be transmitted by the xTU-C, as
 //			compared to loop diagnostic mode and initialization. Therefore, the downstream signal
 //			attenuation value during showtime may be significantly lower than the downstream signal
 //			attenuation value during loop diagnostic mode and initialization.
 //
 //		Upstream Signal Attenuation Per Band
+//			The SATNus attribute is defined per usable band. It is the measured difference in decibels in
+//			the total power transmitted in this band by the xTUR and the total power received in this band
+//			by the xTUC during loop diagnostic mode, initialization and showtime. The exact definition is
+//			included in the relevant xDSL Recommendation. The upstream signal attenuation per band ranges
+//			from 0 (0.0-dB) to 1270 (+127.0-dB). The special value 0xFFFF indicates the signal attenuation
+//			per band is out of range to be represented. (R) (mandatory) (4 bands * 2-bytes-= 8-bytes)
+//
 //			NOTE 2 - During showtime, only a subset of the subcarriers may be transmitted by the xTU-R, as
 //			compared to loop diagnostic mode and initialization. Therefore, the upstream signal attenuation
 //			value during showtime may be significantly lower than the upstream signal attenuation value
 //			during loop diagnostic mode and initialization.
 //
 //		Downstream Snr Margin Per Band
-//			Downstream SNR margin per band: The SNRMpbds attribute is defined per usable band. The
-//			downstream SNR margin per band is the maximum increase of noise power received at the xTU-R,
-//			such that the BER requirements are met for all downstream bearer channels. Each array value
-//			ranges from 0 (-64.0-dB) to 1270 (+63.0-dB). The special value 0xFFFF indicates that the
-//			attribute is out of range to be represented. (R) (mandatory) (3 bands * 2-bytes-=-6-bytes)
+//			The SNRMpbds attribute is defined per usable band. The downstream SNR margin per band is the
+//			maximum increase of noise power received at the xTU-R, such that the BER requirements are met
+//			for all downstream bearer channels. Each array value ranges from 0 (-64.0-dB) to 1270
+//			(+63.0-dB). The special value 0xFFFF indicates that the attribute is out of range to be
+//			represented. (R) (mandatory) (3 bands * 2-bytes-=-6-bytes)
 //
 //		Upstream Snr Margin Per Band
-//			Upstream SNR margin per band: The SNRMpbus attribute is defined per usable band. The upstream
-//			SNR margin per band is the maximum increase of noise power received at the xTU-C, such that the
-//			BER requirements are met for all upstream bearer channels. Each array value ranges from 0
-//			(-64.0-dB) to 1270 (+63.0-dB). The special value 0xFFFF indicates that the attribute is out of
-//			range to be represented. (R) (mandatory) (4 bands * 2-bytes-= 8-bytes)
+//			The SNRMpbus attribute is defined per usable band. The upstream SNR margin per band is the
+//			maximum increase of noise power received at the xTU-C, such that the BER requirements are met
+//			for all upstream bearer channels. Each array value ranges from 0 (-64.0-dB) to 1270 (+63.0-dB).
+//			The special value 0xFFFF indicates that the attribute is out of range to be represented. (R)
+//			(mandatory) (4 bands * 2-bytes-= 8-bytes)
+//
+//		Downstream Line Attenuation Extension
+//			This attribute extends LATNds when more than three downstream bands are used. It is defined in
+//			the same way as the downstream line attenuation per band attribute. (R) (optional) (2 bands *
+//			2-bytes-= 4-bytes)
+//
+//		Upstream Line Attenuation Extension
+//			This attribute extends LATNus when more than four upstream bands are used. It is defined in the
+//			same way as the upstream line attenuation per band attribute. (R) (optional) (1 band *
+//			2-bytes-=-2-bytes)
+//
+//		Downstream Signal Attenuation Extension
+//			This attribute extends SATNds when more than three downstream bands are used. It is defined in
+//			the same way as the downstream signal attenuation per band attribute. (R) (optional) (2 bands *
+//			2-bytes-= 4-bytes)
+//
+//		Upstream Signal Attenuation Extension
+//			This attribute extends SATNus when more than four upstream bands are used. It is defined in the
+//			same way as the upstream signal attenuation per band attribute. (R) (optional) (1 band *
+//			2-bytes-= 2-bytes)
+//
+//		Downstream Snr Margin Extension
+//			This attribute extends SNRMpbds when more than three downstream bands are used. It is defined in
+//			the same way as the downstream SNR margin per band attribute. (R) (optional) (2 bands *
+//			2-bytes-= 4-bytes)
+//
+//		Upstream Snr Margin Extension
+//			This attribute extends SNRMpbus when more than four upstream bands are used. It is defined in
+//			the same way as the upstream SNR margin per band attribute. (R) (optional) (1-band * 2-bytes-=
+//			2-bytes)
 //
 type Vdsl2LineInventoryAndStatusDataPart3 struct {
 	ManagedEntityDefinition
@@ -103,15 +162,23 @@ func init() {
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
-		AllowedAttributeMask: 0xfc00,
+		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: MultiByteField("DownstreamLineAttenuationPerBand", OctetsAttributeType, 0x8000, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 1),
-			2: Uint32Field("UpstreamLineAttenuationPerBand", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3: MultiByteField("DownstreamSignalAttenuationPerBand", OctetsAttributeType, 0x2000, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 3),
-			4: Uint32Field("UpstreamSignalAttenuationPerBand", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5: MultiByteField("DownstreamSnrMarginPerBand", OctetsAttributeType, 0x0800, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 5),
-			6: Uint32Field("UpstreamSnrMarginPerBand", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField("UpstreamBandsCount", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  ByteField("DownstreamBandsCount", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  MultiByteField("DownstreamLineAttenuationPerBand", OctetsAttributeType, 0x2000, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field("UpstreamLineAttenuationPerBand", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  MultiByteField("DownstreamSignalAttenuationPerBand", OctetsAttributeType, 0x0800, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field("UpstreamSignalAttenuationPerBand", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  MultiByteField("DownstreamSnrMarginPerBand", OctetsAttributeType, 0x0200, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field("UpstreamSnrMarginPerBand", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint16Field("DownstreamLineAttenuationExtension", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: ByteField("UpstreamLineAttenuationExtension", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: Uint16Field("DownstreamSignalAttenuationExtension", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			12: ByteField("UpstreamSignalAttenuationExtension", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
+			13: Uint16Field("DownstreamSnrMarginExtension", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
+			14: ByteField("UpstreamSnrMarginExtension", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

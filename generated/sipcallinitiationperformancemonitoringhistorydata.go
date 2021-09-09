@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // SipCallInitiationPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity SIP call initiation performance monitoring history data
-const SipCallInitiationPerformanceMonitoringHistoryDataClassID ClassID = ClassID(152)
+const SipCallInitiationPerformanceMonitoringHistoryDataClassID = ClassID(152) // 0x0098
 
 var sipcallinitiationperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// SipCallInitiationPerformanceMonitoringHistoryData (class ID #152)
+// SipCallInitiationPerformanceMonitoringHistoryData (Class ID: #152 / 0x0098)
 //	This ME collects PM data related to call initiations of a VoIP SIP agent. Instances of this ME
 //	are created and deleted by the OLT.
 //
@@ -43,15 +43,13 @@ var sipcallinitiationperformancemonitoringhistorydataBME *ManagedEntityDefinitio
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the SIP agent config data or the
-//			SIP config portal ME. If a nonOMCI configuration method is used for VoIP, there can be only one
-//			live ME instance, associated with the SIP config portal, and with ME ID 0. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the SIP agent config data or the SIP config portal ME. If a
+//			nonOMCI configuration method is used for VoIP, there can be only one live ME instance,
+//			associated with the SIP config portal, and with ME ID 0. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -59,24 +57,24 @@ var sipcallinitiationperformancemonitoringhistorydataBME *ManagedEntityDefinitio
 //			data 2 ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Failed To Connect Counter
-//			Failed to connect counter: This attribute counts the number of times that the SIP UA failed to
-//			reach/connect its TCP/UDP peer during SIP call initiations. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of times that the SIP UA failed to reach/connect its TCP/UDP
+//			peer during SIP call initiations. (R) (mandatory) (4-bytes)
 //
 //		Failed To Validate Counter
-//			Failed to validate counter: This attribute counts the number of times that the SIP UA failed to
-//			validate its peer during SIP call initiations. (R) (mandatory) (4-bytes)
-//
-//		Timeout Counter
-//			Timeout counter: This attribute counts the number of times that the SIP UA timed out during SIP
+//			This attribute counts the number of times that the SIP UA failed to validate its peer during SIP
 //			call initiations. (R) (mandatory) (4-bytes)
 //
+//		Timeout Counter
+//			This attribute counts the number of times that the SIP UA timed out during SIP call initiations.
+//			(R) (mandatory) (4-bytes)
+//
 //		Failure Received Counter
-//			Failure received counter: This attribute counts the number of times that the SIP UA received a
-//			failure error code during SIP call initiations. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of times that the SIP UA received a failure error code during
+//			SIP call initiations. (R) (mandatory) (4-bytes)
 //
 //		Failed To Authenticate Counter
-//			Failed to authenticate counter: This attribute counts the number of times that the SIP UA failed
-//			to authenticate itself during SIP call initiations. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of times that the SIP UA failed to authenticate itself during
+//			SIP call initiations. (R) (mandatory) (4-bytes)
 //
 type SipCallInitiationPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

@@ -1,137 +1,69 @@
 # OMCI
 
 OMCI gopacket library supports the encoding and decoding of ITU G.988 OMCI
-messages.  Support for the Baseline Message Set has been completed and work
-is underway to support the Extended Message Set format.
+messages. Support for the Baseline and Extended Message Set has been completed for
+basic serialization and decode and some support for the MEFrame library.
 
-## Message Types supported and under unit test
-The following OMCI message types currently have been coded and are covered
-satisfactory by unit tests.
+Future work is to focus on getting unit test coverage >= 75% for the basic serialization
+and decode objects before work for additional extended message set support in the
+MEFrame library.
 
- - CreateRequest
- - CreateResponse
- - DeleteRequest
- - DeleteResponse
- - SetRequest
- - GetRequest
- - GetAllAlarmsRequest
- - GetAllAlarmsResponse
- - GetAllAlarmsNextRequest
- - MibUploadRequest
- - MibUploadResponse
- - MibUploadNextRequest
- - MibResetRequest
- - MibResetResponse
- - SynchronizeTimeRequest
- - DownloadSectionRequest
- - DownloadSectionResponse
- - EndSoftwareDownloadRequest
- - EndSoftwareDownloadResponse
- - CommitSoftwareRequest
- - CommitSoftwareResponse
- - AlarmNotification
+# Recent Changes
 
-## Message Types supported but lacking full unit test
-The following OMCI message types currently have been coded and are partially covered
-by unit tests, but work still remains for sufficient/better unit test coverage.
+In v2.0.0, the directory/package structure was reorganized (no API changes otherwise)
+in order to separate message type functionality on a filename basis. This will allow
+for future features and bug fixes to be better localized and to allow for better
+unit test coverage reporting.
 
- - SetResponse
- - GetResponse
- - GetAllAlarmsNextResponse
- - MibUploadNextResponse
- - SynchronizeTimeResponse
- - AttributeValueChange
- - RebootRequest
- - RebootResponse
- - StartSoftwareDownloadRequest
- - GetNextRequest
- - GetNextResponse
- - TestResult
- - TestRequest
- - TestResponse
- - GetCurrentDataRequest
- - GetCurrentDataResponse
-
-## Message Types supported but lacking any unit test
-The following OMCI message types currently have been coded but do not
-have any unit test coverage.
-
- - StartSoftwareDownloadResponse
- - ActivateSoftwareRequest
- - ActivateSoftwareResponse
+Bug fixes will typically result in an increment of the third number in the version string
+and additional feature support will typically result in incrementing the second number. 
  
-## Message Types not yet supported
-
-The following OMCI message types currently have not been coded.
-
- - SetTableRequest
- - SetTableResponse
-
-## Extended Message Set Support
-
-As mentioned earlier, support for the Extended Message Set is underway.  Currently,
-the following Message Types have this support and are covered by unit tests:
-
- - GetRequest
- - GetResponse
- - DownloadSectionRequest/Response
- - AlarmNotification
- - AttributeValueChange
- - TestResult
-
-### Upcoming message types that will be supported
-
-The following provides a list of message types that will eventually support the _Extended Message Set_
-in the expected order of implementation.  The priority was chosen based on speed improvement requests
-of operations and ease of implementation.
-
- - GetCurrentDataRequest/Response
- - MibResetRequest/Response
- - RebootRequest/Response
- - SynchronizeTimeRequest/Response
- - CreateRequest/Response
- - DeleteRequest/Response
- - SetRequest/Response
-
- - GetNextRequest/Response
- - SetTableRequest/Response
-
- - MibUploadRequest/Response
- - MibUploadNextRequest/Response
-
- - GetAllAlarmsRequest/Response
- - GetAllAlarmsNextRequest/Response
-
- - StartSoftwareDownloadRequest/Response
- - EndSoftwareDownloadRequest/Response
- - CommitSoftwareRequest/Response
- - ActivateSoftwareRequest/Response
-  
- - TestRequest/Response
-
 ## Current user-test coverage
 
 The _**make** test_ command can be used to create code coverage support for the
-library.  The current coverage for version 1.0.0 (as of 4/21/2021) is:
+library.  The current coverage for version 2.0.0 (as of 9/08/2021) is:
 
-| File            | Statement Coverage |
-| --------------: | :---: |
-| layers.go       | 100%  |
-| mebase.go       | 91.7% |
-| meframe.go      | 50.8% |
-| messagetypes.go | 59.1% |
-| omci.go         | 79.0% |
+Entire Project:         97.3% of files and 70.2% of statements
+Generated Subdirectory: 98.5% of files and 51.9% of statements
+meframe Subdirectory:   80% of files and 55.4% of statements
+
+Main Message Directory (below):
+
+| File            | Coverage | < 75% |
+| --------------: | :------: | :---: |
+| alarms.go       |  74.3%   |   Y   |
+| avc.go          |  86%     |       |
+| create.go       |  82.5%   |       |
+| delete.go       |  85.5%   |       |
+| get.go          |  78.4%   |       |
+| getcurrent.go   |  69.4%   |       |
+| getnext.go      |  79.3%   |       |
+| layers.go       |  100%    |       |
+| mebase.go       |  93.3%   |       |
+| messagetypes.go |  100%    |       |
+| mibreset.go     |  76.6%   |       |
+| mibupload.go    |  77%     |       |
+| omci.go         |  90.6%   |       |
+| reboot.go       |  81.2%   |       |
+| set.go          |  77.3%   |       |
+| settable.go     |  81.5%   |       |
+| software.go     |  75.2%   |       |
+| synctime.go     |  79.3%   |       |
+| test.go         |  79.9%   |       |
 
 ## Other outstanding items
 
-Besides OMCI Message decode/serialization, and associated unit tests, the following items
-would be needed or useful in a first official release of this library. Some changes are
-to be done in the generated OMCI ME code as well.
+A few additional features have been requested and are listed below for future inclusion
+in the package:
 
  - Constraint checking (these are not yet fully parsed/provided by the OMCI code generated
    structs). This feature will hopefully be available in the near future.
  - Add AVC flag for appropriate attributes
- - Add some type of logging support
+ - Review other gopacket libraries for logging support and add some type of logging support
+   if it is standard. If not, recommend design patterns users of this library can use to detect
+   issues in decode or serialization.
+ - For several of the software image message types, multiple instances can be supported. Unit
+   test and source implementation to verify correct implementation is needed.
  
 Also searching through the code for _TODO_ statements will also yield additional areas of
 work to be performed.

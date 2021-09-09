@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // OmciClassID is the 16-bit ID for the OMCI
 // Managed entity OMCI
-const OmciClassID ClassID = ClassID(287)
+const OmciClassID = ClassID(287) // 0x011f
 
 var omciBME *ManagedEntityDefinition
 
-// Omci (class ID #287)
+// Omci (Class ID: #287 / 0x011f)
 //	This ME describes the ONU's general level of support for OMCI MEs and messages. This ME is not
 //	included in an MIB upload.
 //
@@ -40,18 +40,18 @@ var omciBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. There is only
-//			one instance, number 0. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. There is only one instance, number
+//			0. (R) (mandatory) (2-bytes)
 //
 //		Me Type Table
-//			ME type table: This attribute lists the ME classes supported by the ONU. Each entry contains the
-//			ME class value (see Table 11.2.4-1) of an ME type. (R) (mandatory) (2 * N bytes, where N is the
-//			number of entries in the list.)
+//			This attribute lists the ME classes supported by the ONU. Each entry contains the ME class value
+//			(see Table 11.2.4-1) of an ME type. (R) (mandatory) (2 * N bytes, where N is the number of
+//			entries in the list.)
 //
 //		Message Type Table
-//			Message type table: This attribute is a list of message types (MTs) supported by the ONU. Each
-//			entry contains the MT of an OMCI message (see Table-11.2.2-1). (R) (mandatory) (M bytes, where M
-//			is the number of entries in the list.)
+//			This attribute is a list of message types (MTs) supported by the ONU. Each entry contains the MT
+//			of an OMCI message (see Table-11.2.2-1). (R) (mandatory) (M bytes, where M is the number of
+//			entries in the list.)
 //
 type Omci struct {
 	ManagedEntityDefinition

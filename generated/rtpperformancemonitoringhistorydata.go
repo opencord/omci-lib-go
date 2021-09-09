@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // RtpPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity RTP performance monitoring history data
-const RtpPerformanceMonitoringHistoryDataClassID ClassID = ClassID(144)
+const RtpPerformanceMonitoringHistoryDataClassID = ClassID(144) // 0x0090
 
 var rtpperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// RtpPerformanceMonitoringHistoryData (class ID #144)
+// RtpPerformanceMonitoringHistoryData (Class ID: #144 / 0x0090)
 //	This ME collects PM data related to an RTP session. Instances of this ME are created and deleted
 //	by the OLT.
 //
@@ -42,13 +42,11 @@ var rtpperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP POTS UNI ME. (R,
-//			setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP POTS UNI ME. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 ME that
@@ -56,18 +54,17 @@ var rtpperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			data 2 ME is optional. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Rtp Errors
-//			RTP errors:	This attribute counts RTP packet errors. (R) (mandatory) (4-bytes)
+//			This attribute counts RTP packet errors. (R) (mandatory) (4-bytes)
 //
 //		Packet Loss
-//			Packet loss:	This attribute represents the fraction of packets lost. This attribute is
-//			calculated at the end of the 15-min interval, and is undefined under the get current data
-//			action. The value 0 indicates no packet loss, scaling linearly to 0xFFFF FFFF to indicate 100%
-//			packet loss (zero divided by zero is defined to be zero). (R) (mandatory) (4-bytes)
+//			This attribute represents the fraction of packets lost. This attribute is calculated at the end
+//			of the 15-min interval, and is undefined under the get current data action. The value 0
+//			indicates no packet loss, scaling linearly to 0xFFFF FFFF to indicate 100% packet loss (zero
+//			divided by zero is defined to be zero). (R) (mandatory) (4-bytes)
 //
 //		Maximum Jitter
-//			Maximum jitter: This attribute is a high water-mark that represents the maximum jitter
-//			identified during the measured interval, expressed in RTP timestamp units. (R) (mandatory)
-//			(4-bytes)
+//			This attribute is a high water-mark that represents the maximum jitter identified during the
+//			measured interval, expressed in RTP timestamp units. (R) (mandatory) (4-bytes)
 //
 //		Maximum Time Between Real_Time Transport Control Protocol Rtcp Packets
 //			Maximum time between real-time transport control protocol (RTCP) packets: This attribute is a
@@ -75,17 +72,16 @@ var rtpperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			interval, in milliseconds. (R) (mandatory) (4-bytes)
 //
 //		Buffer Underflows
-//			Buffer underflows: This attribute counts the number of times the reassembly buffer underflows.
-//			In the case of continuous underflow caused by a loss of IP packets, a single buffer underflow
-//			should be counted. If the IW function is implemented with multiple buffers, such as a packet
-//			level buffer and a bit level buffer, then the underflow of either buffer increments this
-//			counter. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of times the reassembly buffer underflows. In the case of
+//			continuous underflow caused by a loss of IP packets, a single buffer underflow should be
+//			counted. If the IW function is implemented with multiple buffers, such as a packet level buffer
+//			and a bit level buffer, then the underflow of either buffer increments this counter. (R)
+//			(mandatory) (4-bytes)
 //
 //		Buffer Overflows
-//			Buffer overflows: This attribute counts the number of times the reassembly buffer overflows. If
-//			the IW function is implemented with multiple buffers, such as a packet level buffer and a bit
-//			level buffer, then the overflow of either buffer increments this counter. (R) (mandatory)
-//			(4-bytes)
+//			This attribute counts the number of times the reassembly buffer overflows. If the IW function is
+//			implemented with multiple buffers, such as a packet level buffer and a bit level buffer, then
+//			the overflow of either buffer increments this counter. (R) (mandatory) (4-bytes)
 //
 type RtpPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition

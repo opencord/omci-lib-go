@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // PseudowirePerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity Pseudowire performance monitoring history data
-const PseudowirePerformanceMonitoringHistoryDataClassID ClassID = ClassID(285)
+const PseudowirePerformanceMonitoringHistoryDataClassID = ClassID(285) // 0x011d
 
 var pseudowireperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// PseudowirePerformanceMonitoringHistoryData (class ID #285)
+// PseudowirePerformanceMonitoringHistoryData (Class ID: #285 / 0x011d)
 //	This ME collects PM for a pseudowire TP. Most of the attributes monitor packets received from
 //	the PSN, and may therefore be considered egress PM. For the most part, ingress PM is collected
 //	at the CES PPTP ME.
@@ -49,42 +49,39 @@ var pseudowireperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the pseudowire TP. (R, setbycreate)
-//			(mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the pseudowire TP. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1-byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1-byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 and 2 MEs
 //			that contains PM threshold values. (R,-W, setbycreate) (mandatory) (2-bytes)
 //
 //		Received Packets
-//			Received packets: This attribute counts the total number of packets, both payload and
-//			signalling, received in the PSN to the TDM direction. (R) (mandatory) (4-bytes)
+//			This attribute counts the total number of packets, both payload and signalling, received in the
+//			PSN to the TDM direction. (R) (mandatory) (4-bytes)
 //
 //		Transmitted Packets
-//			Transmitted packets: This attribute counts the total number of packets, both payload and
-//			signalling, transmitted in the TDM to the PSN direction. The count includes packets whose L bit
-//			is set and which may therefore not contain a payload. (R) (mandatory) (4-bytes)
+//			This attribute counts the total number of packets, both payload and signalling, transmitted in
+//			the TDM to the PSN direction. The count includes packets whose L bit is set and which may
+//			therefore not contain a payload. (R) (mandatory) (4-bytes)
 //
 //		Missing Packets
-//			Missing packets: This attribute counts the number of lost packets, as indicated by gaps in the
-//			control word numbering sequence. Both payload and signalling packets, if any, contribute to this
-//			count. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of lost packets, as indicated by gaps in the control word
+//			numbering sequence. Both payload and signalling packets, if any, contribute to this count. (R)
+//			(mandatory) (4-bytes)
 //
 //		Misordered Packets, Usable
-//			Misordered packets, usable: This attribute counts the number of packets received out of order,
-//			but which were able to be successfully re-ordered and played out. Both payload and signalling
-//			packets, if any, contribute to this count. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of packets received out of order, but which were able to be
+//			successfully re-ordered and played out. Both payload and signalling packets, if any, contribute
+//			to this count. (R) (mandatory) (4-bytes)
 //
 //		Misordered Packets Dropped
-//			Misordered packets dropped: This attribute counts the number of packets received out of sequence
-//			that were discarded, either because the ONU did not support reordering or because it was too
-//			late to reorder them. Both payload and signalling packets, if any, contribute to this count. (R)
-//			(mandatory) (4-bytes)
+//			This attribute counts the number of packets received out of sequence that were discarded, either
+//			because the ONU did not support reordering or because it was too late to reorder them. Both
+//			payload and signalling packets, if any, contribute to this count. (R) (mandatory) (4-bytes)
 //
 //		Playout Buffer Underruns_Overruns
 //			Playout buffer underruns/overruns: This attribute counts the number of packets that were
@@ -92,20 +89,20 @@ var pseudowireperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			signalling packets, if any, contribute to this count. (R) (mandatory) (4-bytes)
 //
 //		Malformed Packets
-//			Malformed packets: This attribute counts the number of malformed packets, e.g., because the
-//			packet length was not as expected or because of an unexpected RTP payload type. Both payload and
-//			signalling packets, if any, contribute to this count. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of malformed packets, e.g., because the packet length was not
+//			as expected or because of an unexpected RTP payload type. Both payload and signalling packets,
+//			if any, contribute to this count. (R) (mandatory) (4-bytes)
 //
 //		Stray Packets
-//			Stray packets: This attribute counts the number of packets whose ECID or RTP SSRC failed to
-//			match the expected value, or which are otherwise known to have been misdelivered. Stray packets
-//			are discarded without affecting any of the other PM counters. Both payload and signalling
-//			packets, if any, contribute to this count. (R) (mandatory) (4-bytes)
+//			This attribute counts the number of packets whose ECID or RTP SSRC failed to match the expected
+//			value, or which are otherwise known to have been misdelivered. Stray packets are discarded
+//			without affecting any of the other PM counters. Both payload and signalling packets, if any,
+//			contribute to this count. (R) (mandatory) (4-bytes)
 //
 //		Remote Packet Loss
-//			Remote packet loss: This attribute counts received packets whose R bit is set, indicating the
-//			loss of packets at the far end. Both payload and signalling packets, if any, contribute to this
-//			count. (R) (mandatory) (4-bytes)
+//			This attribute counts received packets whose R bit is set, indicating the loss of packets at the
+//			far end. Both payload and signalling packets, if any, contribute to this count. (R) (mandatory)
+//			(4-bytes)
 //
 //		Tdm L_Bit Packets Transmitted
 //			TDM L-bit packets transmitted: This attribute counts the number of packets transmitted with the
@@ -113,17 +110,17 @@ var pseudowireperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			contribute to this count. (R) (mandatory) (4-bytes)
 //
 //		Es
-//			ES:	This attribute counts errored seconds. Any discarded, lost, malformed or unusable packet
+//			This attribute counts errored seconds. Any discarded, lost, malformed or unusable packet
 //			received from the PSN during a given second causes this counter to increment. Both payload and
 //			signalling packets, if any, contribute to this count. (R) (mandatory) (4-bytes)
 //
 //		Ses
-//			SES:	This attribute counts severely errored seconds. The criterion for an SES may be configured
+//			This attribute counts severely errored seconds. The criterion for an SES may be configured
 //			through the pseudowire maintenance profile ME. Both payload and signalling packets, if any,
 //			contribute to this count. (R) (mandatory) (4-bytes)
 //
 //		Uas
-//			UAS:	This attribute counts unavailable seconds. An unavailable second begins at the onset of 10
+//			This attribute counts unavailable seconds. An unavailable second begins at the onset of 10
 //			consecutive SES and ends at the onset of 10 consecutive seconds that are not severely errored. A
 //			service is unavailable if either its payload or its signalling, if any, are unavailable. During
 //			unavailable time, only UAS should be counted; other anomalies should not be counted. (R)

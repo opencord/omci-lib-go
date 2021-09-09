@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // OnuGClassID is the 16-bit ID for the OMCI
 // Managed entity ONU-G
-const OnuGClassID ClassID = ClassID(256)
+const OnuGClassID = ClassID(256) // 0x0100
 
 var onugBME *ManagedEntityDefinition
 
-// OnuG (class ID #256)
+// OnuG (Class ID: #256 / 0x0100)
 //	This ME represents the ONU as equipment. The ONU automatically creates an instance of this ME.
 //	It assigns values to read-only attributes according to data within the ONU itself.
 //
@@ -43,70 +43,113 @@ var onugBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. There is only
-//			one instance, number 0. (R) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. There is only one instance, number
+//			0. (R) (mandatory) (2-bytes)
 //
 //		Vendor Id
-//			Vendor ID:	This attribute identifies the vendor of the ONU. It is the same as the four most
-//			significant bytes of the ONU serial number as specified in the respective transmission
-//			convergence (TC) layer specification. (R) (mandatory) (4-bytes)
+//			This attribute identifies the vendor of the ONU. It is the same as the four most significant
+//			bytes of the ONU serial number as specified in the respective transmission convergence (TC)
+//			layer specification. (R) (mandatory) (4-bytes)
 //
 //		Version
-//			Version:	This attribute identifies the version of the ONU as defined by the vendor. The
-//			character value 0 indicates that version information is not available or applicable. (R)
-//			(mandatory) (14-bytes)
+//			This attribute identifies the version of the ONU as defined by the vendor. The character value 0
+//			indicates that version information is not available or applicable. (R) (mandatory) (14-bytes)
 //
 //		Serial Number
-//			Serial number: The serial number is unique for each ONU. It is defined in the respective TC
-//			layer specification and contains the vendor ID and version number. The first four bytes are an
-//			ASCII-encoded four-letter vendor ID. The second four bytes are a binary encoded serial number,
-//			under the control of the ONU vendor. (R) (mandatory) (8-bytes)
+//			The serial number is unique for each ONU. It is defined in the respective TC layer specification
+//			and contains the vendor ID and version number. The first four bytes are an ASCII-encoded four-
+//			letter vendor ID. The second four bytes are a binary encoded serial number, under the control of
+//			the ONU vendor. (R) (mandatory) (8-bytes)
 //
 //		Traffic Management Option
+//			This attribute identifies the upstream traffic management function implemented in the ONU. There
+//			are three options:
+//
+//			0	Priority controlled and flexibly scheduled upstream traffic. The traffic scheduler and
+//			priority queue mechanism are used for upstream traffic.
+//
+//			1	Rate controlled upstream traffic. The maximum upstream traffic of each individual connection
+//			is guaranteed by shaping.
+//
+//			2	Priority and rate controlled. The traffic scheduler and priority queue mechanism are used for
+//			upstream traffic. The maximum upstream traffic of each individual connection is guaranteed by
+//			shaping.
+//
+//			For a further explanation, see Appendix II.
+//
+//			Downstream priority queues are managed via the GEM port network CTP ME.
+//
 //			Upon ME instantiation, the ONU sets this attribute to the value that describes its
 //			implementation. The OLT must adapt its model to conform to the ONU's selection. (R) (mandatory)
 //			(1-byte)
 //
 //		Deprecated
-//			Deprecated:	This attribute is not used. If it is present, it should be set to 0. (R) (optional)
-//			(1-byte)
+//			This attribute is not used. If it is present, it should be set to 0. (R) (optional) (1-byte)
 //
 //		Battery Backup
-//			Battery backup: This Boolean attribute controls whether the ONU performs backup battery
-//			monitoring (assuming it is capable of doing so). False disables battery alarm monitoring; true
-//			enables battery alarm monitoring. (R,-W) (mandatory) (1-byte)
+//			This Boolean attribute controls whether the ONU performs backup battery monitoring (assuming it
+//			is capable of doing so). False disables battery alarm monitoring; true enables battery alarm
+//			monitoring. (R,-W) (mandatory) (1-byte)
 //
 //		Administrative State
-//			Administrative state: This attribute locks (1) and unlocks (0) the functions performed by the
-//			ONU as an entirety. Administrative state is further described in clause A.1.6. (R,-W)
-//			(mandatory) (1-byte)
+//			This attribute locks (1) and unlocks (0) the functions performed by the ONU as an entirety.
+//			Administrative state is further described in clause A.1.6. (R,-W) (mandatory) (1-byte)
 //
 //		Operational State
-//			Operational state: This attribute reports whether the ME is currently capable of performing its
-//			function. Valid values are enabled (0) and disabled (1). (R) (optional) (1-byte)
+//			This attribute reports whether the ME is currently capable of performing its function. Valid
+//			values are enabled (0) and disabled (1). (R) (optional) (1-byte)
 //
 //		Onu Survival Time
-//			ONU survival time: This attribute indicates the minimum guaranteed time in milliseconds between
-//			the loss of external power and the silence of the ONU. This does not include survival time
-//			attributable to a backup battery. The value zero implies that the actual time is not known. (R)
-//			(optional) (1-byte)
+//			This attribute indicates the minimum guaranteed time in milliseconds between the loss of
+//			external power and the silence of the ONU. This does not include survival time attributable to a
+//			backup battery. The value zero implies that the actual time is not known. (R) (optional)
+//			(1-byte)
 //
 //		Logical Onu Id
-//			Logical ONU ID: This attribute provides a way for the ONU to identify itself. It is a text
-//			string, null terminated if it is shorter than 24 bytes, with a null default value. The mechanism
-//			for creation or modification of this information is beyond the scope of this Recommendation, but
-//			might include, for example, a web page displayed to a user. (R) (optional) (24 bytes)
+//			This attribute provides a way for the ONU to identify itself. It is a text string, null
+//			terminated if it is shorter than 24 bytes, with a null default value. The mechanism for creation
+//			or modification of this information is beyond the scope of this Recommendation, but might
+//			include, for example, a web page displayed to a user. (R) (optional) (24 bytes)
 //
 //		Logical Password
-//			Logical password: This attribute provides a way for the ONU to submit authentication
-//			credentials. It is a text string, null terminated if it is shorter than 12 bytes, with a null
-//			default value. The mechanism for creation or modification of this information is beyond the
-//			scope of this Recommendation. (R) (optional) (12-bytes)
+//			This attribute provides a way for the ONU to submit authentication credentials. It is a text
+//			string, null terminated if it is shorter than 12 bytes, with a null default value. The mechanism
+//			for creation or modification of this information is beyond the scope of this Recommendation. (R)
+//			(optional) (12-bytes)
 //
 //		Credentials Status
+//			This attribute permits the OLT to signal to the ONU whether its credentials are valid or not.
+//			The behaviour of the ONU is not specified, but might, for example, include displaying an error
+//			screen to the user. (R, W) (optional) (1-byte)
+//
+//			Values include:
+//
+//			0	Initial state, status indeterminate
+//
+//			1	Successful authentication
+//
+//			2	Logical ONU ID (LOID) error
+//
+//			3	Password error
+//
+//			4	Duplicate LOID
+//
 //			Other values are reserved.
 //
 //		Extended Tc_Layer Options
+//			Extended TC-layer options: This attribute is meaningful in ITU-T G.984 systems only. It is a bit
+//			map that defines whether the ONU supports (1) or does not support (0) various optional TC-layer
+//			capabilities of [ITU-T G.984.3]. Bits are assigned as follows.
+//
+//			Bit	Meaning
+//
+//			1 (LSB)	Annex C  of [ITU-T G.984.3], PON-ID maintenance.
+//
+//			2	Annex D of [ITU-T G.984.3], PLOAM channel enhancements: swift_POPUP and Ranging_adjustment
+//			messages.
+//
+//			3..16	Reserved
+//
 //			(R) (optional) (2-bytes)
 //
 type OnuG struct {

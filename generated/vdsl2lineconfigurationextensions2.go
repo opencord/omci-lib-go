@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // Vdsl2LineConfigurationExtensions2ClassID is the 16-bit ID for the OMCI
 // Managed entity VDSL2 line configuration extensions 2
-const Vdsl2LineConfigurationExtensions2ClassID ClassID = ClassID(323)
+const Vdsl2LineConfigurationExtensions2ClassID = ClassID(323) // 0x0143
 
 var vdsl2lineconfigurationextensions2BME *ManagedEntityDefinition
 
-// Vdsl2LineConfigurationExtensions2 (class ID #323)
+// Vdsl2LineConfigurationExtensions2 (Class ID: #323 / 0x0143)
 //	This ME extends the xDSL line configuration MEs. The ME name was chosen because its attributes
 //	were initially unique to ITU-T G.993.2 VDSL2. Due to continuing standards development, two of
 //	the attributes (FEXT and NEXT TXREFVNds) are also used in [ITUT-G.992.3] and [ITUT-G.992.5].
@@ -49,113 +49,107 @@ var vdsl2lineconfigurationextensions2BME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. All xDSL and
-//			VDSL2 line configuration profiles and extensions that pertain to a given PPTP xDSL must share a
-//			common ME ID. (R, setbycreate) (mandatory) (2-bytes)
+//			This attribute uniquely identifies each instance of this ME. All xDSL and VDSL2 line
+//			configuration profiles and extensions that pertain to a given PPTP xDSL must share a common ME
+//			ID. (R, setbycreate) (mandatory) (2-bytes)
 //
 //		Sos Time Downstream
-//			SOS time downstream: The SOS-TIME-ds attribute is used in the specification of receiver
-//			initiated SOS (see clause 13.4.3 of [ITUT G.993.2]). If the attribute value is not zero, the
-//			standard SOS triggering criteria are enabled, and the value specifies the duration of the window
-//			used in the standard SOS triggering criteria in the downstream direction. The special value zero
-//			indicates that the standard SOS triggering criteria are disabled, i.e., vendor-discretionary
-//			values may be used instead of the values configured in the MIB for the following parameters:
-//			SOS-NTONES-ds, SOS-CRC-ds, SOS-TIME-ds. The valid range of non-zero values is from 1..255,
-//			specifying 64-ms to 16320 ms in steps of 64-ms. (R,-W, setbycreate) (optional) (1-byte)
+//			The SOS-TIME-ds attribute is used in the specification of receiver initiated SOS (see clause
+//			13.4.3 of [ITUT G.993.2]). If the attribute value is not zero, the standard SOS triggering
+//			criteria are enabled, and the value specifies the duration of the window used in the standard
+//			SOS triggering criteria in the downstream direction. The special value zero indicates that the
+//			standard SOS triggering criteria are disabled, i.e., vendor-discretionary values may be used
+//			instead of the values configured in the MIB for the following parameters: SOS-NTONES-ds, SOS-
+//			CRC-ds, SOS-TIME-ds. The valid range of non-zero values is from 1..255, specifying 64-ms to
+//			16320 ms in steps of 64-ms. (R,-W, setbycreate) (optional) (1-byte)
 //
 //		Sos Time Upstream
-//			SOS time upstream: The SOS-TIME-us attribute is used in the specification of receiver initiated
-//			SOS (see clause 13.4.3 of [ITUT G.993.2]). If the attribute value is not zero, the standard SOS
-//			triggering criteria are enabled, and the value specifies the duration of the window used in the
-//			standard SOS triggering criteria in the upstream direction. The special value zero indicates
-//			that the standard SOS triggering criteria are disabled, i.e., vendor-discretionary values may be
-//			used instead of the values configured in the MIB for the following parameters: SOS-NTONES-us,
-//			SOS-CRC-us, SOS-TIME-us. The valid range of non-zero values is from 1..255, specifying 64-ms to
+//			The SOS-TIME-us attribute is used in the specification of receiver initiated SOS (see clause
+//			13.4.3 of [ITUT G.993.2]). If the attribute value is not zero, the standard SOS triggering
+//			criteria are enabled, and the value specifies the duration of the window used in the standard
+//			SOS triggering criteria in the upstream direction. The special value zero indicates that the
+//			standard SOS triggering criteria are disabled, i.e., vendor-discretionary values may be used
+//			instead of the values configured in the MIB for the following parameters: SOS-NTONES-us, SOS-
+//			CRC-us, SOS-TIME-us. The valid range of non-zero values is from 1..255, specifying 64-ms to
 //			16320-ms in steps of 64-ms. (R,-W, setbycreate) (optional) (1-byte)
 //
 //		Sos Degraded Tones Threshold Downstream
-//			SOS degraded tones threshold downstream: The SOS-NTONES-ds attribute is the minimum percentage
-//			of tones in the downstream medley set that must be degraded in order to arm the first
-//			subcondition of the standard SOS triggering criteria in the downstream direction. The valid
-//			range of values is from 1 to 100% in steps of 1. Use of the special value 0 is described in
-//			clause 13.4.3.2 of [ITUT G.993.2]. (R,-W, setbycreate) (optional) (1-byte)
+//			The SOS-NTONES-ds attribute is the minimum percentage of tones in the downstream medley set that
+//			must be degraded in order to arm the first subcondition of the standard SOS triggering criteria
+//			in the downstream direction. The valid range of values is from 1 to 100% in steps of 1. Use of
+//			the special value 0 is described in clause 13.4.3.2 of [ITUT G.993.2]. (R,-W, setbycreate)
+//			(optional) (1-byte)
 //
 //		Sos Degraded Tones Threshold Upstream
-//			SOS degraded tones threshold upstream: The SOS-NTONES-us attribute is the minimum percentage of
-//			tones in the upstream medley set that must be degraded in order to arm the first subcondition of
-//			the standard SOS triggering criteria in the upstream direction. The valid range of values is
-//			from 1 to 100% in steps of 1. Use of the special value 0 is described in clause 13.4.3.2 of
-//			[ITUT-G.993.2]. (R,-W, setbycreate) (optional) (1-byte)
+//			The SOS-NTONES-us attribute is the minimum percentage of tones in the upstream medley set that
+//			must be degraded in order to arm the first subcondition of the standard SOS triggering criteria
+//			in the upstream direction. The valid range of values is from 1 to 100% in steps of 1. Use of the
+//			special value 0 is described in clause 13.4.3.2 of [ITUT-G.993.2]. (R,-W, setbycreate)
+//			(optional) (1-byte)
 //
 //		Sos Crc Threshold Downstream
-//			SOS CRC threshold downstream: The SOS-CRC-ds attribute is the minimum number of normalized CRC
-//			anomalies received in SOS-TIME-ds seconds in order to arm the second sub-condition of the
-//			standard SOS triggering criteria (see clause 13.4.3.2 of [ITU T G.993.2]) in the downstream
-//			direction. The valid range of SOS-CRC values is 0.02 to (216-1)*0.02, in steps of 0.02. The
-//			value-0 specifies that the ONU uses its internal default. (R, W, set-by-create) (optional) (2
-//			bytes)
+//			The SOS-CRC-ds attribute is the minimum number of normalized CRC anomalies received in SOS-TIME-
+//			ds seconds in order to arm the second sub-condition of the standard SOS triggering criteria (see
+//			clause 13.4.3.2 of [ITU T G.993.2]) in the downstream direction. The valid range of SOS-CRC
+//			values is 0.02 to (216-1)*0.02, in steps of 0.02. The value-0 specifies that the ONU uses its
+//			internal default. (R, W, set-by-create) (optional) (2 bytes)
 //
 //		Sos Crc Threshold Upstream
-//			SOS CRC threshold upstream: The SOS-CRC-us attribute is the minimum number of normalized CRC
-//			anomalies received in SOS-TIME-us seconds in order to arm the second sub-condition of the
-//			standard SOS triggering criteria (see clause 13.4.3.2 of [ITU T G.993.2]) in the upstream
-//			direction. The valid range of SOS-CRC values is 0.02 to (216-1)*0.02, in steps of 0.02. The
-//			value-0 specifies that the ONU uses its internal default. (R, W, set-by-create) (optional) (2
-//			bytes)
+//			The SOS-CRC-us attribute is the minimum number of normalized CRC anomalies received in SOS-TIME-
+//			us seconds in order to arm the second sub-condition of the standard SOS triggering criteria (see
+//			clause 13.4.3.2 of [ITU T G.993.2]) in the upstream direction. The valid range of SOS-CRC values
+//			is 0.02 to (216-1)*0.02, in steps of 0.02. The value-0 specifies that the ONU uses its internal
+//			default. (R, W, set-by-create) (optional) (2 bytes)
 //
 //		Max Sos Downstream
-//			MAX SOS downstream: The MAX-SOS-ds attribute is used in deactivation. If the number of
-//			successful SOS procedures in the downstream direction performed within a 120-s interval exceeds
-//			MAX-SOS-ds, the modem goes to state L3. See clause 12.1.4 of [ITUT G.993.2] for details. The
-//			valid range of values is 1 to 15, with the special value 0 as described in clause 12.1 of [ITUT
-//			G.993.2]. (R,-W, setbycreate) (optional) (1-byte)
+//			The MAX-SOS-ds attribute is used in deactivation. If the number of successful SOS procedures in
+//			the downstream direction performed within a 120-s interval exceeds MAX-SOS-ds, the modem goes to
+//			state L3. See clause 12.1.4 of [ITUT G.993.2] for details. The valid range of values is 1 to 15,
+//			with the special value 0 as described in clause 12.1 of [ITUT G.993.2]. (R,-W, setbycreate)
+//			(optional) (1-byte)
 //
 //		Max Sos Upstream
-//			MAX SOS upstream: The MAX-SOS-us attribute is used in deactivation. If the number of successful
-//			SOS procedures in the upstream direction performed within a 120-s interval exceeds MAX-SOS-us,
-//			the modem goes to state L3. See clause 12.1.4 of [ITUT G.993.2] for details. The valid range of
-//			values is 1 to 15, with the special value 0 as described in clause 12.1 of [ITUT G.993.2].
-//			(R,-W, setbycreate) (optional) (1-byte)
+//			The MAX-SOS-us attribute is used in deactivation. If the number of successful SOS procedures in
+//			the upstream direction performed within a 120-s interval exceeds MAX-SOS-us, the modem goes to
+//			state L3. See clause 12.1.4 of [ITUT G.993.2] for details. The valid range of values is 1 to 15,
+//			with the special value 0 as described in clause 12.1 of [ITUT G.993.2]. (R,-W, setbycreate)
+//			(optional) (1-byte)
 //
 //		Snr Max Offset Downstream
-//			SNR max offset downstream: The SNRMOFFSET-ROC-ds attribute is the SNR margin offset for the ROC
-//			in the downstream direction. The attribute is used in the specification of the channel
-//			initialization policy (see clause 12.3.7.1 of [ITUT G.993.2]). The valid range of SNR margin
-//			offset values is from 0..31-dB in 0.1-dB steps. (R,-W, setbycreate) (optional) (2-bytes)
+//			The SNRMOFFSET-ROC-ds attribute is the SNR margin offset for the ROC in the downstream
+//			direction. The attribute is used in the specification of the channel initialization policy (see
+//			clause 12.3.7.1 of [ITUT G.993.2]). The valid range of SNR margin offset values is from 0..31-dB
+//			in 0.1-dB steps. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Snr Max Offset Upstream
-//			SNR max offset upstream: The SNRMOFFSET-ROC-us attribute is the SNR margin offset for the ROC in
-//			the upstream direction. The attribute is used in the specification of the channel initialization
-//			policy (see clause-12.3.7.1 of [ITUT G.993.2]). The valid range of SNR margin offset values is
-//			from 0..31-dB in 0.1-dB steps. (R,-W, setbycreate) (optional) (2-bytes)
+//			The SNRMOFFSET-ROC-us attribute is the SNR margin offset for the ROC in the upstream direction.
+//			The attribute is used in the specification of the channel initialization policy (see
+//			clause-12.3.7.1 of [ITUT G.993.2]). The valid range of SNR margin offset values is from 0..31-dB
+//			in 0.1-dB steps. (R,-W, setbycreate) (optional) (2-bytes)
 //
 //		Roc Minimum Impulse Noise Protection Downstream
-//			ROC minimum impulse noise protection downstream: The INPMIN-ROC-ds attribute specifies the
-//			minimum INP to apply on the ROC in the downstream direction expressed in multiples of equivalent
-//			4k DMT, xDSL (DMT) symbol length. The minimum INP is an integer ranging from 0 to 8. (R,-W,
-//			setbycreate) (optional) (1-byte)
+//			The INPMIN-ROC-ds attribute specifies the minimum INP to apply on the ROC in the downstream
+//			direction expressed in multiples of equivalent 4k DMT, xDSL (DMT) symbol length. The minimum INP
+//			is an integer ranging from 0 to 8. (R,-W, setbycreate) (optional) (1-byte)
 //
 //		Roc Minimum Impulse Noise Protection Upstream
-//			ROC minimum impulse noise protection upstream: The INPMIN-ROC-us attribute specifies the minimum
-//			impulse noise protection to apply on the ROC in the upstream direction expressed in multiples of
-//			equivalent 4k DMT symbol length. The minimum INP is an integer ranging from 0 to 8. (R,-W,
-//			setbycreate) (optional) (1-byte)
+//			The INPMIN-ROC-us attribute specifies the minimum impulse noise protection to apply on the ROC
+//			in the upstream direction expressed in multiples of equivalent 4k DMT symbol length. The minimum
+//			INP is an integer ranging from 0 to 8. (R,-W, setbycreate) (optional) (1-byte)
 //
 //		Fext Downstream Transmitter Referred Virtual Noise Table
-//			FEXT downstream transmitter referred virtual noise table: The FEXT TXREFVNds attribute is the
-//			downstream transmitter referred virtual noise specified for FEXTR duration in Annex C of [ITUT
-//			G.992.3] (ADSL2) and Annex C of [ITUT G.992.5] (ADSL2plus). The syntax of this attribute is the
-//			same as that of the TXREFVNds table attribute of the VDSL2 line configuration extensions ME.
-//			(R,-W) (mandatory for Annex-C of [ITUT-G.992.3] and Annex-C of [ITUT-G.992.5]) (3-*-N bytes,
-//			where N is the number of breakpoints)
+//			The FEXT TXREFVNds attribute is the downstream transmitter referred virtual noise specified for
+//			FEXTR duration in Annex C of [ITUT G.992.3] (ADSL2) and Annex C of [ITUT G.992.5] (ADSL2plus).
+//			The syntax of this attribute is the same as that of the TXREFVNds table attribute of the VDSL2
+//			line configuration extensions ME. (R,-W) (mandatory for Annex-C of [ITUT-G.992.3] and Annex-C of
+//			[ITUT-G.992.5]) (3-*-N bytes, where N is the number of breakpoints)
 //
 //		Next Downstream Transmitter Referred Virtual Noise Table
-//			NEXT downstream transmitter referred virtual noise table: The NEXT TXREFVNds attribute is the
-//			downstream transmitter referred virtual noise specified for NEXTR duration in Annex C of [ITUT
-//			G.992.3] (ADSL2) and Annex C of [ITUT G.992.5] (ADSL2plus). The syntax of this attribute is the
-//			same as that of the TXREFVNds table attribute of the VDSL2 line configuration extensions ME.
-//			(R,-W) (mandatory for Annex-C of [ITUT-G.992.3] and Annex-C of [ITUT-G.992.5]) (3-*-N bytes,
-//			where N is the number of breakpoints)
+//			The NEXT TXREFVNds attribute is the downstream transmitter referred virtual noise specified for
+//			NEXTR duration in Annex C of [ITUT G.992.3] (ADSL2) and Annex C of [ITUT G.992.5] (ADSL2plus).
+//			The syntax of this attribute is the same as that of the TXREFVNds table attribute of the VDSL2
+//			line configuration extensions ME. (R,-W) (mandatory for Annex-C of [ITUT-G.992.3] and Annex-C of
+//			[ITUT-G.992.5]) (3-*-N bytes, where N is the number of breakpoints)
 //
 type Vdsl2LineConfigurationExtensions2 struct {
 	ManagedEntityDefinition

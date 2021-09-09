@@ -27,11 +27,11 @@ import "github.com/deckarep/golang-set"
 
 // FastXtuCPerformanceMonitoringHistoryDataClassID is the 16-bit ID for the OMCI
 // Managed entity FAST xTU-C performance monitoring history data
-const FastXtuCPerformanceMonitoringHistoryDataClassID ClassID = ClassID(437)
+const FastXtuCPerformanceMonitoringHistoryDataClassID = ClassID(437) // 0x01b5
 
 var fastxtucperformancemonitoringhistorydataBME *ManagedEntityDefinition
 
-// FastXtuCPerformanceMonitoringHistoryData (class ID #437)
+// FastXtuCPerformanceMonitoringHistoryData (Class ID: #437 / 0x01b5)
 //	This ME collects PM data on the xTU C to xTU R path as seen from the xTU-C. Instances of this ME
 //	are created and deleted by the OLT.
 //
@@ -40,33 +40,32 @@ var fastxtucperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //
 //	Attributes
 //		Managed Entity Id
-//			Managed entity ID: This attribute uniquely identifies each instance of this ME. Through an
-//			identical ID, this ME is implicitly linked to an instance of the PPTP xDSL UNI part 1. (R, set-
-//			by-create) (mandatory) (2 bytes)
+//			This attribute uniquely identifies each instance of this ME. Through an identical ID, this ME is
+//			implicitly linked to an instance of the PPTP xDSL UNI part 1. (R, set-by-create) (mandatory) (2
+//			bytes)
 //
 //		Interval End Time
-//			Interval end time: This attribute identifies the most recently finished 15-min interval. (R)
-//			(mandatory) (1 byte)
+//			This attribute identifies the most recently finished 15-min interval. (R) (mandatory) (1 byte)
 //
 //		Threshold Data 1_2 Id
 //			Threshold data 1/2 ID: This attribute points to an instance of the threshold data 1 and 2 MEs
 //			that contain PM threshold values. (R, W, set-by-create) (mandatory) (2 bytes)
 //
 //		Successful Fra Counter
-//			Successful FRA counter: This attribute counts the successful FRA primitives (success_FRA). The
-//			successful FRA primitive (success_FRA) is defined in clause 11.3.1.6 of [ITU-T G.9701]. See
-//			clause 7.7.22 of [ITU-T G.997.2]. (R) (mandatory) (4-bytes)
+//			This attribute counts the successful FRA primitives (success_FRA). The successful FRA primitive
+//			(success_FRA) is defined in clause 11.3.1.6 of [ITU-T G.9701]. See clause 7.7.22 of [ITU-T
+//			G.997.2]. (R) (mandatory) (4-bytes)
 //
 //		Successful Rpa Counter
-//			Successful RPA counter: This attribute counts the successful RPA primitives (success_RPA). The
-//			successful RPA primitive (success_RPA) is defined in clause 11.3.1.6 of [ITU-T G.9701]. See
-//			clause 7.7.23 of [ITU-T G.997.2] (R) (optional) (4 bytes)
+//			This attribute counts the successful RPA primitives (success_RPA). The successful RPA primitive
+//			(success_RPA) is defined in clause 11.3.1.6 of [ITU-T G.9701]. See clause 7.7.23 of [ITU-T
+//			G.997.2] (R) (optional) (4 bytes)
 //
 //		Successful Tiga Counter
-//			Successful TIGA counter: This attribute counts the successful TIGA primitives (success_TIGA).
-//			The successful TIGA primitive (success_TIGA) is defined in clause 11.3.1.6 of [ITU-T G.9701].
-//			Reported only with the near-end measured time, invalid data flag and timestamp. See clause
-//			7.7.24 of [ITUT-G.997.2] (R) (optional) (4 bytes)
+//			This attribute counts the successful TIGA primitives (success_TIGA). The successful TIGA
+//			primitive (success_TIGA) is defined in clause 11.3.1.6 of [ITU-T G.9701]. Reported only with the
+//			near-end measured time, invalid data flag and timestamp. See clause 7.7.24 of [ITUT-G.997.2] (R)
+//			(optional) (4 bytes)
 //
 type FastXtuCPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition
