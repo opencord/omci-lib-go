@@ -90,10 +90,15 @@ func (bme ManagedEntityDefinition) GetAlarmMap() AlarmMap {
 }
 
 func (bme ManagedEntityDefinition) DecodeAttributes(mask uint16, data []byte, p gopacket.PacketBuilder, msgType byte) (AttributeValueMap, error) {
-	if (mask | bme.GetAllowedAttributeMask()) != bme.GetAllowedAttributeMask() {
-		return nil, fmt.Errorf("unsupported attribute mask %#x, valid: %#x for ME %v (Class ID: %d)",
+	badMask := (mask | bme.GetAllowedAttributeMask()) ^ bme.GetAllowedAttributeMask()
+
+	var maskErr error
+	if badMask != 0 {
+		maskErr = fmt.Errorf("unsupported attribute mask %#x, valid: %#x for ME %v (Class ID: %d)",
 			mask, bme.GetAllowedAttributeMask(), bme.GetName(), bme.ClassID)
+		mask &= bme.GetAllowedAttributeMask()
 	}
+	// Process known attributes
 	keyList := GetAttributeDefinitionMapKeys(bme.AttributeDefinitions)
 
 	attrMap := make(AttributeValueMap, bits.OnesCount16(mask))
@@ -153,7 +158,13 @@ func (bme ManagedEntityDefinition) DecodeAttributes(mask uint16, data []byte, p 
 			}
 		}
 	}
-	return attrMap, nil
+	// If badMask is non-zero.  Handle it by re-encoding the error as a custom relaxed
+	// decode error that the caller of this decode can process if they wish to relax
+	// the decoding
+	if badMask != 0 {
+		maskErr = NewUnknownAttributeDecodeError(maskErr.Error(), badMask, data)
+	}
+	return attrMap, maskErr
 }
 
 func (bme ManagedEntityDefinition) SerializeAttributes(attr AttributeValueMap, mask uint16,

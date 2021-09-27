@@ -353,6 +353,8 @@ type MibUploadNextResponse struct {
 	MeBasePacket
 	ReportedME    me.ManagedEntity
 	AdditionalMEs []me.ManagedEntity // Valid only for extended message set version
+
+	RelaxedErrors []me.IRelaxedDecodeError
 }
 
 type MibUploadNextManageEntity struct {
@@ -377,7 +379,19 @@ func (omci *MibUploadNextResponse) CanDecode() gopacket.LayerClass {
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
 func (omci *MibUploadNextResponse) NextLayerType() gopacket.LayerType {
+
+	if omci.RelaxedErrors != nil && len(omci.RelaxedErrors) > 0 {
+		return LayerTypeUnknownAttributes
+	}
 	return gopacket.LayerTypePayload
+}
+
+// addRelaxedError appends relaxed decode errors to this message
+func (omci *MibUploadNextResponse) addRelaxedError(err me.IRelaxedDecodeError) {
+	if omci.RelaxedErrors == nil {
+		omci.RelaxedErrors = make([]me.IRelaxedDecodeError, 0)
+	}
+	omci.RelaxedErrors = append(omci.RelaxedErrors, err)
 }
 
 // DecodeFromBytes decodes the given bytes of a MIB Upload Next Response into this layer
@@ -418,47 +432,77 @@ func (omci *MibUploadNextResponse) DecodeFromBytes(data []byte, p gopacket.Packe
 	// error of "managed entity definition not found" returned.
 	var offset int
 	var attrLen int
+	meLength := len(data)
 	if omci.Extended {
 		offset = 2 + 2 // Message Contents length (2) + first ME attribute values len (2)
 		attrLen = int(binary.BigEndian.Uint16(data[6:]))
+		meLength = 4 + offset + 6 + attrLen
 
 		if len(data[4+offset:]) < 6+attrLen {
 			p.SetTruncated()
 			return errors.New("frame too small: MIB Upload Response Managed Entity attribute truncated")
 		}
 	}
-	err = omci.ReportedME.DecodeFromBytes(data[4+offset:], p, byte(MibUploadNextResponseType))
-	if err != nil || !omci.Extended {
-		return err
+	err = omci.ReportedME.DecodeFromBytes(data[4+offset:meLength], p, byte(MibUploadNextResponseType))
+	if err != nil {
+		attrError, ok := err.(*me.UnknownAttributeDecodeError)
+
+		// Error if relaxed decode not supported or other error signalled
+		if !ok || !me.GetRelaxedDecode(me.MibUploadNext, false) {
+			return err
+		}
+		// Save off which Managed Entity had the issue
+		attrError.EntityClass = omci.ReportedME.GetClassID()
+		attrError.EntityInstance = omci.ReportedME.GetEntityID()
+		if attrError.Contents != nil && !omci.Extended {
+			attrLen += len(attrError.Contents)
+		}
+		omci.addRelaxedError(attrError)
+		err = nil
 	}
-	// Handle extended message set decode here for additional attributes
-	remaining := len(data) - (6 + 8 + attrLen)
-	if remaining > 0 {
-		offset = 6 + 8 + attrLen
-		omci.AdditionalMEs = make([]me.ManagedEntity, 0)
-		for remaining > 0 {
-			if len(data[offset:]) < 8 {
+	if err == nil && omci.Extended {
+		// Handle extended message set decode here for additional managed entities
+		data = data[meLength:]
+		if len(data) > 0 {
+			omci.AdditionalMEs = make([]me.ManagedEntity, 0)
+		}
+		for len(data) > 0 {
+			if len(data) < 8 {
 				p.SetTruncated()
 				// TODO: Review all "frame to small" and add an extra hint for developers
 				return errors.New("frame too small: MIB Upload Response Managed Entity header truncated")
 			}
 			additional := me.ManagedEntity{}
-			attrLen = int(binary.BigEndian.Uint16(data[offset:]))
+			attrLen = int(binary.BigEndian.Uint16(data))
+			meLength = 8 + attrLen
 
-			if len(data[offset:]) < 8+attrLen {
+			if len(data) < meLength {
 				p.SetTruncated()
 				return errors.New("frame too small: MIB Upload Response Managed Entity attribute truncated")
 			}
-			err = additional.DecodeFromBytes(data[offset+2:], p, byte(MibUploadNextResponseType))
+			err = additional.DecodeFromBytes(data[2:meLength], p, byte(MibUploadNextResponseType))
 			if err != nil {
-				return err
+				attrError, ok := err.(*me.UnknownAttributeDecodeError)
+
+				// Error if relaxed decode not supported
+				if !ok || !me.GetRelaxedDecode(me.MibUploadNext, false) {
+					return err
+				}
+				// Save off which Managed Entity had the issue
+				attrError.EntityClass = additional.GetClassID()
+				attrError.EntityInstance = additional.GetEntityID()
+				omci.addRelaxedError(attrError)
+				err = nil
 			}
 			omci.AdditionalMEs = append(omci.AdditionalMEs, additional)
-			remaining -= 8 + attrLen
-			offset += 8 + attrLen
+			data = data[meLength:]
 		}
 	}
-	return nil
+	if err == nil && omci.RelaxedErrors != nil && len(omci.RelaxedErrors) > 0 {
+		// Create our error layer now
+		err = newUnknownAttributesLayer(omci, omci.RelaxedErrors, p)
+	}
+	return err
 }
 
 func decodeMibUploadNextResponse(data []byte, p gopacket.PacketBuilder) error {

@@ -613,8 +613,6 @@ func TestMibUploadNextResponseDecodeExtendedThreeMe(t *testing.T) {
 	data, err := stringToPacket(goodMessage)
 	assert.NoError(t, err)
 
-	// TODO: Implement and test
-
 	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
 	assert.NotNil(t, packet)
 

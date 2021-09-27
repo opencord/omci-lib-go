@@ -286,15 +286,26 @@ func (entity *ManagedEntity) DecodeFromBytes(data []byte, p gopacket.PacketBuild
 	entity.definition = meDefinition.definition
 	entity.attributeMask = binary.BigEndian.Uint16(data[4:6])
 	entity.attributes = make(map[string]interface{})
-	entity.SetEntityID(entityID)
+	setErr := entity.SetEntityID(entityID)
+	if setErr != nil {
+		return setErr
+	}
 	packetAttributes, err := entity.DecodeAttributes(entity.GetAttributeMask(), data[6:], p, msgType)
+
+	// Decode packet attributes even if present in case relaxed attribute decoding is enabled.
+	if packetAttributes != nil {
+		for name, value := range packetAttributes {
+			entity.attributes[name] = value
+		}
+	}
 	if err != nil {
-		return err
+		if attrError, ok := err.(*UnknownAttributeDecodeError); ok && GetRelaxedDecodeByOctetType(msgType) {
+			// Subtract off bad mask from what we computed
+			badMask := attrError.AttributeMask
+			entity.attributeMask &= ^badMask
+		}
 	}
-	for name, value := range packetAttributes {
-		entity.attributes[name] = value
-	}
-	return nil
+	return err
 }
 
 // SerializeTo serializes a Managed Entity into an octet stream

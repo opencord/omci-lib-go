@@ -117,6 +117,9 @@ var (
 	LayerTypeGetAllAlarmsResponseExtended          gopacket.LayerType
 	LayerTypeGetAllAlarmsNextResponseExtended      gopacket.LayerType
 )
+var (
+	LayerTypeUnknownAttributes gopacket.LayerType
+)
 
 func mkReqLayer(mt me.MsgType, mts string, decode gopacket.DecodeFunc) gopacket.LayerType {
 	return gopacket.RegisterLayerType(1000+(int(mt)|int(me.AR)),
@@ -334,6 +337,16 @@ func init() {
 	nextLayerMapping[AlarmNotificationType+ExtendedTypeDecodeOffset] = LayerTypeAlarmNotificationExtended
 	nextLayerMapping[AttributeValueChangeType+ExtendedTypeDecodeOffset] = LayerTypeAttributeValueChangeExtended
 	nextLayerMapping[TestResultType+ExtendedTypeDecodeOffset] = LayerTypeTestResultExtended
+
+	////////////////////////////////////////////////////////////////////////
+	// The following are custom layers used during relaxed decode.  They are defined
+	// as layers but will be appended to decoded packets as an error layer.  The DecodeFunc
+	// is actually never called and does not have to be added to the nextLayerMapping
+	var decode gopacket.DecodeFunc
+
+	decode = decodeUnknownAttributes
+	LayerTypeUnknownAttributes = gopacket.RegisterLayerType(2000,
+		gopacket.LayerTypeMetadata{Name: "Unknown Attributes", Decoder: decode})
 }
 
 func MsgTypeToNextLayer(mt MessageType, isExtended bool) (gopacket.LayerType, error) {
