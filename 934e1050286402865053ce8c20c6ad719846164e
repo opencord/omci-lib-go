@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02f192a6_54282d77",
+        "filename": "FrameDecode.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000671
+      },
+      "writtenOn": "2021-09-30T09:01:50Z",
+      "side": 1,
+      "message": "Line feed missing.",
+      "range": {
+        "startLine": 58,
+        "startChar": 13,
+        "endLine": 58,
+        "endChar": 14
+      },
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd127cf5_34323823",
+        "filename": "FrameDecode.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000671
+      },
+      "writtenOn": "2021-09-30T09:01:50Z",
+      "side": 1,
+      "message": "Can you name it or is it still hypothetical?",
+      "range": {
+        "startLine": 68,
+        "startChar": 41,
+        "endLine": 68,
+        "endChar": 48
+      },
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
