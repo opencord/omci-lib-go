@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "061eb42a_ea6714a3",
+        "filename": "FrameDecode.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-09-30T13:29:26Z",
+      "side": 1,
+      "message": "I can fix this on the next JIRA (one related to missing table attributes for VoIP MEs) that is ready to submit once this one passes if that is okay.",
+      "parentUuid": "02f192a6_54282d77",
+      "range": {
+        "startLine": 58,
+        "startChar": 13,
+        "endLine": 58,
+        "endChar": 14
+      },
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cd127cf5_34323823",
         "filename": "FrameDecode.md",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2021-09-30T09:01:50Z",
       "side": 1,
       "message": "Can you name it or is it still hypothetical?",
+      "range": {
+        "startLine": 68,
+        "startChar": 41,
+        "endLine": 68,
+        "endChar": 48
+      },
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d734df88_09ddafd8",
+        "filename": "FrameDecode.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-09-30T13:29:26Z",
+      "side": 1,
+      "message": "If I remember correctly, it was from the BroadCom SDK and it may have been either (or both) the Alpha and T\u0026W ONUs.  If I remember correctly it was on the ANI-G ME which has 26-28 bytes of attribute data if you took them all at once. The max octets to return is 25.\n\nI think the decode logic comments in the python version of the adapter or related check-ins comments/JIRA for either the python or go OMCI library may have the name as well.",
+      "parentUuid": "cd127cf5_34323823",
       "range": {
         "startLine": 68,
         "startChar": 41,
