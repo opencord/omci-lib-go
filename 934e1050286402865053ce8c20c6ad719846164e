@@ -1,6 +1,91 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b0f0f95_d218b9d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-10-06T10:42:12Z",
+      "side": 1,
+      "message": "Only some minor remarks which could be considered in some follow up version.",
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3c3c320_35e80a28",
+        "filename": "FrameDecode.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-10-06T10:42:12Z",
+      "side": 1,
+      "message": "OMCI message type?",
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e84a6ca_bf0aa628",
+        "filename": "FrameDecode.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-10-06T10:42:12Z",
+      "side": 1,
+      "message": "double entry? compare line 38 ?",
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa2bcb5a_ce723a53",
+        "filename": "FrameDecode.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-10-06T10:42:12Z",
+      "side": 1,
+      "message": "response",
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fcc29896_abbd9539",
+        "filename": "FrameDecode.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-10-06T10:42:12Z",
+      "side": 1,
+      "message": "Why? Also for AVC notifications - which might be prone to include unknown attributes?",
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "02f192a6_54282d77",
@@ -139,6 +224,23 @@
         "endLine": 68,
         "endChar": 48
       },
+      "revId": "934e1050286402865053ce8c20c6ad719846164e",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ead479a2_e3eba473",
+        "filename": "mibupload.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1000666
+      },
+      "writtenOn": "2021-10-06T10:42:12Z",
+      "side": 1,
+      "message": "block could also be placed already under the len check above from line 466? (nothing to do if already 0)",
       "revId": "934e1050286402865053ce8c20c6ad719846164e",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
