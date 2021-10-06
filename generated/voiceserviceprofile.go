@@ -250,6 +250,7 @@ func init() {
 			Create,
 			Delete,
 			Get,
+			GetNext,
 			Set,
 			SetTable,
 		),
@@ -265,14 +266,17 @@ func init() {
 			7:  Uint16Field("DtmfDigitDuration", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
 			8:  Uint16Field("HookFlashMinimumTime", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 8),
 			9:  Uint16Field("HookFlashMaximumTime", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 9),
-			10: MultiByteField("TonePatternTable", OctetsAttributeType, 0x0040, 20, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 10),
-			11: MultiByteField("ToneEventTable", OctetsAttributeType, 0x0020, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: MultiByteField("RingingPatternTable", OctetsAttributeType, 0x0010, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: MultiByteField("RingingEventTable", OctetsAttributeType, 0x0008, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 13),
+			10: TableField("TonePatternTable", TableAttributeType, 0x0040, TableInfo{nil, 20}, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: TableField("ToneEventTable", TableAttributeType, 0x0020, TableInfo{nil, 7}, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: TableField("RingingPatternTable", TableAttributeType, 0x0010, TableInfo{nil, 5}, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: TableField("RingingEventTable", TableAttributeType, 0x0008, TableInfo{nil, 7}, mapset.NewSetWith(Read, Write), false, true, false, 13),
 			14: Uint16Field("NetworkSpecificExtensionsPointer", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 14),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,
+		Alarms: AlarmMap{
+			1: "File not found",
+		},
 	}
 }
 
