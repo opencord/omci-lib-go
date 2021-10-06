@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "348e57db_5571b8c0",
+        "filename": "generated/sipagentconfigdata.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-10-06T13:36:22Z",
+      "side": 1,
+      "message": "The GetNext message type is not listed as a required message type in any version of ITU-G.988 that I could find. However, it is not possible to retrieve table data with the Baseline Message set unless this operation is supported.\n\nFor this reason I added GetNext as it is clearly an oversight in G.988",
+      "revId": "3829b6b9123e048da6710fec6882e26ccd7f8d84",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "787c0699_6676d673",
+        "filename": "generated/voiceserviceprofile.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-10-06T13:36:22Z",
+      "side": 1,
+      "message": "The GetNext message type is not listed as a required message type in any version of ITU-G.988 that I could find. However, it is not possible to retrieve table data with the Baseline Message set unless this operation is supported.\n\nFor this reason I added GetNext as it is clearly an oversight in G.988",
+      "revId": "3829b6b9123e048da6710fec6882e26ccd7f8d84",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
