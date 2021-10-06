@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cc08443_cbec91a4",
+        "filename": "generated/sipagentconfigdata.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1000127
+      },
+      "writtenOn": "2021-10-06T18:00:01Z",
+      "side": 1,
+      "message": "Just curious on how the TableField is different from the MultiByteField? Is it encoded differently in the library?",
+      "range": {
+        "startLine": 195,
+        "startChar": 7,
+        "endLine": 195,
+        "endChar": 17
+      },
+      "revId": "17e177817958ebfcad71d16369cdae8c7d582b29",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
