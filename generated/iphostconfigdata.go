@@ -205,6 +205,7 @@ func init() {
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
+			Test,
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{

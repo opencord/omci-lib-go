@@ -174,6 +174,7 @@ func init() {
 			Create,
 			Delete,
 			Get,
+			GetNext,
 			Set,
 			SetTable,
 		),
@@ -191,7 +192,7 @@ func init() {
 			9:  ByteField("SipStatus", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), true, false, false, 9),
 			10: Uint16Field("SipRegistrar", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
 			11: Uint32Field("Softswitch", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 11),
-			12: MultiByteField("SipResponseTable", OctetsAttributeType, 0x0010, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 12),
+			12: TableField("SipResponseTable", TableAttributeType, 0x0010, TableInfo{nil, 5}, mapset.NewSetWith(Read, Write), false, true, false, 12),
 			13: ByteField("SipOptionTransmitControl", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
 			14: ByteField("SipUriFormat", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 14),
 			15: Uint16Field("RedundantSipAgentPointer", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 15),
@@ -203,6 +204,9 @@ func init() {
 			1: "SIP-UA register reach",
 			2: "SIP-UA register connect",
 			3: "SIP-UA register validate",
+			4: "SIP-UA register auth",
+			5: "SIP-UA register timeout",
+			6: "SIP-UA register fail",
 		},
 	}
 }
