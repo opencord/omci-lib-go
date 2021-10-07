@@ -22,6 +22,30 @@
       },
       "revId": "17e177817958ebfcad71d16369cdae8c7d582b29",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "974cc636_a451cdb2",
+        "filename": "generated/sipagentconfigdata.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2021-10-07T13:16:02Z",
+      "side": 1,
+      "message": "TableField has a parameter (TableInfo) in that allows for additional information of the table format. The parameters to that would be and interface/struct and the size of a row.\n\nDid not take it much further than that but the idea was to to provide pre-decoded rows (or rows for encoding) to be handled by the library.  Still a possibility.  So think of all the crazy table structs like the in EVTO ME or something as simple as  3 fields in this 5 byte row.  This size can help out in creating code that stores rows as individual byte slices or helping out in automating get-next logic should you be writing the ONU side of an OMCI conversation. \n\nI have a private project that implements this but have not had the time to create a generic way to pull in custom tableInfo structs to make use of it.",
+      "parentUuid": "7cc08443_cbec91a4",
+      "range": {
+        "startLine": 195,
+        "startChar": 7,
+        "endLine": 195,
+        "endChar": 17
+      },
+      "revId": "17e177817958ebfcad71d16369cdae8c7d582b29",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
     }
   ]
 }
