@@ -1,4 +1,4 @@
-module github.com/opencord/omci-lib-go
+module github.com/opencord/omci-lib-go/v2
 
 go 1.16
 

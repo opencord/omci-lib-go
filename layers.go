@@ -20,7 +20,7 @@ package omci
 import (
 	"errors"
 	"github.com/google/gopacket"
-	me "github.com/opencord/omci-lib-go/generated"
+	me "github.com/opencord/omci-lib-go/v2/generated"
 )
 
 var nextLayerMapping map[MessageType]gopacket.LayerType

@@ -19,7 +19,7 @@ package omci_test
 import (
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	. "github.com/opencord/omci-lib-go"
+	. "github.com/opencord/omci-lib-go/v2"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
