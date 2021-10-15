@@ -21,7 +21,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"github.com/google/gopacket"
-	me "github.com/opencord/omci-lib-go/generated"
+	me "github.com/opencord/omci-lib-go/v2/generated"
 )
 
 type AttributeValueChangeMsg struct {

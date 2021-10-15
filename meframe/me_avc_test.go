@@ -17,8 +17,8 @@
 package meframe_test
 
 import (
-	. "github.com/opencord/omci-lib-go"
-	me "github.com/opencord/omci-lib-go/generated"
+	. "github.com/opencord/omci-lib-go/v2"
+	me "github.com/opencord/omci-lib-go/v2/generated"
 	"testing"
 )
 

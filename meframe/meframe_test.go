@@ -19,9 +19,9 @@ package meframe_test
 import (
 	mapset "github.com/deckarep/golang-set"
 	"github.com/google/gopacket"
-	. "github.com/opencord/omci-lib-go"
-	me "github.com/opencord/omci-lib-go/generated"
-	"github.com/opencord/omci-lib-go/meframe"
+	. "github.com/opencord/omci-lib-go/v2"
+	me "github.com/opencord/omci-lib-go/v2/generated"
+	"github.com/opencord/omci-lib-go/v2/meframe"
 	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"testing"

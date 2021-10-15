@@ -21,8 +21,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/gopacket"
-	. "github.com/opencord/omci-lib-go"
-	me "github.com/opencord/omci-lib-go/generated"
+	. "github.com/opencord/omci-lib-go/v2"
+	me "github.com/opencord/omci-lib-go/v2/generated"
 )
 
 func SetTableRequestFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {

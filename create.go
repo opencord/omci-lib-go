@@ -22,7 +22,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/gopacket"
-	me "github.com/opencord/omci-lib-go/generated"
+	me "github.com/opencord/omci-lib-go/v2/generated"
 )
 
 // CreateRequest message apply only to attributes that are defined to be set by create.

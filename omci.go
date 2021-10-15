@@ -27,7 +27,7 @@ import (
 	"github.com/aead/cmac/aes"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	me "github.com/opencord/omci-lib-go/generated"
+	me "github.com/opencord/omci-lib-go/v2/generated"
 )
 
 // DeviceIdent identifies the OMCI message format. Currently either baseline or extended.
