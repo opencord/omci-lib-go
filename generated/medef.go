@@ -117,7 +117,8 @@ func (bme ManagedEntityDefinition) DecodeAttributes(mask uint16, data []byte, p 
 			if attrDef.IsTableAttribute() {
 				switch msgType {
 				default:
-					return nil, fmt.Errorf("unsupported Message Type '%v' for table serialization", msgType)
+					return nil, fmt.Errorf("unsupported Message Type '%v/0x%02x' for table decode",
+						MsgType(msgType&MsgTypeMask), msgType)
 
 				case byte(Get) | AK: // Get Response
 					attrMap[name] = value

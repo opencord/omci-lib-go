@@ -377,7 +377,8 @@ func (attr *AttributeDefinition) tableAttributeDecode(data []byte, df gopacket.D
 	// either Read and/or Write, never Set-by-Create
 	switch msgType {
 	default:
-		return nil, fmt.Errorf("unsupported Message Type '%v' for table serialization", msgType)
+		return nil, fmt.Errorf("unsupported Message Type '%v/0x%02x' for table decode",
+			MsgType(msgType&MsgTypeMask), msgType)
 
 	case byte(Get) | AK: // Get Response
 		// Size
@@ -434,7 +435,8 @@ func (attr *AttributeDefinition) tableAttributeSerializeTo(value interface{}, b 
 	// either Read and/or Write, never Set-by-Create
 	switch msgType {
 	default:
-		return 0, fmt.Errorf("unsupported Message Type '%v' for table serialization", msgType)
+		return 0, fmt.Errorf("unsupported Message Type '%v/0x%02x' for table serialization",
+			MsgType(msgType&MsgTypeMask), msgType)
 
 	case byte(Get) | AK: // Get Response
 		// Size

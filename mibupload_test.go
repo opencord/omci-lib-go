@@ -1745,3 +1745,47 @@ func TestMibUpload(t *testing.T) {
 	reconstituted := packetToString(outgoingPacket)
 	assert.Equal(t, strings.ToLower(mibUpload), reconstituted)
 }
+
+func TestMibUploadNextResponseDecodeAdtn401orBFWS(t *testing.T) {
+	// Next is ADTN 401 issue (note the very strange length field)
+	// goodMessage := "801f2e0a00020000009e000020000000000000000000000000000000000000000000000000000000943200281c98ff60"
+	// Next is BFWS that Ozge & Andrea saw
+	goodMessage := "82fd2e0a00020000011f0000c000000000040000000400000000000000000000000000000000000000000028cd1de3e4"
+	data, err := stringToPacket(goodMessage)
+	assert.NoError(t, err)
+
+	packet := gopacket.NewPacket(data, LayerTypeOMCI, gopacket.NoCopy)
+	assert.NotNil(t, packet)
+
+	// Can decode this layer
+	omciLayer := packet.Layer(LayerTypeOMCI)
+	assert.NotNil(t, omciLayer)
+
+	omciMsg, ok := omciLayer.(*OMCI)
+	assert.True(t, ok)
+	assert.NotNil(t, omciMsg)
+	assert.Equal(t, LayerTypeOMCI, omciMsg.LayerType())
+	assert.Equal(t, LayerTypeOMCI, omciMsg.CanDecode())
+	assert.Equal(t, LayerTypeMibUploadNextResponse, omciMsg.NextLayerType())
+	assert.Equal(t, uint16(0x82fd), omciMsg.TransactionID)
+	assert.Equal(t, MibUploadNextResponseType, omciMsg.MessageType)
+	assert.Equal(t, BaselineIdent, omciMsg.DeviceIdentifier)
+	assert.Equal(t, uint16(40), omciMsg.Length)
+
+	// Cannot decode this layer yet. Hope to in future partially with relaxed decoding
+	msgLayer := packet.Layer(LayerTypeMibUploadNextResponse)
+	assert.Nil(t, msgLayer)
+
+	// Look closer
+	errLayer := packet.Layer(gopacket.LayerTypeDecodeFailure)
+	assert.NotNil(t, errLayer)
+	decodeFailure, ok := errLayer.(*gopacket.DecodeFailure)
+	assert.NotNil(t, decodeFailure)
+	assert.True(t, ok)
+	errorMessage := decodeFailure.String()
+	assert.NotNil(t, errorMessage)
+	assert.True(t, len(errorMessage) > 0)
+
+	// Make sure that 'decode' shows up, not 'serialization'
+	assert.True(t, strings.Contains(strings.ToLower(errorMessage), "decode"))
+}
