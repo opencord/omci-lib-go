@@ -1,0 +1,10 @@
+Verified+1: Jenkins Technical User <do-not-reply@opennetworking.org>
+Code-Review+1: Mahir Gunyel <mahir.gunyel@netsia.com>
+Code-Review+1: Ozge AYAZ <ozge.ayaz@netsia.com>
+Code-Review+1: Michael Pagenkopf <michael.pagenkopf@adtran.com>
+Code-Review+2: Andrea Campanella <andrea@opennetworking.org>
+Submitted-by: Andrea Campanella <andrea@opennetworking.org>
+Submitted-at: Thu, 18 Nov 2021 16:03:47 +0000
+Reviewed-on: https://gerrit.opencord.org/c/omci-lib-go/+/29164
+Project: omci-lib-go
+Branch: refs/heads/master
