@@ -24,7 +24,13 @@
 package generated
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"os"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -37,5 +43,126 @@ func TestClassIDMap(t *testing.T) {
 
 		assert.Equal(t, classID, managedEntity.GetClassID())
 		assert.NotNil(t, managedEntity.GetManagedEntityDefinition())
+	}
+}
+
+func TestAllAttributeNamesMatch(t *testing.T) {
+	// Load test JSON Class and Attribute Name file
+	//     NOTE: This JSON file should never be updated as it is used to verify
+	//           that attribute name constants never change between versions
+	//
+	type attributeEntry struct {
+		Name      string `json:"Name"`
+		CamelCase string `json:"CamelCase"`
+		Final     string `json:"Final"`
+		Index     uint   `json:"Index"`
+	}
+	type classEntry struct {
+		Name       string                    `json:"Name"`
+		Filename   string                    `json:"Filename"`
+		CamelCase  string                    `json:"CamelCase"`
+		ClassID    uint16                    `json:"ClassID"`
+		Attributes map[string]attributeEntry `json:"Attributes"`
+	}
+	//cwd, getErr := os.Getwd()
+	//assert.NoError(t, getErr)
+	//assert.NotNil(t, cwd)
+	inputFile := "./attrNames_test.json"
+	input, err := os.Open(inputFile)
+	assert.NoError(t, err)
+	assert.NotNil(t, input)
+	defer input.Close()
+
+	inputJson, err2 := ioutil.ReadAll(input)
+	assert.NoError(t, err2)
+	assert.NotNil(t, inputJson)
+
+	var classEntries map[string]classEntry
+
+	err = json.Unmarshal([]byte(inputJson), &classEntries)
+	assert.NoError(t, err)
+	// Make sure every Managed Entity is represented in the map
+
+	for classID, function := range classToManagedEntityMap {
+		// Get attribute string definition
+		classAttrEntry, ok := classEntries[strconv.Itoa(int(classID))]
+		assert.True(t, ok)
+		assert.NotNil(t, classAttrEntry)
+
+		// Get an example class
+		managedEntity, omciError := function()
+
+		assert.NotNil(t, managedEntity)
+		assert.Equal(t, omciError.StatusCode(), Success)
+		assert.Equal(t, classID, managedEntity.GetClassID())
+
+		meDef := managedEntity.GetManagedEntityDefinition()
+		assert.NotNil(t, meDef)
+		assert.Equal(t, meDef.Name, classAttrEntry.CamelCase)
+
+		// Open the Golang class file and make sure the attribute name constants exist
+		golangFile, goFileErr := os.Open(classAttrEntry.Filename)
+		assert.NoError(t, goFileErr)
+		assert.NotNil(t, golangFile)
+		defer golangFile.Close()
+
+		goFileBytes, txtErr := ioutil.ReadAll(golangFile)
+		assert.NoError(t, txtErr)
+		assert.NotNil(t, goFileBytes)
+
+		goFileText := string(goFileBytes)
+		assert.NotNil(t, goFileText)
+		assert.NotEmpty(t, goFileText)
+
+		if meDef.Name == classAttrEntry.CamelCase {
+			attrDefs := meDef.GetAttributeDefinitions()
+			assert.NotNil(t, attrDefs)
+
+			// Walk attribute definitions and see if they match
+			for attrIndex, attr := range attrDefs {
+				assert.NotNil(t, attr)
+
+				attrEntry, found := classAttrEntry.Attributes[strconv.Itoa(int(attrIndex))]
+				assert.True(t, found)
+				assert.NotNil(t, attrEntry)
+
+				assert.Equal(t, attr.Name, attrEntry.CamelCase)
+				if attr.Name == attrEntry.CamelCase {
+					// ManagedEntityId constant common in all files and defined elsewhere
+					var expectedLine string
+					if attrEntry.Index != 0 {
+						expectedLine = fmt.Sprintf("(\"%v\", ", attrEntry.CamelCase)
+						// NOTE: Following will be enabled when the constant attribute names are
+						//       added to the golang generated code and the previous removed
+						//format := "const %v = %v"
+						//expectedLine = fmt.Sprintf(format, attrEntry.Final, attrEntry.CamelCase)
+					} else {
+						expectedLine = "(\"ManagedEntityId\", "
+						// NOTE: Following will be enabled when the constant attribute names are
+						//       added to the golang generated code
+						//format := "const ManagedEntityId = %v"
+						//expectedLine = fmt.Sprintf(format, attrEntry.CamelCase)
+					}
+					found := strings.Contains(goFileText, expectedLine)
+					assert.True(t, found)
+
+					if found {
+						// Scrub it from the attribute list
+						delete(classAttrEntry.Attributes, strconv.Itoa(int(attrIndex)))
+					}
+				}
+			}
+		}
+		// If all attributes have been scrubbed, delete the class entry
+		assert.Zero(t, len(classAttrEntry.Attributes))
+		if len(classAttrEntry.Attributes) == 0 {
+			delete(classEntries, strconv.Itoa(int(classID)))
+		}
+	}
+	// Unmarshalled JSON map should be empty if all attributes and classes
+	// match the code-generated file information.
+	assert.Zero(t, len(classEntries))
+	if len(classEntries) != 0 {
+		fmt.Printf("These entries remained after test:\n%+v\n", classEntries)
 	}
 }

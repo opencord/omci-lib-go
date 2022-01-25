@@ -40,6 +40,10 @@ var fastchannelconfigurationprofileBME *ManagedEntityDefinition
 //		1.
 //
 //	Attributes
+//		Managed Entity Id
+//			This attribute uniquely identifies each instance of this ME. The value 0 is reserved. (R, set-
+//			by-create) (mandatory) (2 bytes)
+//
 //		Maximum Net Data Rate Maxndr
 //			Maximum net data rate (MAXNDR): This attribute specifies the value of the maximum net data rate.
 //			See clause 11.4.2.2 of [ITU-T G.9701]. Valid values range from 0 (0-kbit/s) to 4294967295
@@ -136,19 +140,20 @@ func init() {
 			Get,
 			Set,
 		),
-		AllowedAttributeMask: 0xffc0,
+		AllowedAttributeMask: 0xffe0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint32Field("MaximumNetDataRateMaxndr", UnknownAttributeType, 0x0000, 0, mapset.NewSetWith(Read, Write), false, false, false, 0),
-			1:  Uint32Field("MinimumExpectedThroughputMinetr", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  Uint32Field("MaximumGammaDataRateMaxgdr", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3:  Uint32Field("MinimumGammaDataRateMingdr", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  Uint32Field("MaximumDelayDelaymax", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5:  Uint16Field("MinimumImpulseNoiseProtectionAgainstShineInpminShine", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  ByteField("ShineRatioShineratio", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  ByteField("MinimumImpulseNoiseProtectionAgainstReinInpminRein", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  ByteField("ReinInterArrivalTimeIatRein", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  ByteField("MinimumReedSolomonRfecNfecRatioRnratio", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: ByteField("RtxTcTestmodeRtxTestmode", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint32Field("MaximumNetDataRateMaxndr", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  Uint32Field("MinimumExpectedThroughputMinetr", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3:  Uint32Field("MaximumGammaDataRateMaxgdr", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  Uint32Field("MinimumGammaDataRateMingdr", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  Uint32Field("MaximumDelayDelaymax", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  Uint16Field("MinimumImpulseNoiseProtectionAgainstShineInpminShine", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  ByteField("ShineRatioShineratio", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField("MinimumImpulseNoiseProtectionAgainstReinInpminRein", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  ByteField("ReinInterArrivalTimeIatRein", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: ByteField("MinimumReedSolomonRfecNfecRatioRnratio", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
+			11: ByteField("RtxTcTestmodeRtxTestmode", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,
