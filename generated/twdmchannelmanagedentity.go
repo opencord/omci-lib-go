@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,20 +72,27 @@ type TwdmChannelManagedEntity struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const TwdmChannelManagedEntity_ActiveChannelIndication = "ActiveChannelIndication"
+const TwdmChannelManagedEntity_OperationalChannelIndication = "OperationalChannelIndication"
+const TwdmChannelManagedEntity_DownstreamWavelengthChannel = "DownstreamWavelengthChannel"
+const TwdmChannelManagedEntity_UpstreamWavelengthChannel = "UpstreamWavelengthChannel"
+
 func init() {
 	twdmchannelmanagedentityBME = &ManagedEntityDefinition{
 		Name:    "TwdmChannelManagedEntity",
-		ClassID: 443,
+		ClassID: TwdmChannelManagedEntityClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
 		AllowedAttributeMask: 0xf000,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: ByteField("ActiveChannelIndication", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2: ByteField("OperationalChannelIndication", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3: ByteField("DownstreamWavelengthChannel", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4: ByteField("UpstreamWavelengthChannel", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: ByteField(TwdmChannelManagedEntity_ActiveChannelIndication, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2: ByteField(TwdmChannelManagedEntity_OperationalChannelIndication, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3: ByteField(TwdmChannelManagedEntity_DownstreamWavelengthChannel, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4: ByteField(TwdmChannelManagedEntity_UpstreamWavelengthChannel, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

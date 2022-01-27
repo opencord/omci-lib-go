@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -319,7 +319,7 @@ var vdsl2lineconfigurationextensionsBME *ManagedEntityDefinition
 //			of 0.1 dB, i.e., with values 18..635. The special value 0 is also allowed, with semantics as
 //			defined in clause 7.2.1.3.2 of [ITUT G.993.2]. (R,-W) (optional) (2-bytes * 5 upstream bands)
 //
-//		Upboshaped Aele_Mode, Upboelmt
+//		Upboshaped Aele_Mode Upboelmt
 //			UPBOSHAPED (AELE-MODE, UPBOELMT): This attribute defines the UPBO electrical length estimation
 //			mode (AELE-MODE) and UPBO electrical length minimum threshold percentile (UPBOELMT) to be used
 //			in the alternative electrical length estimation method (ELE-M1). The format of this attribute is
@@ -330,10 +330,29 @@ type Vdsl2LineConfigurationExtensions struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Vdsl2LineConfigurationExtensions_Vdsl2ProfilesEnabling = "Vdsl2ProfilesEnabling"
+const Vdsl2LineConfigurationExtensions_Vdsl2PsdMaskClassSelectionClassmask = "Vdsl2PsdMaskClassSelectionClassmask"
+const Vdsl2LineConfigurationExtensions_Vdsl2LimitPsdMasks = "Vdsl2LimitPsdMasks"
+const Vdsl2LineConfigurationExtensions_Vdsl2Us0Disabling = "Vdsl2Us0Disabling"
+const Vdsl2LineConfigurationExtensions_Vdsl2Us0PsdMasks = "Vdsl2Us0PsdMasks"
+const Vdsl2LineConfigurationExtensions_Vdsl2CarmaskTable = "Vdsl2CarmaskTable"
+const Vdsl2LineConfigurationExtensions_CarmaskValid = "CarmaskValid"
+const Vdsl2LineConfigurationExtensions_Upboshaped = "Upboshaped"
+const Vdsl2LineConfigurationExtensions_CyclicExtension = "CyclicExtension"
+const Vdsl2LineConfigurationExtensions_DownstreamSignalToNoiseRatioSnrMode = "DownstreamSignalToNoiseRatioSnrMode"
+const Vdsl2LineConfigurationExtensions_UpstreamSnrMode = "UpstreamSnrMode"
+const Vdsl2LineConfigurationExtensions_TransmitterReferredVirtualNoiseDownstreamTable = "TransmitterReferredVirtualNoiseDownstreamTable"
+const Vdsl2LineConfigurationExtensions_TransmitterReferredVirtualNoiseUpstreamTable = "TransmitterReferredVirtualNoiseUpstreamTable"
+const Vdsl2LineConfigurationExtensions_Dpboshaped = "Dpboshaped"
+const Vdsl2LineConfigurationExtensions_UpboklrefPb = "UpboklrefPb"
+const Vdsl2LineConfigurationExtensions_UpboshapedAeleModeUpboelmt = "UpboshapedAeleModeUpboelmt"
+
 func init() {
 	vdsl2lineconfigurationextensionsBME = &ManagedEntityDefinition{
 		Name:    "Vdsl2LineConfigurationExtensions",
-		ClassID: 165,
+		ClassID: Vdsl2LineConfigurationExtensionsClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -344,23 +363,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("Vdsl2ProfilesEnabling", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  ByteField("Vdsl2PsdMaskClassSelectionClassmask", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint64Field("Vdsl2LimitPsdMasks", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  Uint64Field("Vdsl2Us0Disabling", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  Uint32Field("Vdsl2Us0PsdMasks", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6:  TableField("Vdsl2CarmaskTable", TableAttributeType, 0x0400, TableInfo{nil, 5}, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  ByteField("CarmaskValid", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  MultiByteField("Upboshaped", OctetsAttributeType, 0x0100, 23, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  ByteField("CyclicExtension", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: ByteField("DownstreamSignalToNoiseRatioSnrMode", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
-			11: ByteField("UpstreamSnrMode", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
-			12: TableField("TransmitterReferredVirtualNoiseDownstreamTable", TableAttributeType, 0x0010, TableInfo{nil, 3}, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: TableField("TransmitterReferredVirtualNoiseUpstreamTable", TableAttributeType, 0x0008, TableInfo{nil, 3}, mapset.NewSetWith(Read, Write), false, true, false, 13),
-			14: MultiByteField("Dpboshaped", OctetsAttributeType, 0x0004, 15, toOctets("AAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, true, false, 14),
-			15: Uint16Field("UpboklrefPb", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
-			16: ByteField("UpboshapedAeleMode,Upboelmt", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(Vdsl2LineConfigurationExtensions_Vdsl2ProfilesEnabling, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField(Vdsl2LineConfigurationExtensions_Vdsl2PsdMaskClassSelectionClassmask, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint64Field(Vdsl2LineConfigurationExtensions_Vdsl2LimitPsdMasks, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint64Field(Vdsl2LineConfigurationExtensions_Vdsl2Us0Disabling, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  Uint32Field(Vdsl2LineConfigurationExtensions_Vdsl2Us0PsdMasks, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  TableField(Vdsl2LineConfigurationExtensions_Vdsl2CarmaskTable, TableAttributeType, 0x0400, TableInfo{nil, 5}, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  ByteField(Vdsl2LineConfigurationExtensions_CarmaskValid, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  MultiByteField(Vdsl2LineConfigurationExtensions_Upboshaped, OctetsAttributeType, 0x0100, 23, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  ByteField(Vdsl2LineConfigurationExtensions_CyclicExtension, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: ByteField(Vdsl2LineConfigurationExtensions_DownstreamSignalToNoiseRatioSnrMode, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
+			11: ByteField(Vdsl2LineConfigurationExtensions_UpstreamSnrMode, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
+			12: TableField(Vdsl2LineConfigurationExtensions_TransmitterReferredVirtualNoiseDownstreamTable, TableAttributeType, 0x0010, TableInfo{nil, 3}, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: TableField(Vdsl2LineConfigurationExtensions_TransmitterReferredVirtualNoiseUpstreamTable, TableAttributeType, 0x0008, TableInfo{nil, 3}, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: MultiByteField(Vdsl2LineConfigurationExtensions_Dpboshaped, OctetsAttributeType, 0x0004, 15, toOctets("AAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, true, false, 14),
+			15: Uint16Field(Vdsl2LineConfigurationExtensions_UpboklrefPb, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
+			16: ByteField(Vdsl2LineConfigurationExtensions_UpboshapedAeleModeUpboelmt, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), false, true, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

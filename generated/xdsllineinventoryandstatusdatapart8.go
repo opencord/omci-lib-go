@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -84,22 +84,31 @@ type XdslLineInventoryAndStatusDataPart8 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslLineInventoryAndStatusDataPart8_RetransmissionUsedDownstreamRtxUsedds = "RetransmissionUsedDownstreamRtxUsedds"
+const XdslLineInventoryAndStatusDataPart8_RetransmissionUsedUpstreamRtxUsedus = "RetransmissionUsedUpstreamRtxUsedus"
+const XdslLineInventoryAndStatusDataPart8_DateTimeStampingOfNearEndTestParametersStampTestNe = "DateTimeStampingOfNearEndTestParametersStampTestNe"
+const XdslLineInventoryAndStatusDataPart8_DateTimeStampingOfFarEndTestParametersStampTestFe = "DateTimeStampingOfFarEndTestParametersStampTestFe"
+const XdslLineInventoryAndStatusDataPart8_DateTimeStampingOfLastSuccessfulDownstreamOlrOperationStampOlrDs = "DateTimeStampingOfLastSuccessfulDownstreamOlrOperationStampOlrDs"
+const XdslLineInventoryAndStatusDataPart8_DateTimeStampingOfLastSuccessfulUpstreamOlrOperationStampOlrUs = "DateTimeStampingOfLastSuccessfulUpstreamOlrOperationStampOlrUs"
+
 func init() {
 	xdsllineinventoryandstatusdatapart8BME = &ManagedEntityDefinition{
 		Name:    "XdslLineInventoryAndStatusDataPart8",
-		ClassID: 414,
+		ClassID: XdslLineInventoryAndStatusDataPart8ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
 		AllowedAttributeMask: 0xfc00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: ByteField("RetransmissionUsedDownstreamRtxUsedds", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2: ByteField("RetransmissionUsedUpstreamRtxUsedus", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3: MultiByteField("DateTimeStampingOfNearEndTestParametersStampTestNe", OctetsAttributeType, 0x2000, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 3),
-			4: MultiByteField("DateTimeStampingOfFarEndTestParametersStampTestFe", OctetsAttributeType, 0x1000, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 4),
-			5: MultiByteField("DateTimeStampingOfLastSuccessfulDownstreamOlrOperationStampOlrDs", OctetsAttributeType, 0x0800, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 5),
-			6: MultiByteField("DateTimeStampingOfLastSuccessfulUpstreamOlrOperationStampOlrUs", OctetsAttributeType, 0x0400, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 6),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: ByteField(XdslLineInventoryAndStatusDataPart8_RetransmissionUsedDownstreamRtxUsedds, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2: ByteField(XdslLineInventoryAndStatusDataPart8_RetransmissionUsedUpstreamRtxUsedus, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3: MultiByteField(XdslLineInventoryAndStatusDataPart8_DateTimeStampingOfNearEndTestParametersStampTestNe, OctetsAttributeType, 0x2000, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 3),
+			4: MultiByteField(XdslLineInventoryAndStatusDataPart8_DateTimeStampingOfFarEndTestParametersStampTestFe, OctetsAttributeType, 0x1000, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 4),
+			5: MultiByteField(XdslLineInventoryAndStatusDataPart8_DateTimeStampingOfLastSuccessfulDownstreamOlrOperationStampOlrDs, OctetsAttributeType, 0x0800, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 5),
+			6: MultiByteField(XdslLineInventoryAndStatusDataPart8_DateTimeStampingOfLastSuccessfulUpstreamOlrOperationStampOlrUs, OctetsAttributeType, 0x0400, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 6),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

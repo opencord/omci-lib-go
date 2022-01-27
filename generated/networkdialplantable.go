@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -104,10 +104,19 @@ type NetworkDialPlanTable struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const NetworkDialPlanTable_DialPlanNumber = "DialPlanNumber"
+const NetworkDialPlanTable_DialPlanTableMaxSize = "DialPlanTableMaxSize"
+const NetworkDialPlanTable_CriticalDialTimeout = "CriticalDialTimeout"
+const NetworkDialPlanTable_PartialDialTimeout = "PartialDialTimeout"
+const NetworkDialPlanTable_DialPlanFormat = "DialPlanFormat"
+const NetworkDialPlanTable_DialPlanTable = "DialPlanTable"
+
 func init() {
 	networkdialplantableBME = &ManagedEntityDefinition{
 		Name:    "NetworkDialPlanTable",
-		ClassID: 145,
+		ClassID: NetworkDialPlanTableClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -118,13 +127,13 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfc00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: Uint16Field("DialPlanNumber", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2: Uint16Field("DialPlanTableMaxSize", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 2),
-			3: Uint16Field("CriticalDialTimeout", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4: Uint16Field("PartialDialTimeout", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5: ByteField("DialPlanFormat", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6: TableField("DialPlanTable", TableAttributeType, 0x0400, TableInfo{nil, 30}, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: Uint16Field(NetworkDialPlanTable_DialPlanNumber, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2: Uint16Field(NetworkDialPlanTable_DialPlanTableMaxSize, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 2),
+			3: Uint16Field(NetworkDialPlanTable_CriticalDialTimeout, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4: Uint16Field(NetworkDialPlanTable_PartialDialTimeout, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5: ByteField(NetworkDialPlanTable_DialPlanFormat, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6: TableField(NetworkDialPlanTable_DialPlanTable, TableAttributeType, 0x0400, TableInfo{nil, 30}, mapset.NewSetWith(Read, Write), false, false, false, 6),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

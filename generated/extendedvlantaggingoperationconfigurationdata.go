@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -554,10 +554,23 @@ type ExtendedVlanTaggingOperationConfigurationData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const ExtendedVlanTaggingOperationConfigurationData_AssociationType = "AssociationType"
+const ExtendedVlanTaggingOperationConfigurationData_ReceivedFrameVlanTaggingOperationTableMaxSize = "ReceivedFrameVlanTaggingOperationTableMaxSize"
+const ExtendedVlanTaggingOperationConfigurationData_InputTpid = "InputTpid"
+const ExtendedVlanTaggingOperationConfigurationData_OutputTpid = "OutputTpid"
+const ExtendedVlanTaggingOperationConfigurationData_DownstreamMode = "DownstreamMode"
+const ExtendedVlanTaggingOperationConfigurationData_ReceivedFrameVlanTaggingOperationTable = "ReceivedFrameVlanTaggingOperationTable"
+const ExtendedVlanTaggingOperationConfigurationData_AssociatedMePointer = "AssociatedMePointer"
+const ExtendedVlanTaggingOperationConfigurationData_DscpToPBitMapping = "DscpToPBitMapping"
+const ExtendedVlanTaggingOperationConfigurationData_EnhancedMode = "EnhancedMode"
+const ExtendedVlanTaggingOperationConfigurationData_EnhancedReceivedFrameClassificationAndProcessingTable = "EnhancedReceivedFrameClassificationAndProcessingTable"
+
 func init() {
 	extendedvlantaggingoperationconfigurationdataBME = &ManagedEntityDefinition{
 		Name:    "ExtendedVlanTaggingOperationConfigurationData",
-		ClassID: 171,
+		ClassID: ExtendedVlanTaggingOperationConfigurationDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -568,17 +581,17 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("AssociationType", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  Uint16Field("ReceivedFrameVlanTaggingOperationTableMaxSize", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3:  Uint16Field("InputTpid", UnsignedIntegerAttributeType, 0x2000, 34984, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  Uint16Field("OutputTpid", UnsignedIntegerAttributeType, 0x1000, 34984, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5:  ByteField("DownstreamMode", EnumerationAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  TableField("ReceivedFrameVlanTaggingOperationTable", TableAttributeType, 0x0400, TableInfo{nil, 16}, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  Uint16Field("AssociatedMePointer", PointerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  MultiByteField("DscpToPBitMapping", OctetsAttributeType, 0x0100, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, true, false, 8),
-			9:  ByteField("EnhancedMode", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate), false, true, false, 9),
-			10: TableField("EnhancedReceivedFrameClassificationAndProcessingTable", TableAttributeType, 0x0040, TableInfo{nil, 28}, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(ExtendedVlanTaggingOperationConfigurationData_AssociationType, EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  Uint16Field(ExtendedVlanTaggingOperationConfigurationData_ReceivedFrameVlanTaggingOperationTableMaxSize, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  Uint16Field(ExtendedVlanTaggingOperationConfigurationData_InputTpid, UnsignedIntegerAttributeType, 0x2000, 34984, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  Uint16Field(ExtendedVlanTaggingOperationConfigurationData_OutputTpid, UnsignedIntegerAttributeType, 0x1000, 34984, mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  ByteField(ExtendedVlanTaggingOperationConfigurationData_DownstreamMode, EnumerationAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  TableField(ExtendedVlanTaggingOperationConfigurationData_ReceivedFrameVlanTaggingOperationTable, TableAttributeType, 0x0400, TableInfo{nil, 16}, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  Uint16Field(ExtendedVlanTaggingOperationConfigurationData_AssociatedMePointer, PointerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  MultiByteField(ExtendedVlanTaggingOperationConfigurationData_DscpToPBitMapping, OctetsAttributeType, 0x0100, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  ByteField(ExtendedVlanTaggingOperationConfigurationData_EnhancedMode, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate), false, true, false, 9),
+			10: TableField(ExtendedVlanTaggingOperationConfigurationData_EnhancedReceivedFrameClassificationAndProcessingTable, TableAttributeType, 0x0040, TableInfo{nil, 28}, mapset.NewSetWith(Read, Write), false, true, false, 10),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

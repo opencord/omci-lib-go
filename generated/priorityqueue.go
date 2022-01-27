@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -247,33 +247,52 @@ type PriorityQueue struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PriorityQueue_QueueConfigurationOption = "QueueConfigurationOption"
+const PriorityQueue_MaximumQueueSize = "MaximumQueueSize"
+const PriorityQueue_AllocatedQueueSize = "AllocatedQueueSize"
+const PriorityQueue_DiscardBlockCounterResetInterval = "DiscardBlockCounterResetInterval"
+const PriorityQueue_ThresholdValueForDiscardedBlocksDueToBufferOverflow = "ThresholdValueForDiscardedBlocksDueToBufferOverflow"
+const PriorityQueue_RelatedPort = "RelatedPort"
+const PriorityQueue_TrafficSchedulerPointer = "TrafficSchedulerPointer"
+const PriorityQueue_Weight = "Weight"
+const PriorityQueue_BackPressureOperation = "BackPressureOperation"
+const PriorityQueue_BackPressureTime = "BackPressureTime"
+const PriorityQueue_BackPressureOccurQueueThreshold = "BackPressureOccurQueueThreshold"
+const PriorityQueue_BackPressureClearQueueThreshold = "BackPressureClearQueueThreshold"
+const PriorityQueue_PacketDropQueueThresholds = "PacketDropQueueThresholds"
+const PriorityQueue_PacketDropMaxP = "PacketDropMaxP"
+const PriorityQueue_QueueDropWQ = "QueueDropWQ"
+const PriorityQueue_DropPrecedenceColourMarking = "DropPrecedenceColourMarking"
+
 func init() {
 	priorityqueueBME = &ManagedEntityDefinition{
 		Name:    "PriorityQueue",
-		ClassID: 277,
+		ClassID: PriorityQueueClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("QueueConfigurationOption", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("MaximumQueueSize", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3:  Uint16Field("AllocatedQueueSize", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  Uint16Field("DiscardBlockCounterResetInterval", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5:  Uint16Field("ThresholdValueForDiscardedBlocksDueToBufferOverflow", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
-			6:  Uint32Field("RelatedPort", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  Uint16Field("TrafficSchedulerPointer", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  ByteField("Weight", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  Uint16Field("BackPressureOperation", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: Uint32Field("BackPressureTime", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
-			11: Uint16Field("BackPressureOccurQueueThreshold", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
-			12: Uint16Field("BackPressureClearQueueThreshold", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
-			13: Uint64Field("PacketDropQueueThresholds", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
-			14: Uint16Field("PacketDropMaxP", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
-			15: ByteField("QueueDropWQ", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
-			16: ByteField("DropPrecedenceColourMarking", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(PriorityQueue_QueueConfigurationOption, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(PriorityQueue_MaximumQueueSize, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  Uint16Field(PriorityQueue_AllocatedQueueSize, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  Uint16Field(PriorityQueue_DiscardBlockCounterResetInterval, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  Uint16Field(PriorityQueue_ThresholdValueForDiscardedBlocksDueToBufferOverflow, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
+			6:  Uint32Field(PriorityQueue_RelatedPort, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  Uint16Field(PriorityQueue_TrafficSchedulerPointer, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField(PriorityQueue_Weight, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  Uint16Field(PriorityQueue_BackPressureOperation, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: Uint32Field(PriorityQueue_BackPressureTime, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
+			11: Uint16Field(PriorityQueue_BackPressureOccurQueueThreshold, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
+			12: Uint16Field(PriorityQueue_BackPressureClearQueueThreshold, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
+			13: Uint64Field(PriorityQueue_PacketDropQueueThresholds, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: Uint16Field(PriorityQueue_PacketDropMaxP, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
+			15: ByteField(PriorityQueue_QueueDropWQ, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
+			16: ByteField(PriorityQueue_DropPrecedenceColourMarking, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), false, true, false, 16),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

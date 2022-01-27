@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -87,25 +87,36 @@ type TimeStatusMessage struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const TimeStatusMessage_DomainNumber = "DomainNumber"
+const TimeStatusMessage_FlagField = "FlagField"
+const TimeStatusMessage_Currentutcoffset = "Currentutcoffset"
+const TimeStatusMessage_Priority1 = "Priority1"
+const TimeStatusMessage_Clockclass = "Clockclass"
+const TimeStatusMessage_Accuracy = "Accuracy"
+const TimeStatusMessage_Offsetscaledlogvariance = "Offsetscaledlogvariance"
+const TimeStatusMessage_Priority2 = "Priority2"
+
 func init() {
 	timestatusmessageBME = &ManagedEntityDefinition{
 		Name:    "TimeStatusMessage",
-		ClassID: 440,
+		ClassID: TimeStatusMessageClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xff00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: ByteField("DomainNumber", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2: ByteField("FlagField", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3: Uint16Field("Currentutcoffset", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4: ByteField("Priority1", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5: ByteField("Clockclass", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6: ByteField("Accuracy", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7: Uint16Field("Offsetscaledlogvariance", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8: ByteField("Priority2", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: ByteField(TimeStatusMessage_DomainNumber, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2: ByteField(TimeStatusMessage_FlagField, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3: Uint16Field(TimeStatusMessage_Currentutcoffset, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4: ByteField(TimeStatusMessage_Priority1, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5: ByteField(TimeStatusMessage_Clockclass, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6: ByteField(TimeStatusMessage_Accuracy, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7: Uint16Field(TimeStatusMessage_Offsetscaledlogvariance, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8: ByteField(TimeStatusMessage_Priority2, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -130,23 +130,38 @@ var redownstreamamplifierBME *ManagedEntityDefinition
 //			dBm), with 0.5-dB granularity. The default value 0x7F selects the RE's internal policy. (R,-W)
 //			(optional) (1-byte)
 //
-//		R'S' Splitter Coupling Ratio
-//			This attribute reports the coupling ratio of the splitter at the R'/S' interface that connects
-//			the embedded management ONU and the amplifiers to the OTL. Valid values are 99:1 (coded as
-//			99-decimal) to 1:99 (coded as 1 decimal), where the first value is the value encoded and is the
-//			percentage of the optical signal connected to the amplifier. The default value 0xFF indicates
-//			that there is no splitter connected to this upstream/downstream amplifier pair. (R) (optional)
-//			(1-byte)
+//		R S Splitter Coupling Ratio
+//			R'S' splitter coupling ratio: This attribute reports the coupling ratio of the splitter at the
+//			R'/S' interface that connects the embedded management ONU and the amplifiers to the OTL. Valid
+//			values are 99:1 (coded as 99-decimal) to 1:99 (coded as 1 decimal), where the first value is the
+//			value encoded and is the percentage of the optical signal connected to the amplifier. The
+//			default value 0xFF indicates that there is no splitter connected to this upstream/downstream
+//			amplifier pair. (R) (optional) (1-byte)
 //
 type ReDownstreamAmplifier struct {
 	ManagedEntityDefinition
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const ReDownstreamAmplifier_AdministrativeState = "AdministrativeState"
+const ReDownstreamAmplifier_OperationalState = "OperationalState"
+const ReDownstreamAmplifier_Arc = "Arc"
+const ReDownstreamAmplifier_ArcInterval = "ArcInterval"
+const ReDownstreamAmplifier_OperationalMode = "OperationalMode"
+const ReDownstreamAmplifier_InputOpticalSignalLevel = "InputOpticalSignalLevel"
+const ReDownstreamAmplifier_LowerInputOpticalThreshold = "LowerInputOpticalThreshold"
+const ReDownstreamAmplifier_UpperInputOpticalThreshold = "UpperInputOpticalThreshold"
+const ReDownstreamAmplifier_OutputOpticalSignalLevel = "OutputOpticalSignalLevel"
+const ReDownstreamAmplifier_LowerOutputOpticalThreshold = "LowerOutputOpticalThreshold"
+const ReDownstreamAmplifier_UpperOutputOpticalThreshold = "UpperOutputOpticalThreshold"
+const ReDownstreamAmplifier_RSSplitterCouplingRatio = "RSSplitterCouplingRatio"
+
 func init() {
 	redownstreamamplifierBME = &ManagedEntityDefinition{
 		Name:    "ReDownstreamAmplifier",
-		ClassID: 316,
+		ClassID: ReDownstreamAmplifierClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
@@ -154,19 +169,19 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("OperationalState", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
-			3:  ByteField("Arc", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
-			4:  ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5:  ByteField("OperationalMode", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  Uint16Field("InputOpticalSignalLevel", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
-			7:  ByteField("LowerInputOpticalThreshold", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
-			8:  ByteField("UpperInputOpticalThreshold", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
-			9:  Uint16Field("OutputOpticalSignalLevel", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
-			10: ByteField("LowerOutputOpticalThreshold", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
-			11: ByteField("UpperOutputOpticalThreshold", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: ByteField("R'S'SplitterCouplingRatio", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(ReDownstreamAmplifier_AdministrativeState, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(ReDownstreamAmplifier_OperationalState, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
+			3:  ByteField(ReDownstreamAmplifier_Arc, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
+			4:  ByteField(ReDownstreamAmplifier_ArcInterval, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  ByteField(ReDownstreamAmplifier_OperationalMode, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  Uint16Field(ReDownstreamAmplifier_InputOpticalSignalLevel, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
+			7:  ByteField(ReDownstreamAmplifier_LowerInputOpticalThreshold, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8:  ByteField(ReDownstreamAmplifier_UpperInputOpticalThreshold, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  Uint16Field(ReDownstreamAmplifier_OutputOpticalSignalLevel, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: ByteField(ReDownstreamAmplifier_LowerOutputOpticalThreshold, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: ByteField(ReDownstreamAmplifier_UpperOutputOpticalThreshold, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: ByteField(ReDownstreamAmplifier_RSSplitterCouplingRatio, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

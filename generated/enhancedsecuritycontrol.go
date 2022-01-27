@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -238,10 +238,25 @@ type EnhancedSecurityControl struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const EnhancedSecurityControl_OltCryptoCapabilities = "OltCryptoCapabilities"
+const EnhancedSecurityControl_OltRandomChallengeTable = "OltRandomChallengeTable"
+const EnhancedSecurityControl_OltChallengeStatus = "OltChallengeStatus"
+const EnhancedSecurityControl_OnuSelectedCryptoCapabilities = "OnuSelectedCryptoCapabilities"
+const EnhancedSecurityControl_OnuRandomChallengeTable = "OnuRandomChallengeTable"
+const EnhancedSecurityControl_OnuAuthenticationResultTable = "OnuAuthenticationResultTable"
+const EnhancedSecurityControl_OltAuthenticationResultTable = "OltAuthenticationResultTable"
+const EnhancedSecurityControl_OltResultStatus = "OltResultStatus"
+const EnhancedSecurityControl_OnuAuthenticationStatus = "OnuAuthenticationStatus"
+const EnhancedSecurityControl_MasterSessionKeyName = "MasterSessionKeyName"
+const EnhancedSecurityControl_BroadcastKeyTable = "BroadcastKeyTable"
+const EnhancedSecurityControl_EffectiveKeyLength = "EffectiveKeyLength"
+
 func init() {
 	enhancedsecuritycontrolBME = &ManagedEntityDefinition{
 		Name:    "EnhancedSecurityControl",
-		ClassID: 332,
+		ClassID: EnhancedSecurityControlClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			GetNext,
@@ -249,19 +264,19 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  MultiByteField("OltCryptoCapabilities", OctetsAttributeType, 0x8000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Write), false, false, false, 1),
-			2:  TableField("OltRandomChallengeTable", TableAttributeType, 0x4000, TableInfo{nil, 17}, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3:  ByteField("OltChallengeStatus", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  ByteField("OnuSelectedCryptoCapabilities", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  TableField("OnuRandomChallengeTable", TableAttributeType, 0x0800, TableInfo{nil, 16}, mapset.NewSetWith(Read), true, false, false, 5),
-			6:  TableField("OnuAuthenticationResultTable", TableAttributeType, 0x0400, TableInfo{nil, 16}, mapset.NewSetWith(Read), true, false, false, 6),
-			7:  TableField("OltAuthenticationResultTable", TableAttributeType, 0x0200, TableInfo{nil, 17}, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  ByteField("OltResultStatus", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  ByteField("OnuAuthenticationStatus", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), true, false, false, 9),
-			10: MultiByteField("MasterSessionKeyName", OctetsAttributeType, 0x0040, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 10),
-			11: TableField("BroadcastKeyTable", TableAttributeType, 0x0020, TableInfo{nil, 18}, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: Uint16Field("EffectiveKeyLength", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  MultiByteField(EnhancedSecurityControl_OltCryptoCapabilities, OctetsAttributeType, 0x8000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Write), false, false, false, 1),
+			2:  TableField(EnhancedSecurityControl_OltRandomChallengeTable, TableAttributeType, 0x4000, TableInfo{nil, 17}, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3:  ByteField(EnhancedSecurityControl_OltChallengeStatus, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  ByteField(EnhancedSecurityControl_OnuSelectedCryptoCapabilities, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  TableField(EnhancedSecurityControl_OnuRandomChallengeTable, TableAttributeType, 0x0800, TableInfo{nil, 16}, mapset.NewSetWith(Read), true, false, false, 5),
+			6:  TableField(EnhancedSecurityControl_OnuAuthenticationResultTable, TableAttributeType, 0x0400, TableInfo{nil, 16}, mapset.NewSetWith(Read), true, false, false, 6),
+			7:  TableField(EnhancedSecurityControl_OltAuthenticationResultTable, TableAttributeType, 0x0200, TableInfo{nil, 17}, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField(EnhancedSecurityControl_OltResultStatus, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  ByteField(EnhancedSecurityControl_OnuAuthenticationStatus, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), true, false, false, 9),
+			10: MultiByteField(EnhancedSecurityControl_MasterSessionKeyName, OctetsAttributeType, 0x0040, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 10),
+			11: TableField(EnhancedSecurityControl_BroadcastKeyTable, TableAttributeType, 0x0020, TableInfo{nil, 18}, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: Uint16Field(EnhancedSecurityControl_EffectiveKeyLength, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

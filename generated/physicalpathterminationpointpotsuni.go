@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -151,10 +151,26 @@ type PhysicalPathTerminationPointPotsUni struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PhysicalPathTerminationPointPotsUni_AdministrativeState = "AdministrativeState"
+const PhysicalPathTerminationPointPotsUni_Deprecated = "Deprecated"
+const PhysicalPathTerminationPointPotsUni_Arc = "Arc"
+const PhysicalPathTerminationPointPotsUni_ArcInterval = "ArcInterval"
+const PhysicalPathTerminationPointPotsUni_Impedance = "Impedance"
+const PhysicalPathTerminationPointPotsUni_TransmissionPath = "TransmissionPath"
+const PhysicalPathTerminationPointPotsUni_RxGain = "RxGain"
+const PhysicalPathTerminationPointPotsUni_TxGain = "TxGain"
+const PhysicalPathTerminationPointPotsUni_OperationalState = "OperationalState"
+const PhysicalPathTerminationPointPotsUni_HookState = "HookState"
+const PhysicalPathTerminationPointPotsUni_PotsHoldoverTime = "PotsHoldoverTime"
+const PhysicalPathTerminationPointPotsUni_NominalFeedVoltage = "NominalFeedVoltage"
+const PhysicalPathTerminationPointPotsUni_LossOfSoftswitch = "LossOfSoftswitch"
+
 func init() {
 	physicalpathterminationpointpotsuniBME = &ManagedEntityDefinition{
 		Name:    "PhysicalPathTerminationPointPotsUni",
-		ClassID: 53,
+		ClassID: PhysicalPathTerminationPointPotsUniClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
@@ -162,20 +178,20 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff8,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), true, false, false, 1),
-			2:  Uint16Field("Deprecated", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, true, 2),
-			3:  ByteField("Arc", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
-			4:  ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5:  ByteField("Impedance", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
-			6:  ByteField("TransmissionPath", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
-			7:  ByteField("RxGain", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
-			8:  ByteField("TxGain", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
-			9:  ByteField("OperationalState", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), true, true, false, 9),
-			10: ByteField("HookState", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: Uint16Field("PotsHoldoverTime", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: ByteField("NominalFeedVoltage", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: ByteField("LossOfSoftswitch", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(PhysicalPathTerminationPointPotsUni_AdministrativeState, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), true, false, false, 1),
+			2:  Uint16Field(PhysicalPathTerminationPointPotsUni_Deprecated, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, true, 2),
+			3:  ByteField(PhysicalPathTerminationPointPotsUni_Arc, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
+			4:  ByteField(PhysicalPathTerminationPointPotsUni_ArcInterval, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  ByteField(PhysicalPathTerminationPointPotsUni_Impedance, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
+			6:  ByteField(PhysicalPathTerminationPointPotsUni_TransmissionPath, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7:  ByteField(PhysicalPathTerminationPointPotsUni_RxGain, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8:  ByteField(PhysicalPathTerminationPointPotsUni_TxGain, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  ByteField(PhysicalPathTerminationPointPotsUni_OperationalState, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), true, true, false, 9),
+			10: ByteField(PhysicalPathTerminationPointPotsUni_HookState, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: Uint16Field(PhysicalPathTerminationPointPotsUni_PotsHoldoverTime, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: ByteField(PhysicalPathTerminationPointPotsUni_NominalFeedVoltage, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: ByteField(PhysicalPathTerminationPointPotsUni_LossOfSoftswitch, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

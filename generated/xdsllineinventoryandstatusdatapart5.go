@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -141,32 +141,51 @@ type XdslLineInventoryAndStatusDataPart5 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslLineInventoryAndStatusDataPart5_FextDownstreamSnrMargin = "FextDownstreamSnrMargin"
+const XdslLineInventoryAndStatusDataPart5_NextDownstreamSnrMargin = "NextDownstreamSnrMargin"
+const XdslLineInventoryAndStatusDataPart5_FextUpstreamSnrMargin = "FextUpstreamSnrMargin"
+const XdslLineInventoryAndStatusDataPart5_NextUpstreamSnrMargin = "NextUpstreamSnrMargin"
+const XdslLineInventoryAndStatusDataPart5_FextDownstreamMaximumAttainableDataRate = "FextDownstreamMaximumAttainableDataRate"
+const XdslLineInventoryAndStatusDataPart5_NextDownstreamMaximumAttainableDataRate = "NextDownstreamMaximumAttainableDataRate"
+const XdslLineInventoryAndStatusDataPart5_FextUpstreamMaximumAttainableDataRate = "FextUpstreamMaximumAttainableDataRate"
+const XdslLineInventoryAndStatusDataPart5_NextUpstreamMaximumAttainableDataRate = "NextUpstreamMaximumAttainableDataRate"
+const XdslLineInventoryAndStatusDataPart5_FextDownstreamActualPowerSpectralDensity = "FextDownstreamActualPowerSpectralDensity"
+const XdslLineInventoryAndStatusDataPart5_NextDownstreamActualPowerSpectralDensity = "NextDownstreamActualPowerSpectralDensity"
+const XdslLineInventoryAndStatusDataPart5_FextUpstreamActualPowerSpectralDensity = "FextUpstreamActualPowerSpectralDensity"
+const XdslLineInventoryAndStatusDataPart5_NextUpstreamActualPowerSpectralDensity = "NextUpstreamActualPowerSpectralDensity"
+const XdslLineInventoryAndStatusDataPart5_FextDownstreamActualAggregateTransmitPower = "FextDownstreamActualAggregateTransmitPower"
+const XdslLineInventoryAndStatusDataPart5_NextDownstreamActualAggregateTransmitPower = "NextDownstreamActualAggregateTransmitPower"
+const XdslLineInventoryAndStatusDataPart5_FextUpstreamActualAggregateTransmitPower = "FextUpstreamActualAggregateTransmitPower"
+const XdslLineInventoryAndStatusDataPart5_NextUpstreamActualAggregateTransmitPower = "NextUpstreamActualAggregateTransmitPower"
+
 func init() {
 	xdsllineinventoryandstatusdatapart5BME = &ManagedEntityDefinition{
 		Name:    "XdslLineInventoryAndStatusDataPart5",
-		ClassID: 325,
+		ClassID: XdslLineInventoryAndStatusDataPart5ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  Uint16Field("FextDownstreamSnrMargin", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("NextDownstreamSnrMargin", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3:  Uint16Field("FextUpstreamSnrMargin", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint16Field("NextUpstreamSnrMargin", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("FextDownstreamMaximumAttainableDataRate", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("NextDownstreamMaximumAttainableDataRate", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("FextUpstreamMaximumAttainableDataRate", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("NextUpstreamMaximumAttainableDataRate", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint16Field("FextDownstreamActualPowerSpectralDensity", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint16Field("NextDownstreamActualPowerSpectralDensity", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint16Field("FextUpstreamActualPowerSpectralDensity", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint16Field("NextUpstreamActualPowerSpectralDensity", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint16Field("FextDownstreamActualAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint16Field("NextDownstreamActualAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: Uint16Field("FextUpstreamActualAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
-			16: Uint16Field("NextUpstreamActualAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  Uint16Field(XdslLineInventoryAndStatusDataPart5_FextDownstreamSnrMargin, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(XdslLineInventoryAndStatusDataPart5_NextDownstreamSnrMargin, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  Uint16Field(XdslLineInventoryAndStatusDataPart5_FextUpstreamSnrMargin, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint16Field(XdslLineInventoryAndStatusDataPart5_NextUpstreamSnrMargin, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(XdslLineInventoryAndStatusDataPart5_FextDownstreamMaximumAttainableDataRate, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(XdslLineInventoryAndStatusDataPart5_NextDownstreamMaximumAttainableDataRate, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(XdslLineInventoryAndStatusDataPart5_FextUpstreamMaximumAttainableDataRate, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(XdslLineInventoryAndStatusDataPart5_NextUpstreamMaximumAttainableDataRate, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint16Field(XdslLineInventoryAndStatusDataPart5_FextDownstreamActualPowerSpectralDensity, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint16Field(XdslLineInventoryAndStatusDataPart5_NextDownstreamActualPowerSpectralDensity, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint16Field(XdslLineInventoryAndStatusDataPart5_FextUpstreamActualPowerSpectralDensity, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint16Field(XdslLineInventoryAndStatusDataPart5_NextUpstreamActualPowerSpectralDensity, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint16Field(XdslLineInventoryAndStatusDataPart5_FextDownstreamActualAggregateTransmitPower, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint16Field(XdslLineInventoryAndStatusDataPart5_NextDownstreamActualAggregateTransmitPower, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: Uint16Field(XdslLineInventoryAndStatusDataPart5_FextUpstreamActualAggregateTransmitPower, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
+			16: Uint16Field(XdslLineInventoryAndStatusDataPart5_NextUpstreamActualAggregateTransmitPower, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

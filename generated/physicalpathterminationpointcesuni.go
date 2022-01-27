@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -214,29 +214,44 @@ type PhysicalPathTerminationPointCesUni struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PhysicalPathTerminationPointCesUni_ExpectedType = "ExpectedType"
+const PhysicalPathTerminationPointCesUni_SensedType = "SensedType"
+const PhysicalPathTerminationPointCesUni_CesLoopbackConfiguration = "CesLoopbackConfiguration"
+const PhysicalPathTerminationPointCesUni_AdministrativeState = "AdministrativeState"
+const PhysicalPathTerminationPointCesUni_OperationalState = "OperationalState"
+const PhysicalPathTerminationPointCesUni_Framing = "Framing"
+const PhysicalPathTerminationPointCesUni_Encoding = "Encoding"
+const PhysicalPathTerminationPointCesUni_LineLength = "LineLength"
+const PhysicalPathTerminationPointCesUni_Ds1Mode = "Ds1Mode"
+const PhysicalPathTerminationPointCesUni_Arc = "Arc"
+const PhysicalPathTerminationPointCesUni_ArcInterval = "ArcInterval"
+const PhysicalPathTerminationPointCesUni_LineType = "LineType"
+
 func init() {
 	physicalpathterminationpointcesuniBME = &ManagedEntityDefinition{
 		Name:    "PhysicalPathTerminationPointCesUni",
-		ClassID: 12,
+		ClassID: PhysicalPathTerminationPointCesUniClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xfff0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("ExpectedType", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("SensedType", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, false, false, 2),
-			3:  ByteField("CesLoopbackConfiguration", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, false, false, 3),
-			4:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5:  ByteField("OperationalState", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), true, true, false, 5),
-			6:  ByteField("Framing", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
-			7:  ByteField("Encoding", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  ByteField("LineLength", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
-			9:  ByteField("Ds1Mode", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: ByteField("Arc", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), true, true, false, 10),
-			11: ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: ByteField("LineType", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(PhysicalPathTerminationPointCesUni_ExpectedType, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(PhysicalPathTerminationPointCesUni_SensedType, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, false, false, 2),
+			3:  ByteField(PhysicalPathTerminationPointCesUni_CesLoopbackConfiguration, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, false, false, 3),
+			4:  ByteField(PhysicalPathTerminationPointCesUni_AdministrativeState, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  ByteField(PhysicalPathTerminationPointCesUni_OperationalState, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), true, true, false, 5),
+			6:  ByteField(PhysicalPathTerminationPointCesUni_Framing, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7:  ByteField(PhysicalPathTerminationPointCesUni_Encoding, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField(PhysicalPathTerminationPointCesUni_LineLength, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  ByteField(PhysicalPathTerminationPointCesUni_Ds1Mode, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: ByteField(PhysicalPathTerminationPointCesUni_Arc, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), true, true, false, 10),
+			11: ByteField(PhysicalPathTerminationPointCesUni_ArcInterval, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: ByteField(PhysicalPathTerminationPointCesUni_LineType, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

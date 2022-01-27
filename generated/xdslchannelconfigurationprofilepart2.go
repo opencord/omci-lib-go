@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -136,10 +136,26 @@ type XdslChannelConfigurationProfilePart2 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslChannelConfigurationProfilePart2_MinimumExpectedThroughputForRetransmissionMinetrRtx = "MinimumExpectedThroughputForRetransmissionMinetrRtx"
+const XdslChannelConfigurationProfilePart2_MaximumExpectedThroughputForRetransmissionMaxetrRtx = "MaximumExpectedThroughputForRetransmissionMaxetrRtx"
+const XdslChannelConfigurationProfilePart2_MaximumNetDataRateForRetransmissionMaxndrRtx = "MaximumNetDataRateForRetransmissionMaxndrRtx"
+const XdslChannelConfigurationProfilePart2_MaximumDelayForRetransmissionDelaymaxRtx = "MaximumDelayForRetransmissionDelaymaxRtx"
+const XdslChannelConfigurationProfilePart2_MinimumDelayForRetransmissionDelayminRtx = "MinimumDelayForRetransmissionDelayminRtx"
+const XdslChannelConfigurationProfilePart2_MinimumImpulseNoiseProtectionAgainstSingleHighImpulseNoiseEventShineForRetransmissionInpminShineRtx = "MinimumImpulseNoiseProtectionAgainstSingleHighImpulseNoiseEventShineForRetransmissionInpminShineRtx"
+const XdslChannelConfigurationProfilePart2_MinimumImpulseNoiseProtectionAgainstShineForRetransmissionForSystemsUsing8625KhzSubcarrierSpacingInpmin8ShineRtx = "MinimumImpulseNoiseProtectionAgainstShineForRetransmissionForSystemsUsing8625KhzSubcarrierSpacingInpmin8ShineRtx"
+const XdslChannelConfigurationProfilePart2_ShineratioRtx = "ShineratioRtx"
+const XdslChannelConfigurationProfilePart2_MinimumImpulseNoiseProtectionAgainstReinForRetransmissionInpminReinRtx = "MinimumImpulseNoiseProtectionAgainstReinForRetransmissionInpminReinRtx"
+const XdslChannelConfigurationProfilePart2_MinimumImpulseNoiseProtectionAgainstReinForRetransmissionForSystemsUsing8625KhzSubcarrierSpacingInpmin8ReinRtx = "MinimumImpulseNoiseProtectionAgainstReinForRetransmissionForSystemsUsing8625KhzSubcarrierSpacingInpmin8ReinRtx"
+const XdslChannelConfigurationProfilePart2_ReinInterArrivalTimeForRetransmissionIatReinRtx = "ReinInterArrivalTimeForRetransmissionIatReinRtx"
+const XdslChannelConfigurationProfilePart2_TargetNetDataRateTargetNdr = "TargetNetDataRateTargetNdr"
+const XdslChannelConfigurationProfilePart2_TargetExpectedThroughputForRetransmissionTargetEtr = "TargetExpectedThroughputForRetransmissionTargetEtr"
+
 func init() {
 	xdslchannelconfigurationprofilepart2BME = &ManagedEntityDefinition{
 		Name:    "XdslChannelConfigurationProfilePart2",
-		ClassID: 412,
+		ClassID: XdslChannelConfigurationProfilePart2ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -148,20 +164,20 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff8,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  Uint32Field("MinimumExpectedThroughputForRetransmissionMinetrRtx", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  Uint32Field("MaximumExpectedThroughputForRetransmissionMaxetrRtx", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3:  Uint32Field("MaximumNetDataRateForRetransmissionMaxndrRtx", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  ByteField("MaximumDelayForRetransmissionDelaymaxRtx", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5:  ByteField("MinimumDelayForRetransmissionDelayminRtx", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  ByteField("MinimumImpulseNoiseProtectionAgainstSingleHighImpulseNoiseEventShineForRetransmissionInpminShineRtx", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  ByteField("MinimumImpulseNoiseProtectionAgainstShineForRetransmissionForSystemsUsing8625KhzSubcarrierSpacingInpmin8ShineRtx", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  ByteField("ShineratioRtx", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  ByteField("MinimumImpulseNoiseProtectionAgainstReinForRetransmissionInpminReinRtx", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: ByteField("MinimumImpulseNoiseProtectionAgainstReinForRetransmissionForSystemsUsing8625KhzSubcarrierSpacingInpmin8ReinRtx", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
-			11: ByteField("ReinInterArrivalTimeForRetransmissionIatReinRtx", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
-			12: Uint32Field("TargetNetDataRateTargetNdr", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
-			13: Uint32Field("TargetExpectedThroughputForRetransmissionTargetEtr", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, false, false, 13),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint32Field(XdslChannelConfigurationProfilePart2_MinimumExpectedThroughputForRetransmissionMinetrRtx, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  Uint32Field(XdslChannelConfigurationProfilePart2_MaximumExpectedThroughputForRetransmissionMaxetrRtx, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3:  Uint32Field(XdslChannelConfigurationProfilePart2_MaximumNetDataRateForRetransmissionMaxndrRtx, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  ByteField(XdslChannelConfigurationProfilePart2_MaximumDelayForRetransmissionDelaymaxRtx, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  ByteField(XdslChannelConfigurationProfilePart2_MinimumDelayForRetransmissionDelayminRtx, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  ByteField(XdslChannelConfigurationProfilePart2_MinimumImpulseNoiseProtectionAgainstSingleHighImpulseNoiseEventShineForRetransmissionInpminShineRtx, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  ByteField(XdslChannelConfigurationProfilePart2_MinimumImpulseNoiseProtectionAgainstShineForRetransmissionForSystemsUsing8625KhzSubcarrierSpacingInpmin8ShineRtx, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField(XdslChannelConfigurationProfilePart2_ShineratioRtx, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  ByteField(XdslChannelConfigurationProfilePart2_MinimumImpulseNoiseProtectionAgainstReinForRetransmissionInpminReinRtx, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: ByteField(XdslChannelConfigurationProfilePart2_MinimumImpulseNoiseProtectionAgainstReinForRetransmissionForSystemsUsing8625KhzSubcarrierSpacingInpmin8ReinRtx, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
+			11: ByteField(XdslChannelConfigurationProfilePart2_ReinInterArrivalTimeForRetransmissionIatReinRtx, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
+			12: Uint32Field(XdslChannelConfigurationProfilePart2_TargetNetDataRateTargetNdr, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
+			13: Uint32Field(XdslChannelConfigurationProfilePart2_TargetExpectedThroughputForRetransmissionTargetEtr, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, false, false, 13),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

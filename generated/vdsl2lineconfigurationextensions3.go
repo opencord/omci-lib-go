@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -117,10 +117,25 @@ type Vdsl2LineConfigurationExtensions3 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Vdsl2LineConfigurationExtensions3_Ripolicyds = "Ripolicyds"
+const Vdsl2LineConfigurationExtensions3_Ripolicyus = "Ripolicyus"
+const Vdsl2LineConfigurationExtensions3_ReinitTimeThresholdds = "ReinitTimeThresholdds"
+const Vdsl2LineConfigurationExtensions3_ReinitTimeThresholdus = "ReinitTimeThresholdus"
+const Vdsl2LineConfigurationExtensions3_Rxrefvnsfus = "Rxrefvnsfus"
+const Vdsl2LineConfigurationExtensions3_Txrefvnsfds = "Txrefvnsfds"
+const Vdsl2LineConfigurationExtensions3_RtxModeds = "RtxModeds"
+const Vdsl2LineConfigurationExtensions3_RtxModeus = "RtxModeus"
+const Vdsl2LineConfigurationExtensions3_LeftrThresh = "LeftrThresh"
+const Vdsl2LineConfigurationExtensions3_MaxdelayoctetSplitParameterMdosplit = "MaxdelayoctetSplitParameterMdosplit"
+const Vdsl2LineConfigurationExtensions3_AttndrMethodAttndrMethod = "AttndrMethodAttndrMethod"
+const Vdsl2LineConfigurationExtensions3_AttndrMaxdelayoctetSplitParameterAttndrMdosplit = "AttndrMaxdelayoctetSplitParameterAttndrMdosplit"
+
 func init() {
 	vdsl2lineconfigurationextensions3BME = &ManagedEntityDefinition{
 		Name:    "Vdsl2LineConfigurationExtensions3",
-		ClassID: 410,
+		ClassID: Vdsl2LineConfigurationExtensions3ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -129,19 +144,19 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("Ripolicyds", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, true, false, 1),
-			2:  ByteField("Ripolicyus", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, false, 2),
-			3:  ByteField("ReinitTimeThresholdds", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
-			4:  ByteField("ReinitTimeThresholdus", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5:  ByteField("Rxrefvnsfus", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
-			6:  ByteField("Txrefvnsfds", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
-			7:  ByteField("RtxModeds", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  ByteField("RtxModeus", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  ByteField("LeftrThresh", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: ByteField("MaxdelayoctetSplitParameterMdosplit", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
-			11: ByteField("AttndrMethodAttndrMethod", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: ByteField("AttndrMaxdelayoctetSplitParameterAttndrMdosplit", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(Vdsl2LineConfigurationExtensions3_Ripolicyds, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, true, false, 1),
+			2:  ByteField(Vdsl2LineConfigurationExtensions3_Ripolicyus, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, false, 2),
+			3:  ByteField(Vdsl2LineConfigurationExtensions3_ReinitTimeThresholdds, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
+			4:  ByteField(Vdsl2LineConfigurationExtensions3_ReinitTimeThresholdus, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  ByteField(Vdsl2LineConfigurationExtensions3_Rxrefvnsfus, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
+			6:  ByteField(Vdsl2LineConfigurationExtensions3_Txrefvnsfds, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7:  ByteField(Vdsl2LineConfigurationExtensions3_RtxModeds, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField(Vdsl2LineConfigurationExtensions3_RtxModeus, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  ByteField(Vdsl2LineConfigurationExtensions3_LeftrThresh, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: ByteField(Vdsl2LineConfigurationExtensions3_MaxdelayoctetSplitParameterMdosplit, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: ByteField(Vdsl2LineConfigurationExtensions3_AttndrMethodAttndrMethod, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: ByteField(Vdsl2LineConfigurationExtensions3_AttndrMaxdelayoctetSplitParameterAttndrMdosplit, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

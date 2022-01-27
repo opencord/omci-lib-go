@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -167,31 +167,49 @@ type XdslLineInventoryAndStatusDataPart1 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslLineInventoryAndStatusDataPart1_XtuCG9941VendorId = "XtuCG9941VendorId"
+const XdslLineInventoryAndStatusDataPart1_XtuRG9941VendorId = "XtuRG9941VendorId"
+const XdslLineInventoryAndStatusDataPart1_XtuCSystemVendorId = "XtuCSystemVendorId"
+const XdslLineInventoryAndStatusDataPart1_XtuRSystemVendorId = "XtuRSystemVendorId"
+const XdslLineInventoryAndStatusDataPart1_XtuCVersionNumber = "XtuCVersionNumber"
+const XdslLineInventoryAndStatusDataPart1_XtuRVersionNumber = "XtuRVersionNumber"
+const XdslLineInventoryAndStatusDataPart1_XtuCSerialNumberPart1 = "XtuCSerialNumberPart1"
+const XdslLineInventoryAndStatusDataPart1_XtuCSerialNumberPart2 = "XtuCSerialNumberPart2"
+const XdslLineInventoryAndStatusDataPart1_XtuRSerialNumberPart1 = "XtuRSerialNumberPart1"
+const XdslLineInventoryAndStatusDataPart1_XtuRSerialNumberPart2 = "XtuRSerialNumberPart2"
+const XdslLineInventoryAndStatusDataPart1_XtuCSelfTestResults = "XtuCSelfTestResults"
+const XdslLineInventoryAndStatusDataPart1_XtuRSelfTestResults = "XtuRSelfTestResults"
+const XdslLineInventoryAndStatusDataPart1_XtuCTransmissionSystemCapability = "XtuCTransmissionSystemCapability"
+const XdslLineInventoryAndStatusDataPart1_XtuRTransmissionSystemCapability = "XtuRTransmissionSystemCapability"
+const XdslLineInventoryAndStatusDataPart1_InitializationSuccessFailureCause = "InitializationSuccessFailureCause"
+
 func init() {
 	xdsllineinventoryandstatusdatapart1BME = &ManagedEntityDefinition{
 		Name:    "XdslLineInventoryAndStatusDataPart1",
-		ClassID: 100,
+		ClassID: XdslLineInventoryAndStatusDataPart1ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  Uint64Field("XtuCG9941VendorId", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint64Field("XtuRG9941VendorId", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3:  Uint64Field("XtuCSystemVendorId", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint64Field("XtuRSystemVendorId", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  MultiByteField("XtuCVersionNumber", OctetsAttributeType, 0x0800, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 5),
-			6:  MultiByteField("XtuRVersionNumber", OctetsAttributeType, 0x0400, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 6),
-			7:  MultiByteField("XtuCSerialNumberPart1", OctetsAttributeType, 0x0200, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 7),
-			8:  MultiByteField("XtuCSerialNumberPart2", OctetsAttributeType, 0x0100, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 8),
-			9:  MultiByteField("XtuRSerialNumberPart1", OctetsAttributeType, 0x0080, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 9),
-			10: MultiByteField("XtuRSerialNumberPart2", OctetsAttributeType, 0x0040, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint32Field("XtuCSelfTestResults", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint32Field("XtuRSelfTestResults", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: MultiByteField("XtuCTransmissionSystemCapability", OctetsAttributeType, 0x0008, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 13),
-			14: MultiByteField("XtuRTransmissionSystemCapability", OctetsAttributeType, 0x0004, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 14),
-			15: ByteField("InitializationSuccessFailureCause", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  Uint64Field(XdslLineInventoryAndStatusDataPart1_XtuCG9941VendorId, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint64Field(XdslLineInventoryAndStatusDataPart1_XtuRG9941VendorId, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  Uint64Field(XdslLineInventoryAndStatusDataPart1_XtuCSystemVendorId, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint64Field(XdslLineInventoryAndStatusDataPart1_XtuRSystemVendorId, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  MultiByteField(XdslLineInventoryAndStatusDataPart1_XtuCVersionNumber, OctetsAttributeType, 0x0800, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 5),
+			6:  MultiByteField(XdslLineInventoryAndStatusDataPart1_XtuRVersionNumber, OctetsAttributeType, 0x0400, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 6),
+			7:  MultiByteField(XdslLineInventoryAndStatusDataPart1_XtuCSerialNumberPart1, OctetsAttributeType, 0x0200, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 7),
+			8:  MultiByteField(XdslLineInventoryAndStatusDataPart1_XtuCSerialNumberPart2, OctetsAttributeType, 0x0100, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 8),
+			9:  MultiByteField(XdslLineInventoryAndStatusDataPart1_XtuRSerialNumberPart1, OctetsAttributeType, 0x0080, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 9),
+			10: MultiByteField(XdslLineInventoryAndStatusDataPart1_XtuRSerialNumberPart2, OctetsAttributeType, 0x0040, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint32Field(XdslLineInventoryAndStatusDataPart1_XtuCSelfTestResults, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint32Field(XdslLineInventoryAndStatusDataPart1_XtuRSelfTestResults, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: MultiByteField(XdslLineInventoryAndStatusDataPart1_XtuCTransmissionSystemCapability, OctetsAttributeType, 0x0008, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 13),
+			14: MultiByteField(XdslLineInventoryAndStatusDataPart1_XtuRTransmissionSystemCapability, OctetsAttributeType, 0x0004, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 14),
+			15: ByteField(XdslLineInventoryAndStatusDataPart1_InitializationSuccessFailureCause, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

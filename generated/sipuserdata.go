@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -110,10 +110,25 @@ type SipUserData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const SipUserData_SipAgentPointer = "SipAgentPointer"
+const SipUserData_UserPartAor = "UserPartAor"
+const SipUserData_SipDisplayName = "SipDisplayName"
+const SipUserData_UsernameAndPassword = "UsernameAndPassword"
+const SipUserData_VoicemailServerSipUri = "VoicemailServerSipUri"
+const SipUserData_VoicemailSubscriptionExpirationTime = "VoicemailSubscriptionExpirationTime"
+const SipUserData_NetworkDialPlanPointer = "NetworkDialPlanPointer"
+const SipUserData_ApplicationServicesProfilePointer = "ApplicationServicesProfilePointer"
+const SipUserData_FeatureCodePointer = "FeatureCodePointer"
+const SipUserData_PptpPointer = "PptpPointer"
+const SipUserData_ReleaseTimer = "ReleaseTimer"
+const SipUserData_ReceiverOffHookRohTimer = "ReceiverOffHookRohTimer"
+
 func init() {
 	sipuserdataBME = &ManagedEntityDefinition{
 		Name:    "SipUserData",
-		ClassID: 153,
+		ClassID: SipUserDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -122,19 +137,19 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  Uint16Field("SipAgentPointer", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  Uint16Field("UserPartAor", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  MultiByteField("SipDisplayName", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  Uint16Field("UsernameAndPassword", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  Uint16Field("VoicemailServerSipUri", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6:  Uint32Field("VoicemailSubscriptionExpirationTime", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7:  Uint16Field("NetworkDialPlanPointer", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  Uint16Field("ApplicationServicesProfilePointer", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  Uint16Field("FeatureCodePointer", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
-			10: Uint16Field("PptpPointer", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
-			11: ByteField("ReleaseTimer", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: ByteField("ReceiverOffHookRohTimer", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint16Field(SipUserData_SipAgentPointer, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  Uint16Field(SipUserData_UserPartAor, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  MultiByteField(SipUserData_SipDisplayName, OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  Uint16Field(SipUserData_UsernameAndPassword, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  Uint16Field(SipUserData_VoicemailServerSipUri, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  Uint32Field(SipUserData_VoicemailSubscriptionExpirationTime, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  Uint16Field(SipUserData_NetworkDialPlanPointer, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  Uint16Field(SipUserData_ApplicationServicesProfilePointer, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  Uint16Field(SipUserData_FeatureCodePointer, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
+			10: Uint16Field(SipUserData_PptpPointer, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
+			11: ByteField(SipUserData_ReleaseTimer, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: ByteField(SipUserData_ReceiverOffHookRohTimer, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

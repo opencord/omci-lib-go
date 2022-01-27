@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -156,10 +156,27 @@ type Vdsl2LineConfigurationExtensions2 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Vdsl2LineConfigurationExtensions2_SosTimeDownstream = "SosTimeDownstream"
+const Vdsl2LineConfigurationExtensions2_SosTimeUpstream = "SosTimeUpstream"
+const Vdsl2LineConfigurationExtensions2_SosDegradedTonesThresholdDownstream = "SosDegradedTonesThresholdDownstream"
+const Vdsl2LineConfigurationExtensions2_SosDegradedTonesThresholdUpstream = "SosDegradedTonesThresholdUpstream"
+const Vdsl2LineConfigurationExtensions2_SosCrcThresholdDownstream = "SosCrcThresholdDownstream"
+const Vdsl2LineConfigurationExtensions2_SosCrcThresholdUpstream = "SosCrcThresholdUpstream"
+const Vdsl2LineConfigurationExtensions2_MaxSosDownstream = "MaxSosDownstream"
+const Vdsl2LineConfigurationExtensions2_MaxSosUpstream = "MaxSosUpstream"
+const Vdsl2LineConfigurationExtensions2_SnrMaxOffsetDownstream = "SnrMaxOffsetDownstream"
+const Vdsl2LineConfigurationExtensions2_SnrMaxOffsetUpstream = "SnrMaxOffsetUpstream"
+const Vdsl2LineConfigurationExtensions2_RocMinimumImpulseNoiseProtectionDownstream = "RocMinimumImpulseNoiseProtectionDownstream"
+const Vdsl2LineConfigurationExtensions2_RocMinimumImpulseNoiseProtectionUpstream = "RocMinimumImpulseNoiseProtectionUpstream"
+const Vdsl2LineConfigurationExtensions2_FextDownstreamTransmitterReferredVirtualNoiseTable = "FextDownstreamTransmitterReferredVirtualNoiseTable"
+const Vdsl2LineConfigurationExtensions2_NextDownstreamTransmitterReferredVirtualNoiseTable = "NextDownstreamTransmitterReferredVirtualNoiseTable"
+
 func init() {
 	vdsl2lineconfigurationextensions2BME = &ManagedEntityDefinition{
 		Name:    "Vdsl2LineConfigurationExtensions2",
-		ClassID: 323,
+		ClassID: Vdsl2LineConfigurationExtensions2ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -170,21 +187,21 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("SosTimeDownstream", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 1),
-			2:  ByteField("SosTimeUpstream", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 2),
-			3:  ByteField("SosDegradedTonesThresholdDownstream", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
-			4:  ByteField("SosDegradedTonesThresholdUpstream", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
-			5:  Uint16Field("SosCrcThresholdDownstream", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
-			6:  Uint16Field("SosCrcThresholdUpstream", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
-			7:  ByteField("MaxSosDownstream", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
-			8:  ByteField("MaxSosUpstream", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 8),
-			9:  Uint16Field("SnrMaxOffsetDownstream", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 9),
-			10: Uint16Field("SnrMaxOffsetUpstream", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 10),
-			11: ByteField("RocMinimumImpulseNoiseProtectionDownstream", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 11),
-			12: ByteField("RocMinimumImpulseNoiseProtectionUpstream", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 12),
-			13: TableField("FextDownstreamTransmitterReferredVirtualNoiseTable", TableAttributeType, 0x0008, TableInfo{nil, 3}, mapset.NewSetWith(Read, Write), false, false, false, 13),
-			14: TableField("NextDownstreamTransmitterReferredVirtualNoiseTable", TableAttributeType, 0x0004, TableInfo{nil, 3}, mapset.NewSetWith(Read, Write), false, false, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(Vdsl2LineConfigurationExtensions2_SosTimeDownstream, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 1),
+			2:  ByteField(Vdsl2LineConfigurationExtensions2_SosTimeUpstream, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 2),
+			3:  ByteField(Vdsl2LineConfigurationExtensions2_SosDegradedTonesThresholdDownstream, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
+			4:  ByteField(Vdsl2LineConfigurationExtensions2_SosDegradedTonesThresholdUpstream, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
+			5:  Uint16Field(Vdsl2LineConfigurationExtensions2_SosCrcThresholdDownstream, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
+			6:  Uint16Field(Vdsl2LineConfigurationExtensions2_SosCrcThresholdUpstream, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
+			7:  ByteField(Vdsl2LineConfigurationExtensions2_MaxSosDownstream, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
+			8:  ByteField(Vdsl2LineConfigurationExtensions2_MaxSosUpstream, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 8),
+			9:  Uint16Field(Vdsl2LineConfigurationExtensions2_SnrMaxOffsetDownstream, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 9),
+			10: Uint16Field(Vdsl2LineConfigurationExtensions2_SnrMaxOffsetUpstream, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 10),
+			11: ByteField(Vdsl2LineConfigurationExtensions2_RocMinimumImpulseNoiseProtectionDownstream, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 11),
+			12: ByteField(Vdsl2LineConfigurationExtensions2_RocMinimumImpulseNoiseProtectionUpstream, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 12),
+			13: TableField(Vdsl2LineConfigurationExtensions2_FextDownstreamTransmitterReferredVirtualNoiseTable, TableAttributeType, 0x0008, TableInfo{nil, 3}, mapset.NewSetWith(Read, Write), false, false, false, 13),
+			14: TableField(Vdsl2LineConfigurationExtensions2_NextDownstreamTransmitterReferredVirtualNoiseTable, TableAttributeType, 0x0004, TableInfo{nil, 3}, mapset.NewSetWith(Read, Write), false, false, false, 14),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

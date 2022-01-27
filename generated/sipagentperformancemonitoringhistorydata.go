@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -105,10 +105,28 @@ type SipAgentPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const SipAgentPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const SipAgentPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const SipAgentPerformanceMonitoringHistoryData_Transactions = "Transactions"
+const SipAgentPerformanceMonitoringHistoryData_RxInviteReqs = "RxInviteReqs"
+const SipAgentPerformanceMonitoringHistoryData_RxInviteRetrans = "RxInviteRetrans"
+const SipAgentPerformanceMonitoringHistoryData_RxNoninviteReqs = "RxNoninviteReqs"
+const SipAgentPerformanceMonitoringHistoryData_RxNoninviteRetrans = "RxNoninviteRetrans"
+const SipAgentPerformanceMonitoringHistoryData_RxResponse = "RxResponse"
+const SipAgentPerformanceMonitoringHistoryData_RxResponseRetransmissions = "RxResponseRetransmissions"
+const SipAgentPerformanceMonitoringHistoryData_TxInviteReqs = "TxInviteReqs"
+const SipAgentPerformanceMonitoringHistoryData_TxInviteRetrans = "TxInviteRetrans"
+const SipAgentPerformanceMonitoringHistoryData_TxNoninviteReqs = "TxNoninviteReqs"
+const SipAgentPerformanceMonitoringHistoryData_TxNoninviteRetrans = "TxNoninviteRetrans"
+const SipAgentPerformanceMonitoringHistoryData_TxResponse = "TxResponse"
+const SipAgentPerformanceMonitoringHistoryData_TxResponseRetransmissions = "TxResponseRetransmissions"
+
 func init() {
 	sipagentperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "SipAgentPerformanceMonitoringHistoryData",
-		ClassID: 151,
+		ClassID: SipAgentPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -118,22 +136,22 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("Transactions", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
-			4:  Uint32Field("RxInviteReqs", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
-			5:  Uint32Field("RxInviteRetrans", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
-			6:  Uint32Field("RxNoninviteReqs", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
-			7:  Uint32Field("RxNoninviteRetrans", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
-			8:  Uint32Field("RxResponse", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
-			9:  Uint32Field("RxResponseRetransmissions", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
-			10: Uint32Field("TxInviteReqs", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: Uint32Field("TxInviteRetrans", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
-			12: Uint32Field("TxNoninviteReqs", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
-			13: Uint32Field("TxNoninviteRetrans", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
-			14: Uint32Field("TxResponse", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
-			15: Uint32Field("TxResponseRetransmissions", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(SipAgentPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(SipAgentPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(SipAgentPerformanceMonitoringHistoryData_Transactions, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
+			4:  Uint32Field(SipAgentPerformanceMonitoringHistoryData_RxInviteReqs, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
+			5:  Uint32Field(SipAgentPerformanceMonitoringHistoryData_RxInviteRetrans, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
+			6:  Uint32Field(SipAgentPerformanceMonitoringHistoryData_RxNoninviteReqs, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
+			7:  Uint32Field(SipAgentPerformanceMonitoringHistoryData_RxNoninviteRetrans, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
+			8:  Uint32Field(SipAgentPerformanceMonitoringHistoryData_RxResponse, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
+			9:  Uint32Field(SipAgentPerformanceMonitoringHistoryData_RxResponseRetransmissions, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: Uint32Field(SipAgentPerformanceMonitoringHistoryData_TxInviteReqs, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: Uint32Field(SipAgentPerformanceMonitoringHistoryData_TxInviteRetrans, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			12: Uint32Field(SipAgentPerformanceMonitoringHistoryData_TxNoninviteReqs, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
+			13: Uint32Field(SipAgentPerformanceMonitoringHistoryData_TxNoninviteRetrans, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
+			14: Uint32Field(SipAgentPerformanceMonitoringHistoryData_TxResponse, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
+			15: Uint32Field(SipAgentPerformanceMonitoringHistoryData_TxResponseRetransmissions, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

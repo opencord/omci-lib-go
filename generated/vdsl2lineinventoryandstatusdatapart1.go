@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -173,32 +173,50 @@ type Vdsl2LineInventoryAndStatusDataPart1 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Vdsl2LineInventoryAndStatusDataPart1_Vdsl2TransmissionSystemCapabilityXtuC = "Vdsl2TransmissionSystemCapabilityXtuC"
+const Vdsl2LineInventoryAndStatusDataPart1_Vdsl2TransmissionSystem = "Vdsl2TransmissionSystem"
+const Vdsl2LineInventoryAndStatusDataPart1_Vdsl2Profile = "Vdsl2Profile"
+const Vdsl2LineInventoryAndStatusDataPart1_Vdsl2LimitPsdMaskAndBandplan = "Vdsl2LimitPsdMaskAndBandplan"
+const Vdsl2LineInventoryAndStatusDataPart1_Vdsl2Us0PsdMask = "Vdsl2Us0PsdMask"
+const Vdsl2LineInventoryAndStatusDataPart1_Actsnrmodeds = "Actsnrmodeds"
+const Vdsl2LineInventoryAndStatusDataPart1_Hlingds = "Hlingds"
+const Vdsl2LineInventoryAndStatusDataPart1_Hloggds = "Hloggds"
+const Vdsl2LineInventoryAndStatusDataPart1_Qlngds = "Qlngds"
+const Vdsl2LineInventoryAndStatusDataPart1_Snrgds = "Snrgds"
+const Vdsl2LineInventoryAndStatusDataPart1_MrefpsddsTable = "MrefpsddsTable"
+const Vdsl2LineInventoryAndStatusDataPart1_Trellisds = "Trellisds"
+const Vdsl2LineInventoryAndStatusDataPart1_ActualRateAdaptationModeDownstream = "ActualRateAdaptationModeDownstream"
+const Vdsl2LineInventoryAndStatusDataPart1_ActualImpulseNoiseProtectionRobustOperationsChannelRocDownstream = "ActualImpulseNoiseProtectionRobustOperationsChannelRocDownstream"
+const Vdsl2LineInventoryAndStatusDataPart1_SnrMarginRocDownstream = "SnrMarginRocDownstream"
+
 func init() {
 	vdsl2lineinventoryandstatusdatapart1BME = &ManagedEntityDefinition{
 		Name:    "Vdsl2LineInventoryAndStatusDataPart1",
-		ClassID: 168,
+		ClassID: Vdsl2LineInventoryAndStatusDataPart1ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			GetNext,
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("Vdsl2TransmissionSystemCapabilityXtuC", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  ByteField("Vdsl2TransmissionSystem", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3:  ByteField("Vdsl2Profile", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint64Field("Vdsl2LimitPsdMaskAndBandplan", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("Vdsl2Us0PsdMask", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  ByteField("Actsnrmodeds", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  ByteField("Hlingds", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  ByteField("Hloggds", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  ByteField("Qlngds", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: ByteField("Snrgds", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: TableField("MrefpsddsTable", TableAttributeType, 0x0020, TableInfo{nil, 3}, mapset.NewSetWith(Read), false, false, false, 11),
-			12: ByteField("Trellisds", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: ByteField("ActualRateAdaptationModeDownstream", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
-			14: ByteField("ActualImpulseNoiseProtectionRobustOperationsChannelRocDownstream", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
-			15: Uint16Field("SnrMarginRocDownstream", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(Vdsl2LineInventoryAndStatusDataPart1_Vdsl2TransmissionSystemCapabilityXtuC, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  ByteField(Vdsl2LineInventoryAndStatusDataPart1_Vdsl2TransmissionSystem, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  ByteField(Vdsl2LineInventoryAndStatusDataPart1_Vdsl2Profile, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint64Field(Vdsl2LineInventoryAndStatusDataPart1_Vdsl2LimitPsdMaskAndBandplan, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(Vdsl2LineInventoryAndStatusDataPart1_Vdsl2Us0PsdMask, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  ByteField(Vdsl2LineInventoryAndStatusDataPart1_Actsnrmodeds, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  ByteField(Vdsl2LineInventoryAndStatusDataPart1_Hlingds, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  ByteField(Vdsl2LineInventoryAndStatusDataPart1_Hloggds, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  ByteField(Vdsl2LineInventoryAndStatusDataPart1_Qlngds, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: ByteField(Vdsl2LineInventoryAndStatusDataPart1_Snrgds, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: TableField(Vdsl2LineInventoryAndStatusDataPart1_MrefpsddsTable, TableAttributeType, 0x0020, TableInfo{nil, 3}, mapset.NewSetWith(Read), false, false, false, 11),
+			12: ByteField(Vdsl2LineInventoryAndStatusDataPart1_Trellisds, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: ByteField(Vdsl2LineInventoryAndStatusDataPart1_ActualRateAdaptationModeDownstream, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
+			14: ByteField(Vdsl2LineInventoryAndStatusDataPart1_ActualImpulseNoiseProtectionRobustOperationsChannelRocDownstream, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
+			15: Uint16Field(Vdsl2LineInventoryAndStatusDataPart1_SnrMarginRocDownstream, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

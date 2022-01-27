@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,19 +60,24 @@ type OnuTimeConfiguration struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const OnuTimeConfiguration_CurrentLocalOnuTime = "CurrentLocalOnuTime"
+const OnuTimeConfiguration_TimeQualificationBlock = "TimeQualificationBlock"
+
 func init() {
 	onutimeconfigurationBME = &ManagedEntityDefinition{
 		Name:    "OnuTimeConfiguration",
-		ClassID: 457,
+		ClassID: OnuTimeConfigurationClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xc000,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: MultiByteField("CurrentLocalOnuTime", OctetsAttributeType, 0x8000, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 1),
-			2: Uint16Field("TimeQualificationBlock", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: MultiByteField(OnuTimeConfiguration_CurrentLocalOnuTime, OctetsAttributeType, 0x8000, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 1),
+			2: Uint16Field(OnuTimeConfiguration_TimeQualificationBlock, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -103,10 +103,23 @@ type MacBridgeServiceProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const MacBridgeServiceProfile_SpanningTreeInd = "SpanningTreeInd"
+const MacBridgeServiceProfile_LearningInd = "LearningInd"
+const MacBridgeServiceProfile_PortBridgingInd = "PortBridgingInd"
+const MacBridgeServiceProfile_Priority = "Priority"
+const MacBridgeServiceProfile_MaxAge = "MaxAge"
+const MacBridgeServiceProfile_HelloTime = "HelloTime"
+const MacBridgeServiceProfile_ForwardDelay = "ForwardDelay"
+const MacBridgeServiceProfile_UnknownMacAddressDiscard = "UnknownMacAddressDiscard"
+const MacBridgeServiceProfile_MacLearningDepth = "MacLearningDepth"
+const MacBridgeServiceProfile_DynamicFilteringAgeingTime = "DynamicFilteringAgeingTime"
+
 func init() {
 	macbridgeserviceprofileBME = &ManagedEntityDefinition{
 		Name:    "MacBridgeServiceProfile",
-		ClassID: 45,
+		ClassID: MacBridgeServiceProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -115,17 +128,17 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("SpanningTreeInd", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  ByteField("LearningInd", EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  ByteField("PortBridgingInd", EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  Uint16Field("Priority", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  Uint16Field("MaxAge", UnsignedIntegerAttributeType, 0x0800, 1536, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6:  Uint16Field("HelloTime", UnsignedIntegerAttributeType, 0x0400, 256, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7:  Uint16Field("ForwardDelay", UnsignedIntegerAttributeType, 0x0200, 1024, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  ByteField("UnknownMacAddressDiscard", EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  ByteField("MacLearningDepth", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 9),
-			10: Uint32Field("DynamicFilteringAgeingTime", UnsignedIntegerAttributeType, 0x0040, 300, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 10),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(MacBridgeServiceProfile_SpanningTreeInd, EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField(MacBridgeServiceProfile_LearningInd, EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  ByteField(MacBridgeServiceProfile_PortBridgingInd, EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint16Field(MacBridgeServiceProfile_Priority, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  Uint16Field(MacBridgeServiceProfile_MaxAge, UnsignedIntegerAttributeType, 0x0800, 1536, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  Uint16Field(MacBridgeServiceProfile_HelloTime, UnsignedIntegerAttributeType, 0x0400, 256, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  Uint16Field(MacBridgeServiceProfile_ForwardDelay, UnsignedIntegerAttributeType, 0x0200, 1024, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  ByteField(MacBridgeServiceProfile_UnknownMacAddressDiscard, EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  ByteField(MacBridgeServiceProfile_MacLearningDepth, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 9),
+			10: Uint32Field(MacBridgeServiceProfile_DynamicFilteringAgeingTime, UnsignedIntegerAttributeType, 0x0040, 300, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 10),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

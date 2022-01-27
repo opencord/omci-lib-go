@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -91,10 +91,21 @@ type XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmInpeqHistogramTable = "InmInpeqHistogramTable"
+const XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmTotalMeasurement = "InmTotalMeasurement"
+const XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmIatHistogram = "InmIatHistogram"
+const XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmInpeqHistogramLfeTable = "InmInpeqHistogramLfeTable"
+const XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmTotalMeasurementLfe = "InmTotalMeasurementLfe"
+const XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmIatHistogramLfe = "InmIatHistogramLfe"
+
 func init() {
 	xdslimpulsenoisemonitorperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData",
-		ClassID: 324,
+		ClassID: XdslImpulseNoiseMonitorPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -105,15 +116,15 @@ func init() {
 		),
 		AllowedAttributeMask: 0xff00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2: Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: TableField("InmInpeqHistogramTable", TableAttributeType, 0x2000, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, true, false, 3),
-			4: Uint16Field("InmTotalMeasurement", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
-			5: Uint16Field("InmIatHistogram", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
-			6: TableField("InmInpeqHistogramLfeTable", TableAttributeType, 0x0400, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, true, false, 6),
-			7: Uint16Field("InmTotalMeasurementLfe", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
-			8: Uint16Field("InmIatHistogramLfe", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: ByteField(XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2: Uint16Field(XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: TableField(XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmInpeqHistogramTable, TableAttributeType, 0x2000, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, true, false, 3),
+			4: Uint16Field(XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmTotalMeasurement, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
+			5: Uint16Field(XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmIatHistogram, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
+			6: TableField(XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmInpeqHistogramLfeTable, TableAttributeType, 0x0400, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, true, false, 6),
+			7: Uint16Field(XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmTotalMeasurementLfe, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
+			8: Uint16Field(XdslImpulseNoiseMonitorPerformanceMonitoringHistoryData_InmIatHistogramLfe, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

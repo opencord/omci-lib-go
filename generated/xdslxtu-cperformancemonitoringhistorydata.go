@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -121,25 +121,44 @@ var xdslxtucperformancemonitoringhistorydataBME *ManagedEntityDefinition
 //			attribute counts are inhibited during unavailability - see clause 7.2.7.13 of [ITUT G.997.1].
 //			(R) (mandatory) (2-bytes)
 //
-//		Sos Success Count, Near End
-//			The SOS-SUCCESS-NE attribute is a count of the total number of successful SOS procedures
-//			initiated by the near-end xTU on the line during the accumulation period. Successful SOS is
-//			defined in clause-12.1.4 of [ITUT G.993.2]. (R) (optional) (2-bytes)
+//		Sos Success Count Near End
+//			SOS success count, near end: The SOS-SUCCESS-NE attribute is a count of the total number of
+//			successful SOS procedures initiated by the near-end xTU on the line during the accumulation
+//			period. Successful SOS is defined in clause-12.1.4 of [ITUT G.993.2]. (R) (optional) (2-bytes)
 //
-//		Sos Success Count, Far End
-//			The SOS-SUCCESS-FE attribute is a count of the total number of successful SOS procedures
-//			initiated by the far-end xTU on the line during the accumulation period. Successful SOS is
-//			defined in clause 12.1.4 of [ITUT-G.993.2]. (R) (optional) (2-bytes)
+//		Sos Success Count Far End
+//			SOS success count, far end: The SOS-SUCCESS-FE attribute is a count of the total number of
+//			successful SOS procedures initiated by the far-end xTU on the line during the accumulation
+//			period. Successful SOS is defined in clause 12.1.4 of [ITUT-G.993.2]. (R) (optional) (2-bytes)
 //
 type XdslXtuCPerformanceMonitoringHistoryData struct {
 	ManagedEntityDefinition
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslXtuCPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const XdslXtuCPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const XdslXtuCPerformanceMonitoringHistoryData_LossOfFrameSeconds = "LossOfFrameSeconds"
+const XdslXtuCPerformanceMonitoringHistoryData_LossOfSignalSeconds = "LossOfSignalSeconds"
+const XdslXtuCPerformanceMonitoringHistoryData_LossOfLinkSeconds = "LossOfLinkSeconds"
+const XdslXtuCPerformanceMonitoringHistoryData_LossOfPowerSeconds = "LossOfPowerSeconds"
+const XdslXtuCPerformanceMonitoringHistoryData_ErroredSecondsEs = "ErroredSecondsEs"
+const XdslXtuCPerformanceMonitoringHistoryData_SeverelyErroredSeconds = "SeverelyErroredSeconds"
+const XdslXtuCPerformanceMonitoringHistoryData_LineInitializations = "LineInitializations"
+const XdslXtuCPerformanceMonitoringHistoryData_FailedLineInitializations = "FailedLineInitializations"
+const XdslXtuCPerformanceMonitoringHistoryData_ShortInitializations = "ShortInitializations"
+const XdslXtuCPerformanceMonitoringHistoryData_FailedShortInitializations = "FailedShortInitializations"
+const XdslXtuCPerformanceMonitoringHistoryData_FecSeconds = "FecSeconds"
+const XdslXtuCPerformanceMonitoringHistoryData_UnavailableSeconds = "UnavailableSeconds"
+const XdslXtuCPerformanceMonitoringHistoryData_SosSuccessCountNearEnd = "SosSuccessCountNearEnd"
+const XdslXtuCPerformanceMonitoringHistoryData_SosSuccessCountFarEnd = "SosSuccessCountFarEnd"
+
 func init() {
 	xdslxtucperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "XdslXtuCPerformanceMonitoringHistoryData",
-		ClassID: 112,
+		ClassID: XdslXtuCPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -149,23 +168,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint16Field("LossOfFrameSeconds", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint16Field("LossOfSignalSeconds", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint16Field("LossOfLinkSeconds", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint16Field("LossOfPowerSeconds", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint16Field("ErroredSecondsEs", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint16Field("SeverelyErroredSeconds", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint16Field("LineInitializations", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint16Field("FailedLineInitializations", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint16Field("ShortInitializations", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
-			12: Uint16Field("FailedShortInitializations", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
-			13: Uint16Field("FecSeconds", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint16Field("UnavailableSeconds", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: Uint16Field("SosSuccessCount,NearEnd", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
-			16: Uint16Field("SosSuccessCount,FarEnd", CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(XdslXtuCPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_LossOfFrameSeconds, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_LossOfSignalSeconds, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_LossOfLinkSeconds, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_LossOfPowerSeconds, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_ErroredSecondsEs, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_SeverelyErroredSeconds, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_LineInitializations, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_FailedLineInitializations, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_ShortInitializations, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			12: Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_FailedShortInitializations, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
+			13: Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_FecSeconds, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_UnavailableSeconds, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_SosSuccessCountNearEnd, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
+			16: Uint16Field(XdslXtuCPerformanceMonitoringHistoryData_SosSuccessCountFarEnd, CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, true, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

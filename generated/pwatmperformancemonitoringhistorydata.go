@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -85,10 +85,22 @@ type PwAtmPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PwAtmPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const PwAtmPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const PwAtmPerformanceMonitoringHistoryData_DownstreamMissingPacketsCounter = "DownstreamMissingPacketsCounter"
+const PwAtmPerformanceMonitoringHistoryData_DownstreamReorderedPacketsCounter = "DownstreamReorderedPacketsCounter"
+const PwAtmPerformanceMonitoringHistoryData_DownstreamMisorderedPacketsCounter = "DownstreamMisorderedPacketsCounter"
+const PwAtmPerformanceMonitoringHistoryData_UpstreamTimeoutPacketsCounter = "UpstreamTimeoutPacketsCounter"
+const PwAtmPerformanceMonitoringHistoryData_UpstreamTransmittedCellsCounter = "UpstreamTransmittedCellsCounter"
+const PwAtmPerformanceMonitoringHistoryData_UpstreamDroppedCellsCounter = "UpstreamDroppedCellsCounter"
+const PwAtmPerformanceMonitoringHistoryData_UpstreamReceivedCellsCounter = "UpstreamReceivedCellsCounter"
+
 func init() {
 	pwatmperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "PwAtmPerformanceMonitoringHistoryData",
-		ClassID: 338,
+		ClassID: PwAtmPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -98,16 +110,16 @@ func init() {
 		),
 		AllowedAttributeMask: 0xff80,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2: Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: Uint32Field("DownstreamMissingPacketsCounter", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4: Uint32Field("DownstreamReorderedPacketsCounter", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
-			5: Uint32Field("DownstreamMisorderedPacketsCounter", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6: Uint32Field("UpstreamTimeoutPacketsCounter", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7: Uint32Field("UpstreamTransmittedCellsCounter", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8: Uint32Field("UpstreamDroppedCellsCounter", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9: Uint32Field("UpstreamReceivedCellsCounter", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: ByteField(PwAtmPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2: Uint16Field(PwAtmPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: Uint32Field(PwAtmPerformanceMonitoringHistoryData_DownstreamMissingPacketsCounter, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4: Uint32Field(PwAtmPerformanceMonitoringHistoryData_DownstreamReorderedPacketsCounter, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
+			5: Uint32Field(PwAtmPerformanceMonitoringHistoryData_DownstreamMisorderedPacketsCounter, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6: Uint32Field(PwAtmPerformanceMonitoringHistoryData_UpstreamTimeoutPacketsCounter, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7: Uint32Field(PwAtmPerformanceMonitoringHistoryData_UpstreamTransmittedCellsCounter, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8: Uint32Field(PwAtmPerformanceMonitoringHistoryData_UpstreamDroppedCellsCounter, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9: Uint32Field(PwAtmPerformanceMonitoringHistoryData_UpstreamReceivedCellsCounter, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

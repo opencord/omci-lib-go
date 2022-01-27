@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -103,25 +103,36 @@ type ManagedEntityMe struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const ManagedEntityMe_Name = "Name"
+const ManagedEntityMe_AttributesTable = "AttributesTable"
+const ManagedEntityMe_Access = "Access"
+const ManagedEntityMe_AlarmsTable = "AlarmsTable"
+const ManagedEntityMe_AvcsTable = "AvcsTable"
+const ManagedEntityMe_Actions = "Actions"
+const ManagedEntityMe_InstancesTable = "InstancesTable"
+const ManagedEntityMe_Support = "Support"
+
 func init() {
 	managedentitymeBME = &ManagedEntityDefinition{
 		Name:    "ManagedEntityMe",
-		ClassID: 288,
+		ClassID: ManagedEntityMeClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			GetNext,
 		),
 		AllowedAttributeMask: 0xff00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: MultiByteField("Name", OctetsAttributeType, 0x8000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 1),
-			2: TableField("AttributesTable", TableAttributeType, 0x4000, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, false, false, 2),
-			3: ByteField("Access", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4: TableField("AlarmsTable", TableAttributeType, 0x1000, TableInfo{nil, 1}, mapset.NewSetWith(Read), false, false, false, 4),
-			5: TableField("AvcsTable", TableAttributeType, 0x0800, TableInfo{nil, 1}, mapset.NewSetWith(Read), false, false, false, 5),
-			6: Uint32Field("Actions", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7: TableField("InstancesTable", TableAttributeType, 0x0200, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, false, false, 7),
-			8: ByteField("Support", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: MultiByteField(ManagedEntityMe_Name, OctetsAttributeType, 0x8000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 1),
+			2: TableField(ManagedEntityMe_AttributesTable, TableAttributeType, 0x4000, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, false, false, 2),
+			3: ByteField(ManagedEntityMe_Access, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4: TableField(ManagedEntityMe_AlarmsTable, TableAttributeType, 0x1000, TableInfo{nil, 1}, mapset.NewSetWith(Read), false, false, false, 4),
+			5: TableField(ManagedEntityMe_AvcsTable, TableAttributeType, 0x0800, TableInfo{nil, 1}, mapset.NewSetWith(Read), false, false, false, 5),
+			6: Uint32Field(ManagedEntityMe_Actions, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7: TableField(ManagedEntityMe_InstancesTable, TableAttributeType, 0x0200, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, false, false, 7),
+			8: ByteField(ManagedEntityMe_Support, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

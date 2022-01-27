@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -163,10 +163,27 @@ type CircuitPack struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const CircuitPack_Type = "Type"
+const CircuitPack_NumberOfPorts = "NumberOfPorts"
+const CircuitPack_SerialNumber = "SerialNumber"
+const CircuitPack_Version = "Version"
+const CircuitPack_VendorId = "VendorId"
+const CircuitPack_AdministrativeState = "AdministrativeState"
+const CircuitPack_OperationalState = "OperationalState"
+const CircuitPack_BridgedOrIpInd = "BridgedOrIpInd"
+const CircuitPack_EquipmentId = "EquipmentId"
+const CircuitPack_CardConfiguration = "CardConfiguration"
+const CircuitPack_TotalTContBufferNumber = "TotalTContBufferNumber"
+const CircuitPack_TotalPriorityQueueNumber = "TotalPriorityQueueNumber"
+const CircuitPack_TotalTrafficSchedulerNumber = "TotalTrafficSchedulerNumber"
+const CircuitPack_PowerShedOverride = "PowerShedOverride"
+
 func init() {
 	circuitpackBME = &ManagedEntityDefinition{
 		Name:    "CircuitPack",
-		ClassID: 6,
+		ClassID: CircuitPackClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
@@ -175,21 +192,21 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("Type", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 1),
-			2:  ByteField("NumberOfPorts", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, true, false, 2),
-			3:  MultiByteField("SerialNumber", OctetsAttributeType, 0x2000, 8, toOctets("ICAgICAgICA="), mapset.NewSetWith(Read), false, false, false, 3),
-			4:  MultiByteField("Version", OctetsAttributeType, 0x1000, 14, toOctets("ICAgICAgICAgICAgICA="), mapset.NewSetWith(Read), false, false, false, 4),
-			5:  MultiByteField("VendorId", StringAttributeType, 0x0800, 4, toOctets("ICAgIA=="), mapset.NewSetWith(Read), false, true, false, 5),
-			6:  ByteField("AdministrativeState", EnumerationAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  ByteField("OperationalState", EnumerationAttributeType, 0x0200, 2, mapset.NewSetWith(Read), true, true, false, 7),
-			8:  ByteField("BridgedOrIpInd", EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  MultiByteField("EquipmentId", StringAttributeType, 0x0080, 20, toOctets("ICAgICAgICAgICAgICAgICAgICA="), mapset.NewSetWith(Read), false, true, false, 9),
-			10: ByteField("CardConfiguration", EnumerationAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
-			11: ByteField("TotalTContBufferNumber", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: ByteField("TotalPriorityQueueNumber", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: ByteField("TotalTrafficSchedulerNumber", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint32Field("PowerShedOverride", BitFieldAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(CircuitPack_Type, EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 1),
+			2:  ByteField(CircuitPack_NumberOfPorts, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, true, false, 2),
+			3:  MultiByteField(CircuitPack_SerialNumber, OctetsAttributeType, 0x2000, 8, toOctets("ICAgICAgICA="), mapset.NewSetWith(Read), false, false, false, 3),
+			4:  MultiByteField(CircuitPack_Version, OctetsAttributeType, 0x1000, 14, toOctets("ICAgICAgICAgICAgICA="), mapset.NewSetWith(Read), false, false, false, 4),
+			5:  MultiByteField(CircuitPack_VendorId, StringAttributeType, 0x0800, 4, toOctets("ICAgIA=="), mapset.NewSetWith(Read), false, true, false, 5),
+			6:  ByteField(CircuitPack_AdministrativeState, EnumerationAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  ByteField(CircuitPack_OperationalState, EnumerationAttributeType, 0x0200, 2, mapset.NewSetWith(Read), true, true, false, 7),
+			8:  ByteField(CircuitPack_BridgedOrIpInd, EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  MultiByteField(CircuitPack_EquipmentId, StringAttributeType, 0x0080, 20, toOctets("ICAgICAgICAgICAgICAgICAgICA="), mapset.NewSetWith(Read), false, true, false, 9),
+			10: ByteField(CircuitPack_CardConfiguration, EnumerationAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
+			11: ByteField(CircuitPack_TotalTContBufferNumber, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: ByteField(CircuitPack_TotalPriorityQueueNumber, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: ByteField(CircuitPack_TotalTrafficSchedulerNumber, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint32Field(CircuitPack_PowerShedOverride, BitFieldAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -169,10 +169,29 @@ type PseudowireMaintenanceProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PseudowireMaintenanceProfile_JitterBufferMaximumDepth = "JitterBufferMaximumDepth"
+const PseudowireMaintenanceProfile_JitterBufferDesiredDepth = "JitterBufferDesiredDepth"
+const PseudowireMaintenanceProfile_FillPolicy = "FillPolicy"
+const PseudowireMaintenanceProfile_MisconnectedPacketsDeclarationPolicy = "MisconnectedPacketsDeclarationPolicy"
+const PseudowireMaintenanceProfile_MisconnectedPacketsClearPolicy = "MisconnectedPacketsClearPolicy"
+const PseudowireMaintenanceProfile_LossOfPacketsDeclarationPolicy = "LossOfPacketsDeclarationPolicy"
+const PseudowireMaintenanceProfile_LossOfPacketsClearPolicy = "LossOfPacketsClearPolicy"
+const PseudowireMaintenanceProfile_BufferOverrunUnderrunDeclarationPolicy = "BufferOverrunUnderrunDeclarationPolicy"
+const PseudowireMaintenanceProfile_BufferOverrunUnderrunClearPolicy = "BufferOverrunUnderrunClearPolicy"
+const PseudowireMaintenanceProfile_MalformedPacketsDeclarationPolicy = "MalformedPacketsDeclarationPolicy"
+const PseudowireMaintenanceProfile_MalformedPacketsClearPolicy = "MalformedPacketsClearPolicy"
+const PseudowireMaintenanceProfile_RBitTransmitSetPolicy = "RBitTransmitSetPolicy"
+const PseudowireMaintenanceProfile_RBitTransmitClearPolicy = "RBitTransmitClearPolicy"
+const PseudowireMaintenanceProfile_RBitReceivePolicy = "RBitReceivePolicy"
+const PseudowireMaintenanceProfile_LBitReceivePolicy = "LBitReceivePolicy"
+const PseudowireMaintenanceProfile_SesThreshold = "SesThreshold"
+
 func init() {
 	pseudowiremaintenanceprofileBME = &ManagedEntityDefinition{
 		Name:    "PseudowireMaintenanceProfile",
-		ClassID: 284,
+		ClassID: PseudowireMaintenanceProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -181,23 +200,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  Uint16Field("JitterBufferMaximumDepth", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 1),
-			2:  Uint16Field("JitterBufferDesiredDepth", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 2),
-			3:  ByteField("FillPolicy", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
-			4:  ByteField("MisconnectedPacketsDeclarationPolicy", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
-			5:  ByteField("MisconnectedPacketsClearPolicy", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
-			6:  ByteField("LossOfPacketsDeclarationPolicy", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
-			7:  ByteField("LossOfPacketsClearPolicy", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
-			8:  ByteField("BufferOverrunUnderrunDeclarationPolicy", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 8),
-			9:  ByteField("BufferOverrunUnderrunClearPolicy", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 9),
-			10: ByteField("MalformedPacketsDeclarationPolicy", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 10),
-			11: ByteField("MalformedPacketsClearPolicy", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 11),
-			12: ByteField("RBitTransmitSetPolicy", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 12),
-			13: ByteField("RBitTransmitClearPolicy", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
-			14: ByteField("RBitReceivePolicy", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 14),
-			15: ByteField("LBitReceivePolicy", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 15),
-			16: Uint16Field("SesThreshold", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint16Field(PseudowireMaintenanceProfile_JitterBufferMaximumDepth, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 1),
+			2:  Uint16Field(PseudowireMaintenanceProfile_JitterBufferDesiredDepth, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 2),
+			3:  ByteField(PseudowireMaintenanceProfile_FillPolicy, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
+			4:  ByteField(PseudowireMaintenanceProfile_MisconnectedPacketsDeclarationPolicy, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
+			5:  ByteField(PseudowireMaintenanceProfile_MisconnectedPacketsClearPolicy, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
+			6:  ByteField(PseudowireMaintenanceProfile_LossOfPacketsDeclarationPolicy, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
+			7:  ByteField(PseudowireMaintenanceProfile_LossOfPacketsClearPolicy, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
+			8:  ByteField(PseudowireMaintenanceProfile_BufferOverrunUnderrunDeclarationPolicy, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 8),
+			9:  ByteField(PseudowireMaintenanceProfile_BufferOverrunUnderrunClearPolicy, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 9),
+			10: ByteField(PseudowireMaintenanceProfile_MalformedPacketsDeclarationPolicy, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 10),
+			11: ByteField(PseudowireMaintenanceProfile_MalformedPacketsClearPolicy, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 11),
+			12: ByteField(PseudowireMaintenanceProfile_RBitTransmitSetPolicy, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 12),
+			13: ByteField(PseudowireMaintenanceProfile_RBitTransmitClearPolicy, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
+			14: ByteField(PseudowireMaintenanceProfile_RBitReceivePolicy, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 14),
+			15: ByteField(PseudowireMaintenanceProfile_LBitReceivePolicy, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 15),
+			16: Uint16Field(PseudowireMaintenanceProfile_SesThreshold, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

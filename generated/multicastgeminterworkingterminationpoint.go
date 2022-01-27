@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -187,10 +187,23 @@ type MulticastGemInterworkingTerminationPoint struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const MulticastGemInterworkingTerminationPoint_GemPortNetworkCtpConnectivityPointer = "GemPortNetworkCtpConnectivityPointer"
+const MulticastGemInterworkingTerminationPoint_InterworkingOption = "InterworkingOption"
+const MulticastGemInterworkingTerminationPoint_ServiceProfilePointer = "ServiceProfilePointer"
+const MulticastGemInterworkingTerminationPoint_NotUsed1 = "NotUsed1"
+const MulticastGemInterworkingTerminationPoint_PptpCounter = "PptpCounter"
+const MulticastGemInterworkingTerminationPoint_OperationalState = "OperationalState"
+const MulticastGemInterworkingTerminationPoint_GalProfilePointer = "GalProfilePointer"
+const MulticastGemInterworkingTerminationPoint_NotUsed2 = "NotUsed2"
+const MulticastGemInterworkingTerminationPoint_Ipv4MulticastAddressTable = "Ipv4MulticastAddressTable"
+const MulticastGemInterworkingTerminationPoint_Ipv6MulticastAddressTable = "Ipv6MulticastAddressTable"
+
 func init() {
 	multicastgeminterworkingterminationpointBME = &ManagedEntityDefinition{
 		Name:    "MulticastGemInterworkingTerminationPoint",
-		ClassID: 281,
+		ClassID: MulticastGemInterworkingTerminationPointClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -201,17 +214,17 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  Uint16Field("GemPortNetworkCtpConnectivityPointer", PointerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  ByteField("InterworkingOption", EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint16Field("ServiceProfilePointer", PointerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  Uint16Field("NotUsed1", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  ByteField("PptpCounter", UnsignedIntegerAttributeType, 0x0800, 255, mapset.NewSetWith(Read), false, true, false, 5),
-			6:  ByteField("OperationalState", EnumerationAttributeType, 0x0400, 0, mapset.NewSetWith(Read), true, true, false, 6),
-			7:  Uint16Field("GalProfilePointer", PointerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  ByteField("NotUsed2", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  TableField("Ipv4MulticastAddressTable", TableAttributeType, 0x0080, TableInfo{nil, 12}, mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: TableField("Ipv6MulticastAddressTable", TableAttributeType, 0x0040, TableInfo{nil, 24}, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint16Field(MulticastGemInterworkingTerminationPoint_GemPortNetworkCtpConnectivityPointer, PointerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField(MulticastGemInterworkingTerminationPoint_InterworkingOption, EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint16Field(MulticastGemInterworkingTerminationPoint_ServiceProfilePointer, PointerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint16Field(MulticastGemInterworkingTerminationPoint_NotUsed1, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  ByteField(MulticastGemInterworkingTerminationPoint_PptpCounter, UnsignedIntegerAttributeType, 0x0800, 255, mapset.NewSetWith(Read), false, true, false, 5),
+			6:  ByteField(MulticastGemInterworkingTerminationPoint_OperationalState, EnumerationAttributeType, 0x0400, 0, mapset.NewSetWith(Read), true, true, false, 6),
+			7:  Uint16Field(MulticastGemInterworkingTerminationPoint_GalProfilePointer, PointerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  ByteField(MulticastGemInterworkingTerminationPoint_NotUsed2, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  TableField(MulticastGemInterworkingTerminationPoint_Ipv4MulticastAddressTable, TableAttributeType, 0x0080, TableInfo{nil, 12}, mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: TableField(MulticastGemInterworkingTerminationPoint_Ipv6MulticastAddressTable, TableAttributeType, 0x0040, TableInfo{nil, 24}, mapset.NewSetWith(Read, Write), false, true, false, 10),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

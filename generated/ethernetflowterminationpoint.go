@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,10 +82,18 @@ type EthernetFlowTerminationPoint struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const EthernetFlowTerminationPoint_DestinationMac = "DestinationMac"
+const EthernetFlowTerminationPoint_SourceMac = "SourceMac"
+const EthernetFlowTerminationPoint_TagPolicy = "TagPolicy"
+const EthernetFlowTerminationPoint_Tci = "Tci"
+const EthernetFlowTerminationPoint_Loopback = "Loopback"
+
 func init() {
 	ethernetflowterminationpointBME = &ManagedEntityDefinition{
 		Name:    "EthernetFlowTerminationPoint",
-		ClassID: 286,
+		ClassID: EthernetFlowTerminationPointClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -94,12 +102,12 @@ func init() {
 		),
 		AllowedAttributeMask: 0xf800,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: MultiByteField("DestinationMac", OctetsAttributeType, 0x8000, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: MultiByteField("SourceMac", OctetsAttributeType, 0x4000, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read), false, false, false, 2),
-			3: ByteField("TagPolicy", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4: Uint16Field("Tci", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5: ByteField("Loopback", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: MultiByteField(EthernetFlowTerminationPoint_DestinationMac, OctetsAttributeType, 0x8000, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: MultiByteField(EthernetFlowTerminationPoint_SourceMac, OctetsAttributeType, 0x4000, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read), false, false, false, 2),
+			3: ByteField(EthernetFlowTerminationPoint_TagPolicy, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4: Uint16Field(EthernetFlowTerminationPoint_Tci, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5: ByteField(EthernetFlowTerminationPoint_Loopback, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

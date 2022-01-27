@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -117,10 +117,29 @@ type TwdmChannelPloamPerformanceMonitoringHistoryDataPart2 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_IntervalEndTime = "IntervalEndTime"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_ThresholdData12Id = "ThresholdData12Id"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_SystemProfileMessageCount = "SystemProfileMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_ChannelProfileMessageCount = "ChannelProfileMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_BurstProfileMessageCount = "BurstProfileMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_AssignOnuIdMessageCount = "AssignOnuIdMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_UnsatisfiedAdjustTxWavelengthRequests = "UnsatisfiedAdjustTxWavelengthRequests"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_DeactivateOnuIdMessageCount = "DeactivateOnuIdMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_DisableSerialNumberMessageCount = "DisableSerialNumberMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_RequestRegistrationMessageCount = "RequestRegistrationMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_AssignAllocIdMessageCount = "AssignAllocIdMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_KeyControlMessageCount = "KeyControlMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_SleepAllowMessageCount = "SleepAllowMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_TuningControlRequestMessageCount = "TuningControlRequestMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_TuningControlCompleteDMessageCount = "TuningControlCompleteDMessageCount"
+const TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_CalibrationRequestMessageCount = "CalibrationRequestMessageCount"
+
 func init() {
 	twdmchannelploamperformancemonitoringhistorydatapart2BME = &ManagedEntityDefinition{
 		Name:    "TwdmChannelPloamPerformanceMonitoringHistoryDataPart2",
-		ClassID: 447,
+		ClassID: TwdmChannelPloamPerformanceMonitoringHistoryDataPart2ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -130,23 +149,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("SystemProfileMessageCount", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("ChannelProfileMessageCount", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("BurstProfileMessageCount", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("AssignOnuIdMessageCount", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("UnsatisfiedAdjustTxWavelengthRequests", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("DeactivateOnuIdMessageCount", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint32Field("DisableSerialNumberMessageCount", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint32Field("RequestRegistrationMessageCount", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint32Field("AssignAllocIdMessageCount", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint32Field("KeyControlMessageCount", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint32Field("SleepAllowMessageCount", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint32Field("TuningControlRequestMessageCount", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: Uint32Field("TuningControlCompleteDMessageCount", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
-			16: Uint32Field("CalibrationRequestMessageCount", CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_SystemProfileMessageCount, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_ChannelProfileMessageCount, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_BurstProfileMessageCount, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_AssignOnuIdMessageCount, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_UnsatisfiedAdjustTxWavelengthRequests, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_DeactivateOnuIdMessageCount, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_DisableSerialNumberMessageCount, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_RequestRegistrationMessageCount, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_AssignAllocIdMessageCount, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_KeyControlMessageCount, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_SleepAllowMessageCount, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_TuningControlRequestMessageCount, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_TuningControlCompleteDMessageCount, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
+			16: Uint32Field(TwdmChannelPloamPerformanceMonitoringHistoryDataPart2_CalibrationRequestMessageCount, CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

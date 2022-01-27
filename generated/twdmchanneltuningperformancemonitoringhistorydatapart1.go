@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -124,10 +124,28 @@ type TwdmChannelTuningPerformanceMonitoringHistoryDataPart1 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_IntervalEndTime = "IntervalEndTime"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_ThresholdData12Id = "ThresholdData12Id"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsForRxOnlyOrRxAndTx = "TuningControlRequestsForRxOnlyOrRxAndTx"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsForTxOnly = "TuningControlRequestsForTxOnly"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRejectedIntSfc = "TuningControlRequestsRejectedIntSfc"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRejectedDsXxx = "TuningControlRequestsRejectedDsXxx"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRejectedUsXxx = "TuningControlRequestsRejectedUsXxx"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsFulfilledWithOnuReacquiredAtTargetChannel = "TuningControlRequestsFulfilledWithOnuReacquiredAtTargetChannel"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsFailedDueToTargetDsWavelengthChannelNotFound = "TuningControlRequestsFailedDueToTargetDsWavelengthChannelNotFound"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsFailedDueToNoFeedbackInTargetDsWavelengthChannel = "TuningControlRequestsFailedDueToNoFeedbackInTargetDsWavelengthChannel"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsResolvedWithOnuReacquiredAtDiscretionaryChannel = "TuningControlRequestsResolvedWithOnuReacquiredAtDiscretionaryChannel"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRollbackComDs = "TuningControlRequestsRollbackComDs"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRollbackDsXxx = "TuningControlRequestsRollbackDsXxx"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRollbackUsXxx = "TuningControlRequestsRollbackUsXxx"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsFailedWithOnuReactivation = "TuningControlRequestsFailedWithOnuReactivation"
+
 func init() {
 	twdmchanneltuningperformancemonitoringhistorydatapart1BME = &ManagedEntityDefinition{
 		Name:    "TwdmChannelTuningPerformanceMonitoringHistoryDataPart1",
-		ClassID: 449,
+		ClassID: TwdmChannelTuningPerformanceMonitoringHistoryDataPart1ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -136,22 +154,22 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("TuningControlRequestsForRxOnlyOrRxAndTx", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("TuningControlRequestsForTxOnly", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("TuningControlRequestsRejectedIntSfc", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("TuningControlRequestsRejectedDsXxx", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("TuningControlRequestsRejectedUsXxx", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("TuningControlRequestsFulfilledWithOnuReacquiredAtTargetChannel", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint32Field("TuningControlRequestsFailedDueToTargetDsWavelengthChannelNotFound", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint32Field("TuningControlRequestsFailedDueToNoFeedbackInTargetDsWavelengthChannel", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint32Field("TuningControlRequestsResolvedWithOnuReacquiredAtDiscretionaryChannel", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint32Field("TuningControlRequestsRollbackComDs", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint32Field("TuningControlRequestsRollbackDsXxx", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint32Field("TuningControlRequestsRollbackUsXxx", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: Uint32Field("TuningControlRequestsFailedWithOnuReactivation", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsForRxOnlyOrRxAndTx, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsForTxOnly, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRejectedIntSfc, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRejectedDsXxx, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRejectedUsXxx, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsFulfilledWithOnuReacquiredAtTargetChannel, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsFailedDueToTargetDsWavelengthChannelNotFound, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsFailedDueToNoFeedbackInTargetDsWavelengthChannel, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsResolvedWithOnuReacquiredAtDiscretionaryChannel, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRollbackComDs, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRollbackDsXxx, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsRollbackUsXxx, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart1_TuningControlRequestsFailedWithOnuReactivation, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

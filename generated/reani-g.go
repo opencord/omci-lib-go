@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -174,31 +174,48 @@ type ReAniG struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const ReAniG_AdministrativeState = "AdministrativeState"
+const ReAniG_OperationalState = "OperationalState"
+const ReAniG_Arc = "Arc"
+const ReAniG_ArcInterval = "ArcInterval"
+const ReAniG_OpticalSignalLevel = "OpticalSignalLevel"
+const ReAniG_LowerOpticalThreshold = "LowerOpticalThreshold"
+const ReAniG_UpperOpticalThreshold = "UpperOpticalThreshold"
+const ReAniG_TransmitOpticalLevel = "TransmitOpticalLevel"
+const ReAniG_LowerTransmitPowerThreshold = "LowerTransmitPowerThreshold"
+const ReAniG_UpperTransmitPowerThreshold = "UpperTransmitPowerThreshold"
+const ReAniG_UsageMode = "UsageMode"
+const ReAniG_TargetUpstreamFrequency = "TargetUpstreamFrequency"
+const ReAniG_TargetDownstreamFrequency = "TargetDownstreamFrequency"
+const ReAniG_UpstreamSignalTransmissionMode = "UpstreamSignalTransmissionMode"
+
 func init() {
 	reanigBME = &ManagedEntityDefinition{
 		Name:    "ReAniG",
-		ClassID: 313,
+		ClassID: ReAniGClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("OperationalState", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
-			3:  ByteField("Arc", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
-			4:  ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5:  Uint16Field("OpticalSignalLevel", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
-			6:  ByteField("LowerOpticalThreshold", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
-			7:  ByteField("UpperOpticalThreshold", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
-			8:  Uint16Field("TransmitOpticalLevel", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
-			9:  ByteField("LowerTransmitPowerThreshold", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: ByteField("UpperTransmitPowerThreshold", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
-			11: ByteField("UsageMode", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
-			12: Uint32Field("TargetUpstreamFrequency", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: Uint32Field("TargetDownstreamFrequency", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
-			14: ByteField("UpstreamSignalTransmissionMode", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(ReAniG_AdministrativeState, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(ReAniG_OperationalState, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
+			3:  ByteField(ReAniG_Arc, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
+			4:  ByteField(ReAniG_ArcInterval, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  Uint16Field(ReAniG_OpticalSignalLevel, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
+			6:  ByteField(ReAniG_LowerOpticalThreshold, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7:  ByteField(ReAniG_UpperOpticalThreshold, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8:  Uint16Field(ReAniG_TransmitOpticalLevel, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
+			9:  ByteField(ReAniG_LowerTransmitPowerThreshold, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: ByteField(ReAniG_UpperTransmitPowerThreshold, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: ByteField(ReAniG_UsageMode, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
+			12: Uint32Field(ReAniG_TargetUpstreamFrequency, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: Uint32Field(ReAniG_TargetDownstreamFrequency, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: ByteField(ReAniG_UpstreamSignalTransmissionMode, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

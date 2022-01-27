@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -119,10 +119,29 @@ type VoipMediaProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const VoipMediaProfile_FaxMode = "FaxMode"
+const VoipMediaProfile_VoiceServiceProfilePointer = "VoiceServiceProfilePointer"
+const VoipMediaProfile_CodecSelection1StOrder = "CodecSelection1StOrder"
+const VoipMediaProfile_PacketPeriodSelection1StOrder = "PacketPeriodSelection1StOrder"
+const VoipMediaProfile_SilenceSuppression1StOrder = "SilenceSuppression1StOrder"
+const VoipMediaProfile_CodecSelection2NdOrder = "CodecSelection2NdOrder"
+const VoipMediaProfile_PacketPeriodSelection2NdOrder = "PacketPeriodSelection2NdOrder"
+const VoipMediaProfile_SilenceSuppression2NdOrder = "SilenceSuppression2NdOrder"
+const VoipMediaProfile_CodecSelection3RdOrder = "CodecSelection3RdOrder"
+const VoipMediaProfile_PacketPeriodSelection3RdOrder = "PacketPeriodSelection3RdOrder"
+const VoipMediaProfile_SilenceSuppression3RdOrder = "SilenceSuppression3RdOrder"
+const VoipMediaProfile_CodecSelection4ThOrder = "CodecSelection4ThOrder"
+const VoipMediaProfile_PacketPeriodSelection4ThOrder = "PacketPeriodSelection4ThOrder"
+const VoipMediaProfile_SilenceSuppression4ThOrder = "SilenceSuppression4ThOrder"
+const VoipMediaProfile_OobDtmf = "OobDtmf"
+const VoipMediaProfile_RtpProfilePointer = "RtpProfilePointer"
+
 func init() {
 	voipmediaprofileBME = &ManagedEntityDefinition{
 		Name:    "VoipMediaProfile",
-		ClassID: 142,
+		ClassID: VoipMediaProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -131,23 +150,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("FaxMode", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  Uint16Field("VoiceServiceProfilePointer", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  ByteField("CodecSelection1StOrder", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  ByteField("PacketPeriodSelection1StOrder", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  ByteField("SilenceSuppression1StOrder", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6:  ByteField("CodecSelection2NdOrder", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7:  ByteField("PacketPeriodSelection2NdOrder", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  ByteField("SilenceSuppression2NdOrder", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  ByteField("CodecSelection3RdOrder", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
-			10: ByteField("PacketPeriodSelection3RdOrder", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
-			11: ByteField("SilenceSuppression3RdOrder", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 11),
-			12: ByteField("CodecSelection4ThOrder", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 12),
-			13: ByteField("PacketPeriodSelection4ThOrder", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 13),
-			14: ByteField("SilenceSuppression4ThOrder", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 14),
-			15: ByteField("OobDtmf", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 15),
-			16: Uint16Field("RtpProfilePointer", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(VoipMediaProfile_FaxMode, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  Uint16Field(VoipMediaProfile_VoiceServiceProfilePointer, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  ByteField(VoipMediaProfile_CodecSelection1StOrder, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  ByteField(VoipMediaProfile_PacketPeriodSelection1StOrder, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  ByteField(VoipMediaProfile_SilenceSuppression1StOrder, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  ByteField(VoipMediaProfile_CodecSelection2NdOrder, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  ByteField(VoipMediaProfile_PacketPeriodSelection2NdOrder, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  ByteField(VoipMediaProfile_SilenceSuppression2NdOrder, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  ByteField(VoipMediaProfile_CodecSelection3RdOrder, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
+			10: ByteField(VoipMediaProfile_PacketPeriodSelection3RdOrder, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
+			11: ByteField(VoipMediaProfile_SilenceSuppression3RdOrder, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 11),
+			12: ByteField(VoipMediaProfile_CodecSelection4ThOrder, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 12),
+			13: ByteField(VoipMediaProfile_PacketPeriodSelection4ThOrder, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 13),
+			14: ByteField(VoipMediaProfile_SilenceSuppression4ThOrder, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 14),
+			15: ByteField(VoipMediaProfile_OobDtmf, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 15),
+			16: Uint16Field(VoipMediaProfile_RtpProfilePointer, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

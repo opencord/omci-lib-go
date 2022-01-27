@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -154,32 +154,51 @@ type Vdsl2LineInventoryAndStatusDataPart4 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Vdsl2LineInventoryAndStatusDataPart4_VtuOEstimatedUpstreamPowerBackOffElectricalLengthPerBandUpboklePb = "VtuOEstimatedUpstreamPowerBackOffElectricalLengthPerBandUpboklePb"
+const Vdsl2LineInventoryAndStatusDataPart4_VtuREstimatedUpstreamPowerBackOffElectricalLengthPerBandUpbokleRPb = "VtuREstimatedUpstreamPowerBackOffElectricalLengthPerBandUpbokleRPb"
+const Vdsl2LineInventoryAndStatusDataPart4_UpboDownstreamReceiverSignalLevelThresholdRxthrshds = "UpboDownstreamReceiverSignalLevelThresholdRxthrshds"
+const Vdsl2LineInventoryAndStatusDataPart4_UpboUpstreamReceiverSignalLevelThresholdRxthrshus = "UpboUpstreamReceiverSignalLevelThresholdRxthrshus"
+const Vdsl2LineInventoryAndStatusDataPart4_ActualAlternativeElectricalLengthEstimationModEActAeleMode = "ActualAlternativeElectricalLengthEstimationModEActAeleMode"
+const Vdsl2LineInventoryAndStatusDataPart4_ActualDownstreamRipolicyActripolicyds = "ActualDownstreamRipolicyActripolicyds"
+const Vdsl2LineInventoryAndStatusDataPart4_ActualUpstreamRipolicyActripolicyus = "ActualUpstreamRipolicyActripolicyus"
+const Vdsl2LineInventoryAndStatusDataPart4_AttndrActualMEthodAttndrActmethod = "AttndrActualMEthodAttndrActmethod"
+const Vdsl2LineInventoryAndStatusDataPart4_AttndrDownstreamACtualImpulseNoiseProtectionAttndrActinpds = "AttndrDownstreamACtualImpulseNoiseProtectionAttndrActinpds"
+const Vdsl2LineInventoryAndStatusDataPart4_AttndrUpstreamACtualImpulseNoiseProtectionAttndrActinpus = "AttndrUpstreamACtualImpulseNoiseProtectionAttndrActinpus"
+const Vdsl2LineInventoryAndStatusDataPart4_AttndrDownstreamACtualImpulseNoiseProtectionAgainstReinAttndrActinpReinds = "AttndrDownstreamACtualImpulseNoiseProtectionAgainstReinAttndrActinpReinds"
+const Vdsl2LineInventoryAndStatusDataPart4_AttndrUpstreamACtualImpulseNoiseProtectionAgainstReinAttndrActinpReinus = "AttndrUpstreamACtualImpulseNoiseProtectionAgainstReinAttndrActinpReinus"
+const Vdsl2LineInventoryAndStatusDataPart4_AttndrDownstreamActualDelayAttndrActdelayds = "AttndrDownstreamActualDelayAttndrActdelayds"
+const Vdsl2LineInventoryAndStatusDataPart4_AttndrUpstreamACtualDelayAttndrActdelayus = "AttndrUpstreamACtualDelayAttndrActdelayus"
+const Vdsl2LineInventoryAndStatusDataPart4_NearEndAGgregateAchievableNetDataRateAggachndrNe = "NearEndAGgregateAchievableNetDataRateAggachndrNe"
+const Vdsl2LineInventoryAndStatusDataPart4_FarEndAggregateAchievableNetDataRateAggachndrFe = "FarEndAggregateAchievableNetDataRateAggachndrFe"
+
 func init() {
 	vdsl2lineinventoryandstatusdatapart4BME = &ManagedEntityDefinition{
 		Name:    "Vdsl2LineInventoryAndStatusDataPart4",
-		ClassID: 415,
+		ClassID: Vdsl2LineInventoryAndStatusDataPart4ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  Uint32Field("VtuOEstimatedUpstreamPowerBackOffElectricalLengthPerBandUpboklePb", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, true, false, 1),
-			2:  MultiByteField("VtuREstimatedUpstreamPowerBackOffElectricalLengthPerBandUpbokleRPb", OctetsAttributeType, 0x4000, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, true, false, 2),
-			3:  ByteField("UpboDownstreamReceiverSignalLevelThresholdRxthrshds", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
-			4:  ByteField("UpboUpstreamReceiverSignalLevelThresholdRxthrshus", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
-			5:  ByteField("ActualAlternativeElectricalLengthEstimationModEActAeleMode", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
-			6:  ByteField("ActualDownstreamRipolicyActripolicyds", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
-			7:  ByteField("ActualUpstreamRipolicyActripolicyus", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
-			8:  ByteField("AttndrActualMEthodAttndrActmethod", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
-			9:  ByteField("AttndrDownstreamACtualImpulseNoiseProtectionAttndrActinpds", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
-			10: ByteField("AttndrUpstreamACtualImpulseNoiseProtectionAttndrActinpus", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: ByteField("AttndrDownstreamACtualImpulseNoiseProtectionAgainstReinAttndrActinpReinds", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
-			12: ByteField("AttndrUpstreamACtualImpulseNoiseProtectionAgainstReinAttndrActinpReinus", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
-			13: ByteField("AttndrDownstreamActualDelayAttndrActdelayds", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
-			14: ByteField("AttndrUpstreamACtualDelayAttndrActdelayus", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
-			15: Uint32Field("NearEndAGgregateAchievableNetDataRateAggachndrNe", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
-			16: Uint32Field("FarEndAggregateAchievableNetDataRateAggachndrFe", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  Uint32Field(Vdsl2LineInventoryAndStatusDataPart4_VtuOEstimatedUpstreamPowerBackOffElectricalLengthPerBandUpboklePb, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, true, false, 1),
+			2:  MultiByteField(Vdsl2LineInventoryAndStatusDataPart4_VtuREstimatedUpstreamPowerBackOffElectricalLengthPerBandUpbokleRPb, OctetsAttributeType, 0x4000, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, true, false, 2),
+			3:  ByteField(Vdsl2LineInventoryAndStatusDataPart4_UpboDownstreamReceiverSignalLevelThresholdRxthrshds, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
+			4:  ByteField(Vdsl2LineInventoryAndStatusDataPart4_UpboUpstreamReceiverSignalLevelThresholdRxthrshus, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
+			5:  ByteField(Vdsl2LineInventoryAndStatusDataPart4_ActualAlternativeElectricalLengthEstimationModEActAeleMode, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
+			6:  ByteField(Vdsl2LineInventoryAndStatusDataPart4_ActualDownstreamRipolicyActripolicyds, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
+			7:  ByteField(Vdsl2LineInventoryAndStatusDataPart4_ActualUpstreamRipolicyActripolicyus, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
+			8:  ByteField(Vdsl2LineInventoryAndStatusDataPart4_AttndrActualMEthodAttndrActmethod, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
+			9:  ByteField(Vdsl2LineInventoryAndStatusDataPart4_AttndrDownstreamACtualImpulseNoiseProtectionAttndrActinpds, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: ByteField(Vdsl2LineInventoryAndStatusDataPart4_AttndrUpstreamACtualImpulseNoiseProtectionAttndrActinpus, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: ByteField(Vdsl2LineInventoryAndStatusDataPart4_AttndrDownstreamACtualImpulseNoiseProtectionAgainstReinAttndrActinpReinds, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			12: ByteField(Vdsl2LineInventoryAndStatusDataPart4_AttndrUpstreamACtualImpulseNoiseProtectionAgainstReinAttndrActinpReinus, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
+			13: ByteField(Vdsl2LineInventoryAndStatusDataPart4_AttndrDownstreamActualDelayAttndrActdelayds, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
+			14: ByteField(Vdsl2LineInventoryAndStatusDataPart4_AttndrUpstreamACtualDelayAttndrActdelayus, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
+			15: Uint32Field(Vdsl2LineInventoryAndStatusDataPart4_NearEndAGgregateAchievableNetDataRateAggachndrNe, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
+			16: Uint32Field(Vdsl2LineInventoryAndStatusDataPart4_FarEndAggregateAchievableNetDataRateAggachndrFe, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, true, false, 16),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

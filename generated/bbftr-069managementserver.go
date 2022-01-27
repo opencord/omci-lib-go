@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,20 +72,26 @@ type BbfTr069ManagementServer struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const BbfTr069ManagementServer_AdministrativeState = "AdministrativeState"
+const BbfTr069ManagementServer_AcsNetworkAddress = "AcsNetworkAddress"
+const BbfTr069ManagementServer_AssociatedTag = "AssociatedTag"
+
 func init() {
 	bbftr069managementserverBME = &ManagedEntityDefinition{
 		Name:    "BbfTr069ManagementServer",
-		ClassID: 340,
+		ClassID: BbfTr069ManagementServerClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xe000,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2: Uint16Field("AcsNetworkAddress", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3: Uint16Field("AssociatedTag", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: ByteField(BbfTr069ManagementServer_AdministrativeState, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2: Uint16Field(BbfTr069ManagementServer_AcsNetworkAddress, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3: Uint16Field(BbfTr069ManagementServer_AssociatedTag, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

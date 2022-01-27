@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -94,10 +94,14 @@ type MacBridgePortFilterTableData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const MacBridgePortFilterTableData_MacFilterTable = "MacFilterTable"
+
 func init() {
 	macbridgeportfiltertabledataBME = &ManagedEntityDefinition{
 		Name:    "MacBridgePortFilterTableData",
-		ClassID: 49,
+		ClassID: MacBridgePortFilterTableDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			GetNext,
@@ -106,8 +110,8 @@ func init() {
 		),
 		AllowedAttributeMask: 0x8000,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: TableField("MacFilterTable", TableAttributeType, 0x8000, TableInfo{nil, 8}, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: TableField(MacBridgePortFilterTableData_MacFilterTable, TableAttributeType, 0x8000, TableInfo{nil, 8}, mapset.NewSetWith(Read, Write), false, false, false, 1),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

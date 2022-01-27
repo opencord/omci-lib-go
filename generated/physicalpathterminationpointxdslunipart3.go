@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,21 +75,28 @@ type PhysicalPathTerminationPointXdslUniPart3 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PhysicalPathTerminationPointXdslUniPart3_FastLineConfigurationProfile = "FastLineConfigurationProfile"
+const PhysicalPathTerminationPointXdslUniPart3_FastDataPathConfigurationProfile = "FastDataPathConfigurationProfile"
+const PhysicalPathTerminationPointXdslUniPart3_FastChannelConfigurationProfileForBearerChannel0Downstream = "FastChannelConfigurationProfileForBearerChannel0Downstream"
+const PhysicalPathTerminationPointXdslUniPart3_FastXdslChannelConfigurationProfileForBearerChannel0Upstream = "FastXdslChannelConfigurationProfileForBearerChannel0Upstream"
+
 func init() {
 	physicalpathterminationpointxdslunipart3BME = &ManagedEntityDefinition{
 		Name:    "PhysicalPathTerminationPointXdslUniPart3",
-		ClassID: 427,
+		ClassID: PhysicalPathTerminationPointXdslUniPart3ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xf000,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: Uint16Field("FastLineConfigurationProfile", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2: Uint16Field("FastDataPathConfigurationProfile", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, false, 2),
-			3: Uint16Field("FastChannelConfigurationProfileForBearerChannel0Downstream", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
-			4: Uint16Field("FastXdslChannelConfigurationProfileForBearerChannel0Upstream", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: Uint16Field(PhysicalPathTerminationPointXdslUniPart3_FastLineConfigurationProfile, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2: Uint16Field(PhysicalPathTerminationPointXdslUniPart3_FastDataPathConfigurationProfile, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, false, 2),
+			3: Uint16Field(PhysicalPathTerminationPointXdslUniPart3_FastChannelConfigurationProfileForBearerChannel0Downstream, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
+			4: Uint16Field(PhysicalPathTerminationPointXdslUniPart3_FastXdslChannelConfigurationProfileForBearerChannel0Upstream, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

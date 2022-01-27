@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -117,10 +117,28 @@ type TwdmChannelPhyLodsPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_TotalReceivedWordsProtectedByBitInterleavedParity32Bip32 = "TotalReceivedWordsProtectedByBitInterleavedParity32Bip32"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_Bip32BitErrorCount = "Bip32BitErrorCount"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_CorrectedPsbdHecErrorCount = "CorrectedPsbdHecErrorCount"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_UncorrectablePsbdHecErrorCount = "UncorrectablePsbdHecErrorCount"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_CorrectedDownstreamFsHeaderHecErrorCount = "CorrectedDownstreamFsHeaderHecErrorCount"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_UncorrectableDownstreamFsHeaderHecErrorCount = "UncorrectableDownstreamFsHeaderHecErrorCount"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_TotalNumberOfLodsEvents = "TotalNumberOfLodsEvents"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsRestoredInOperatingTwdmChannel = "LodsEventsRestoredInOperatingTwdmChannel"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsRestoredInProtectionTwdmChannel = "LodsEventsRestoredInProtectionTwdmChannel"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsRestoredInDiscretionaryTwdmChannel = "LodsEventsRestoredInDiscretionaryTwdmChannel"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsResultingInReactivation = "LodsEventsResultingInReactivation"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsResultingInReactivationAfterRetuningToProtectionTwdmChannel = "LodsEventsResultingInReactivationAfterRetuningToProtectionTwdmChannel"
+const TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsResultingInReactivationAfterRetuningToDiscretionaryTwdmChannel = "LodsEventsResultingInReactivationAfterRetuningToDiscretionaryTwdmChannel"
+
 func init() {
 	twdmchannelphylodsperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "TwdmChannelPhyLodsPerformanceMonitoringHistoryData",
-		ClassID: 444,
+		ClassID: TwdmChannelPhyLodsPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -130,22 +148,22 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint64Field("TotalReceivedWordsProtectedByBitInterleavedParity32Bip32", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("Bip32BitErrorCount", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("CorrectedPsbdHecErrorCount", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("UncorrectablePsbdHecErrorCount", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("CorrectedDownstreamFsHeaderHecErrorCount", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("UncorrectableDownstreamFsHeaderHecErrorCount", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint32Field("TotalNumberOfLodsEvents", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint32Field("LodsEventsRestoredInOperatingTwdmChannel", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint32Field("LodsEventsRestoredInProtectionTwdmChannel", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint32Field("LodsEventsRestoredInDiscretionaryTwdmChannel", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint32Field("LodsEventsResultingInReactivation", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint32Field("LodsEventsResultingInReactivationAfterRetuningToProtectionTwdmChannel", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: Uint32Field("LodsEventsResultingInReactivationAfterRetuningToDiscretionaryTwdmChannel", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint64Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_TotalReceivedWordsProtectedByBitInterleavedParity32Bip32, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_Bip32BitErrorCount, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_CorrectedPsbdHecErrorCount, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_UncorrectablePsbdHecErrorCount, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_CorrectedDownstreamFsHeaderHecErrorCount, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_UncorrectableDownstreamFsHeaderHecErrorCount, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_TotalNumberOfLodsEvents, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsRestoredInOperatingTwdmChannel, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsRestoredInProtectionTwdmChannel, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsRestoredInDiscretionaryTwdmChannel, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsResultingInReactivation, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsResultingInReactivationAfterRetuningToProtectionTwdmChannel, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: Uint32Field(TwdmChannelPhyLodsPerformanceMonitoringHistoryData_LodsEventsResultingInReactivationAfterRetuningToDiscretionaryTwdmChannel, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

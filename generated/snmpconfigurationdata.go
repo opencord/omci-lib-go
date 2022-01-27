@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,10 +82,21 @@ type SnmpConfigurationData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const SnmpConfigurationData_SnmpVersion = "SnmpVersion"
+const SnmpConfigurationData_SnmpAgentAddress = "SnmpAgentAddress"
+const SnmpConfigurationData_SnmpServerAddress = "SnmpServerAddress"
+const SnmpConfigurationData_SnmpServerPort = "SnmpServerPort"
+const SnmpConfigurationData_SecurityNamePointer = "SecurityNamePointer"
+const SnmpConfigurationData_CommunityForRead = "CommunityForRead"
+const SnmpConfigurationData_CommunityForWrite = "CommunityForWrite"
+const SnmpConfigurationData_SysNamePointer = "SysNamePointer"
+
 func init() {
 	snmpconfigurationdataBME = &ManagedEntityDefinition{
 		Name:    "SnmpConfigurationData",
-		ClassID: 335,
+		ClassID: SnmpConfigurationDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -94,15 +105,15 @@ func init() {
 		),
 		AllowedAttributeMask: 0xff00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: Uint16Field("SnmpVersion", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: Uint16Field("SnmpAgentAddress", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: Uint32Field("SnmpServerAddress", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4: Uint16Field("SnmpServerPort", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5: Uint16Field("SecurityNamePointer", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6: Uint16Field("CommunityForRead", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7: Uint16Field("CommunityForWrite", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8: Uint16Field("SysNamePointer", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: Uint16Field(SnmpConfigurationData_SnmpVersion, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: Uint16Field(SnmpConfigurationData_SnmpAgentAddress, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: Uint32Field(SnmpConfigurationData_SnmpServerAddress, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4: Uint16Field(SnmpConfigurationData_SnmpServerPort, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5: Uint16Field(SnmpConfigurationData_SecurityNamePointer, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6: Uint16Field(SnmpConfigurationData_CommunityForRead, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7: Uint16Field(SnmpConfigurationData_CommunityForWrite, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8: Uint16Field(SnmpConfigurationData_SysNamePointer, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

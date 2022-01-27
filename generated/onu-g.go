@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -157,10 +157,26 @@ type OnuG struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const OnuG_VendorId = "VendorId"
+const OnuG_Version = "Version"
+const OnuG_SerialNumber = "SerialNumber"
+const OnuG_TrafficManagementOption = "TrafficManagementOption"
+const OnuG_Deprecated = "Deprecated"
+const OnuG_BatteryBackup = "BatteryBackup"
+const OnuG_AdministrativeState = "AdministrativeState"
+const OnuG_OperationalState = "OperationalState"
+const OnuG_OnuSurvivalTime = "OnuSurvivalTime"
+const OnuG_LogicalOnuId = "LogicalOnuId"
+const OnuG_LogicalPassword = "LogicalPassword"
+const OnuG_CredentialsStatus = "CredentialsStatus"
+const OnuG_ExtendedTcLayerOptions = "ExtendedTcLayerOptions"
+
 func init() {
 	onugBME = &ManagedEntityDefinition{
 		Name:    "OnuG",
-		ClassID: 256,
+		ClassID: OnuGClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Reboot,
@@ -170,20 +186,20 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff8,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  MultiByteField("VendorId", StringAttributeType, 0x8000, 4, toOctets("ICAgIA=="), mapset.NewSetWith(Read), false, false, false, 1),
-			2:  MultiByteField("Version", StringAttributeType, 0x4000, 14, toOctets("MAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read), false, false, false, 2),
-			3:  MultiByteField("SerialNumber", OctetsAttributeType, 0x2000, 8, toOctets("AAAAAAAAAAA="), mapset.NewSetWith(Read), false, false, false, 3),
-			4:  ByteField("TrafficManagementOption", EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  ByteField("Deprecated", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, true, 5),
-			6:  ByteField("BatteryBackup", EnumerationAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  ByteField("AdministrativeState", EnumerationAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  ByteField("OperationalState", EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
-			9:  ByteField("OnuSurvivalTime", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
-			10: MultiByteField("LogicalOnuId", OctetsAttributeType, 0x0040, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read), false, true, false, 10),
-			11: MultiByteField("LogicalPassword", OctetsAttributeType, 0x0020, 12, toOctets("AAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read), false, true, false, 11),
-			12: ByteField("CredentialsStatus", EnumerationAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: Uint16Field("ExtendedTcLayerOptions", BitFieldAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  MultiByteField(OnuG_VendorId, StringAttributeType, 0x8000, 4, toOctets("ICAgIA=="), mapset.NewSetWith(Read), false, false, false, 1),
+			2:  MultiByteField(OnuG_Version, StringAttributeType, 0x4000, 14, toOctets("MAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read), false, false, false, 2),
+			3:  MultiByteField(OnuG_SerialNumber, OctetsAttributeType, 0x2000, 8, toOctets("AAAAAAAAAAA="), mapset.NewSetWith(Read), false, false, false, 3),
+			4:  ByteField(OnuG_TrafficManagementOption, EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  ByteField(OnuG_Deprecated, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, true, 5),
+			6:  ByteField(OnuG_BatteryBackup, EnumerationAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  ByteField(OnuG_AdministrativeState, EnumerationAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField(OnuG_OperationalState, EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
+			9:  ByteField(OnuG_OnuSurvivalTime, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: MultiByteField(OnuG_LogicalOnuId, OctetsAttributeType, 0x0040, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read), false, true, false, 10),
+			11: MultiByteField(OnuG_LogicalPassword, OctetsAttributeType, 0x0020, 12, toOctets("AAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read), false, true, false, 11),
+			12: ByteField(OnuG_CredentialsStatus, EnumerationAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: Uint16Field(OnuG_ExtendedTcLayerOptions, BitFieldAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

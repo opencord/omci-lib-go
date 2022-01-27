@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -133,10 +133,29 @@ type EthernetPerformanceMonitoringHistoryData3 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const EthernetPerformanceMonitoringHistoryData3_IntervalEndTime = "IntervalEndTime"
+const EthernetPerformanceMonitoringHistoryData3_ThresholdData12Id = "ThresholdData12Id"
+const EthernetPerformanceMonitoringHistoryData3_DropEvents = "DropEvents"
+const EthernetPerformanceMonitoringHistoryData3_Octets = "Octets"
+const EthernetPerformanceMonitoringHistoryData3_Packets = "Packets"
+const EthernetPerformanceMonitoringHistoryData3_BroadcastPackets = "BroadcastPackets"
+const EthernetPerformanceMonitoringHistoryData3_MulticastPackets = "MulticastPackets"
+const EthernetPerformanceMonitoringHistoryData3_UndersizePackets = "UndersizePackets"
+const EthernetPerformanceMonitoringHistoryData3_Fragments = "Fragments"
+const EthernetPerformanceMonitoringHistoryData3_Jabbers = "Jabbers"
+const EthernetPerformanceMonitoringHistoryData3_Packets64Octets = "Packets64Octets"
+const EthernetPerformanceMonitoringHistoryData3_Packets65To127Octets = "Packets65To127Octets"
+const EthernetPerformanceMonitoringHistoryData3_Packets128To255Octets = "Packets128To255Octets"
+const EthernetPerformanceMonitoringHistoryData3_Packets256To511Octets = "Packets256To511Octets"
+const EthernetPerformanceMonitoringHistoryData3_Packets512To1023Octets = "Packets512To1023Octets"
+const EthernetPerformanceMonitoringHistoryData3_Packets1024To1518Octets = "Packets1024To1518Octets"
+
 func init() {
 	ethernetperformancemonitoringhistorydata3BME = &ManagedEntityDefinition{
 		Name:    "EthernetPerformanceMonitoringHistoryData3",
-		ClassID: 296,
+		ClassID: EthernetPerformanceMonitoringHistoryData3ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -146,23 +165,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", PointerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("DropEvents", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("Octets", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("Packets", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("BroadcastPackets", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("MulticastPackets", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("UndersizePackets", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint32Field("Fragments", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint32Field("Jabbers", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint32Field("Packets64Octets", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint32Field("Packets65To127Octets", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint32Field("Packets128To255Octets", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint32Field("Packets256To511Octets", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: Uint32Field("Packets512To1023Octets", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
-			16: Uint32Field("Packets1024To1518Octets", CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(EthernetPerformanceMonitoringHistoryData3_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(EthernetPerformanceMonitoringHistoryData3_ThresholdData12Id, PointerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(EthernetPerformanceMonitoringHistoryData3_DropEvents, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(EthernetPerformanceMonitoringHistoryData3_Octets, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(EthernetPerformanceMonitoringHistoryData3_Packets, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(EthernetPerformanceMonitoringHistoryData3_BroadcastPackets, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(EthernetPerformanceMonitoringHistoryData3_MulticastPackets, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(EthernetPerformanceMonitoringHistoryData3_UndersizePackets, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint32Field(EthernetPerformanceMonitoringHistoryData3_Fragments, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint32Field(EthernetPerformanceMonitoringHistoryData3_Jabbers, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint32Field(EthernetPerformanceMonitoringHistoryData3_Packets64Octets, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint32Field(EthernetPerformanceMonitoringHistoryData3_Packets65To127Octets, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint32Field(EthernetPerformanceMonitoringHistoryData3_Packets128To255Octets, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint32Field(EthernetPerformanceMonitoringHistoryData3_Packets256To511Octets, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: Uint32Field(EthernetPerformanceMonitoringHistoryData3_Packets512To1023Octets, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
+			16: Uint32Field(EthernetPerformanceMonitoringHistoryData3_Packets1024To1518Octets, CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

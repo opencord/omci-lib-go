@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -131,17 +131,11 @@ func TestAllAttributeNamesMatch(t *testing.T) {
 					// ManagedEntityId constant common in all files and defined elsewhere
 					var expectedLine string
 					if attrEntry.Index != 0 {
-						expectedLine = fmt.Sprintf("(\"%v\", ", attrEntry.CamelCase)
-						// NOTE: Following will be enabled when the constant attribute names are
-						//       added to the golang generated code and the previous removed
-						//format := "const %v = %v"
-						//expectedLine = fmt.Sprintf(format, attrEntry.Final, attrEntry.CamelCase)
+						format := "const %v = \"%v\""
+						expectedLine = fmt.Sprintf(format, attrEntry.Final, attrEntry.CamelCase)
 					} else {
-						expectedLine = "(\"ManagedEntityId\", "
-						// NOTE: Following will be enabled when the constant attribute names are
-						//       added to the golang generated code
-						//format := "const ManagedEntityId = %v"
-						//expectedLine = fmt.Sprintf(format, attrEntry.CamelCase)
+						// Match Entity ID by looking at use in structure initialization
+						expectedLine = "Uint16Field(ManagedEntityID, PointerAttributeType"
 					}
 					found := strings.Contains(goFileText, expectedLine)
 					assert.True(t, found)

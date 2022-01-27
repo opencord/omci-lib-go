@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -92,10 +92,23 @@ type TcAdaptorPerformanceMonitoringHistoryDataXdsl struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_IntervalEndTime = "IntervalEndTime"
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_ThresholdData12Id = "ThresholdData12Id"
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_NearEndHecViolationCount = "NearEndHecViolationCount"
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_NearEndDelineatedTotalCellCountCdP = "NearEndDelineatedTotalCellCountCdP"
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_NearEndUserTotalCellCountCuP = "NearEndUserTotalCellCountCuP"
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_NearEndIdleCellBitErrorCount = "NearEndIdleCellBitErrorCount"
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_FarEndHecViolationCount = "FarEndHecViolationCount"
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_FarEndDelineatedTotalCellCountCdPfe = "FarEndDelineatedTotalCellCountCdPfe"
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_FarEndUserTotalCellCountCuPfe = "FarEndUserTotalCellCountCuPfe"
+const TcAdaptorPerformanceMonitoringHistoryDataXdsl_FarEndIdleCellBitErrorCount = "FarEndIdleCellBitErrorCount"
+
 func init() {
 	tcadaptorperformancemonitoringhistorydataxdslBME = &ManagedEntityDefinition{
 		Name:    "TcAdaptorPerformanceMonitoringHistoryDataXdsl",
-		ClassID: 116,
+		ClassID: TcAdaptorPerformanceMonitoringHistoryDataXdslClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -105,17 +118,17 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint16Field("NearEndHecViolationCount", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("NearEndDelineatedTotalCellCountCdP", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("NearEndUserTotalCellCountCuP", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint16Field("NearEndIdleCellBitErrorCount", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint16Field("FarEndHecViolationCount", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("FarEndDelineatedTotalCellCountCdPfe", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint32Field("FarEndUserTotalCellCountCuPfe", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint16Field("FarEndIdleCellBitErrorCount", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(TcAdaptorPerformanceMonitoringHistoryDataXdsl_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(TcAdaptorPerformanceMonitoringHistoryDataXdsl_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint16Field(TcAdaptorPerformanceMonitoringHistoryDataXdsl_NearEndHecViolationCount, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(TcAdaptorPerformanceMonitoringHistoryDataXdsl_NearEndDelineatedTotalCellCountCdP, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(TcAdaptorPerformanceMonitoringHistoryDataXdsl_NearEndUserTotalCellCountCuP, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint16Field(TcAdaptorPerformanceMonitoringHistoryDataXdsl_NearEndIdleCellBitErrorCount, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint16Field(TcAdaptorPerformanceMonitoringHistoryDataXdsl_FarEndHecViolationCount, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(TcAdaptorPerformanceMonitoringHistoryDataXdsl_FarEndDelineatedTotalCellCountCdPfe, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint32Field(TcAdaptorPerformanceMonitoringHistoryDataXdsl_FarEndUserTotalCellCountCuPfe, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint16Field(TcAdaptorPerformanceMonitoringHistoryDataXdsl_FarEndIdleCellBitErrorCount, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -237,33 +237,52 @@ type PhysicalPathTerminationPointVideoAni struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PhysicalPathTerminationPointVideoAni_AdministrativeState = "AdministrativeState"
+const PhysicalPathTerminationPointVideoAni_OperationalState = "OperationalState"
+const PhysicalPathTerminationPointVideoAni_Arc = "Arc"
+const PhysicalPathTerminationPointVideoAni_ArcInterval = "ArcInterval"
+const PhysicalPathTerminationPointVideoAni_FrequencyRangeLow = "FrequencyRangeLow"
+const PhysicalPathTerminationPointVideoAni_FrequencyRangeHigh = "FrequencyRangeHigh"
+const PhysicalPathTerminationPointVideoAni_SignalCapability = "SignalCapability"
+const PhysicalPathTerminationPointVideoAni_OpticalSignalLevel = "OpticalSignalLevel"
+const PhysicalPathTerminationPointVideoAni_PilotSignalLevel = "PilotSignalLevel"
+const PhysicalPathTerminationPointVideoAni_SignalLevelMin = "SignalLevelMin"
+const PhysicalPathTerminationPointVideoAni_SignalLevelMax = "SignalLevelMax"
+const PhysicalPathTerminationPointVideoAni_PilotFrequency = "PilotFrequency"
+const PhysicalPathTerminationPointVideoAni_AgcMode = "AgcMode"
+const PhysicalPathTerminationPointVideoAni_AgcSetting = "AgcSetting"
+const PhysicalPathTerminationPointVideoAni_VideoLowerOpticalThreshold = "VideoLowerOpticalThreshold"
+const PhysicalPathTerminationPointVideoAni_VideoUpperOpticalThreshold = "VideoUpperOpticalThreshold"
+
 func init() {
 	physicalpathterminationpointvideoaniBME = &ManagedEntityDefinition{
 		Name:    "PhysicalPathTerminationPointVideoAni",
-		ClassID: 90,
+		ClassID: PhysicalPathTerminationPointVideoAniClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("OperationalState", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
-			3:  ByteField("Arc", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
-			4:  ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5:  ByteField("FrequencyRangeLow", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  ByteField("FrequencyRangeHigh", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  ByteField("SignalCapability", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  ByteField("OpticalSignalLevel", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
-			9:  ByteField("PilotSignalLevel", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
-			10: ByteField("SignalLevelMin", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: ByteField("SignalLevelMax", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint32Field("PilotFrequency", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: ByteField("AgcMode", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
-			14: ByteField("AgcSetting", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
-			15: ByteField("VideoLowerOpticalThreshold", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
-			16: ByteField("VideoUpperOpticalThreshold", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(PhysicalPathTerminationPointVideoAni_AdministrativeState, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(PhysicalPathTerminationPointVideoAni_OperationalState, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
+			3:  ByteField(PhysicalPathTerminationPointVideoAni_Arc, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
+			4:  ByteField(PhysicalPathTerminationPointVideoAni_ArcInterval, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  ByteField(PhysicalPathTerminationPointVideoAni_FrequencyRangeLow, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  ByteField(PhysicalPathTerminationPointVideoAni_FrequencyRangeHigh, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  ByteField(PhysicalPathTerminationPointVideoAni_SignalCapability, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  ByteField(PhysicalPathTerminationPointVideoAni_OpticalSignalLevel, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
+			9:  ByteField(PhysicalPathTerminationPointVideoAni_PilotSignalLevel, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: ByteField(PhysicalPathTerminationPointVideoAni_SignalLevelMin, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: ByteField(PhysicalPathTerminationPointVideoAni_SignalLevelMax, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint32Field(PhysicalPathTerminationPointVideoAni_PilotFrequency, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: ByteField(PhysicalPathTerminationPointVideoAni_AgcMode, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: ByteField(PhysicalPathTerminationPointVideoAni_AgcSetting, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
+			15: ByteField(PhysicalPathTerminationPointVideoAni_VideoLowerOpticalThreshold, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
+			16: ByteField(PhysicalPathTerminationPointVideoAni_VideoUpperOpticalThreshold, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), false, true, false, 16),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

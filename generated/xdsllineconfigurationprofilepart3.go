@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -175,10 +175,29 @@ type XdslLineConfigurationProfilePart3 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslLineConfigurationProfilePart3_LoopDiagnosticsModeForcedLdsf = "LoopDiagnosticsModeForcedLdsf"
+const XdslLineConfigurationProfilePart3_AutomodeColdStartForced = "AutomodeColdStartForced"
+const XdslLineConfigurationProfilePart3_L2Atpr = "L2Atpr"
+const XdslLineConfigurationProfilePart3_L2Atprt = "L2Atprt"
+const XdslLineConfigurationProfilePart3_ForceInpDownstream = "ForceInpDownstream"
+const XdslLineConfigurationProfilePart3_ForceInpUpstream = "ForceInpUpstream"
+const XdslLineConfigurationProfilePart3_UpdateRequestFlagForNearEndTestParameters = "UpdateRequestFlagForNearEndTestParameters"
+const XdslLineConfigurationProfilePart3_UpdateRequestFlagForFarEndTestParameters = "UpdateRequestFlagForFarEndTestParameters"
+const XdslLineConfigurationProfilePart3_InmInterArrivalTimeOffsetUpstream = "InmInterArrivalTimeOffsetUpstream"
+const XdslLineConfigurationProfilePart3_InmInterArrivalTimeStepUpstream = "InmInterArrivalTimeStepUpstream"
+const XdslLineConfigurationProfilePart3_InmClusterContinuationValueUpstream = "InmClusterContinuationValueUpstream"
+const XdslLineConfigurationProfilePart3_InmEquivalentInpModeUpstream = "InmEquivalentInpModeUpstream"
+const XdslLineConfigurationProfilePart3_InmInterArrivalTimeOffsetDownstream = "InmInterArrivalTimeOffsetDownstream"
+const XdslLineConfigurationProfilePart3_InmInterArrivalTimeStepDownstream = "InmInterArrivalTimeStepDownstream"
+const XdslLineConfigurationProfilePart3_InmClusterContinuationValueDownstream = "InmClusterContinuationValueDownstream"
+const XdslLineConfigurationProfilePart3_InmEquivalentInpModeDownstream = "InmEquivalentInpModeDownstream"
+
 func init() {
 	xdsllineconfigurationprofilepart3BME = &ManagedEntityDefinition{
 		Name:    "XdslLineConfigurationProfilePart3",
-		ClassID: 106,
+		ClassID: XdslLineConfigurationProfilePart3ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -187,23 +206,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("LoopDiagnosticsModeForcedLdsf", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  ByteField("AutomodeColdStartForced", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  ByteField("L2Atpr", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  ByteField("L2Atprt", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  ByteField("ForceInpDownstream", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  ByteField("ForceInpUpstream", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  ByteField("UpdateRequestFlagForNearEndTestParameters", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), true, true, false, 7),
-			8:  ByteField("UpdateRequestFlagForFarEndTestParameters", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), true, true, false, 8),
-			9:  Uint16Field("InmInterArrivalTimeOffsetUpstream", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: ByteField("InmInterArrivalTimeStepUpstream", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
-			11: ByteField("InmClusterContinuationValueUpstream", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: ByteField("InmEquivalentInpModeUpstream", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: Uint16Field("InmInterArrivalTimeOffsetDownstream", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
-			14: ByteField("InmInterArrivalTimeStepDownstream", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
-			15: ByteField("InmClusterContinuationValueDownstream", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
-			16: ByteField("InmEquivalentInpModeDownstream", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(XdslLineConfigurationProfilePart3_LoopDiagnosticsModeForcedLdsf, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField(XdslLineConfigurationProfilePart3_AutomodeColdStartForced, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  ByteField(XdslLineConfigurationProfilePart3_L2Atpr, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  ByteField(XdslLineConfigurationProfilePart3_L2Atprt, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  ByteField(XdslLineConfigurationProfilePart3_ForceInpDownstream, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  ByteField(XdslLineConfigurationProfilePart3_ForceInpUpstream, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  ByteField(XdslLineConfigurationProfilePart3_UpdateRequestFlagForNearEndTestParameters, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), true, true, false, 7),
+			8:  ByteField(XdslLineConfigurationProfilePart3_UpdateRequestFlagForFarEndTestParameters, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), true, true, false, 8),
+			9:  Uint16Field(XdslLineConfigurationProfilePart3_InmInterArrivalTimeOffsetUpstream, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: ByteField(XdslLineConfigurationProfilePart3_InmInterArrivalTimeStepUpstream, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: ByteField(XdslLineConfigurationProfilePart3_InmClusterContinuationValueUpstream, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: ByteField(XdslLineConfigurationProfilePart3_InmEquivalentInpModeUpstream, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: Uint16Field(XdslLineConfigurationProfilePart3_InmInterArrivalTimeOffsetDownstream, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: ByteField(XdslLineConfigurationProfilePart3_InmInterArrivalTimeStepDownstream, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
+			15: ByteField(XdslLineConfigurationProfilePart3_InmClusterContinuationValueDownstream, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
+			16: ByteField(XdslLineConfigurationProfilePart3_InmEquivalentInpModeDownstream, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), false, true, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

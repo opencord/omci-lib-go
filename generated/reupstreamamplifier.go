@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -149,10 +149,26 @@ type ReUpstreamAmplifier struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const ReUpstreamAmplifier_AdministrativeState = "AdministrativeState"
+const ReUpstreamAmplifier_OperationalState = "OperationalState"
+const ReUpstreamAmplifier_OperationalMode = "OperationalMode"
+const ReUpstreamAmplifier_Arc = "Arc"
+const ReUpstreamAmplifier_ArcInterval = "ArcInterval"
+const ReUpstreamAmplifier_ReDownstreamAmplifierPointer = "ReDownstreamAmplifierPointer"
+const ReUpstreamAmplifier_TotalOpticalReceiveSignalLevelTable = "TotalOpticalReceiveSignalLevelTable"
+const ReUpstreamAmplifier_PerBurstReceiveSignalLevelTable = "PerBurstReceiveSignalLevelTable"
+const ReUpstreamAmplifier_LowerReceiveOpticalThreshold = "LowerReceiveOpticalThreshold"
+const ReUpstreamAmplifier_UpperReceiveOpticalThreshold = "UpperReceiveOpticalThreshold"
+const ReUpstreamAmplifier_TransmitOpticalSignalLevel = "TransmitOpticalSignalLevel"
+const ReUpstreamAmplifier_LowerTransmitOpticalThreshold = "LowerTransmitOpticalThreshold"
+const ReUpstreamAmplifier_UpperTransmitOpticalThreshold = "UpperTransmitOpticalThreshold"
+
 func init() {
 	reupstreamamplifierBME = &ManagedEntityDefinition{
 		Name:    "ReUpstreamAmplifier",
-		ClassID: 315,
+		ClassID: ReUpstreamAmplifierClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			GetNext,
@@ -160,20 +176,20 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff8,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("OperationalState", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
-			3:  ByteField("OperationalMode", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  ByteField("Arc", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), true, true, false, 4),
-			5:  ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
-			6:  Uint16Field("ReDownstreamAmplifierPointer", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  TableField("TotalOpticalReceiveSignalLevelTable", TableAttributeType, 0x0200, TableInfo{nil, 4}, mapset.NewSetWith(Read), false, true, false, 7),
-			8:  TableField("PerBurstReceiveSignalLevelTable", TableAttributeType, 0x0100, TableInfo{nil, 4}, mapset.NewSetWith(Read), false, true, false, 8),
-			9:  ByteField("LowerReceiveOpticalThreshold", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: ByteField("UpperReceiveOpticalThreshold", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
-			11: Uint16Field("TransmitOpticalSignalLevel", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
-			12: ByteField("LowerTransmitOpticalThreshold", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: ByteField("UpperTransmitOpticalThreshold", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(ReUpstreamAmplifier_AdministrativeState, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(ReUpstreamAmplifier_OperationalState, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
+			3:  ByteField(ReUpstreamAmplifier_OperationalMode, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  ByteField(ReUpstreamAmplifier_Arc, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), true, true, false, 4),
+			5:  ByteField(ReUpstreamAmplifier_ArcInterval, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
+			6:  Uint16Field(ReUpstreamAmplifier_ReDownstreamAmplifierPointer, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  TableField(ReUpstreamAmplifier_TotalOpticalReceiveSignalLevelTable, TableAttributeType, 0x0200, TableInfo{nil, 4}, mapset.NewSetWith(Read), false, true, false, 7),
+			8:  TableField(ReUpstreamAmplifier_PerBurstReceiveSignalLevelTable, TableAttributeType, 0x0100, TableInfo{nil, 4}, mapset.NewSetWith(Read), false, true, false, 8),
+			9:  ByteField(ReUpstreamAmplifier_LowerReceiveOpticalThreshold, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: ByteField(ReUpstreamAmplifier_UpperReceiveOpticalThreshold, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: Uint16Field(ReUpstreamAmplifier_TransmitOpticalSignalLevel, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			12: ByteField(ReUpstreamAmplifier_LowerTransmitOpticalThreshold, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: ByteField(ReUpstreamAmplifier_UpperTransmitOpticalThreshold, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

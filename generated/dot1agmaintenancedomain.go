@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -118,10 +118,19 @@ type Dot1AgMaintenanceDomain struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Dot1AgMaintenanceDomain_MdLevel = "MdLevel"
+const Dot1AgMaintenanceDomain_MdNameFormat = "MdNameFormat"
+const Dot1AgMaintenanceDomain_MdName1 = "MdName1"
+const Dot1AgMaintenanceDomain_MdName2 = "MdName2"
+const Dot1AgMaintenanceDomain_MaintenanceDomainIntermediatePointHalfFunctionMhfCreation = "MaintenanceDomainIntermediatePointHalfFunctionMhfCreation"
+const Dot1AgMaintenanceDomain_SenderIdPermission = "SenderIdPermission"
+
 func init() {
 	dot1agmaintenancedomainBME = &ManagedEntityDefinition{
 		Name:    "Dot1AgMaintenanceDomain",
-		ClassID: 299,
+		ClassID: Dot1AgMaintenanceDomainClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -130,13 +139,13 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfc00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: ByteField("MdLevel", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: ByteField("MdNameFormat", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: MultiByteField("MdName1", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4: MultiByteField("MdName2", OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5: ByteField("MaintenanceDomainIntermediatePointHalfFunctionMhfCreation", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6: ByteField("SenderIdPermission", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: ByteField(Dot1AgMaintenanceDomain_MdLevel, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: ByteField(Dot1AgMaintenanceDomain_MdNameFormat, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: MultiByteField(Dot1AgMaintenanceDomain_MdName1, OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4: MultiByteField(Dot1AgMaintenanceDomain_MdName2, OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5: ByteField(Dot1AgMaintenanceDomain_MaintenanceDomainIntermediatePointHalfFunctionMhfCreation, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6: ByteField(Dot1AgMaintenanceDomain_SenderIdPermission, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

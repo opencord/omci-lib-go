@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -139,10 +139,27 @@ type MacBridgePortConfigurationData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const MacBridgePortConfigurationData_BridgeIdPointer = "BridgeIdPointer"
+const MacBridgePortConfigurationData_PortNum = "PortNum"
+const MacBridgePortConfigurationData_TpType = "TpType"
+const MacBridgePortConfigurationData_TpPointer = "TpPointer"
+const MacBridgePortConfigurationData_PortPriority = "PortPriority"
+const MacBridgePortConfigurationData_PortPathCost = "PortPathCost"
+const MacBridgePortConfigurationData_PortSpanningTreeInd = "PortSpanningTreeInd"
+const MacBridgePortConfigurationData_Deprecated1 = "Deprecated1"
+const MacBridgePortConfigurationData_Deprecated2 = "Deprecated2"
+const MacBridgePortConfigurationData_PortMacAddress = "PortMacAddress"
+const MacBridgePortConfigurationData_OutboundTdPointer = "OutboundTdPointer"
+const MacBridgePortConfigurationData_InboundTdPointer = "InboundTdPointer"
+const MacBridgePortConfigurationData_MacLearningDepth = "MacLearningDepth"
+const MacBridgePortConfigurationData_LaspIdPointer = "LaspIdPointer"
+
 func init() {
 	macbridgeportconfigurationdataBME = &ManagedEntityDefinition{
 		Name:    "MacBridgePortConfigurationData",
-		ClassID: 47,
+		ClassID: MacBridgePortConfigurationDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -151,21 +168,21 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  Uint16Field("BridgeIdPointer", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  ByteField("PortNum", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  ByteField("TpType", EnumerationAttributeType, 0x2000, 1, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  Uint16Field("TpPointer", PointerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  Uint16Field("PortPriority", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
-			6:  Uint16Field("PortPathCost", UnsignedIntegerAttributeType, 0x0400, 1, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7:  ByteField("PortSpanningTreeInd", EnumerationAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  ByteField("Deprecated1", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, true, 8),
-			9:  ByteField("Deprecated2", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, true, 9),
-			10: MultiByteField("PortMacAddress", OctetsAttributeType, 0x0040, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read), false, true, false, 10),
-			11: Uint16Field("OutboundTdPointer", PointerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: Uint16Field("InboundTdPointer", PointerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: ByteField("MacLearningDepth", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
-			14: Uint16Field("LaspIdPointer", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint16Field(MacBridgePortConfigurationData_BridgeIdPointer, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField(MacBridgePortConfigurationData_PortNum, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  ByteField(MacBridgePortConfigurationData_TpType, EnumerationAttributeType, 0x2000, 1, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint16Field(MacBridgePortConfigurationData_TpPointer, PointerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  Uint16Field(MacBridgePortConfigurationData_PortPriority, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
+			6:  Uint16Field(MacBridgePortConfigurationData_PortPathCost, UnsignedIntegerAttributeType, 0x0400, 1, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  ByteField(MacBridgePortConfigurationData_PortSpanningTreeInd, EnumerationAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  ByteField(MacBridgePortConfigurationData_Deprecated1, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, true, 8),
+			9:  ByteField(MacBridgePortConfigurationData_Deprecated2, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, true, 9),
+			10: MultiByteField(MacBridgePortConfigurationData_PortMacAddress, OctetsAttributeType, 0x0040, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read), false, true, false, 10),
+			11: Uint16Field(MacBridgePortConfigurationData_OutboundTdPointer, PointerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: Uint16Field(MacBridgePortConfigurationData_InboundTdPointer, PointerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: ByteField(MacBridgePortConfigurationData_MacLearningDepth, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
+			14: Uint16Field(MacBridgePortConfigurationData_LaspIdPointer, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 14),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

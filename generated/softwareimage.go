@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -110,10 +110,19 @@ type SoftwareImage struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const SoftwareImage_Version = "Version"
+const SoftwareImage_IsCommitted = "IsCommitted"
+const SoftwareImage_IsActive = "IsActive"
+const SoftwareImage_IsValid = "IsValid"
+const SoftwareImage_ProductCode = "ProductCode"
+const SoftwareImage_ImageHash = "ImageHash"
+
 func init() {
 	softwareimageBME = &ManagedEntityDefinition{
 		Name:    "SoftwareImage",
-		ClassID: 7,
+		ClassID: SoftwareImageClassID,
 		MessageTypes: mapset.NewSetWith(
 			ActivateSoftware,
 			CommitSoftware,
@@ -124,13 +133,13 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfc00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: MultiByteField("Version", StringAttributeType, 0x8000, 14, toOctets("ICAgICAgICAgICAgICA="), mapset.NewSetWith(Read), true, false, false, 1),
-			2: ByteField("IsCommitted", EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, false, false, 2),
-			3: ByteField("IsActive", EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read), true, false, false, 3),
-			4: ByteField("IsValid", EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read), true, false, false, 4),
-			5: MultiByteField("ProductCode", OctetsAttributeType, 0x0800, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), true, true, false, 5),
-			6: MultiByteField("ImageHash", StringAttributeType, 0x0400, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), true, true, false, 6),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: MultiByteField(SoftwareImage_Version, StringAttributeType, 0x8000, 14, toOctets("ICAgICAgICAgICAgICA="), mapset.NewSetWith(Read), true, false, false, 1),
+			2: ByteField(SoftwareImage_IsCommitted, EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, false, false, 2),
+			3: ByteField(SoftwareImage_IsActive, EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read), true, false, false, 3),
+			4: ByteField(SoftwareImage_IsValid, EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read), true, false, false, 4),
+			5: MultiByteField(SoftwareImage_ProductCode, OctetsAttributeType, 0x0800, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), true, true, false, 5),
+			6: MultiByteField(SoftwareImage_ImageHash, StringAttributeType, 0x0400, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), true, true, false, 6),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

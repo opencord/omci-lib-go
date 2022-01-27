@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -83,22 +83,30 @@ type PhysicalPathTerminationPointVideoUni struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PhysicalPathTerminationPointVideoUni_AdministrativeState = "AdministrativeState"
+const PhysicalPathTerminationPointVideoUni_OperationalState = "OperationalState"
+const PhysicalPathTerminationPointVideoUni_Arc = "Arc"
+const PhysicalPathTerminationPointVideoUni_ArcInterval = "ArcInterval"
+const PhysicalPathTerminationPointVideoUni_PowerControl = "PowerControl"
+
 func init() {
 	physicalpathterminationpointvideouniBME = &ManagedEntityDefinition{
 		Name:    "PhysicalPathTerminationPointVideoUni",
-		ClassID: 82,
+		ClassID: PhysicalPathTerminationPointVideoUniClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xf800,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2: ByteField("OperationalState", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
-			3: ByteField("Arc", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
-			4: ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5: ByteField("PowerControl", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: ByteField(PhysicalPathTerminationPointVideoUni_AdministrativeState, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2: ByteField(PhysicalPathTerminationPointVideoUni_OperationalState, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
+			3: ByteField(PhysicalPathTerminationPointVideoUni_Arc, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
+			4: ByteField(PhysicalPathTerminationPointVideoUni_ArcInterval, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5: ByteField(PhysicalPathTerminationPointVideoUni_PowerControl, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

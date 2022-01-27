@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -91,10 +91,18 @@ type XdslSubcarrierMaskingDownstreamProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslSubcarrierMaskingDownstreamProfile_DownstreamSubcarrierMask1 = "DownstreamSubcarrierMask1"
+const XdslSubcarrierMaskingDownstreamProfile_DownstreamSubcarrierMask2 = "DownstreamSubcarrierMask2"
+const XdslSubcarrierMaskingDownstreamProfile_DownstreamSubcarrierMask3 = "DownstreamSubcarrierMask3"
+const XdslSubcarrierMaskingDownstreamProfile_DownstreamSubcarrierMask4 = "DownstreamSubcarrierMask4"
+const XdslSubcarrierMaskingDownstreamProfile_MaskValid = "MaskValid"
+
 func init() {
 	xdslsubcarriermaskingdownstreamprofileBME = &ManagedEntityDefinition{
 		Name:    "XdslSubcarrierMaskingDownstreamProfile",
-		ClassID: 108,
+		ClassID: XdslSubcarrierMaskingDownstreamProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -103,12 +111,12 @@ func init() {
 		),
 		AllowedAttributeMask: 0xf800,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: MultiByteField("DownstreamSubcarrierMask1", OctetsAttributeType, 0x8000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: MultiByteField("DownstreamSubcarrierMask2", OctetsAttributeType, 0x4000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3: MultiByteField("DownstreamSubcarrierMask3", OctetsAttributeType, 0x2000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4: MultiByteField("DownstreamSubcarrierMask4", OctetsAttributeType, 0x1000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5: ByteField("MaskValid", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: MultiByteField(XdslSubcarrierMaskingDownstreamProfile_DownstreamSubcarrierMask1, OctetsAttributeType, 0x8000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: MultiByteField(XdslSubcarrierMaskingDownstreamProfile_DownstreamSubcarrierMask2, OctetsAttributeType, 0x4000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3: MultiByteField(XdslSubcarrierMaskingDownstreamProfile_DownstreamSubcarrierMask3, OctetsAttributeType, 0x2000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4: MultiByteField(XdslSubcarrierMaskingDownstreamProfile_DownstreamSubcarrierMask4, OctetsAttributeType, 0x1000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5: ByteField(XdslSubcarrierMaskingDownstreamProfile_MaskValid, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

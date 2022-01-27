@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,10 +78,18 @@ type Dot1RateLimiter struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Dot1RateLimiter_ParentMePointer = "ParentMePointer"
+const Dot1RateLimiter_TpType = "TpType"
+const Dot1RateLimiter_UpstreamUnicastFloodRatePointer = "UpstreamUnicastFloodRatePointer"
+const Dot1RateLimiter_UpstreamBroadcastRatePointer = "UpstreamBroadcastRatePointer"
+const Dot1RateLimiter_UpstreamMulticastPayloadRatePointer = "UpstreamMulticastPayloadRatePointer"
+
 func init() {
 	dot1ratelimiterBME = &ManagedEntityDefinition{
 		Name:    "Dot1RateLimiter",
-		ClassID: 298,
+		ClassID: Dot1RateLimiterClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -90,12 +98,12 @@ func init() {
 		),
 		AllowedAttributeMask: 0xf800,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: Uint16Field("ParentMePointer", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: ByteField("TpType", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: Uint16Field("UpstreamUnicastFloodRatePointer", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
-			4: Uint16Field("UpstreamBroadcastRatePointer", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
-			5: Uint16Field("UpstreamMulticastPayloadRatePointer", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: Uint16Field(Dot1RateLimiter_ParentMePointer, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: ByteField(Dot1RateLimiter_TpType, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: Uint16Field(Dot1RateLimiter_UpstreamUnicastFloodRatePointer, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
+			4: Uint16Field(Dot1RateLimiter_UpstreamBroadcastRatePointer, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
+			5: Uint16Field(Dot1RateLimiter_UpstreamMulticastPayloadRatePointer, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

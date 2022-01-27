@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -86,24 +86,35 @@ type MacBridgeConfigurationData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const MacBridgeConfigurationData_BridgeMacAddress = "BridgeMacAddress"
+const MacBridgeConfigurationData_BridgePriority = "BridgePriority"
+const MacBridgeConfigurationData_DesignatedRoot = "DesignatedRoot"
+const MacBridgeConfigurationData_RootPathCost = "RootPathCost"
+const MacBridgeConfigurationData_BridgePortCount = "BridgePortCount"
+const MacBridgeConfigurationData_RootPortNum = "RootPortNum"
+const MacBridgeConfigurationData_HelloTime = "HelloTime"
+const MacBridgeConfigurationData_ForwardDelay = "ForwardDelay"
+
 func init() {
 	macbridgeconfigurationdataBME = &ManagedEntityDefinition{
 		Name:    "MacBridgeConfigurationData",
-		ClassID: 46,
+		ClassID: MacBridgeConfigurationDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
 		AllowedAttributeMask: 0xff00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: MultiByteField("BridgeMacAddress", OctetsAttributeType, 0x8000, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read), false, false, false, 1),
-			2: Uint16Field("BridgePriority", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3: MultiByteField("DesignatedRoot", OctetsAttributeType, 0x2000, 8, toOctets("AAAAAAAAAAA="), mapset.NewSetWith(Read), false, false, false, 3),
-			4: Uint32Field("RootPathCost", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5: ByteField("BridgePortCount", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6: Uint16Field("RootPortNum", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7: Uint16Field("HelloTime", UnsignedIntegerAttributeType, 0x0200, 256, mapset.NewSetWith(Read), false, true, false, 7),
-			8: Uint16Field("ForwardDelay", UnsignedIntegerAttributeType, 0x0100, 1024, mapset.NewSetWith(Read), false, true, false, 8),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: MultiByteField(MacBridgeConfigurationData_BridgeMacAddress, OctetsAttributeType, 0x8000, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read), false, false, false, 1),
+			2: Uint16Field(MacBridgeConfigurationData_BridgePriority, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3: MultiByteField(MacBridgeConfigurationData_DesignatedRoot, OctetsAttributeType, 0x2000, 8, toOctets("AAAAAAAAAAA="), mapset.NewSetWith(Read), false, false, false, 3),
+			4: Uint32Field(MacBridgeConfigurationData_RootPathCost, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5: ByteField(MacBridgeConfigurationData_BridgePortCount, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6: Uint16Field(MacBridgeConfigurationData_RootPortNum, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7: Uint16Field(MacBridgeConfigurationData_HelloTime, UnsignedIntegerAttributeType, 0x0200, 256, mapset.NewSetWith(Read), false, true, false, 7),
+			8: Uint16Field(MacBridgeConfigurationData_ForwardDelay, UnsignedIntegerAttributeType, 0x0100, 1024, mapset.NewSetWith(Read), false, true, false, 8),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -119,10 +119,19 @@ type MulticastSubscriberMonitor struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const MulticastSubscriberMonitor_MeType = "MeType"
+const MulticastSubscriberMonitor_CurrentMulticastBandwidth = "CurrentMulticastBandwidth"
+const MulticastSubscriberMonitor_JoinMessagesCounter = "JoinMessagesCounter"
+const MulticastSubscriberMonitor_BandwidthExceededCounter = "BandwidthExceededCounter"
+const MulticastSubscriberMonitor_Ipv4ActiveGroupListTable = "Ipv4ActiveGroupListTable"
+const MulticastSubscriberMonitor_Ipv6ActiveGroupListTable = "Ipv6ActiveGroupListTable"
+
 func init() {
 	multicastsubscribermonitorBME = &ManagedEntityDefinition{
 		Name:    "MulticastSubscriberMonitor",
-		ClassID: 311,
+		ClassID: MulticastSubscriberMonitorClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -132,13 +141,13 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfc00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: ByteField("MeType", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: Uint32Field("CurrentMulticastBandwidth", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, true, false, 2),
-			3: Uint32Field("JoinMessagesCounter", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
-			4: Uint32Field("BandwidthExceededCounter", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
-			5: TableField("Ipv4ActiveGroupListTable", TableAttributeType, 0x0800, TableInfo{nil, 24}, mapset.NewSetWith(Read), false, false, false, 5),
-			6: TableField("Ipv6ActiveGroupListTable", TableAttributeType, 0x0400, TableInfo{nil, 58}, mapset.NewSetWith(Read), false, true, false, 6),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: ByteField(MulticastSubscriberMonitor_MeType, EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: Uint32Field(MulticastSubscriberMonitor_CurrentMulticastBandwidth, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, true, false, 2),
+			3: Uint32Field(MulticastSubscriberMonitor_JoinMessagesCounter, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
+			4: Uint32Field(MulticastSubscriberMonitor_BandwidthExceededCounter, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
+			5: TableField(MulticastSubscriberMonitor_Ipv4ActiveGroupListTable, TableAttributeType, 0x0800, TableInfo{nil, 24}, mapset.NewSetWith(Read), false, false, false, 5),
+			6: TableField(MulticastSubscriberMonitor_Ipv6ActiveGroupListTable, TableAttributeType, 0x0400, TableInfo{nil, 58}, mapset.NewSetWith(Read), false, true, false, 6),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

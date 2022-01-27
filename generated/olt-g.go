@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -80,21 +80,28 @@ type OltG struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const OltG_OltVendorId = "OltVendorId"
+const OltG_EquipmentId = "EquipmentId"
+const OltG_Version = "Version"
+const OltG_TimeOfDayInformation = "TimeOfDayInformation"
+
 func init() {
 	oltgBME = &ManagedEntityDefinition{
 		Name:    "OltG",
-		ClassID: 131,
+		ClassID: OltGClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xf000,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: MultiByteField("OltVendorId", StringAttributeType, 0x8000, 4, toOctets("ICAgIA=="), mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2: MultiByteField("EquipmentId", StringAttributeType, 0x4000, 20, toOctets("ICAgICAgICAgICAgICAgICAgICA="), mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3: MultiByteField("Version", StringAttributeType, 0x2000, 14, toOctets("MAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4: MultiByteField("TimeOfDayInformation", OctetsAttributeType, 0x1000, 14, toOctets("AAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 4),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: MultiByteField(OltG_OltVendorId, StringAttributeType, 0x8000, 4, toOctets("ICAgIA=="), mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2: MultiByteField(OltG_EquipmentId, StringAttributeType, 0x4000, 20, toOctets("ICAgICAgICAgICAgICAgICAgICA="), mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3: MultiByteField(OltG_Version, StringAttributeType, 0x2000, 14, toOctets("MAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4: MultiByteField(OltG_TimeOfDayInformation, OctetsAttributeType, 0x1000, 14, toOctets("AAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 4),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

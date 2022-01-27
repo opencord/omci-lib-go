@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -152,29 +152,44 @@ type OnuDynamicPowerManagementControl struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const OnuDynamicPowerManagementControl_PowerReductionManagementCapability = "PowerReductionManagementCapability"
+const OnuDynamicPowerManagementControl_PowerReductionManagementMode = "PowerReductionManagementMode"
+const OnuDynamicPowerManagementControl_Itransinit = "Itransinit"
+const OnuDynamicPowerManagementControl_Itxinit = "Itxinit"
+const OnuDynamicPowerManagementControl_MaximumSleepInterval = "MaximumSleepInterval"
+const OnuDynamicPowerManagementControl_MaximumReceiverOffInterval = "MaximumReceiverOffInterval"
+const OnuDynamicPowerManagementControl_MinimumAwareInterval = "MinimumAwareInterval"
+const OnuDynamicPowerManagementControl_MinimumActiveHeldInterval = "MinimumActiveHeldInterval"
+const OnuDynamicPowerManagementControl_MaximumSleepIntervalExtension = "MaximumSleepIntervalExtension"
+const OnuDynamicPowerManagementControl_EthernetPassiveOpticalNetworkEponCapabilityExtension = "EthernetPassiveOpticalNetworkEponCapabilityExtension"
+const OnuDynamicPowerManagementControl_EponSetupExtension = "EponSetupExtension"
+const OnuDynamicPowerManagementControl_MissingConsecutiveBurstsThreshold = "MissingConsecutiveBurstsThreshold"
+
 func init() {
 	onudynamicpowermanagementcontrolBME = &ManagedEntityDefinition{
 		Name:    "OnuDynamicPowerManagementControl",
-		ClassID: 336,
+		ClassID: OnuDynamicPowerManagementControlClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xfff0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("PowerReductionManagementCapability", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  ByteField("PowerReductionManagementMode", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3:  Uint16Field("Itransinit", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint16Field("Itxinit", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("MaximumSleepInterval", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  Uint32Field("MaximumReceiverOffInterval", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  Uint32Field("MinimumAwareInterval", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  Uint16Field("MinimumActiveHeldInterval", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  Uint64Field("MaximumSleepIntervalExtension", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: ByteField("EthernetPassiveOpticalNetworkEponCapabilityExtension", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: ByteField("EponSetupExtension", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: Uint32Field("MissingConsecutiveBurstsThreshold", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(OnuDynamicPowerManagementControl_PowerReductionManagementCapability, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  ByteField(OnuDynamicPowerManagementControl_PowerReductionManagementMode, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3:  Uint16Field(OnuDynamicPowerManagementControl_Itransinit, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint16Field(OnuDynamicPowerManagementControl_Itxinit, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(OnuDynamicPowerManagementControl_MaximumSleepInterval, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  Uint32Field(OnuDynamicPowerManagementControl_MaximumReceiverOffInterval, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  Uint32Field(OnuDynamicPowerManagementControl_MinimumAwareInterval, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  Uint16Field(OnuDynamicPowerManagementControl_MinimumActiveHeldInterval, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  Uint64Field(OnuDynamicPowerManagementControl_MaximumSleepIntervalExtension, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: ByteField(OnuDynamicPowerManagementControl_EthernetPassiveOpticalNetworkEponCapabilityExtension, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: ByteField(OnuDynamicPowerManagementControl_EponSetupExtension, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: Uint32Field(OnuDynamicPowerManagementControl_MissingConsecutiveBurstsThreshold, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

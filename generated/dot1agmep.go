@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -141,10 +141,27 @@ type Dot1AgMep struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Dot1AgMep_Layer2EntityPointer = "Layer2EntityPointer"
+const Dot1AgMep_Layer2Type = "Layer2Type"
+const Dot1AgMep_MaPointer = "MaPointer"
+const Dot1AgMep_MepId = "MepId"
+const Dot1AgMep_MepControl = "MepControl"
+const Dot1AgMep_PrimaryVlan = "PrimaryVlan"
+const Dot1AgMep_AdministrativeState = "AdministrativeState"
+const Dot1AgMep_CcmAndLtmPriority = "CcmAndLtmPriority"
+const Dot1AgMep_EgressIdentifier = "EgressIdentifier"
+const Dot1AgMep_PeerMepIds = "PeerMepIds"
+const Dot1AgMep_EthAisControl = "EthAisControl"
+const Dot1AgMep_FaultAlarmThreshold = "FaultAlarmThreshold"
+const Dot1AgMep_AlarmDeclarationSoakTime = "AlarmDeclarationSoakTime"
+const Dot1AgMep_AlarmClearSoakTime = "AlarmClearSoakTime"
+
 func init() {
 	dot1agmepBME = &ManagedEntityDefinition{
 		Name:    "Dot1AgMep",
-		ClassID: 302,
+		ClassID: Dot1AgMepClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -153,21 +170,21 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  Uint16Field("Layer2EntityPointer", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  ByteField("Layer2Type", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint16Field("MaPointer", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  Uint16Field("MepId", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  ByteField("MepControl", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6:  Uint16Field("PrimaryVlan", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  ByteField("CcmAndLtmPriority", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  Uint64Field("EgressIdentifier", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
-			10: MultiByteField("PeerMepIds", OctetsAttributeType, 0x0040, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, false, false, 10),
-			11: ByteField("EthAisControl", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 11),
-			12: ByteField("FaultAlarmThreshold", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 12),
-			13: Uint16Field("AlarmDeclarationSoakTime", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, false, false, 13),
-			14: Uint16Field("AlarmClearSoakTime", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, false, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint16Field(Dot1AgMep_Layer2EntityPointer, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField(Dot1AgMep_Layer2Type, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint16Field(Dot1AgMep_MaPointer, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint16Field(Dot1AgMep_MepId, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  ByteField(Dot1AgMep_MepControl, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  Uint16Field(Dot1AgMep_PrimaryVlan, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  ByteField(Dot1AgMep_AdministrativeState, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  ByteField(Dot1AgMep_CcmAndLtmPriority, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  Uint64Field(Dot1AgMep_EgressIdentifier, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
+			10: MultiByteField(Dot1AgMep_PeerMepIds, OctetsAttributeType, 0x0040, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, false, false, 10),
+			11: ByteField(Dot1AgMep_EthAisControl, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 11),
+			12: ByteField(Dot1AgMep_FaultAlarmThreshold, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 12),
+			13: Uint16Field(Dot1AgMep_AlarmDeclarationSoakTime, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, false, false, 13),
+			14: Uint16Field(Dot1AgMep_AlarmClearSoakTime, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, false, false, 14),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

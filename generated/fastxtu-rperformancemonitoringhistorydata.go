@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,10 +67,17 @@ type FastXtuRPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const FastXtuRPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const FastXtuRPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const FastXtuRPerformanceMonitoringHistoryData_SuccessfulFraCounter = "SuccessfulFraCounter"
+const FastXtuRPerformanceMonitoringHistoryData_SuccessfulRpaCounter = "SuccessfulRpaCounter"
+
 func init() {
 	fastxturperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "FastXtuRPerformanceMonitoringHistoryData",
-		ClassID: 438,
+		ClassID: FastXtuRPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -79,11 +86,11 @@ func init() {
 		),
 		AllowedAttributeMask: 0xf000,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2: Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: Uint32Field("SuccessfulFraCounter", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4: Uint32Field("SuccessfulRpaCounter", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: ByteField(FastXtuRPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2: Uint16Field(FastXtuRPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: Uint32Field(FastXtuRPerformanceMonitoringHistoryData_SuccessfulFraCounter, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4: Uint32Field(FastXtuRPerformanceMonitoringHistoryData_SuccessfulRpaCounter, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

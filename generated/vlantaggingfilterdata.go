@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,10 +74,16 @@ type VlanTaggingFilterData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const VlanTaggingFilterData_VlanFilterList = "VlanFilterList"
+const VlanTaggingFilterData_ForwardOperation = "ForwardOperation"
+const VlanTaggingFilterData_NumberOfEntries = "NumberOfEntries"
+
 func init() {
 	vlantaggingfilterdataBME = &ManagedEntityDefinition{
 		Name:    "VlanTaggingFilterData",
-		ClassID: 84,
+		ClassID: VlanTaggingFilterDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -86,10 +92,10 @@ func init() {
 		),
 		AllowedAttributeMask: 0xe000,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: MultiByteField("VlanFilterList", OctetsAttributeType, 0x8000, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: ByteField("ForwardOperation", EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: ByteField("NumberOfEntries", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: MultiByteField(VlanTaggingFilterData_VlanFilterList, OctetsAttributeType, 0x8000, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: ByteField(VlanTaggingFilterData_ForwardOperation, EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: ByteField(VlanTaggingFilterData_NumberOfEntries, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

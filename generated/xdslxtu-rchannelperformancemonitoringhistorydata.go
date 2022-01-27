@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -85,10 +85,21 @@ type XdslXtuRChannelPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslXtuRChannelPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const XdslXtuRChannelPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const XdslXtuRChannelPerformanceMonitoringHistoryData_CorrectedBlocks = "CorrectedBlocks"
+const XdslXtuRChannelPerformanceMonitoringHistoryData_UncorrectedBlocks = "UncorrectedBlocks"
+const XdslXtuRChannelPerformanceMonitoringHistoryData_TransmittedBlocks = "TransmittedBlocks"
+const XdslXtuRChannelPerformanceMonitoringHistoryData_ReceivedBlocks = "ReceivedBlocks"
+const XdslXtuRChannelPerformanceMonitoringHistoryData_CodeViolations = "CodeViolations"
+const XdslXtuRChannelPerformanceMonitoringHistoryData_ForwardErrorCorrections = "ForwardErrorCorrections"
+
 func init() {
 	xdslxturchannelperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "XdslXtuRChannelPerformanceMonitoringHistoryData",
-		ClassID: 115,
+		ClassID: XdslXtuRChannelPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -98,15 +109,15 @@ func init() {
 		),
 		AllowedAttributeMask: 0xff00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2: Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: Uint32Field("CorrectedBlocks", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4: Uint32Field("UncorrectedBlocks", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5: Uint32Field("TransmittedBlocks", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6: Uint32Field("ReceivedBlocks", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7: Uint16Field("CodeViolations", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8: Uint16Field("ForwardErrorCorrections", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: ByteField(XdslXtuRChannelPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2: Uint16Field(XdslXtuRChannelPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: Uint32Field(XdslXtuRChannelPerformanceMonitoringHistoryData_CorrectedBlocks, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4: Uint32Field(XdslXtuRChannelPerformanceMonitoringHistoryData_UncorrectedBlocks, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5: Uint32Field(XdslXtuRChannelPerformanceMonitoringHistoryData_TransmittedBlocks, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6: Uint32Field(XdslXtuRChannelPerformanceMonitoringHistoryData_ReceivedBlocks, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7: Uint16Field(XdslXtuRChannelPerformanceMonitoringHistoryData_CodeViolations, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8: Uint16Field(XdslXtuRChannelPerformanceMonitoringHistoryData_ForwardErrorCorrections, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

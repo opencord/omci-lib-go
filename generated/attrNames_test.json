@@ -1326,9 +1326,9 @@
         "Index": 3
       },
       "4": {
-        "Name": "Lost C_= 0 Cells",
-        "CamelCase": "LostC=0Cells",
-        "Final": "VpPerformanceMonitoringHistoryData_LostC=0Cells",
+        "Name": "Lost C0 Cells",
+        "CamelCase": "LostC0Cells",
+        "Final": "VpPerformanceMonitoringHistoryData_LostC0Cells",
         "Index": 4
       },
       "5": {
@@ -1338,15 +1338,15 @@
         "Index": 5
       },
       "6": {
-        "Name": "Transmitted C_= 0 _ 1 Cells",
-        "CamelCase": "TransmittedC=01Cells",
-        "Final": "VpPerformanceMonitoringHistoryData_TransmittedC=01Cells",
+        "Name": "Transmitted C0 _ 1 Cells",
+        "CamelCase": "TransmittedC01Cells",
+        "Final": "VpPerformanceMonitoringHistoryData_TransmittedC01Cells",
         "Index": 6
       },
       "7": {
-        "Name": "Transmitted C_= 0 Cells",
-        "CamelCase": "TransmittedC=0Cells",
-        "Final": "VpPerformanceMonitoringHistoryData_TransmittedC=0Cells",
+        "Name": "Transmitted C0 Cells",
+        "CamelCase": "TransmittedC0Cells",
+        "Final": "VpPerformanceMonitoringHistoryData_TransmittedC0Cells",
         "Index": 7
       },
       "8": {
@@ -2772,15 +2772,15 @@
         "Index": 14
       },
       "15": {
-        "Name": "Sos Success Count, Near End",
-        "CamelCase": "SosSuccessCount,NearEnd",
-        "Final": "XdslXtuCPerformanceMonitoringHistoryData_SosSuccessCount,NearEnd",
+        "Name": "Sos Success Count Near End",
+        "CamelCase": "SosSuccessCountNearEnd",
+        "Final": "XdslXtuCPerformanceMonitoringHistoryData_SosSuccessCountNearEnd",
         "Index": 15
       },
       "16": {
-        "Name": "Sos Success Count, Far End",
-        "CamelCase": "SosSuccessCount,FarEnd",
-        "Final": "XdslXtuCPerformanceMonitoringHistoryData_SosSuccessCount,FarEnd",
+        "Name": "Sos Success Count Far End",
+        "CamelCase": "SosSuccessCountFarEnd",
+        "Final": "XdslXtuCPerformanceMonitoringHistoryData_SosSuccessCountFarEnd",
         "Index": 16
       }
     }
@@ -5294,9 +5294,9 @@
         "Index": 15
       },
       "16": {
-        "Name": "Upboshaped Aele_Mode, Upboelmt",
-        "CamelCase": "UpboshapedAeleMode,Upboelmt",
-        "Final": "Vdsl2LineConfigurationExtensions_UpboshapedAeleMode,Upboelmt",
+        "Name": "Upboshaped Aele_Mode Upboelmt",
+        "CamelCase": "UpboshapedAeleModeUpboelmt",
+        "Final": "Vdsl2LineConfigurationExtensions_UpboshapedAeleModeUpboelmt",
         "Index": 16
       }
     }
@@ -6998,9 +6998,9 @@
         "Index": 5
       },
       "6": {
-        "Name": "Misordered Packets, Usable",
-        "CamelCase": "MisorderedPackets,Usable",
-        "Final": "PseudowirePerformanceMonitoringHistoryData_MisorderedPackets,Usable",
+        "Name": "Misordered Packets Usable",
+        "CamelCase": "MisorderedPacketsUsable",
+        "Final": "PseudowirePerformanceMonitoringHistoryData_MisorderedPacketsUsable",
         "Index": 6
       },
       "7": {
@@ -8874,9 +8874,9 @@
         "Index": 11
       },
       "12": {
-        "Name": "R'S' Splitter Coupling Ratio",
-        "CamelCase": "R'S'SplitterCouplingRatio",
-        "Final": "ReDownstreamAmplifier_R'S'SplitterCouplingRatio",
+        "Name": "R S Splitter Coupling Ratio",
+        "CamelCase": "RSSplitterCouplingRatio",
+        "Final": "ReDownstreamAmplifier_RSSplitterCouplingRatio",
         "Index": 12
       }
     }
@@ -13210,34 +13210,40 @@
         "Index": 1
       },
       "2": {
-        "Name": "Serial Number Part 1, Serial Number Part 2",
-        "CamelCase": "SerialNumberPart1,SerialNumberPart2",
-        "Final": "OnuManufacturingData_SerialNumberPart1,SerialNumberPart2",
+        "Name": "Serial Number 1",
+        "CamelCase": "SerialNumber1",
+        "Final": "OnuManufacturingData_SerialNumber1",
         "Index": 2
       },
       "3": {
-        "Name": "Model Name",
-        "CamelCase": "ModelName",
-        "Final": "OnuManufacturingData_ModelName",
+        "Name": "Serial Number 2",
+        "CamelCase": "SerialNumber2",
+        "Final": "OnuManufacturingData_SerialNumber2",
         "Index": 3
       },
       "4": {
-        "Name": "Manufacturing Date",
-        "CamelCase": "ManufacturingDate",
-        "Final": "OnuManufacturingData_ManufacturingDate",
+        "Name": "Model Name",
+        "CamelCase": "ModelName",
+        "Final": "OnuManufacturingData_ModelName",
         "Index": 4
       },
       "5": {
-        "Name": "Hardware_Revision",
-        "CamelCase": "HardwareRevision",
-        "Final": "OnuManufacturingData_HardwareRevision",
+        "Name": "Manufacturing Date",
+        "CamelCase": "ManufacturingDate",
+        "Final": "OnuManufacturingData_ManufacturingDate",
         "Index": 5
       },
       "6": {
+        "Name": "Hardware_Revision",
+        "CamelCase": "HardwareRevision",
+        "Final": "OnuManufacturingData_HardwareRevision",
+        "Index": 6
+      },
+      "7": {
         "Name": "Firmware_Revision",
         "CamelCase": "FirmwareRevision",
         "Final": "OnuManufacturingData_FirmwareRevision",
-        "Index": 6
+        "Index": 7
       }
     }
   },

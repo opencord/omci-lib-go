@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -179,10 +179,29 @@ type PhysicalPathTerminationPointReUni struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PhysicalPathTerminationPointReUni_AdministrativeState = "AdministrativeState"
+const PhysicalPathTerminationPointReUni_OperationalState = "OperationalState"
+const PhysicalPathTerminationPointReUni_Arc = "Arc"
+const PhysicalPathTerminationPointReUni_ArcInterval = "ArcInterval"
+const PhysicalPathTerminationPointReUni_ReAniGPointer = "ReAniGPointer"
+const PhysicalPathTerminationPointReUni_TotalOpticalReceiveSignalLevelTable = "TotalOpticalReceiveSignalLevelTable"
+const PhysicalPathTerminationPointReUni_PerBurstReceiveSignalLevelTable = "PerBurstReceiveSignalLevelTable"
+const PhysicalPathTerminationPointReUni_LowerReceiveOpticalThreshold = "LowerReceiveOpticalThreshold"
+const PhysicalPathTerminationPointReUni_UpperReceiveOpticalThreshold = "UpperReceiveOpticalThreshold"
+const PhysicalPathTerminationPointReUni_TransmitOpticalLevel = "TransmitOpticalLevel"
+const PhysicalPathTerminationPointReUni_LowerTransmitPowerThreshold = "LowerTransmitPowerThreshold"
+const PhysicalPathTerminationPointReUni_UpperTransmitPowerThreshold = "UpperTransmitPowerThreshold"
+const PhysicalPathTerminationPointReUni_AdditionalPreamble = "AdditionalPreamble"
+const PhysicalPathTerminationPointReUni_AdditionalGuardTime = "AdditionalGuardTime"
+const PhysicalPathTerminationPointReUni_ConnectedOnusTable = "ConnectedOnusTable"
+const PhysicalPathTerminationPointReUni_ClearOnuTable = "ClearOnuTable"
+
 func init() {
 	physicalpathterminationpointreuniBME = &ManagedEntityDefinition{
 		Name:    "PhysicalPathTerminationPointReUni",
-		ClassID: 314,
+		ClassID: PhysicalPathTerminationPointReUniClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			GetNext,
@@ -190,23 +209,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("OperationalState", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
-			3:  ByteField("Arc", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
-			4:  ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5:  Uint16Field("ReAniGPointer", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  TableField("TotalOpticalReceiveSignalLevelTable", TableAttributeType, 0x0400, TableInfo{nil, 4}, mapset.NewSetWith(Read), false, true, false, 6),
-			7:  TableField("PerBurstReceiveSignalLevelTable", TableAttributeType, 0x0200, TableInfo{nil, 4}, mapset.NewSetWith(Read), false, true, false, 7),
-			8:  ByteField("LowerReceiveOpticalThreshold", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
-			9:  ByteField("UpperReceiveOpticalThreshold", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: Uint16Field("TransmitOpticalLevel", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: ByteField("LowerTransmitPowerThreshold", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: ByteField("UpperTransmitPowerThreshold", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: ByteField("AdditionalPreamble", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: ByteField("AdditionalGuardTime", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: TableField("ConnectedOnusTable", TableAttributeType, 0x0002, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, true, false, 15),
-			16: TableField("ClearOnuTable", TableAttributeType, 0x0001, TableInfo{nil, 1}, mapset.NewSetWith(Write), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(PhysicalPathTerminationPointReUni_AdministrativeState, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(PhysicalPathTerminationPointReUni_OperationalState, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, true, false, 2),
+			3:  ByteField(PhysicalPathTerminationPointReUni_Arc, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), true, true, false, 3),
+			4:  ByteField(PhysicalPathTerminationPointReUni_ArcInterval, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  Uint16Field(PhysicalPathTerminationPointReUni_ReAniGPointer, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  TableField(PhysicalPathTerminationPointReUni_TotalOpticalReceiveSignalLevelTable, TableAttributeType, 0x0400, TableInfo{nil, 4}, mapset.NewSetWith(Read), false, true, false, 6),
+			7:  TableField(PhysicalPathTerminationPointReUni_PerBurstReceiveSignalLevelTable, TableAttributeType, 0x0200, TableInfo{nil, 4}, mapset.NewSetWith(Read), false, true, false, 7),
+			8:  ByteField(PhysicalPathTerminationPointReUni_LowerReceiveOpticalThreshold, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  ByteField(PhysicalPathTerminationPointReUni_UpperReceiveOpticalThreshold, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: Uint16Field(PhysicalPathTerminationPointReUni_TransmitOpticalLevel, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: ByteField(PhysicalPathTerminationPointReUni_LowerTransmitPowerThreshold, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: ByteField(PhysicalPathTerminationPointReUni_UpperTransmitPowerThreshold, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: ByteField(PhysicalPathTerminationPointReUni_AdditionalPreamble, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: ByteField(PhysicalPathTerminationPointReUni_AdditionalGuardTime, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: TableField(PhysicalPathTerminationPointReUni_ConnectedOnusTable, TableAttributeType, 0x0002, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, true, false, 15),
+			16: TableField(PhysicalPathTerminationPointReUni_ClearOnuTable, TableAttributeType, 0x0001, TableInfo{nil, 1}, mapset.NewSetWith(Write), false, true, false, 16),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

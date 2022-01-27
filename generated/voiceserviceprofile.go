@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -242,10 +242,27 @@ type VoiceServiceProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const VoiceServiceProfile_AnnouncementType = "AnnouncementType"
+const VoiceServiceProfile_JitterTarget = "JitterTarget"
+const VoiceServiceProfile_JitterBufferMax = "JitterBufferMax"
+const VoiceServiceProfile_EchoCancelInd = "EchoCancelInd"
+const VoiceServiceProfile_PstnProtocolVariant = "PstnProtocolVariant"
+const VoiceServiceProfile_DtmfDigitLevels = "DtmfDigitLevels"
+const VoiceServiceProfile_DtmfDigitDuration = "DtmfDigitDuration"
+const VoiceServiceProfile_HookFlashMinimumTime = "HookFlashMinimumTime"
+const VoiceServiceProfile_HookFlashMaximumTime = "HookFlashMaximumTime"
+const VoiceServiceProfile_TonePatternTable = "TonePatternTable"
+const VoiceServiceProfile_ToneEventTable = "ToneEventTable"
+const VoiceServiceProfile_RingingPatternTable = "RingingPatternTable"
+const VoiceServiceProfile_RingingEventTable = "RingingEventTable"
+const VoiceServiceProfile_NetworkSpecificExtensionsPointer = "NetworkSpecificExtensionsPointer"
+
 func init() {
 	voiceserviceprofileBME = &ManagedEntityDefinition{
 		Name:    "VoiceServiceProfile",
-		ClassID: 58,
+		ClassID: VoiceServiceProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -256,21 +273,21 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("AnnouncementType", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  Uint16Field("JitterTarget", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 2),
-			3:  Uint16Field("JitterBufferMax", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
-			4:  ByteField("EchoCancelInd", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  Uint16Field("PstnProtocolVariant", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
-			6:  Uint16Field("DtmfDigitLevels", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
-			7:  Uint16Field("DtmfDigitDuration", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
-			8:  Uint16Field("HookFlashMinimumTime", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 8),
-			9:  Uint16Field("HookFlashMaximumTime", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 9),
-			10: TableField("TonePatternTable", TableAttributeType, 0x0040, TableInfo{nil, 20}, mapset.NewSetWith(Read, Write), false, true, false, 10),
-			11: TableField("ToneEventTable", TableAttributeType, 0x0020, TableInfo{nil, 7}, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: TableField("RingingPatternTable", TableAttributeType, 0x0010, TableInfo{nil, 5}, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: TableField("RingingEventTable", TableAttributeType, 0x0008, TableInfo{nil, 7}, mapset.NewSetWith(Read, Write), false, true, false, 13),
-			14: Uint16Field("NetworkSpecificExtensionsPointer", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(VoiceServiceProfile_AnnouncementType, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  Uint16Field(VoiceServiceProfile_JitterTarget, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 2),
+			3:  Uint16Field(VoiceServiceProfile_JitterBufferMax, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
+			4:  ByteField(VoiceServiceProfile_EchoCancelInd, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  Uint16Field(VoiceServiceProfile_PstnProtocolVariant, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
+			6:  Uint16Field(VoiceServiceProfile_DtmfDigitLevels, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
+			7:  Uint16Field(VoiceServiceProfile_DtmfDigitDuration, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
+			8:  Uint16Field(VoiceServiceProfile_HookFlashMinimumTime, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 8),
+			9:  Uint16Field(VoiceServiceProfile_HookFlashMaximumTime, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 9),
+			10: TableField(VoiceServiceProfile_TonePatternTable, TableAttributeType, 0x0040, TableInfo{nil, 20}, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: TableField(VoiceServiceProfile_ToneEventTable, TableAttributeType, 0x0020, TableInfo{nil, 7}, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: TableField(VoiceServiceProfile_RingingPatternTable, TableAttributeType, 0x0010, TableInfo{nil, 5}, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: TableField(VoiceServiceProfile_RingingEventTable, TableAttributeType, 0x0008, TableInfo{nil, 7}, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: Uint16Field(VoiceServiceProfile_NetworkSpecificExtensionsPointer, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 14),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

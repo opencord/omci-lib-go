@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -164,26 +164,38 @@ type Cardholder struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Cardholder_ActualPlugInUnitType = "ActualPlugInUnitType"
+const Cardholder_ExpectedPlugInUnitType = "ExpectedPlugInUnitType"
+const Cardholder_ExpectedPortCount = "ExpectedPortCount"
+const Cardholder_ExpectedEquipmentId = "ExpectedEquipmentId"
+const Cardholder_ActualEquipmentId = "ActualEquipmentId"
+const Cardholder_ProtectionProfilePointer = "ProtectionProfilePointer"
+const Cardholder_InvokeProtectionSwitch = "InvokeProtectionSwitch"
+const Cardholder_AlarmReportingControl = "AlarmReportingControl"
+const Cardholder_ArcInterval = "ArcInterval"
+
 func init() {
 	cardholderBME = &ManagedEntityDefinition{
 		Name:    "Cardholder",
-		ClassID: 5,
+		ClassID: CardholderClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xff80,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: ByteField("ActualPlugInUnitType", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read), true, false, false, 1),
-			2: ByteField("ExpectedPlugInUnitType", EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3: ByteField("ExpectedPortCount", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
-			4: MultiByteField("ExpectedEquipmentId", StringAttributeType, 0x1000, 20, toOctets("ICAgICAgICAgICAgICAgICAgICA="), mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5: MultiByteField("ActualEquipmentId", StringAttributeType, 0x0800, 20, toOctets("ICAgICAgICAgICAgICAgICAgICA="), mapset.NewSetWith(Read), true, true, false, 5),
-			6: ByteField("ProtectionProfilePointer", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
-			7: ByteField("InvokeProtectionSwitch", EnumerationAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
-			8: ByteField("AlarmReportingControl", EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), true, true, false, 8),
-			9: ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: ByteField(Cardholder_ActualPlugInUnitType, EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read), true, false, false, 1),
+			2: ByteField(Cardholder_ExpectedPlugInUnitType, EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3: ByteField(Cardholder_ExpectedPortCount, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
+			4: MultiByteField(Cardholder_ExpectedEquipmentId, StringAttributeType, 0x1000, 20, toOctets("ICAgICAgICAgICAgICAgICAgICA="), mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5: MultiByteField(Cardholder_ActualEquipmentId, StringAttributeType, 0x0800, 20, toOctets("ICAgICAgICAgICAgICAgICAgICA="), mapset.NewSetWith(Read), true, true, false, 5),
+			6: ByteField(Cardholder_ProtectionProfilePointer, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
+			7: ByteField(Cardholder_InvokeProtectionSwitch, EnumerationAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8: ByteField(Cardholder_AlarmReportingControl, EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), true, true, false, 8),
+			9: ByteField(Cardholder_ArcInterval, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

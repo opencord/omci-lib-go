@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -127,10 +127,28 @@ type TwdmChannelTuningPerformanceMonitoringHistoryDataPart2 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_IntervalEndTime = "IntervalEndTime"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_ThresholdData12Id = "ThresholdData12Id"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsAlbl = "TuningControlRequestsRejectedDsAlbl"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsVoid = "TuningControlRequestsRejectedDsVoid"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsPart = "TuningControlRequestsRejectedDsPart"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsTunr = "TuningControlRequestsRejectedDsTunr"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsLnrt = "TuningControlRequestsRejectedDsLnrt"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsLncd = "TuningControlRequestsRejectedDsLncd"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsAlbl = "TuningControlRequestsRejectedUsAlbl"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsVoid = "TuningControlRequestsRejectedUsVoid"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsTunr = "TuningControlRequestsRejectedUsTunr"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsClbr = "TuningControlRequestsRejectedUsClbr"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsLktp = "TuningControlRequestsRejectedUsLktp"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsLnrt = "TuningControlRequestsRejectedUsLnrt"
+const TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsLncd = "TuningControlRequestsRejectedUsLncd"
+
 func init() {
 	twdmchanneltuningperformancemonitoringhistorydatapart2BME = &ManagedEntityDefinition{
 		Name:    "TwdmChannelTuningPerformanceMonitoringHistoryDataPart2",
-		ClassID: 450,
+		ClassID: TwdmChannelTuningPerformanceMonitoringHistoryDataPart2ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -140,22 +158,22 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("TuningControlRequestsRejectedDsAlbl", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("TuningControlRequestsRejectedDsVoid", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("TuningControlRequestsRejectedDsPart", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("TuningControlRequestsRejectedDsTunr", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("TuningControlRequestsRejectedDsLnrt", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("TuningControlRequestsRejectedDsLncd", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint32Field("TuningControlRequestsRejectedUsAlbl", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint32Field("TuningControlRequestsRejectedUsVoid", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint32Field("TuningControlRequestsRejectedUsTunr", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint32Field("TuningControlRequestsRejectedUsClbr", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint32Field("TuningControlRequestsRejectedUsLktp", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint32Field("TuningControlRequestsRejectedUsLnrt", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: Uint32Field("TuningControlRequestsRejectedUsLncd", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsAlbl, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsVoid, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsPart, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsTunr, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsLnrt, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedDsLncd, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsAlbl, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsVoid, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsTunr, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsClbr, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsLktp, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsLnrt, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: Uint32Field(TwdmChannelTuningPerformanceMonitoringHistoryDataPart2_TuningControlRequestsRejectedUsLncd, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

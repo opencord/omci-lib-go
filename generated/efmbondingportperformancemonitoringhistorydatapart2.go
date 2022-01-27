@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -99,10 +99,27 @@ type EfmBondingPortPerformanceMonitoringHistoryDataPart2 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_IntervalEndTime = "IntervalEndTime"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_ThresholdData12Id = "ThresholdData12Id"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxUnicastFrames = "RxUnicastFrames"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxUnicastFrames = "TxUnicastFrames"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxUnicastBytes = "RxUnicastBytes"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxUnicastBytes = "TxUnicastBytes"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxBroadcastFrames = "RxBroadcastFrames"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxBroadcastFrames = "TxBroadcastFrames"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxBroadcastBytes = "RxBroadcastBytes"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxBroadcastBytes = "TxBroadcastBytes"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxMulticastFrames = "RxMulticastFrames"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxMulticastFrames = "TxMulticastFrames"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxMulticastBytes = "RxMulticastBytes"
+const EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxMulticastBytes = "TxMulticastBytes"
+
 func init() {
 	efmbondingportperformancemonitoringhistorydatapart2BME = &ManagedEntityDefinition{
 		Name:    "EfmBondingPortPerformanceMonitoringHistoryDataPart2",
-		ClassID: 424,
+		ClassID: EfmBondingPortPerformanceMonitoringHistoryDataPart2ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -112,21 +129,21 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("RxUnicastFrames", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("TxUnicastFrames", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("RxUnicastBytes", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("TxUnicastBytes", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("RxBroadcastFrames", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("TxBroadcastFrames", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint32Field("RxBroadcastBytes", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint32Field("TxBroadcastBytes", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint32Field("RxMulticastFrames", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint32Field("TxMulticastFrames", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint32Field("RxMulticastBytes", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint32Field("TxMulticastBytes", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(EfmBondingPortPerformanceMonitoringHistoryDataPart2_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxUnicastFrames, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxUnicastFrames, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxUnicastBytes, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxUnicastBytes, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxBroadcastFrames, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxBroadcastFrames, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxBroadcastBytes, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxBroadcastBytes, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxMulticastFrames, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxMulticastFrames, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_RxMulticastBytes, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint32Field(EfmBondingPortPerformanceMonitoringHistoryDataPart2_TxMulticastBytes, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

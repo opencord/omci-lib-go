@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,10 +79,20 @@ type ThresholdData1 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const ThresholdData1_ThresholdValue1 = "ThresholdValue1"
+const ThresholdData1_ThresholdValue2 = "ThresholdValue2"
+const ThresholdData1_ThresholdValue3 = "ThresholdValue3"
+const ThresholdData1_ThresholdValue4 = "ThresholdValue4"
+const ThresholdData1_ThresholdValue5 = "ThresholdValue5"
+const ThresholdData1_ThresholdValue6 = "ThresholdValue6"
+const ThresholdData1_ThresholdValue7 = "ThresholdValue7"
+
 func init() {
 	thresholddata1BME = &ManagedEntityDefinition{
 		Name:    "ThresholdData1",
-		ClassID: 273,
+		ClassID: ThresholdData1ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -91,14 +101,14 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfe00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: Uint32Field("ThresholdValue1", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: Uint32Field("ThresholdValue2", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: Uint32Field("ThresholdValue3", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4: Uint32Field("ThresholdValue4", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5: Uint32Field("ThresholdValue5", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6: Uint32Field("ThresholdValue6", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7: Uint32Field("ThresholdValue7", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: Uint32Field(ThresholdData1_ThresholdValue1, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: Uint32Field(ThresholdData1_ThresholdValue2, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: Uint32Field(ThresholdData1_ThresholdValue3, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4: Uint32Field(ThresholdData1_ThresholdValue4, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5: Uint32Field(ThresholdData1_ThresholdValue5, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6: Uint32Field(ThresholdData1_ThresholdValue6, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7: Uint32Field(ThresholdData1_ThresholdValue7, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

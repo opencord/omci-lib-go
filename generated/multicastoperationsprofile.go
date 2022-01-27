@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -232,10 +232,29 @@ type MulticastOperationsProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const MulticastOperationsProfile_IgmpVersion = "IgmpVersion"
+const MulticastOperationsProfile_IgmpFunction = "IgmpFunction"
+const MulticastOperationsProfile_ImmediateLeave = "ImmediateLeave"
+const MulticastOperationsProfile_UpstreamIgmpTci = "UpstreamIgmpTci"
+const MulticastOperationsProfile_UpstreamIgmpTagControl = "UpstreamIgmpTagControl"
+const MulticastOperationsProfile_UpstreamIgmpRate = "UpstreamIgmpRate"
+const MulticastOperationsProfile_DynamicAccessControlListTable = "DynamicAccessControlListTable"
+const MulticastOperationsProfile_StaticAccessControlListTable = "StaticAccessControlListTable"
+const MulticastOperationsProfile_LostGroupsListTable = "LostGroupsListTable"
+const MulticastOperationsProfile_Robustness = "Robustness"
+const MulticastOperationsProfile_QuerierIpAddress = "QuerierIpAddress"
+const MulticastOperationsProfile_QueryInterval = "QueryInterval"
+const MulticastOperationsProfile_QueryMaxResponseTime = "QueryMaxResponseTime"
+const MulticastOperationsProfile_LastMemberQueryInterval = "LastMemberQueryInterval"
+const MulticastOperationsProfile_UnauthorizedJoinRequestBehaviour = "UnauthorizedJoinRequestBehaviour"
+const MulticastOperationsProfile_DownstreamIgmpAndMulticastTci = "DownstreamIgmpAndMulticastTci"
+
 func init() {
 	multicastoperationsprofileBME = &ManagedEntityDefinition{
 		Name:    "MulticastOperationsProfile",
-		ClassID: 309,
+		ClassID: MulticastOperationsProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -246,29 +265,26 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IgmpVersion", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  ByteField("IgmpFunction", EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  ByteField("ImmediateLeave", EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  Uint16Field("UpstreamIgmpTci", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
-			5:  ByteField("UpstreamIgmpTagControl", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
-			6:  Uint32Field("UpstreamIgmpRate", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
-			7:  TableField("DynamicAccessControlListTable", TableAttributeType, 0x0200, TableInfo{nil, 24}, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  TableField("StaticAccessControlListTable", TableAttributeType, 0x0100, TableInfo{nil, 24}, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  TableField("LostGroupsListTable", TableAttributeType, 0x0080, TableInfo{nil, 10}, mapset.NewSetWith(Read), false, true, false, 9),
-			10: ByteField("Robustness", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 10),
-			11: Uint32Field("QuerierIpAddress", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 11),
-			12: Uint32Field("QueryInterval", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 12),
-			13: Uint32Field("QueryMaxResponseTime", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
-			14: Uint32Field("LastMemberQueryInterval", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
-			15: ByteField("UnauthorizedJoinRequestBehaviour", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
-			16: MultiByteField("DownstreamIgmpAndMulticastTci", OctetsAttributeType, 0x0001, 3, toOctets("AAAA"), mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(MulticastOperationsProfile_IgmpVersion, EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField(MulticastOperationsProfile_IgmpFunction, EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  ByteField(MulticastOperationsProfile_ImmediateLeave, EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint16Field(MulticastOperationsProfile_UpstreamIgmpTci, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
+			5:  ByteField(MulticastOperationsProfile_UpstreamIgmpTagControl, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
+			6:  Uint32Field(MulticastOperationsProfile_UpstreamIgmpRate, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
+			7:  TableField(MulticastOperationsProfile_DynamicAccessControlListTable, TableAttributeType, 0x0200, TableInfo{nil, 24}, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  TableField(MulticastOperationsProfile_StaticAccessControlListTable, TableAttributeType, 0x0100, TableInfo{nil, 24}, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  TableField(MulticastOperationsProfile_LostGroupsListTable, TableAttributeType, 0x0080, TableInfo{nil, 10}, mapset.NewSetWith(Read), false, true, false, 9),
+			10: ByteField(MulticastOperationsProfile_Robustness, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 10),
+			11: Uint32Field(MulticastOperationsProfile_QuerierIpAddress, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 11),
+			12: Uint32Field(MulticastOperationsProfile_QueryInterval, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 12),
+			13: Uint32Field(MulticastOperationsProfile_QueryMaxResponseTime, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
+			14: Uint32Field(MulticastOperationsProfile_LastMemberQueryInterval, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
+			15: ByteField(MulticastOperationsProfile_UnauthorizedJoinRequestBehaviour, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
+			16: MultiByteField(MulticastOperationsProfile_DownstreamIgmpAndMulticastTci, OctetsAttributeType, 0x0001, 3, toOctets("AAAA"), mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,
-		Alarms: AlarmMap{
-			0: "Lost multicast group",
-		},
 	}
 }
 

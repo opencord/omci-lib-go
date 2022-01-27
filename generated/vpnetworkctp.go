@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,10 +78,20 @@ type VpNetworkCtp struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const VpNetworkCtp_VpiValue = "VpiValue"
+const VpNetworkCtp_UniPointer = "UniPointer"
+const VpNetworkCtp_Direction = "Direction"
+const VpNetworkCtp_Deprecated1 = "Deprecated1"
+const VpNetworkCtp_Deprecated2 = "Deprecated2"
+const VpNetworkCtp_Deprecated3 = "Deprecated3"
+const VpNetworkCtp_Deprecated4 = "Deprecated4"
+
 func init() {
 	vpnetworkctpBME = &ManagedEntityDefinition{
 		Name:    "VpNetworkCtp",
-		ClassID: 269,
+		ClassID: VpNetworkCtpClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -90,14 +100,14 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfe00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: Uint16Field("VpiValue", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: Uint16Field("UniPointer", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: ByteField("Direction", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4: Uint16Field("Deprecated1", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, true, 4),
-			5: Uint16Field("Deprecated2", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, true, 5),
-			6: Uint16Field("Deprecated3", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, true, 6),
-			7: ByteField("Deprecated4", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, true, 7),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: Uint16Field(VpNetworkCtp_VpiValue, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: Uint16Field(VpNetworkCtp_UniPointer, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: ByteField(VpNetworkCtp_Direction, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4: Uint16Field(VpNetworkCtp_Deprecated1, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, true, 4),
+			5: Uint16Field(VpNetworkCtp_Deprecated2, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, true, 5),
+			6: Uint16Field(VpNetworkCtp_Deprecated3, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, true, 6),
+			7: ByteField(VpNetworkCtp_Deprecated4, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, true, 7),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

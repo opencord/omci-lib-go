@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -135,10 +135,20 @@ type Dot1AgMaintenanceAssociation struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Dot1AgMaintenanceAssociation_MdPointer = "MdPointer"
+const Dot1AgMaintenanceAssociation_ShortMaNameFormat = "ShortMaNameFormat"
+const Dot1AgMaintenanceAssociation_ShortMaName1 = "ShortMaName1"
+const Dot1AgMaintenanceAssociation_ShortMaName2 = "ShortMaName2"
+const Dot1AgMaintenanceAssociation_ContinuityCheckMessageCcmInterval = "ContinuityCheckMessageCcmInterval"
+const Dot1AgMaintenanceAssociation_AssociatedVlans = "AssociatedVlans"
+const Dot1AgMaintenanceAssociation_MhfCreation = "MhfCreation"
+
 func init() {
 	dot1agmaintenanceassociationBME = &ManagedEntityDefinition{
 		Name:    "Dot1AgMaintenanceAssociation",
-		ClassID: 300,
+		ClassID: Dot1AgMaintenanceAssociationClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -147,14 +157,14 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfe00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: Uint16Field("MdPointer", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: ByteField("ShortMaNameFormat", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: MultiByteField("ShortMaName1", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4: MultiByteField("ShortMaName2", OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5: ByteField("ContinuityCheckMessageCcmInterval", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6: Uint16Field("AssociatedVlans", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7: ByteField("MhfCreation", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: Uint16Field(Dot1AgMaintenanceAssociation_MdPointer, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: ByteField(Dot1AgMaintenanceAssociation_ShortMaNameFormat, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: MultiByteField(Dot1AgMaintenanceAssociation_ShortMaName1, OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4: MultiByteField(Dot1AgMaintenanceAssociation_ShortMaName2, OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5: ByteField(Dot1AgMaintenanceAssociation_ContinuityCheckMessageCcmInterval, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6: Uint16Field(Dot1AgMaintenanceAssociation_AssociatedVlans, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7: ByteField(Dot1AgMaintenanceAssociation_MhfCreation, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

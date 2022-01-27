@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -132,26 +132,38 @@ type AttributeMe struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const AttributeMe_Name = "Name"
+const AttributeMe_Size = "Size"
+const AttributeMe_Access = "Access"
+const AttributeMe_Format = "Format"
+const AttributeMe_LowerLimit = "LowerLimit"
+const AttributeMe_UpperLimit = "UpperLimit"
+const AttributeMe_BitField = "BitField"
+const AttributeMe_CodePointsTable = "CodePointsTable"
+const AttributeMe_Support = "Support"
+
 func init() {
 	attributemeBME = &ManagedEntityDefinition{
 		Name:    "AttributeMe",
-		ClassID: 289,
+		ClassID: AttributeMeClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			GetNext,
 		),
 		AllowedAttributeMask: 0xff80,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: MultiByteField("Name", OctetsAttributeType, 0x8000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 1),
-			2: Uint16Field("Size", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3: ByteField("Access", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4: ByteField("Format", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5: Uint32Field("LowerLimit", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6: Uint32Field("UpperLimit", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7: Uint32Field("BitField", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8: TableField("CodePointsTable", TableAttributeType, 0x0100, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, false, false, 8),
-			9: ByteField("Support", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: MultiByteField(AttributeMe_Name, OctetsAttributeType, 0x8000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 1),
+			2: Uint16Field(AttributeMe_Size, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3: ByteField(AttributeMe_Access, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4: ByteField(AttributeMe_Format, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5: Uint32Field(AttributeMe_LowerLimit, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6: Uint32Field(AttributeMe_UpperLimit, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7: Uint32Field(AttributeMe_BitField, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8: TableField(AttributeMe_CodePointsTable, TableAttributeType, 0x0100, TableInfo{nil, 2}, mapset.NewSetWith(Read), false, false, false, 8),
+			9: ByteField(AttributeMe_Support, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

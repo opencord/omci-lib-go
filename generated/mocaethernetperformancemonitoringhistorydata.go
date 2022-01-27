@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -102,10 +102,29 @@ type MocaEthernetPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const MocaEthernetPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const MocaEthernetPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const MocaEthernetPerformanceMonitoringHistoryData_IncomingUnicastPackets = "IncomingUnicastPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_IncomingDiscardedPackets = "IncomingDiscardedPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_IncomingErroredPackets = "IncomingErroredPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_IncomingUnknownPackets = "IncomingUnknownPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_IncomingMulticastPackets = "IncomingMulticastPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_IncomingBroadcastPackets = "IncomingBroadcastPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_IncomingOctets = "IncomingOctets"
+const MocaEthernetPerformanceMonitoringHistoryData_OutgoingUnicastPackets = "OutgoingUnicastPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_OutgoingDiscardedPackets = "OutgoingDiscardedPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_OutgoingErroredPackets = "OutgoingErroredPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_OutgoingUnknownPackets = "OutgoingUnknownPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_OutgoingMulticastPackets = "OutgoingMulticastPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_OutgoingBroadcastPackets = "OutgoingBroadcastPackets"
+const MocaEthernetPerformanceMonitoringHistoryData_OutgoingOctets = "OutgoingOctets"
+
 func init() {
 	mocaethernetperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "MocaEthernetPerformanceMonitoringHistoryData",
-		ClassID: 163,
+		ClassID: MocaEthernetPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -114,23 +133,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("IncomingUnicastPackets", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
-			4:  Uint32Field("IncomingDiscardedPackets", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
-			5:  Uint32Field("IncomingErroredPackets", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
-			6:  Uint32Field("IncomingUnknownPackets", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
-			7:  Uint32Field("IncomingMulticastPackets", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
-			8:  Uint32Field("IncomingBroadcastPackets", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
-			9:  Uint32Field("IncomingOctets", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
-			10: Uint32Field("OutgoingUnicastPackets", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: Uint32Field("OutgoingDiscardedPackets", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
-			12: Uint32Field("OutgoingErroredPackets", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
-			13: Uint32Field("OutgoingUnknownPackets", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
-			14: Uint32Field("OutgoingMulticastPackets", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
-			15: Uint32Field("OutgoingBroadcastPackets", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
-			16: Uint32Field("OutgoingOctets", CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(MocaEthernetPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(MocaEthernetPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_IncomingUnicastPackets, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
+			4:  Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_IncomingDiscardedPackets, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
+			5:  Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_IncomingErroredPackets, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
+			6:  Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_IncomingUnknownPackets, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
+			7:  Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_IncomingMulticastPackets, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
+			8:  Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_IncomingBroadcastPackets, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
+			9:  Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_IncomingOctets, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_OutgoingUnicastPackets, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_OutgoingDiscardedPackets, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			12: Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_OutgoingErroredPackets, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
+			13: Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_OutgoingUnknownPackets, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
+			14: Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_OutgoingMulticastPackets, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
+			15: Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_OutgoingBroadcastPackets, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
+			16: Uint32Field(MocaEthernetPerformanceMonitoringHistoryData_OutgoingOctets, CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, true, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

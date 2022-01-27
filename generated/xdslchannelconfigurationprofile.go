@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -170,10 +170,28 @@ type XdslChannelConfigurationProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslChannelConfigurationProfile_MinimumDataRate = "MinimumDataRate"
+const XdslChannelConfigurationProfile_MaximumDataRate = "MaximumDataRate"
+const XdslChannelConfigurationProfile_RateAdaptationRatio = "RateAdaptationRatio"
+const XdslChannelConfigurationProfile_MaximumInterleavingDelay = "MaximumInterleavingDelay"
+const XdslChannelConfigurationProfile_DataRateThresholdUpshift = "DataRateThresholdUpshift"
+const XdslChannelConfigurationProfile_DataRateThresholdDownshift = "DataRateThresholdDownshift"
+const XdslChannelConfigurationProfile_MinimumReservedDataRate = "MinimumReservedDataRate"
+const XdslChannelConfigurationProfile_MinimumDataRateInLowPowerState = "MinimumDataRateInLowPowerState"
+const XdslChannelConfigurationProfile_MinimumImpulseNoiseProtection = "MinimumImpulseNoiseProtection"
+const XdslChannelConfigurationProfile_MaximumBitErrorRatio = "MaximumBitErrorRatio"
+const XdslChannelConfigurationProfile_MinimumImpulseNoiseProtection8Khz = "MinimumImpulseNoiseProtection8Khz"
+const XdslChannelConfigurationProfile_MaximumDelayVariation = "MaximumDelayVariation"
+const XdslChannelConfigurationProfile_ChannelInitializationPolicySelection = "ChannelInitializationPolicySelection"
+const XdslChannelConfigurationProfile_MinimumSosBitRateDownstream = "MinimumSosBitRateDownstream"
+const XdslChannelConfigurationProfile_MinimumSosBitRateUpstream = "MinimumSosBitRateUpstream"
+
 func init() {
 	xdslchannelconfigurationprofileBME = &ManagedEntityDefinition{
 		Name:    "XdslChannelConfigurationProfile",
-		ClassID: 107,
+		ClassID: XdslChannelConfigurationProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -182,22 +200,22 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  Uint32Field("MinimumDataRate", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  Uint32Field("MaximumDataRate", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  ByteField("RateAdaptationRatio", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
-			4:  ByteField("MaximumInterleavingDelay", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  Uint32Field("DataRateThresholdUpshift", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6:  Uint32Field("DataRateThresholdDownshift", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7:  Uint32Field("MinimumReservedDataRate", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
-			8:  Uint32Field("MinimumDataRateInLowPowerState", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  ByteField("MinimumImpulseNoiseProtection", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
-			10: ByteField("MaximumBitErrorRatio", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
-			11: ByteField("MinimumImpulseNoiseProtection8Khz", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
-			12: ByteField("MaximumDelayVariation", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
-			13: ByteField("ChannelInitializationPolicySelection", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
-			14: Uint32Field("MinimumSosBitRateDownstream", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
-			15: Uint32Field("MinimumSosBitRateUpstream", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint32Field(XdslChannelConfigurationProfile_MinimumDataRate, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  Uint32Field(XdslChannelConfigurationProfile_MaximumDataRate, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  ByteField(XdslChannelConfigurationProfile_RateAdaptationRatio, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
+			4:  ByteField(XdslChannelConfigurationProfile_MaximumInterleavingDelay, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  Uint32Field(XdslChannelConfigurationProfile_DataRateThresholdUpshift, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  Uint32Field(XdslChannelConfigurationProfile_DataRateThresholdDownshift, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  Uint32Field(XdslChannelConfigurationProfile_MinimumReservedDataRate, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
+			8:  Uint32Field(XdslChannelConfigurationProfile_MinimumDataRateInLowPowerState, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  ByteField(XdslChannelConfigurationProfile_MinimumImpulseNoiseProtection, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
+			10: ByteField(XdslChannelConfigurationProfile_MaximumBitErrorRatio, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
+			11: ByteField(XdslChannelConfigurationProfile_MinimumImpulseNoiseProtection8Khz, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
+			12: ByteField(XdslChannelConfigurationProfile_MaximumDelayVariation, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, false, false, 12),
+			13: ByteField(XdslChannelConfigurationProfile_ChannelInitializationPolicySelection, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: Uint32Field(XdslChannelConfigurationProfile_MinimumSosBitRateDownstream, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
+			15: Uint32Field(XdslChannelConfigurationProfile_MinimumSosBitRateUpstream, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

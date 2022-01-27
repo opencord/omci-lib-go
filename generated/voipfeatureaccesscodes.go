@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -91,10 +91,25 @@ type VoipFeatureAccessCodes struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const VoipFeatureAccessCodes_CancelCallWaiting = "CancelCallWaiting"
+const VoipFeatureAccessCodes_CallHold = "CallHold"
+const VoipFeatureAccessCodes_CallPark = "CallPark"
+const VoipFeatureAccessCodes_CallerIdActivate = "CallerIdActivate"
+const VoipFeatureAccessCodes_CallerIdDeactivate = "CallerIdDeactivate"
+const VoipFeatureAccessCodes_DoNotDisturbActivation = "DoNotDisturbActivation"
+const VoipFeatureAccessCodes_DoNotDisturbDeactivation = "DoNotDisturbDeactivation"
+const VoipFeatureAccessCodes_DoNotDisturbPinChange = "DoNotDisturbPinChange"
+const VoipFeatureAccessCodes_EmergencyServiceNumber = "EmergencyServiceNumber"
+const VoipFeatureAccessCodes_IntercomService = "IntercomService"
+const VoipFeatureAccessCodes_UnattendedBlindCallTransfer = "UnattendedBlindCallTransfer"
+const VoipFeatureAccessCodes_AttendedCallTransfer = "AttendedCallTransfer"
+
 func init() {
 	voipfeatureaccesscodesBME = &ManagedEntityDefinition{
 		Name:    "VoipFeatureAccessCodes",
-		ClassID: 147,
+		ClassID: VoipFeatureAccessCodesClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -103,19 +118,19 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  MultiByteField("CancelCallWaiting", OctetsAttributeType, 0x8000, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 1),
-			2:  MultiByteField("CallHold", OctetsAttributeType, 0x4000, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 2),
-			3:  MultiByteField("CallPark", OctetsAttributeType, 0x2000, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 3),
-			4:  MultiByteField("CallerIdActivate", OctetsAttributeType, 0x1000, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5:  MultiByteField("CallerIdDeactivate", OctetsAttributeType, 0x0800, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 5),
-			6:  MultiByteField("DoNotDisturbActivation", OctetsAttributeType, 0x0400, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 6),
-			7:  MultiByteField("DoNotDisturbDeactivation", OctetsAttributeType, 0x0200, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 7),
-			8:  MultiByteField("DoNotDisturbPinChange", OctetsAttributeType, 0x0100, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 8),
-			9:  MultiByteField("EmergencyServiceNumber", OctetsAttributeType, 0x0080, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: MultiByteField("IntercomService", OctetsAttributeType, 0x0040, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 10),
-			11: MultiByteField("UnattendedBlindCallTransfer", OctetsAttributeType, 0x0020, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: MultiByteField("AttendedCallTransfer", OctetsAttributeType, 0x0010, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 12),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  MultiByteField(VoipFeatureAccessCodes_CancelCallWaiting, OctetsAttributeType, 0x8000, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 1),
+			2:  MultiByteField(VoipFeatureAccessCodes_CallHold, OctetsAttributeType, 0x4000, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 2),
+			3:  MultiByteField(VoipFeatureAccessCodes_CallPark, OctetsAttributeType, 0x2000, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 3),
+			4:  MultiByteField(VoipFeatureAccessCodes_CallerIdActivate, OctetsAttributeType, 0x1000, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  MultiByteField(VoipFeatureAccessCodes_CallerIdDeactivate, OctetsAttributeType, 0x0800, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 5),
+			6:  MultiByteField(VoipFeatureAccessCodes_DoNotDisturbActivation, OctetsAttributeType, 0x0400, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7:  MultiByteField(VoipFeatureAccessCodes_DoNotDisturbDeactivation, OctetsAttributeType, 0x0200, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8:  MultiByteField(VoipFeatureAccessCodes_DoNotDisturbPinChange, OctetsAttributeType, 0x0100, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  MultiByteField(VoipFeatureAccessCodes_EmergencyServiceNumber, OctetsAttributeType, 0x0080, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: MultiByteField(VoipFeatureAccessCodes_IntercomService, OctetsAttributeType, 0x0040, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: MultiByteField(VoipFeatureAccessCodes_UnattendedBlindCallTransfer, OctetsAttributeType, 0x0020, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: MultiByteField(VoipFeatureAccessCodes_AttendedCallTransfer, OctetsAttributeType, 0x0010, 5, toOctets("AAAAAAA="), mapset.NewSetWith(Read, Write), false, true, false, 12),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

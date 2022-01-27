@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -198,10 +198,29 @@ type IpHostConfigData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const IpHostConfigData_IpOptions = "IpOptions"
+const IpHostConfigData_MacAddress = "MacAddress"
+const IpHostConfigData_OnuIdentifier = "OnuIdentifier"
+const IpHostConfigData_IpAddress = "IpAddress"
+const IpHostConfigData_Mask = "Mask"
+const IpHostConfigData_Gateway = "Gateway"
+const IpHostConfigData_PrimaryDns = "PrimaryDns"
+const IpHostConfigData_SecondaryDns = "SecondaryDns"
+const IpHostConfigData_CurrentAddress = "CurrentAddress"
+const IpHostConfigData_CurrentMask = "CurrentMask"
+const IpHostConfigData_CurrentGateway = "CurrentGateway"
+const IpHostConfigData_CurrentPrimaryDns = "CurrentPrimaryDns"
+const IpHostConfigData_CurrentSecondaryDns = "CurrentSecondaryDns"
+const IpHostConfigData_DomainName = "DomainName"
+const IpHostConfigData_HostName = "HostName"
+const IpHostConfigData_RelayAgentOptions = "RelayAgentOptions"
+
 func init() {
 	iphostconfigdataBME = &ManagedEntityDefinition{
 		Name:    "IpHostConfigData",
-		ClassID: 134,
+		ClassID: IpHostConfigDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
@@ -209,23 +228,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("IpOptions", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  MultiByteField("MacAddress", OctetsAttributeType, 0x4000, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read), false, false, false, 2),
-			3:  MultiByteField("OnuIdentifier", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  Uint32Field("IpAddress", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5:  Uint32Field("Mask", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  Uint32Field("Gateway", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  Uint32Field("PrimaryDns", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  Uint32Field("SecondaryDns", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  Uint32Field("CurrentAddress", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), true, true, false, 9),
-			10: Uint32Field("CurrentMask", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), true, true, false, 10),
-			11: Uint32Field("CurrentGateway", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), true, true, false, 11),
-			12: Uint32Field("CurrentPrimaryDns", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), true, true, false, 12),
-			13: Uint32Field("CurrentSecondaryDns", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), true, true, false, 13),
-			14: MultiByteField("DomainName", OctetsAttributeType, 0x0004, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), true, false, false, 14),
-			15: MultiByteField("HostName", OctetsAttributeType, 0x0002, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), true, false, false, 15),
-			16: Uint16Field("RelayAgentOptions", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), true, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(IpHostConfigData_IpOptions, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  MultiByteField(IpHostConfigData_MacAddress, OctetsAttributeType, 0x4000, 6, toOctets("AAAAAAAA"), mapset.NewSetWith(Read), false, false, false, 2),
+			3:  MultiByteField(IpHostConfigData_OnuIdentifier, OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  Uint32Field(IpHostConfigData_IpAddress, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  Uint32Field(IpHostConfigData_Mask, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  Uint32Field(IpHostConfigData_Gateway, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  Uint32Field(IpHostConfigData_PrimaryDns, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  Uint32Field(IpHostConfigData_SecondaryDns, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  Uint32Field(IpHostConfigData_CurrentAddress, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), true, true, false, 9),
+			10: Uint32Field(IpHostConfigData_CurrentMask, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), true, true, false, 10),
+			11: Uint32Field(IpHostConfigData_CurrentGateway, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), true, true, false, 11),
+			12: Uint32Field(IpHostConfigData_CurrentPrimaryDns, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), true, true, false, 12),
+			13: Uint32Field(IpHostConfigData_CurrentSecondaryDns, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), true, true, false, 13),
+			14: MultiByteField(IpHostConfigData_DomainName, OctetsAttributeType, 0x0004, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), true, false, false, 14),
+			15: MultiByteField(IpHostConfigData_HostName, OctetsAttributeType, 0x0002, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), true, false, false, 15),
+			16: Uint16Field(IpHostConfigData_RelayAgentOptions, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read, Write), true, true, false, 16),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

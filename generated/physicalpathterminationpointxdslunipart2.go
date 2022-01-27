@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,25 +79,36 @@ type PhysicalPathTerminationPointXdslUniPart2 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel0Downstream = "XdslChannelConfigurationProfileForBearerChannel0Downstream"
+const PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel1Downstream = "XdslChannelConfigurationProfileForBearerChannel1Downstream"
+const PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel2Downstream = "XdslChannelConfigurationProfileForBearerChannel2Downstream"
+const PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel3Downstream = "XdslChannelConfigurationProfileForBearerChannel3Downstream"
+const PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel0Upstream = "XdslChannelConfigurationProfileForBearerChannel0Upstream"
+const PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel1Upstream = "XdslChannelConfigurationProfileForBearerChannel1Upstream"
+const PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel2Upstream = "XdslChannelConfigurationProfileForBearerChannel2Upstream"
+const PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel3Upstream = "XdslChannelConfigurationProfileForBearerChannel3Upstream"
+
 func init() {
 	physicalpathterminationpointxdslunipart2BME = &ManagedEntityDefinition{
 		Name:    "PhysicalPathTerminationPointXdslUniPart2",
-		ClassID: 99,
+		ClassID: PhysicalPathTerminationPointXdslUniPart2ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xff00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: Uint16Field("XdslChannelConfigurationProfileForBearerChannel0Downstream", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, true, false, 1),
-			2: Uint16Field("XdslChannelConfigurationProfileForBearerChannel1Downstream", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, false, 2),
-			3: Uint16Field("XdslChannelConfigurationProfileForBearerChannel2Downstream", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
-			4: Uint16Field("XdslChannelConfigurationProfileForBearerChannel3Downstream", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5: Uint16Field("XdslChannelConfigurationProfileForBearerChannel0Upstream", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
-			6: Uint16Field("XdslChannelConfigurationProfileForBearerChannel1Upstream", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
-			7: Uint16Field("XdslChannelConfigurationProfileForBearerChannel2Upstream", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
-			8: Uint16Field("XdslChannelConfigurationProfileForBearerChannel3Upstream", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: Uint16Field(PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel0Downstream, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, true, false, 1),
+			2: Uint16Field(PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel1Downstream, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, false, 2),
+			3: Uint16Field(PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel2Downstream, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
+			4: Uint16Field(PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel3Downstream, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5: Uint16Field(PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel0Upstream, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
+			6: Uint16Field(PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel1Upstream, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7: Uint16Field(PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel2Upstream, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8: Uint16Field(PhysicalPathTerminationPointXdslUniPart2_XdslChannelConfigurationProfileForBearerChannel3Upstream, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

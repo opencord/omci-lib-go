@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -155,10 +155,29 @@ type AniG struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const AniG_SrIndication = "SrIndication"
+const AniG_TotalTcontNumber = "TotalTcontNumber"
+const AniG_GemBlockLength = "GemBlockLength"
+const AniG_PiggybackDbaReporting = "PiggybackDbaReporting"
+const AniG_Deprecated = "Deprecated"
+const AniG_SignalFailThreshold = "SignalFailThreshold"
+const AniG_SignalDegradeThreshold = "SignalDegradeThreshold"
+const AniG_Arc = "Arc"
+const AniG_ArcInterval = "ArcInterval"
+const AniG_OpticalSignalLevel = "OpticalSignalLevel"
+const AniG_LowerOpticalThreshold = "LowerOpticalThreshold"
+const AniG_UpperOpticalThreshold = "UpperOpticalThreshold"
+const AniG_OnuResponseTime = "OnuResponseTime"
+const AniG_TransmitOpticalLevel = "TransmitOpticalLevel"
+const AniG_LowerTransmitPowerThreshold = "LowerTransmitPowerThreshold"
+const AniG_UpperTransmitPowerThreshold = "UpperTransmitPowerThreshold"
+
 func init() {
 	anigBME = &ManagedEntityDefinition{
 		Name:    "AniG",
-		ClassID: 263,
+		ClassID: AniGClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
@@ -166,23 +185,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("SrIndication", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("TotalTcontNumber", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3:  Uint16Field("GemBlockLength", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  ByteField("PiggybackDbaReporting", EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  ByteField("Deprecated", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, true, 5),
-			6:  ByteField("SignalFailThreshold", UnsignedIntegerAttributeType, 0x0400, 5, mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  ByteField("SignalDegradeThreshold", UnsignedIntegerAttributeType, 0x0200, 9, mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  ByteField("Arc", EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), true, true, false, 8),
-			9:  ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: Uint16Field("OpticalSignalLevel", SignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: ByteField("LowerOpticalThreshold", SignedIntegerAttributeType, 0x0020, 255, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: ByteField("UpperOpticalThreshold", SignedIntegerAttributeType, 0x0010, 255, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: Uint16Field("OnuResponseTime", UnsignedIntegerAttributeType, 0x0008, 35000, mapset.NewSetWith(Read), false, true, false, 13),
-			14: Uint16Field("TransmitOpticalLevel", SignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
-			15: ByteField("LowerTransmitPowerThreshold", SignedIntegerAttributeType, 0x0002, 129, mapset.NewSetWith(Read, Write), false, true, false, 15),
-			16: ByteField("UpperTransmitPowerThreshold", SignedIntegerAttributeType, 0x0001, 129, mapset.NewSetWith(Read, Write), false, true, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(AniG_SrIndication, EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(AniG_TotalTcontNumber, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  Uint16Field(AniG_GemBlockLength, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  ByteField(AniG_PiggybackDbaReporting, EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  ByteField(AniG_Deprecated, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, true, 5),
+			6:  ByteField(AniG_SignalFailThreshold, UnsignedIntegerAttributeType, 0x0400, 5, mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  ByteField(AniG_SignalDegradeThreshold, UnsignedIntegerAttributeType, 0x0200, 9, mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField(AniG_Arc, EnumerationAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), true, true, false, 8),
+			9:  ByteField(AniG_ArcInterval, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: Uint16Field(AniG_OpticalSignalLevel, SignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: ByteField(AniG_LowerOpticalThreshold, SignedIntegerAttributeType, 0x0020, 255, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: ByteField(AniG_UpperOpticalThreshold, SignedIntegerAttributeType, 0x0010, 255, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: Uint16Field(AniG_OnuResponseTime, UnsignedIntegerAttributeType, 0x0008, 35000, mapset.NewSetWith(Read), false, true, false, 13),
+			14: Uint16Field(AniG_TransmitOpticalLevel, SignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
+			15: ByteField(AniG_LowerTransmitPowerThreshold, SignedIntegerAttributeType, 0x0002, 129, mapset.NewSetWith(Read, Write), false, true, false, 15),
+			16: ByteField(AniG_UpperTransmitPowerThreshold, SignedIntegerAttributeType, 0x0001, 129, mapset.NewSetWith(Read, Write), false, true, false, 16),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

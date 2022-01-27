@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -110,27 +110,40 @@ type Dot1XConfigurationProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Dot1XConfigurationProfile_CircuitIdPrefix = "CircuitIdPrefix"
+const Dot1XConfigurationProfile_FallbackPolicy = "FallbackPolicy"
+const Dot1XConfigurationProfile_AuthServer1 = "AuthServer1"
+const Dot1XConfigurationProfile_SharedSecretAuth1 = "SharedSecretAuth1"
+const Dot1XConfigurationProfile_AuthServer2 = "AuthServer2"
+const Dot1XConfigurationProfile_SharedSecretAuth2 = "SharedSecretAuth2"
+const Dot1XConfigurationProfile_AuthServer3 = "AuthServer3"
+const Dot1XConfigurationProfile_SharedSecretAuth3 = "SharedSecretAuth3"
+const Dot1XConfigurationProfile_OltProxyAddress = "OltProxyAddress"
+const Dot1XConfigurationProfile_CallingStationIdFormat = "CallingStationIdFormat"
+
 func init() {
 	dot1xconfigurationprofileBME = &ManagedEntityDefinition{
 		Name:    "Dot1XConfigurationProfile",
-		ClassID: 291,
+		ClassID: Dot1XConfigurationProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  Uint16Field("CircuitIdPrefix", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("FallbackPolicy", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3:  Uint16Field("AuthServer1", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  MultiByteField("SharedSecretAuth1", OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5:  Uint16Field("AuthServer2", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
-			6:  MultiByteField("SharedSecretAuth2", OctetsAttributeType, 0x0400, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 6),
-			7:  Uint16Field("AuthServer3", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
-			8:  MultiByteField("SharedSecretAuth3", OctetsAttributeType, 0x0100, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 8),
-			9:  Uint32Field("OltProxyAddress", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: Uint16Field("CallingStationIdFormat", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  Uint16Field(Dot1XConfigurationProfile_CircuitIdPrefix, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(Dot1XConfigurationProfile_FallbackPolicy, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3:  Uint16Field(Dot1XConfigurationProfile_AuthServer1, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  MultiByteField(Dot1XConfigurationProfile_SharedSecretAuth1, OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  Uint16Field(Dot1XConfigurationProfile_AuthServer2, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
+			6:  MultiByteField(Dot1XConfigurationProfile_SharedSecretAuth2, OctetsAttributeType, 0x0400, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7:  Uint16Field(Dot1XConfigurationProfile_AuthServer3, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8:  MultiByteField(Dot1XConfigurationProfile_SharedSecretAuth3, OctetsAttributeType, 0x0100, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  Uint32Field(Dot1XConfigurationProfile_OltProxyAddress, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: Uint16Field(Dot1XConfigurationProfile_CallingStationIdFormat, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

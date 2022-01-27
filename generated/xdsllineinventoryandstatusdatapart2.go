@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -217,32 +217,51 @@ type XdslLineInventoryAndStatusDataPart2 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslLineInventoryAndStatusDataPart2_XdslTransmissionSystem = "XdslTransmissionSystem"
+const XdslLineInventoryAndStatusDataPart2_LinePowerManagementState = "LinePowerManagementState"
+const XdslLineInventoryAndStatusDataPart2_DownstreamLineAttenuation = "DownstreamLineAttenuation"
+const XdslLineInventoryAndStatusDataPart2_UpstreamLineAttenuation = "UpstreamLineAttenuation"
+const XdslLineInventoryAndStatusDataPart2_DownstreamSignalAttenuation = "DownstreamSignalAttenuation"
+const XdslLineInventoryAndStatusDataPart2_UpstreamSignalAttenuation = "UpstreamSignalAttenuation"
+const XdslLineInventoryAndStatusDataPart2_DownstreamSnrRatioMargin = "DownstreamSnrRatioMargin"
+const XdslLineInventoryAndStatusDataPart2_UpstreamSnrMargin = "UpstreamSnrMargin"
+const XdslLineInventoryAndStatusDataPart2_DownstreamMaximumAttainableDataRate = "DownstreamMaximumAttainableDataRate"
+const XdslLineInventoryAndStatusDataPart2_UpstreamMaximumAttainableDataRate = "UpstreamMaximumAttainableDataRate"
+const XdslLineInventoryAndStatusDataPart2_DownstreamActualPowerSpectrumDensity = "DownstreamActualPowerSpectrumDensity"
+const XdslLineInventoryAndStatusDataPart2_UpstreamActualPowerSpectrumDensity = "UpstreamActualPowerSpectrumDensity"
+const XdslLineInventoryAndStatusDataPart2_DownstreamActualAggregateTransmitPower = "DownstreamActualAggregateTransmitPower"
+const XdslLineInventoryAndStatusDataPart2_UpstreamActualAggregateTransmitPower = "UpstreamActualAggregateTransmitPower"
+const XdslLineInventoryAndStatusDataPart2_InitializationLastStateTransmittedDownstream = "InitializationLastStateTransmittedDownstream"
+const XdslLineInventoryAndStatusDataPart2_InitializationLastStateTransmittedUpstream = "InitializationLastStateTransmittedUpstream"
+
 func init() {
 	xdsllineinventoryandstatusdatapart2BME = &ManagedEntityDefinition{
 		Name:    "XdslLineInventoryAndStatusDataPart2",
-		ClassID: 101,
+		ClassID: XdslLineInventoryAndStatusDataPart2ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  MultiByteField("XdslTransmissionSystem", OctetsAttributeType, 0x8000, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 1),
-			2:  ByteField("LinePowerManagementState", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3:  Uint16Field("DownstreamLineAttenuation", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint16Field("UpstreamLineAttenuation", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint16Field("DownstreamSignalAttenuation", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint16Field("UpstreamSignalAttenuation", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint16Field("DownstreamSnrRatioMargin", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint16Field("UpstreamSnrMargin", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint32Field("DownstreamMaximumAttainableDataRate", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint32Field("UpstreamMaximumAttainableDataRate", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint16Field("DownstreamActualPowerSpectrumDensity", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint16Field("UpstreamActualPowerSpectrumDensity", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint16Field("DownstreamActualAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint16Field("UpstreamActualAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: ByteField("InitializationLastStateTransmittedDownstream", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
-			16: ByteField("InitializationLastStateTransmittedUpstream", UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  MultiByteField(XdslLineInventoryAndStatusDataPart2_XdslTransmissionSystem, OctetsAttributeType, 0x8000, 7, toOctets("AAAAAAAAAA=="), mapset.NewSetWith(Read), false, false, false, 1),
+			2:  ByteField(XdslLineInventoryAndStatusDataPart2_LinePowerManagementState, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  Uint16Field(XdslLineInventoryAndStatusDataPart2_DownstreamLineAttenuation, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint16Field(XdslLineInventoryAndStatusDataPart2_UpstreamLineAttenuation, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint16Field(XdslLineInventoryAndStatusDataPart2_DownstreamSignalAttenuation, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint16Field(XdslLineInventoryAndStatusDataPart2_UpstreamSignalAttenuation, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint16Field(XdslLineInventoryAndStatusDataPart2_DownstreamSnrRatioMargin, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint16Field(XdslLineInventoryAndStatusDataPart2_UpstreamSnrMargin, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint32Field(XdslLineInventoryAndStatusDataPart2_DownstreamMaximumAttainableDataRate, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint32Field(XdslLineInventoryAndStatusDataPart2_UpstreamMaximumAttainableDataRate, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint16Field(XdslLineInventoryAndStatusDataPart2_DownstreamActualPowerSpectrumDensity, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint16Field(XdslLineInventoryAndStatusDataPart2_UpstreamActualPowerSpectrumDensity, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint16Field(XdslLineInventoryAndStatusDataPart2_DownstreamActualAggregateTransmitPower, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint16Field(XdslLineInventoryAndStatusDataPart2_UpstreamActualAggregateTransmitPower, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: ByteField(XdslLineInventoryAndStatusDataPart2_InitializationLastStateTransmittedDownstream, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
+			16: ByteField(XdslLineInventoryAndStatusDataPart2_InitializationLastStateTransmittedUpstream, UnsignedIntegerAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

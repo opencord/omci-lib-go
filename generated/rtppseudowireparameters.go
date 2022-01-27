@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -95,10 +95,19 @@ type RtpPseudowireParameters struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const RtpPseudowireParameters_ClockReference = "ClockReference"
+const RtpPseudowireParameters_RtpTimestampMode = "RtpTimestampMode"
+const RtpPseudowireParameters_Ptype = "Ptype"
+const RtpPseudowireParameters_Ssrc = "Ssrc"
+const RtpPseudowireParameters_ExpectedPtype = "ExpectedPtype"
+const RtpPseudowireParameters_ExpectedSsrc = "ExpectedSsrc"
+
 func init() {
 	rtppseudowireparametersBME = &ManagedEntityDefinition{
 		Name:    "RtpPseudowireParameters",
-		ClassID: 283,
+		ClassID: RtpPseudowireParametersClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -107,13 +116,13 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfc00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: Uint16Field("ClockReference", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: ByteField("RtpTimestampMode", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: Uint16Field("Ptype", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4: Uint64Field("Ssrc", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5: Uint16Field("ExpectedPtype", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
-			6: Uint64Field("ExpectedSsrc", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: Uint16Field(RtpPseudowireParameters_ClockReference, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: ByteField(RtpPseudowireParameters_RtpTimestampMode, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: Uint16Field(RtpPseudowireParameters_Ptype, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4: Uint64Field(RtpPseudowireParameters_Ssrc, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5: Uint16Field(RtpPseudowireParameters_ExpectedPtype, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
+			6: Uint64Field(RtpPseudowireParameters_ExpectedSsrc, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

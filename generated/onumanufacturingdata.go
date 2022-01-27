@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,11 +49,17 @@ var onumanufacturingdataBME *ManagedEntityDefinition
 //			This attribute contains the manufacturer name of this physical ONU. The preferred value is the
 //			manufacturer name string printed on the ONU itself (if present). (R) (optional) (25 bytes)
 //
-//		Serial Number Part 1, Serial Number Part 2
-//			These two attributes may be regarded as an ASCII string of up to 32 bytes whose length is a left
-//			justified manufacturer's serial number for this physical ONU. The preferred value is the
-//			manufacturer serial number string printed on the ONU itself (if present). (R) (optional)
-//			(25-bytes*2 attributes)
+//		Serial Number 1
+//			Serial number part 1, serial number part 2: These two attributes may be regarded as an ASCII
+//			string of up to 32 bytes whose length is a left justified manufacturer's serial number for this
+//			physical ONU. The preferred value is the manufacturer serial number string printed on the ONU
+//			itself (if present). (R) (optional) (25-bytes*2 attributes)
+//
+//		Serial Number 2
+//			Serial number part 1, serial number part 2: These two attributes may be regarded as an ASCII
+//			string of up to 32 bytes whose length is a left justified manufacturer's serial number for this
+//			physical ONU. The preferred value is the manufacturer serial number string printed on the ONU
+//			itself (if present). (R) (optional) (25-bytes*2 attributes)
 //
 //		Model Name
 //			This attribute contains the vendor specific model name identifier string. The preferred value is
@@ -78,22 +84,33 @@ type OnuManufacturingData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const OnuManufacturingData_ManufacturerName = "ManufacturerName"
+const OnuManufacturingData_SerialNumber1 = "SerialNumber1"
+const OnuManufacturingData_SerialNumber2 = "SerialNumber2"
+const OnuManufacturingData_ModelName = "ModelName"
+const OnuManufacturingData_ManufacturingDate = "ManufacturingDate"
+const OnuManufacturingData_HardwareRevision = "HardwareRevision"
+const OnuManufacturingData_FirmwareRevision = "FirmwareRevision"
+
 func init() {
 	onumanufacturingdataBME = &ManagedEntityDefinition{
 		Name:    "OnuManufacturingData",
-		ClassID: 456,
+		ClassID: OnuManufacturingDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
-		AllowedAttributeMask: 0xfc00,
+		AllowedAttributeMask: 0xfe00,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: MultiByteField("ManufacturerName", OctetsAttributeType, 0x8000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 1),
-			2: MultiByteField("SerialNumberPart1,SerialNumberPart2", OctetsAttributeType, 0x4000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 2),
-			3: MultiByteField("ModelName", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 3),
-			4: MultiByteField("ManufacturingDate", OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 4),
-			5: MultiByteField("HardwareRevision", OctetsAttributeType, 0x0800, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 5),
-			6: MultiByteField("FirmwareRevision", OctetsAttributeType, 0x0400, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 6),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: MultiByteField(OnuManufacturingData_ManufacturerName, OctetsAttributeType, 0x8000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 1),
+			2: MultiByteField(OnuManufacturingData_SerialNumber1, OctetsAttributeType, 0x4000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 2),
+			3: MultiByteField(OnuManufacturingData_SerialNumber2, OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 3),
+			4: MultiByteField(OnuManufacturingData_ModelName, OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 4),
+			5: MultiByteField(OnuManufacturingData_ManufacturingDate, OctetsAttributeType, 0x0800, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 5),
+			6: MultiByteField(OnuManufacturingData_HardwareRevision, OctetsAttributeType, 0x0400, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 6),
+			7: MultiByteField(OnuManufacturingData_FirmwareRevision, OctetsAttributeType, 0x0200, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read), false, true, false, 7),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

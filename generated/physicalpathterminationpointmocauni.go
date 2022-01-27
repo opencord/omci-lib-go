@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -137,31 +137,48 @@ type PhysicalPathTerminationPointMocaUni struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PhysicalPathTerminationPointMocaUni_LoopbackConfiguration = "LoopbackConfiguration"
+const PhysicalPathTerminationPointMocaUni_AdministrativeState = "AdministrativeState"
+const PhysicalPathTerminationPointMocaUni_OperationalState = "OperationalState"
+const PhysicalPathTerminationPointMocaUni_MaxFrameSize = "MaxFrameSize"
+const PhysicalPathTerminationPointMocaUni_Arc = "Arc"
+const PhysicalPathTerminationPointMocaUni_ArcInterval = "ArcInterval"
+const PhysicalPathTerminationPointMocaUni_PppoeFilter = "PppoeFilter"
+const PhysicalPathTerminationPointMocaUni_NetworkStatus = "NetworkStatus"
+const PhysicalPathTerminationPointMocaUni_Password = "Password"
+const PhysicalPathTerminationPointMocaUni_PrivacyEnabled = "PrivacyEnabled"
+const PhysicalPathTerminationPointMocaUni_MinimumBandwidthAlarmThreshold = "MinimumBandwidthAlarmThreshold"
+const PhysicalPathTerminationPointMocaUni_FrequencyMask = "FrequencyMask"
+const PhysicalPathTerminationPointMocaUni_RfChannel = "RfChannel"
+const PhysicalPathTerminationPointMocaUni_LastOperationalFrequency = "LastOperationalFrequency"
+
 func init() {
 	physicalpathterminationpointmocauniBME = &ManagedEntityDefinition{
 		Name:    "PhysicalPathTerminationPointMocaUni",
-		ClassID: 162,
+		ClassID: PhysicalPathTerminationPointMocaUniClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("LoopbackConfiguration", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, true, false, 1),
-			2:  ByteField("AdministrativeState", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3:  ByteField("OperationalState", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), true, true, false, 3),
-			4:  Uint16Field("MaxFrameSize", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5:  ByteField("Arc", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), true, true, false, 5),
-			6:  ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
-			7:  ByteField("PppoeFilter", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
-			8:  ByteField("NetworkStatus", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  MultiByteField("Password", OctetsAttributeType, 0x0080, 17, toOctets("AAAAAAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: ByteField("PrivacyEnabled", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
-			11: Uint16Field("MinimumBandwidthAlarmThreshold", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: Uint32Field("FrequencyMask", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: Uint16Field("RfChannel", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint16Field("LastOperationalFrequency", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(PhysicalPathTerminationPointMocaUni_LoopbackConfiguration, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, true, false, 1),
+			2:  ByteField(PhysicalPathTerminationPointMocaUni_AdministrativeState, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3:  ByteField(PhysicalPathTerminationPointMocaUni_OperationalState, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), true, true, false, 3),
+			4:  Uint16Field(PhysicalPathTerminationPointMocaUni_MaxFrameSize, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  ByteField(PhysicalPathTerminationPointMocaUni_Arc, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), true, true, false, 5),
+			6:  ByteField(PhysicalPathTerminationPointMocaUni_ArcInterval, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7:  ByteField(PhysicalPathTerminationPointMocaUni_PppoeFilter, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8:  ByteField(PhysicalPathTerminationPointMocaUni_NetworkStatus, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  MultiByteField(PhysicalPathTerminationPointMocaUni_Password, OctetsAttributeType, 0x0080, 17, toOctets("AAAAAAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: ByteField(PhysicalPathTerminationPointMocaUni_PrivacyEnabled, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
+			11: Uint16Field(PhysicalPathTerminationPointMocaUni_MinimumBandwidthAlarmThreshold, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: Uint32Field(PhysicalPathTerminationPointMocaUni_FrequencyMask, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: Uint16Field(PhysicalPathTerminationPointMocaUni_RfChannel, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint16Field(PhysicalPathTerminationPointMocaUni_LastOperationalFrequency, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

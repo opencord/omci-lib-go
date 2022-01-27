@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -113,27 +113,40 @@ type Dot1AgChassisManagementInfo struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Dot1AgChassisManagementInfo_ChassisIdLength = "ChassisIdLength"
+const Dot1AgChassisManagementInfo_ChassisIdSubtype = "ChassisIdSubtype"
+const Dot1AgChassisManagementInfo_ChassisIdPart1 = "ChassisIdPart1"
+const Dot1AgChassisManagementInfo_ChassisIdPart2 = "ChassisIdPart2"
+const Dot1AgChassisManagementInfo_ManagementAddressDomainLength = "ManagementAddressDomainLength"
+const Dot1AgChassisManagementInfo_ManagementAddressDomain1 = "ManagementAddressDomain1"
+const Dot1AgChassisManagementInfo_ManagementAddressDomain2 = "ManagementAddressDomain2"
+const Dot1AgChassisManagementInfo_ManagementAddressLength = "ManagementAddressLength"
+const Dot1AgChassisManagementInfo_ManagementAddress1 = "ManagementAddress1"
+const Dot1AgChassisManagementInfo_ManagementAddress2 = "ManagementAddress2"
+
 func init() {
 	dot1agchassismanagementinfoBME = &ManagedEntityDefinition{
 		Name:    "Dot1AgChassisManagementInfo",
-		ClassID: 306,
+		ClassID: Dot1AgChassisManagementInfoClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("ChassisIdLength", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("ChassisIdSubtype", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
-			3:  MultiByteField("ChassisIdPart1", OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  MultiByteField("ChassisIdPart2", OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5:  ByteField("ManagementAddressDomainLength", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  MultiByteField("ManagementAddressDomain1", OctetsAttributeType, 0x0400, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 6),
-			7:  MultiByteField("ManagementAddressDomain2", OctetsAttributeType, 0x0200, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 7),
-			8:  ByteField("ManagementAddressLength", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  MultiByteField("ManagementAddress1", OctetsAttributeType, 0x0080, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: MultiByteField("ManagementAddress2", OctetsAttributeType, 0x0040, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 10),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(Dot1AgChassisManagementInfo_ChassisIdLength, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(Dot1AgChassisManagementInfo_ChassisIdSubtype, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, false, false, 2),
+			3:  MultiByteField(Dot1AgChassisManagementInfo_ChassisIdPart1, OctetsAttributeType, 0x2000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  MultiByteField(Dot1AgChassisManagementInfo_ChassisIdPart2, OctetsAttributeType, 0x1000, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  ByteField(Dot1AgChassisManagementInfo_ManagementAddressDomainLength, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  MultiByteField(Dot1AgChassisManagementInfo_ManagementAddressDomain1, OctetsAttributeType, 0x0400, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 6),
+			7:  MultiByteField(Dot1AgChassisManagementInfo_ManagementAddressDomain2, OctetsAttributeType, 0x0200, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 7),
+			8:  ByteField(Dot1AgChassisManagementInfo_ManagementAddressLength, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  MultiByteField(Dot1AgChassisManagementInfo_ManagementAddress1, OctetsAttributeType, 0x0080, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: MultiByteField(Dot1AgChassisManagementInfo_ManagementAddress2, OctetsAttributeType, 0x0040, 25, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, Write), false, false, false, 10),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -154,10 +154,26 @@ type Ieee8021PMapperServiceProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Ieee8021PMapperServiceProfile_TpPointer = "TpPointer"
+const Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority0 = "InterworkTpPointerForPBitPriority0"
+const Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority1 = "InterworkTpPointerForPBitPriority1"
+const Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority2 = "InterworkTpPointerForPBitPriority2"
+const Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority3 = "InterworkTpPointerForPBitPriority3"
+const Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority4 = "InterworkTpPointerForPBitPriority4"
+const Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority5 = "InterworkTpPointerForPBitPriority5"
+const Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority6 = "InterworkTpPointerForPBitPriority6"
+const Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority7 = "InterworkTpPointerForPBitPriority7"
+const Ieee8021PMapperServiceProfile_UnmarkedFrameOption = "UnmarkedFrameOption"
+const Ieee8021PMapperServiceProfile_DscpToPBitMapping = "DscpToPBitMapping"
+const Ieee8021PMapperServiceProfile_DefaultPBitAssumption = "DefaultPBitAssumption"
+const Ieee8021PMapperServiceProfile_TpType = "TpType"
+
 func init() {
 	ieee8021pmapperserviceprofileBME = &ManagedEntityDefinition{
 		Name:    "Ieee8021PMapperServiceProfile",
-		ClassID: 130,
+		ClassID: Ieee8021PMapperServiceProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -166,20 +182,20 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff8,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  Uint16Field("TpPointer", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  Uint16Field("InterworkTpPointerForPBitPriority0", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint16Field("InterworkTpPointerForPBitPriority1", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  Uint16Field("InterworkTpPointerForPBitPriority2", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  Uint16Field("InterworkTpPointerForPBitPriority3", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6:  Uint16Field("InterworkTpPointerForPBitPriority4", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7:  Uint16Field("InterworkTpPointerForPBitPriority5", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  Uint16Field("InterworkTpPointerForPBitPriority6", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  Uint16Field("InterworkTpPointerForPBitPriority7", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
-			10: ByteField("UnmarkedFrameOption", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
-			11: MultiByteField("DscpToPBitMapping", OctetsAttributeType, 0x0020, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, false, false, 11),
-			12: ByteField("DefaultPBitAssumption", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 12),
-			13: ByteField("TpType", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint16Field(Ieee8021PMapperServiceProfile_TpPointer, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  Uint16Field(Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority0, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint16Field(Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority1, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint16Field(Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority2, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  Uint16Field(Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority3, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  Uint16Field(Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority4, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  Uint16Field(Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority5, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  Uint16Field(Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority6, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  Uint16Field(Ieee8021PMapperServiceProfile_InterworkTpPointerForPBitPriority7, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
+			10: ByteField(Ieee8021PMapperServiceProfile_UnmarkedFrameOption, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
+			11: MultiByteField(Ieee8021PMapperServiceProfile_DscpToPBitMapping, OctetsAttributeType, 0x0020, 24, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), mapset.NewSetWith(Read, Write), false, false, false, 11),
+			12: ByteField(Ieee8021PMapperServiceProfile_DefaultPBitAssumption, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 12),
+			13: ByteField(Ieee8021PMapperServiceProfile_TpType, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 13),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

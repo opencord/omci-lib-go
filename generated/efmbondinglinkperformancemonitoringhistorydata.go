@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,10 +79,23 @@ type EfmBondingLinkPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const EfmBondingLinkPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const EfmBondingLinkPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const EfmBondingLinkPerformanceMonitoringHistoryData_RxErroredFragments = "RxErroredFragments"
+const EfmBondingLinkPerformanceMonitoringHistoryData_RxSmallFragments = "RxSmallFragments"
+const EfmBondingLinkPerformanceMonitoringHistoryData_RxLargeFragments = "RxLargeFragments"
+const EfmBondingLinkPerformanceMonitoringHistoryData_RxDiscardedFragments = "RxDiscardedFragments"
+const EfmBondingLinkPerformanceMonitoringHistoryData_RxFcsErrors = "RxFcsErrors"
+const EfmBondingLinkPerformanceMonitoringHistoryData_RxCodingErrors = "RxCodingErrors"
+const EfmBondingLinkPerformanceMonitoringHistoryData_RxFragments = "RxFragments"
+const EfmBondingLinkPerformanceMonitoringHistoryData_TxFragments = "TxFragments"
+
 func init() {
 	efmbondinglinkperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "EfmBondingLinkPerformanceMonitoringHistoryData",
-		ClassID: 422,
+		ClassID: EfmBondingLinkPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -92,17 +105,17 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("RxErroredFragments", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("RxSmallFragments", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("RxLargeFragments", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("RxDiscardedFragments", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("RxFcsErrors", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("RxCodingErrors", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint32Field("RxFragments", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint32Field("TxFragments", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(EfmBondingLinkPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(EfmBondingLinkPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(EfmBondingLinkPerformanceMonitoringHistoryData_RxErroredFragments, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(EfmBondingLinkPerformanceMonitoringHistoryData_RxSmallFragments, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(EfmBondingLinkPerformanceMonitoringHistoryData_RxLargeFragments, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(EfmBondingLinkPerformanceMonitoringHistoryData_RxDiscardedFragments, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(EfmBondingLinkPerformanceMonitoringHistoryData_RxFcsErrors, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(EfmBondingLinkPerformanceMonitoringHistoryData_RxCodingErrors, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint32Field(EfmBondingLinkPerformanceMonitoringHistoryData_RxFragments, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint32Field(EfmBondingLinkPerformanceMonitoringHistoryData_TxFragments, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

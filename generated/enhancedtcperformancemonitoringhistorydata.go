@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -121,10 +121,28 @@ type EnhancedTcPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const EnhancedTcPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const EnhancedTcPerformanceMonitoringHistoryData_ThresholdData64BitId = "ThresholdData64BitId"
+const EnhancedTcPerformanceMonitoringHistoryData_PsbdHecErrorCount = "PsbdHecErrorCount"
+const EnhancedTcPerformanceMonitoringHistoryData_XgtcHecErrorCount = "XgtcHecErrorCount"
+const EnhancedTcPerformanceMonitoringHistoryData_UnknownProfileCount = "UnknownProfileCount"
+const EnhancedTcPerformanceMonitoringHistoryData_TransmittedXgemFrames = "TransmittedXgemFrames"
+const EnhancedTcPerformanceMonitoringHistoryData_FragmentXgemFrames = "FragmentXgemFrames"
+const EnhancedTcPerformanceMonitoringHistoryData_XgemHecLostWordsCount = "XgemHecLostWordsCount"
+const EnhancedTcPerformanceMonitoringHistoryData_XgemKeyErrors = "XgemKeyErrors"
+const EnhancedTcPerformanceMonitoringHistoryData_XgemHecErrorCount = "XgemHecErrorCount"
+const EnhancedTcPerformanceMonitoringHistoryData_TransmittedBytesInNonIdleXgemFrames = "TransmittedBytesInNonIdleXgemFrames"
+const EnhancedTcPerformanceMonitoringHistoryData_ReceivedBytesInNonIdleXgemFrames = "ReceivedBytesInNonIdleXgemFrames"
+const EnhancedTcPerformanceMonitoringHistoryData_LodsEventCount = "LodsEventCount"
+const EnhancedTcPerformanceMonitoringHistoryData_LodsEventRestoredCount = "LodsEventRestoredCount"
+const EnhancedTcPerformanceMonitoringHistoryData_OnuReactivationByLodsEvents = "OnuReactivationByLodsEvents"
+
 func init() {
 	enhancedtcperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "EnhancedTcPerformanceMonitoringHistoryData",
-		ClassID: 454,
+		ClassID: EnhancedTcPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -134,22 +152,22 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData64BitId", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("PsbdHecErrorCount", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
-			4:  Uint32Field("XgtcHecErrorCount", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
-			5:  Uint32Field("UnknownProfileCount", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
-			6:  Uint64Field("TransmittedXgemFrames", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint64Field("FragmentXgemFrames", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
-			8:  Uint64Field("XgemHecLostWordsCount", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
-			9:  Uint64Field("XgemKeyErrors", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint64Field("XgemHecErrorCount", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint64Field("TransmittedBytesInNonIdleXgemFrames", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint64Field("ReceivedBytesInNonIdleXgemFrames", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
-			13: Uint32Field("LodsEventCount", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
-			14: Uint32Field("LodsEventRestoredCount", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
-			15: Uint32Field("OnuReactivationByLodsEvents", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(EnhancedTcPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(EnhancedTcPerformanceMonitoringHistoryData_ThresholdData64BitId, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(EnhancedTcPerformanceMonitoringHistoryData_PsbdHecErrorCount, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
+			4:  Uint32Field(EnhancedTcPerformanceMonitoringHistoryData_XgtcHecErrorCount, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
+			5:  Uint32Field(EnhancedTcPerformanceMonitoringHistoryData_UnknownProfileCount, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
+			6:  Uint64Field(EnhancedTcPerformanceMonitoringHistoryData_TransmittedXgemFrames, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint64Field(EnhancedTcPerformanceMonitoringHistoryData_FragmentXgemFrames, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
+			8:  Uint64Field(EnhancedTcPerformanceMonitoringHistoryData_XgemHecLostWordsCount, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
+			9:  Uint64Field(EnhancedTcPerformanceMonitoringHistoryData_XgemKeyErrors, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint64Field(EnhancedTcPerformanceMonitoringHistoryData_XgemHecErrorCount, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint64Field(EnhancedTcPerformanceMonitoringHistoryData_TransmittedBytesInNonIdleXgemFrames, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint64Field(EnhancedTcPerformanceMonitoringHistoryData_ReceivedBytesInNonIdleXgemFrames, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
+			13: Uint32Field(EnhancedTcPerformanceMonitoringHistoryData_LodsEventCount, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
+			14: Uint32Field(EnhancedTcPerformanceMonitoringHistoryData_LodsEventRestoredCount, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
+			15: Uint32Field(EnhancedTcPerformanceMonitoringHistoryData_OnuReactivationByLodsEvents, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, true, false, 15),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

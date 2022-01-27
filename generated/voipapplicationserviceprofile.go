@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -169,10 +169,23 @@ type VoipApplicationServiceProfile struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const VoipApplicationServiceProfile_CidFeatures = "CidFeatures"
+const VoipApplicationServiceProfile_CallWaitingFeatures = "CallWaitingFeatures"
+const VoipApplicationServiceProfile_CallProgressOrTransferFeatures = "CallProgressOrTransferFeatures"
+const VoipApplicationServiceProfile_CallPresentationFeatures = "CallPresentationFeatures"
+const VoipApplicationServiceProfile_DirectConnectFeature = "DirectConnectFeature"
+const VoipApplicationServiceProfile_DirectConnectUriPointer = "DirectConnectUriPointer"
+const VoipApplicationServiceProfile_BridgedLineAgentUriPointer = "BridgedLineAgentUriPointer"
+const VoipApplicationServiceProfile_ConferenceFactoryUriPointer = "ConferenceFactoryUriPointer"
+const VoipApplicationServiceProfile_DialToneFeatureDelayWarmlineTimerNew = "DialToneFeatureDelayWarmlineTimerNew"
+const VoipApplicationServiceProfile_IpHostPointer = "IpHostPointer"
+
 func init() {
 	voipapplicationserviceprofileBME = &ManagedEntityDefinition{
 		Name:    "VoipApplicationServiceProfile",
-		ClassID: 146,
+		ClassID: VoipApplicationServiceProfileClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -181,17 +194,17 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffc0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("CidFeatures", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  ByteField("CallWaitingFeatures", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint16Field("CallProgressOrTransferFeatures", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  Uint16Field("CallPresentationFeatures", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  ByteField("DirectConnectFeature", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6:  Uint16Field("DirectConnectUriPointer", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7:  Uint16Field("BridgedLineAgentUriPointer", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  Uint16Field("ConferenceFactoryUriPointer", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  Uint16Field("DialToneFeatureDelayWarmlineTimerNew", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: Uint16Field("IpHostPointer", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(VoipApplicationServiceProfile_CidFeatures, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField(VoipApplicationServiceProfile_CallWaitingFeatures, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint16Field(VoipApplicationServiceProfile_CallProgressOrTransferFeatures, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint16Field(VoipApplicationServiceProfile_CallPresentationFeatures, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  ByteField(VoipApplicationServiceProfile_DirectConnectFeature, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  Uint16Field(VoipApplicationServiceProfile_DirectConnectUriPointer, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  Uint16Field(VoipApplicationServiceProfile_BridgedLineAgentUriPointer, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  Uint16Field(VoipApplicationServiceProfile_ConferenceFactoryUriPointer, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  Uint16Field(VoipApplicationServiceProfile_DialToneFeatureDelayWarmlineTimerNew, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: Uint16Field(VoipApplicationServiceProfile_IpHostPointer, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

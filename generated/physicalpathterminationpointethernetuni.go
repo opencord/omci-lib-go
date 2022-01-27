@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -193,32 +193,50 @@ type PhysicalPathTerminationPointEthernetUni struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PhysicalPathTerminationPointEthernetUni_ExpectedType = "ExpectedType"
+const PhysicalPathTerminationPointEthernetUni_SensedType = "SensedType"
+const PhysicalPathTerminationPointEthernetUni_AutoDetectionConfiguration = "AutoDetectionConfiguration"
+const PhysicalPathTerminationPointEthernetUni_EthernetLoopbackConfiguration = "EthernetLoopbackConfiguration"
+const PhysicalPathTerminationPointEthernetUni_AdministrativeState = "AdministrativeState"
+const PhysicalPathTerminationPointEthernetUni_OperationalState = "OperationalState"
+const PhysicalPathTerminationPointEthernetUni_ConfigurationInd = "ConfigurationInd"
+const PhysicalPathTerminationPointEthernetUni_MaxFrameSize = "MaxFrameSize"
+const PhysicalPathTerminationPointEthernetUni_DteOrDceInd = "DteOrDceInd"
+const PhysicalPathTerminationPointEthernetUni_PauseTime = "PauseTime"
+const PhysicalPathTerminationPointEthernetUni_BridgedOrIpInd = "BridgedOrIpInd"
+const PhysicalPathTerminationPointEthernetUni_Arc = "Arc"
+const PhysicalPathTerminationPointEthernetUni_ArcInterval = "ArcInterval"
+const PhysicalPathTerminationPointEthernetUni_PppoeFilter = "PppoeFilter"
+const PhysicalPathTerminationPointEthernetUni_PowerControl = "PowerControl"
+
 func init() {
 	physicalpathterminationpointethernetuniBME = &ManagedEntityDefinition{
 		Name:    "PhysicalPathTerminationPointEthernetUni",
-		ClassID: 11,
+		ClassID: PhysicalPathTerminationPointEthernetUniClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("ExpectedType", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("SensedType", EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, false, false, 2),
-			3:  ByteField("AutoDetectionConfiguration", EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
-			4:  ByteField("EthernetLoopbackConfiguration", EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
-			5:  ByteField("AdministrativeState", EnumerationAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  ByteField("OperationalState", EnumerationAttributeType, 0x0400, 0, mapset.NewSetWith(Read), true, true, false, 6),
-			7:  ByteField("ConfigurationInd", EnumerationAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint16Field("MaxFrameSize", UnsignedIntegerAttributeType, 0x0100, 1518, mapset.NewSetWith(Read, Write), false, false, false, 8),
-			9:  ByteField("DteOrDceInd", EnumerationAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: Uint16Field("PauseTime", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
-			11: ByteField("BridgedOrIpInd", EnumerationAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
-			12: ByteField("Arc", EnumerationAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), true, true, false, 12),
-			13: ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
-			14: ByteField("PppoeFilter", EnumerationAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
-			15: ByteField("PowerControl", EnumerationAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(PhysicalPathTerminationPointEthernetUni_ExpectedType, EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(PhysicalPathTerminationPointEthernetUni_SensedType, EnumerationAttributeType, 0x4000, 0, mapset.NewSetWith(Read), true, false, false, 2),
+			3:  ByteField(PhysicalPathTerminationPointEthernetUni_AutoDetectionConfiguration, EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			4:  ByteField(PhysicalPathTerminationPointEthernetUni_EthernetLoopbackConfiguration, EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, false, false, 4),
+			5:  ByteField(PhysicalPathTerminationPointEthernetUni_AdministrativeState, EnumerationAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  ByteField(PhysicalPathTerminationPointEthernetUni_OperationalState, EnumerationAttributeType, 0x0400, 0, mapset.NewSetWith(Read), true, true, false, 6),
+			7:  ByteField(PhysicalPathTerminationPointEthernetUni_ConfigurationInd, EnumerationAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint16Field(PhysicalPathTerminationPointEthernetUni_MaxFrameSize, UnsignedIntegerAttributeType, 0x0100, 1518, mapset.NewSetWith(Read, Write), false, false, false, 8),
+			9:  ByteField(PhysicalPathTerminationPointEthernetUni_DteOrDceInd, EnumerationAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: Uint16Field(PhysicalPathTerminationPointEthernetUni_PauseTime, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, true, false, 10),
+			11: ByteField(PhysicalPathTerminationPointEthernetUni_BridgedOrIpInd, EnumerationAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, true, false, 11),
+			12: ByteField(PhysicalPathTerminationPointEthernetUni_Arc, EnumerationAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), true, true, false, 12),
+			13: ByteField(PhysicalPathTerminationPointEthernetUni_ArcInterval, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: ByteField(PhysicalPathTerminationPointEthernetUni_PppoeFilter, EnumerationAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), false, true, false, 14),
+			15: ByteField(PhysicalPathTerminationPointEthernetUni_PowerControl, EnumerationAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

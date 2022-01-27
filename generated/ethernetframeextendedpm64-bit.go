@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -202,10 +202,29 @@ type EthernetFrameExtendedPm64Bit struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const EthernetFrameExtendedPm64Bit_IntervalEndTime = "IntervalEndTime"
+const EthernetFrameExtendedPm64Bit_ControlBlock = "ControlBlock"
+const EthernetFrameExtendedPm64Bit_DropEvents = "DropEvents"
+const EthernetFrameExtendedPm64Bit_Octets = "Octets"
+const EthernetFrameExtendedPm64Bit_Frames = "Frames"
+const EthernetFrameExtendedPm64Bit_BroadcastFrames = "BroadcastFrames"
+const EthernetFrameExtendedPm64Bit_MulticastFrames = "MulticastFrames"
+const EthernetFrameExtendedPm64Bit_CrcErroredFrames = "CrcErroredFrames"
+const EthernetFrameExtendedPm64Bit_UndersizeFrames = "UndersizeFrames"
+const EthernetFrameExtendedPm64Bit_OversizeFrames = "OversizeFrames"
+const EthernetFrameExtendedPm64Bit_Frames64Octets = "Frames64Octets"
+const EthernetFrameExtendedPm64Bit_Frames65To127Octets = "Frames65To127Octets"
+const EthernetFrameExtendedPm64Bit_Frames128To255Octets = "Frames128To255Octets"
+const EthernetFrameExtendedPm64Bit_Frames256To511Octets = "Frames256To511Octets"
+const EthernetFrameExtendedPm64Bit_Frames512To1023Octets = "Frames512To1023Octets"
+const EthernetFrameExtendedPm64Bit_Frames1024To1518Octets = "Frames1024To1518Octets"
+
 func init() {
 	ethernetframeextendedpm64bitBME = &ManagedEntityDefinition{
 		Name:    "EthernetFrameExtendedPm64Bit",
-		ClassID: 425,
+		ClassID: EthernetFrameExtendedPm64BitClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -215,23 +234,23 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffff,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  MultiByteField("ControlBlock", OctetsAttributeType, 0x4000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint64Field("DropEvents", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint64Field("Octets", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint64Field("Frames", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint64Field("BroadcastFrames", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint64Field("MulticastFrames", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint64Field("CrcErroredFrames", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint64Field("UndersizeFrames", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint64Field("OversizeFrames", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint64Field("Frames64Octets", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint64Field("Frames65To127Octets", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint64Field("Frames128To255Octets", CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
-			14: Uint64Field("Frames256To511Octets", CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
-			15: Uint64Field("Frames512To1023Octets", CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
-			16: Uint64Field("Frames1024To1518Octets", CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(EthernetFrameExtendedPm64Bit_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  MultiByteField(EthernetFrameExtendedPm64Bit_ControlBlock, OctetsAttributeType, 0x4000, 16, toOctets("AAAAAAAAAAAAAAAAAAAAAA=="), mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint64Field(EthernetFrameExtendedPm64Bit_DropEvents, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint64Field(EthernetFrameExtendedPm64Bit_Octets, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint64Field(EthernetFrameExtendedPm64Bit_Frames, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint64Field(EthernetFrameExtendedPm64Bit_BroadcastFrames, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint64Field(EthernetFrameExtendedPm64Bit_MulticastFrames, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint64Field(EthernetFrameExtendedPm64Bit_CrcErroredFrames, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint64Field(EthernetFrameExtendedPm64Bit_UndersizeFrames, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint64Field(EthernetFrameExtendedPm64Bit_OversizeFrames, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint64Field(EthernetFrameExtendedPm64Bit_Frames64Octets, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint64Field(EthernetFrameExtendedPm64Bit_Frames65To127Octets, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint64Field(EthernetFrameExtendedPm64Bit_Frames128To255Octets, CounterAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, false, false, 13),
+			14: Uint64Field(EthernetFrameExtendedPm64Bit_Frames256To511Octets, CounterAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, false, false, 14),
+			15: Uint64Field(EthernetFrameExtendedPm64Bit_Frames512To1023Octets, CounterAttributeType, 0x0002, 0, mapset.NewSetWith(Read), false, false, false, 15),
+			16: Uint64Field(EthernetFrameExtendedPm64Bit_Frames1024To1518Octets, CounterAttributeType, 0x0001, 0, mapset.NewSetWith(Read), false, false, false, 16),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -107,28 +107,42 @@ type ReCommonAmplifierParameters struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const ReCommonAmplifierParameters_Gain = "Gain"
+const ReCommonAmplifierParameters_LowerGainThreshold = "LowerGainThreshold"
+const ReCommonAmplifierParameters_UpperGainThreshold = "UpperGainThreshold"
+const ReCommonAmplifierParameters_TargetGain = "TargetGain"
+const ReCommonAmplifierParameters_DeviceTemperature = "DeviceTemperature"
+const ReCommonAmplifierParameters_LowerDeviceTemperatureThreshold = "LowerDeviceTemperatureThreshold"
+const ReCommonAmplifierParameters_UpperDeviceTemperatureThreshold = "UpperDeviceTemperatureThreshold"
+const ReCommonAmplifierParameters_DeviceBiasCurrent = "DeviceBiasCurrent"
+const ReCommonAmplifierParameters_AmplifierSaturationOutputPower = "AmplifierSaturationOutputPower"
+const ReCommonAmplifierParameters_AmplifierNoiseFigure = "AmplifierNoiseFigure"
+const ReCommonAmplifierParameters_AmplifierSaturationGain = "AmplifierSaturationGain"
+
 func init() {
 	recommonamplifierparametersBME = &ManagedEntityDefinition{
 		Name:    "ReCommonAmplifierParameters",
-		ClassID: 328,
+		ClassID: ReCommonAmplifierParametersClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xffe0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("Gain", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, true, false, 1),
-			2:  ByteField("LowerGainThreshold", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, false, 2),
-			3:  ByteField("UpperGainThreshold", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
-			4:  ByteField("TargetGain", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
-			5:  Uint16Field("DeviceTemperature", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
-			6:  ByteField("LowerDeviceTemperatureThreshold", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
-			7:  ByteField("UpperDeviceTemperatureThreshold", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
-			8:  ByteField("DeviceBiasCurrent", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
-			9:  Uint16Field("AmplifierSaturationOutputPower", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
-			10: ByteField("AmplifierNoiseFigure", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: ByteField("AmplifierSaturationGain", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(ReCommonAmplifierParameters_Gain, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, true, false, 1),
+			2:  ByteField(ReCommonAmplifierParameters_LowerGainThreshold, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, Write), false, true, false, 2),
+			3:  ByteField(ReCommonAmplifierParameters_UpperGainThreshold, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, true, false, 3),
+			4:  ByteField(ReCommonAmplifierParameters_TargetGain, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, Write), false, true, false, 4),
+			5:  Uint16Field(ReCommonAmplifierParameters_DeviceTemperature, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, true, false, 5),
+			6:  ByteField(ReCommonAmplifierParameters_LowerDeviceTemperatureThreshold, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, Write), false, true, false, 6),
+			7:  ByteField(ReCommonAmplifierParameters_UpperDeviceTemperatureThreshold, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, Write), false, true, false, 7),
+			8:  ByteField(ReCommonAmplifierParameters_DeviceBiasCurrent, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, true, false, 8),
+			9:  Uint16Field(ReCommonAmplifierParameters_AmplifierSaturationOutputPower, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: ByteField(ReCommonAmplifierParameters_AmplifierNoiseFigure, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: ByteField(ReCommonAmplifierParameters_AmplifierSaturationGain, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -155,30 +155,47 @@ type Vdsl2LineInventoryAndStatusDataPart3 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Vdsl2LineInventoryAndStatusDataPart3_UpstreamBandsCount = "UpstreamBandsCount"
+const Vdsl2LineInventoryAndStatusDataPart3_DownstreamBandsCount = "DownstreamBandsCount"
+const Vdsl2LineInventoryAndStatusDataPart3_DownstreamLineAttenuationPerBand = "DownstreamLineAttenuationPerBand"
+const Vdsl2LineInventoryAndStatusDataPart3_UpstreamLineAttenuationPerBand = "UpstreamLineAttenuationPerBand"
+const Vdsl2LineInventoryAndStatusDataPart3_DownstreamSignalAttenuationPerBand = "DownstreamSignalAttenuationPerBand"
+const Vdsl2LineInventoryAndStatusDataPart3_UpstreamSignalAttenuationPerBand = "UpstreamSignalAttenuationPerBand"
+const Vdsl2LineInventoryAndStatusDataPart3_DownstreamSnrMarginPerBand = "DownstreamSnrMarginPerBand"
+const Vdsl2LineInventoryAndStatusDataPart3_UpstreamSnrMarginPerBand = "UpstreamSnrMarginPerBand"
+const Vdsl2LineInventoryAndStatusDataPart3_DownstreamLineAttenuationExtension = "DownstreamLineAttenuationExtension"
+const Vdsl2LineInventoryAndStatusDataPart3_UpstreamLineAttenuationExtension = "UpstreamLineAttenuationExtension"
+const Vdsl2LineInventoryAndStatusDataPart3_DownstreamSignalAttenuationExtension = "DownstreamSignalAttenuationExtension"
+const Vdsl2LineInventoryAndStatusDataPart3_UpstreamSignalAttenuationExtension = "UpstreamSignalAttenuationExtension"
+const Vdsl2LineInventoryAndStatusDataPart3_DownstreamSnrMarginExtension = "DownstreamSnrMarginExtension"
+const Vdsl2LineInventoryAndStatusDataPart3_UpstreamSnrMarginExtension = "UpstreamSnrMarginExtension"
+
 func init() {
 	vdsl2lineinventoryandstatusdatapart3BME = &ManagedEntityDefinition{
 		Name:    "Vdsl2LineInventoryAndStatusDataPart3",
-		ClassID: 170,
+		ClassID: Vdsl2LineInventoryAndStatusDataPart3ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("UpstreamBandsCount", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  ByteField("DownstreamBandsCount", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
-			3:  MultiByteField("DownstreamLineAttenuationPerBand", OctetsAttributeType, 0x2000, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("UpstreamLineAttenuationPerBand", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  MultiByteField("DownstreamSignalAttenuationPerBand", OctetsAttributeType, 0x0800, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("UpstreamSignalAttenuationPerBand", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  MultiByteField("DownstreamSnrMarginPerBand", OctetsAttributeType, 0x0200, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("UpstreamSnrMarginPerBand", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint16Field("DownstreamLineAttenuationExtension", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
-			10: ByteField("UpstreamLineAttenuationExtension", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: Uint16Field("DownstreamSignalAttenuationExtension", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
-			12: ByteField("UpstreamSignalAttenuationExtension", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
-			13: Uint16Field("DownstreamSnrMarginExtension", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
-			14: ByteField("UpstreamSnrMarginExtension", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(Vdsl2LineInventoryAndStatusDataPart3_UpstreamBandsCount, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  ByteField(Vdsl2LineInventoryAndStatusDataPart3_DownstreamBandsCount, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read), false, false, false, 2),
+			3:  MultiByteField(Vdsl2LineInventoryAndStatusDataPart3_DownstreamLineAttenuationPerBand, OctetsAttributeType, 0x2000, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(Vdsl2LineInventoryAndStatusDataPart3_UpstreamLineAttenuationPerBand, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  MultiByteField(Vdsl2LineInventoryAndStatusDataPart3_DownstreamSignalAttenuationPerBand, OctetsAttributeType, 0x0800, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(Vdsl2LineInventoryAndStatusDataPart3_UpstreamSignalAttenuationPerBand, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  MultiByteField(Vdsl2LineInventoryAndStatusDataPart3_DownstreamSnrMarginPerBand, OctetsAttributeType, 0x0200, 3, toOctets("AAAA"), mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(Vdsl2LineInventoryAndStatusDataPart3_UpstreamSnrMarginPerBand, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint16Field(Vdsl2LineInventoryAndStatusDataPart3_DownstreamLineAttenuationExtension, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: ByteField(Vdsl2LineInventoryAndStatusDataPart3_UpstreamLineAttenuationExtension, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: Uint16Field(Vdsl2LineInventoryAndStatusDataPart3_DownstreamSignalAttenuationExtension, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			12: ByteField(Vdsl2LineInventoryAndStatusDataPart3_UpstreamSignalAttenuationExtension, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, true, false, 12),
+			13: Uint16Field(Vdsl2LineInventoryAndStatusDataPart3_DownstreamSnrMarginExtension, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
+			14: ByteField(Vdsl2LineInventoryAndStatusDataPart3_UpstreamSnrMarginExtension, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read), false, true, false, 14),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

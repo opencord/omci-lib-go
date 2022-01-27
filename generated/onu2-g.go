@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -216,31 +216,48 @@ type Onu2G struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Onu2G_EquipmentId = "EquipmentId"
+const Onu2G_OpticalNetworkUnitManagementAndControlChannelOmccVersion = "OpticalNetworkUnitManagementAndControlChannelOmccVersion"
+const Onu2G_VendorProductCode = "VendorProductCode"
+const Onu2G_SecurityCapability = "SecurityCapability"
+const Onu2G_SecurityMode = "SecurityMode"
+const Onu2G_TotalPriorityQueueNumber = "TotalPriorityQueueNumber"
+const Onu2G_TotalTrafficSchedulerNumber = "TotalTrafficSchedulerNumber"
+const Onu2G_Deprecated = "Deprecated"
+const Onu2G_TotalGemPortIdNumber = "TotalGemPortIdNumber"
+const Onu2G_Sysuptime = "Sysuptime"
+const Onu2G_ConnectivityCapability = "ConnectivityCapability"
+const Onu2G_CurrentConnectivityMode = "CurrentConnectivityMode"
+const Onu2G_QualityOfServiceQosConfigurationFlexibility = "QualityOfServiceQosConfigurationFlexibility"
+const Onu2G_PriorityQueueScaleFactor = "PriorityQueueScaleFactor"
+
 func init() {
 	onu2gBME = &ManagedEntityDefinition{
 		Name:    "Onu2G",
-		ClassID: 257,
+		ClassID: Onu2GClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xfffc,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  MultiByteField("EquipmentId", StringAttributeType, 0x8000, 20, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read), false, true, false, 1),
-			2:  ByteField("OpticalNetworkUnitManagementAndControlChannelOmccVersion", EnumerationAttributeType, 0x4000, 164, mapset.NewSetWith(Read), true, false, false, 2),
-			3:  Uint16Field("VendorProductCode", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
-			4:  ByteField("SecurityCapability", EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  ByteField("SecurityMode", EnumerationAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
-			6:  Uint16Field("TotalPriorityQueueNumber", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  ByteField("TotalTrafficSchedulerNumber", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  ByteField("Deprecated", UnsignedIntegerAttributeType, 0x0100, 1, mapset.NewSetWith(Read), false, false, true, 8),
-			9:  Uint16Field("TotalGemPortIdNumber", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
-			10: Uint32Field("Sysuptime", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: Uint16Field("ConnectivityCapability", BitFieldAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
-			12: ByteField("CurrentConnectivityMode", BitFieldAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
-			13: Uint16Field("QualityOfServiceQosConfigurationFlexibility", BitFieldAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
-			14: Uint16Field("PriorityQueueScaleFactor", UnsignedIntegerAttributeType, 0x0004, 1, mapset.NewSetWith(Read, Write), false, true, false, 14),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  MultiByteField(Onu2G_EquipmentId, StringAttributeType, 0x8000, 20, toOctets("AAAAAAAAAAAAAAAAAAAAAAAAAAA="), mapset.NewSetWith(Read), false, true, false, 1),
+			2:  ByteField(Onu2G_OpticalNetworkUnitManagementAndControlChannelOmccVersion, EnumerationAttributeType, 0x4000, 164, mapset.NewSetWith(Read), true, false, false, 2),
+			3:  Uint16Field(Onu2G_VendorProductCode, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
+			4:  ByteField(Onu2G_SecurityCapability, EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  ByteField(Onu2G_SecurityMode, EnumerationAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, false, false, 5),
+			6:  Uint16Field(Onu2G_TotalPriorityQueueNumber, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  ByteField(Onu2G_TotalTrafficSchedulerNumber, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  ByteField(Onu2G_Deprecated, UnsignedIntegerAttributeType, 0x0100, 1, mapset.NewSetWith(Read), false, false, true, 8),
+			9:  Uint16Field(Onu2G_TotalGemPortIdNumber, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, true, false, 9),
+			10: Uint32Field(Onu2G_Sysuptime, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: Uint16Field(Onu2G_ConnectivityCapability, BitFieldAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			12: ByteField(Onu2G_CurrentConnectivityMode, BitFieldAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			13: Uint16Field(Onu2G_QualityOfServiceQosConfigurationFlexibility, BitFieldAttributeType, 0x0008, 0, mapset.NewSetWith(Read), false, true, false, 13),
+			14: Uint16Field(Onu2G_PriorityQueueScaleFactor, UnsignedIntegerAttributeType, 0x0004, 1, mapset.NewSetWith(Read, Write), false, true, false, 14),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

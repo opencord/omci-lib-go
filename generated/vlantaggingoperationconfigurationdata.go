@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -142,10 +142,18 @@ type VlanTaggingOperationConfigurationData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const VlanTaggingOperationConfigurationData_UpstreamVlanTaggingOperationMode = "UpstreamVlanTaggingOperationMode"
+const VlanTaggingOperationConfigurationData_UpstreamVlanTagTciValue = "UpstreamVlanTagTciValue"
+const VlanTaggingOperationConfigurationData_DownstreamVlanTaggingOperationMode = "DownstreamVlanTaggingOperationMode"
+const VlanTaggingOperationConfigurationData_AssociationType = "AssociationType"
+const VlanTaggingOperationConfigurationData_AssociatedMePointer = "AssociatedMePointer"
+
 func init() {
 	vlantaggingoperationconfigurationdataBME = &ManagedEntityDefinition{
 		Name:    "VlanTaggingOperationConfigurationData",
-		ClassID: 78,
+		ClassID: VlanTaggingOperationConfigurationDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -154,12 +162,12 @@ func init() {
 		),
 		AllowedAttributeMask: 0xf800,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1: ByteField("UpstreamVlanTaggingOperationMode", EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2: Uint16Field("UpstreamVlanTagTciValue", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3: ByteField("DownstreamVlanTaggingOperationMode", EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4: ByteField("AssociationType", EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
-			5: Uint16Field("AssociatedMePointer", PointerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1: ByteField(VlanTaggingOperationConfigurationData_UpstreamVlanTaggingOperationMode, EnumerationAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2: Uint16Field(VlanTaggingOperationConfigurationData_UpstreamVlanTagTciValue, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3: ByteField(VlanTaggingOperationConfigurationData_DownstreamVlanTaggingOperationMode, EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4: ByteField(VlanTaggingOperationConfigurationData_AssociationType, EnumerationAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
+			5: Uint16Field(VlanTaggingOperationConfigurationData_AssociatedMePointer, PointerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

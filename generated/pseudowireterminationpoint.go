@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -184,10 +184,28 @@ type PseudowireTerminationPoint struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const PseudowireTerminationPoint_UnderlyingTransport = "UnderlyingTransport"
+const PseudowireTerminationPoint_ServiceType = "ServiceType"
+const PseudowireTerminationPoint_Signalling = "Signalling"
+const PseudowireTerminationPoint_TdmUniPointer = "TdmUniPointer"
+const PseudowireTerminationPoint_NorthSidePointer = "NorthSidePointer"
+const PseudowireTerminationPoint_FarEndIpInfo = "FarEndIpInfo"
+const PseudowireTerminationPoint_PayloadSize = "PayloadSize"
+const PseudowireTerminationPoint_PayloadEncapsulationDelay = "PayloadEncapsulationDelay"
+const PseudowireTerminationPoint_TimingMode = "TimingMode"
+const PseudowireTerminationPoint_TransmitCircuitId = "TransmitCircuitId"
+const PseudowireTerminationPoint_ExpectedCircuitId = "ExpectedCircuitId"
+const PseudowireTerminationPoint_ReceivedCircuitId = "ReceivedCircuitId"
+const PseudowireTerminationPoint_ExceptionPolicy = "ExceptionPolicy"
+const PseudowireTerminationPoint_Arc = "Arc"
+const PseudowireTerminationPoint_ArcInterval = "ArcInterval"
+
 func init() {
 	pseudowireterminationpointBME = &ManagedEntityDefinition{
 		Name:    "PseudowireTerminationPoint",
-		ClassID: 282,
+		ClassID: PseudowireTerminationPointClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -196,22 +214,22 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("UnderlyingTransport", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
-			2:  ByteField("ServiceType", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  ByteField("Signalling", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
-			4:  Uint16Field("TdmUniPointer", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
-			5:  Uint16Field("NorthSidePointer", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
-			6:  Uint16Field("FarEndIpInfo", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
-			7:  Uint16Field("PayloadSize", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
-			8:  ByteField("PayloadEncapsulationDelay", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  ByteField("TimingMode", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
-			10: Uint64Field("TransmitCircuitId", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
-			11: Uint64Field("ExpectedCircuitId", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
-			12: Uint64Field("ReceivedCircuitId", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
-			13: Uint16Field("ExceptionPolicy", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
-			14: ByteField("Arc", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), true, true, false, 14),
-			15: ByteField("ArcInterval", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(PseudowireTerminationPoint_UnderlyingTransport, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 1),
+			2:  ByteField(PseudowireTerminationPoint_ServiceType, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  ByteField(PseudowireTerminationPoint_Signalling, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 3),
+			4:  Uint16Field(PseudowireTerminationPoint_TdmUniPointer, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 4),
+			5:  Uint16Field(PseudowireTerminationPoint_NorthSidePointer, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 5),
+			6:  Uint16Field(PseudowireTerminationPoint_FarEndIpInfo, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 6),
+			7:  Uint16Field(PseudowireTerminationPoint_PayloadSize, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 7),
+			8:  ByteField(PseudowireTerminationPoint_PayloadEncapsulationDelay, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  ByteField(PseudowireTerminationPoint_TimingMode, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, false, false, 9),
+			10: Uint64Field(PseudowireTerminationPoint_TransmitCircuitId, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, Write), false, false, false, 10),
+			11: Uint64Field(PseudowireTerminationPoint_ExpectedCircuitId, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, Write), false, false, false, 11),
+			12: Uint64Field(PseudowireTerminationPoint_ReceivedCircuitId, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			13: Uint16Field(PseudowireTerminationPoint_ExceptionPolicy, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, Write), false, true, false, 13),
+			14: ByteField(PseudowireTerminationPoint_Arc, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, Write), true, true, false, 14),
+			15: ByteField(PseudowireTerminationPoint_ArcInterval, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, Write), false, true, false, 15),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

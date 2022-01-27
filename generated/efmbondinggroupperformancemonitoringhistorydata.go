@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -89,10 +89,25 @@ type EfmBondingGroupPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const EfmBondingGroupPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const EfmBondingGroupPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const EfmBondingGroupPerformanceMonitoringHistoryData_RxBadFragments = "RxBadFragments"
+const EfmBondingGroupPerformanceMonitoringHistoryData_RxLostFragments = "RxLostFragments"
+const EfmBondingGroupPerformanceMonitoringHistoryData_RxLostStarts = "RxLostStarts"
+const EfmBondingGroupPerformanceMonitoringHistoryData_RxLostEnds = "RxLostEnds"
+const EfmBondingGroupPerformanceMonitoringHistoryData_RxFrames = "RxFrames"
+const EfmBondingGroupPerformanceMonitoringHistoryData_TxFrames = "TxFrames"
+const EfmBondingGroupPerformanceMonitoringHistoryData_RxBytes = "RxBytes"
+const EfmBondingGroupPerformanceMonitoringHistoryData_TxBytes = "TxBytes"
+const EfmBondingGroupPerformanceMonitoringHistoryData_TxDiscardedFrames = "TxDiscardedFrames"
+const EfmBondingGroupPerformanceMonitoringHistoryData_TxDiscardedBytes = "TxDiscardedBytes"
+
 func init() {
 	efmbondinggroupperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "EfmBondingGroupPerformanceMonitoringHistoryData",
-		ClassID: 420,
+		ClassID: EfmBondingGroupPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -102,19 +117,19 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfff0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("RxBadFragments", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("RxLostFragments", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("RxLostStarts", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("RxLostEnds", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("RxFrames", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("TxFrames", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  Uint64Field("RxBytes", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint64Field("TxBytes", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint32Field("TxDiscardedFrames", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
-			12: Uint32Field("TxDiscardedBytes", CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(EfmBondingGroupPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(EfmBondingGroupPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(EfmBondingGroupPerformanceMonitoringHistoryData_RxBadFragments, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(EfmBondingGroupPerformanceMonitoringHistoryData_RxLostFragments, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(EfmBondingGroupPerformanceMonitoringHistoryData_RxLostStarts, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(EfmBondingGroupPerformanceMonitoringHistoryData_RxLostEnds, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(EfmBondingGroupPerformanceMonitoringHistoryData_RxFrames, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(EfmBondingGroupPerformanceMonitoringHistoryData_TxFrames, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  Uint64Field(EfmBondingGroupPerformanceMonitoringHistoryData_RxBytes, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint64Field(EfmBondingGroupPerformanceMonitoringHistoryData_TxBytes, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint32Field(EfmBondingGroupPerformanceMonitoringHistoryData_TxDiscardedFrames, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			12: Uint32Field(EfmBondingGroupPerformanceMonitoringHistoryData_TxDiscardedBytes, CounterAttributeType, 0x0010, 0, mapset.NewSetWith(Read), false, false, false, 12),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

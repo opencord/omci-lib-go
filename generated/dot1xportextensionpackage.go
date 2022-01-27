@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -167,29 +167,44 @@ type Dot1XPortExtensionPackage struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const Dot1XPortExtensionPackage_Dot1XEnable = "Dot1XEnable"
+const Dot1XPortExtensionPackage_ActionRegister = "ActionRegister"
+const Dot1XPortExtensionPackage_AuthenticatorPaeState = "AuthenticatorPaeState"
+const Dot1XPortExtensionPackage_BackendAuthenticationState = "BackendAuthenticationState"
+const Dot1XPortExtensionPackage_AdminControlledDirections = "AdminControlledDirections"
+const Dot1XPortExtensionPackage_OperationalControlledDirections = "OperationalControlledDirections"
+const Dot1XPortExtensionPackage_AuthenticatorControlledPortStatus = "AuthenticatorControlledPortStatus"
+const Dot1XPortExtensionPackage_QuietPeriod = "QuietPeriod"
+const Dot1XPortExtensionPackage_ServerTimeoutPeriod = "ServerTimeoutPeriod"
+const Dot1XPortExtensionPackage_ReAuthenticationPeriod = "ReAuthenticationPeriod"
+const Dot1XPortExtensionPackage_ReAuthenticationEnabled = "ReAuthenticationEnabled"
+const Dot1XPortExtensionPackage_KeyTransmissionEnabled = "KeyTransmissionEnabled"
+
 func init() {
 	dot1xportextensionpackageBME = &ManagedEntityDefinition{
 		Name:    "Dot1XPortExtensionPackage",
-		ClassID: 290,
+		ClassID: Dot1XPortExtensionPackageClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xfff0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1:  ByteField("Dot1XEnable", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2:  ByteField("ActionRegister", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Write), false, false, false, 2),
-			3:  ByteField("AuthenticatorPaeState", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
-			4:  ByteField("BackendAuthenticationState", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
-			5:  ByteField("AdminControlledDirections", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
-			6:  ByteField("OperationalControlledDirections", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
-			7:  ByteField("AuthenticatorControlledPortStatus", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
-			8:  Uint16Field("QuietPeriod", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
-			9:  Uint16Field("ServerTimeoutPeriod", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
-			10: Uint16Field("ReAuthenticationPeriod", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
-			11: ByteField("ReAuthenticationEnabled", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
-			12: ByteField("KeyTransmissionEnabled", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1:  ByteField(Dot1XPortExtensionPackage_Dot1XEnable, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2:  ByteField(Dot1XPortExtensionPackage_ActionRegister, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Write), false, false, false, 2),
+			3:  ByteField(Dot1XPortExtensionPackage_AuthenticatorPaeState, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, true, false, 3),
+			4:  ByteField(Dot1XPortExtensionPackage_BackendAuthenticationState, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, true, false, 4),
+			5:  ByteField(Dot1XPortExtensionPackage_AdminControlledDirections, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, Write), false, true, false, 5),
+			6:  ByteField(Dot1XPortExtensionPackage_OperationalControlledDirections, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, true, false, 6),
+			7:  ByteField(Dot1XPortExtensionPackage_AuthenticatorControlledPortStatus, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, true, false, 7),
+			8:  Uint16Field(Dot1XPortExtensionPackage_QuietPeriod, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, Write), false, true, false, 8),
+			9:  Uint16Field(Dot1XPortExtensionPackage_ServerTimeoutPeriod, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, Write), false, true, false, 9),
+			10: Uint16Field(Dot1XPortExtensionPackage_ReAuthenticationPeriod, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, true, false, 10),
+			11: ByteField(Dot1XPortExtensionPackage_ReAuthenticationEnabled, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, true, false, 11),
+			12: ByteField(Dot1XPortExtensionPackage_KeyTransmissionEnabled, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, Write), false, true, false, 12),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

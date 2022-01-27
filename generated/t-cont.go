@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -96,20 +96,26 @@ type TCont struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const TCont_AllocId = "AllocId"
+const TCont_Deprecated = "Deprecated"
+const TCont_Policy = "Policy"
+
 func init() {
 	tcontBME = &ManagedEntityDefinition{
 		Name:    "TCont",
-		ClassID: 262,
+		ClassID: TContClassID,
 		MessageTypes: mapset.NewSetWith(
 			Get,
 			Set,
 		),
 		AllowedAttributeMask: 0xe000,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0: Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
-			1: Uint16Field("AllocId", UnsignedIntegerAttributeType, 0x8000, 65535, mapset.NewSetWith(Read, Write), false, false, false, 1),
-			2: ByteField("Deprecated", UnsignedIntegerAttributeType, 0x4000, 1, mapset.NewSetWith(Read), false, false, true, 2),
-			3: ByteField("Policy", EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
+			0: Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read), false, false, false, 0),
+			1: Uint16Field(TCont_AllocId, UnsignedIntegerAttributeType, 0x8000, 65535, mapset.NewSetWith(Read, Write), false, false, false, 1),
+			2: ByteField(TCont_Deprecated, UnsignedIntegerAttributeType, 0x4000, 1, mapset.NewSetWith(Read), false, false, true, 2),
+			3: ByteField(TCont_Policy, EnumerationAttributeType, 0x2000, 0, mapset.NewSetWith(Read, Write), false, false, false, 3),
 		},
 		Access:  CreatedByOnu,
 		Support: UnknownSupport,

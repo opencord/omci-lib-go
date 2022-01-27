@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -123,10 +123,24 @@ type MgcPerformanceMonitoringHistoryData struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const MgcPerformanceMonitoringHistoryData_IntervalEndTime = "IntervalEndTime"
+const MgcPerformanceMonitoringHistoryData_ThresholdData12Id = "ThresholdData12Id"
+const MgcPerformanceMonitoringHistoryData_ReceivedMessages = "ReceivedMessages"
+const MgcPerformanceMonitoringHistoryData_ReceivedOctets = "ReceivedOctets"
+const MgcPerformanceMonitoringHistoryData_SentMessages = "SentMessages"
+const MgcPerformanceMonitoringHistoryData_SentOctets = "SentOctets"
+const MgcPerformanceMonitoringHistoryData_ProtocolErrors = "ProtocolErrors"
+const MgcPerformanceMonitoringHistoryData_TransportLosses = "TransportLosses"
+const MgcPerformanceMonitoringHistoryData_LastDetectedEvent = "LastDetectedEvent"
+const MgcPerformanceMonitoringHistoryData_LastDetectedEventTime = "LastDetectedEventTime"
+const MgcPerformanceMonitoringHistoryData_LastDetectedResetTime = "LastDetectedResetTime"
+
 func init() {
 	mgcperformancemonitoringhistorydataBME = &ManagedEntityDefinition{
 		Name:    "MgcPerformanceMonitoringHistoryData",
-		ClassID: 156,
+		ClassID: MgcPerformanceMonitoringHistoryDataClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -136,18 +150,18 @@ func init() {
 		),
 		AllowedAttributeMask: 0xffe0,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  ByteField("IntervalEndTime", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
-			2:  Uint16Field("ThresholdData12Id", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
-			3:  Uint32Field("ReceivedMessages", CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
-			4:  Uint32Field("ReceivedOctets", CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
-			5:  Uint32Field("SentMessages", CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
-			6:  Uint32Field("SentOctets", CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
-			7:  Uint32Field("ProtocolErrors", CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
-			8:  Uint32Field("TransportLosses", CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
-			9:  ByteField("LastDetectedEvent", CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
-			10: Uint32Field("LastDetectedEventTime", CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
-			11: Uint32Field("LastDetectedResetTime", CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  ByteField(MgcPerformanceMonitoringHistoryData_IntervalEndTime, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read), false, false, false, 1),
+			2:  Uint16Field(MgcPerformanceMonitoringHistoryData_ThresholdData12Id, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 2),
+			3:  Uint32Field(MgcPerformanceMonitoringHistoryData_ReceivedMessages, CounterAttributeType, 0x2000, 0, mapset.NewSetWith(Read), false, false, false, 3),
+			4:  Uint32Field(MgcPerformanceMonitoringHistoryData_ReceivedOctets, CounterAttributeType, 0x1000, 0, mapset.NewSetWith(Read), false, false, false, 4),
+			5:  Uint32Field(MgcPerformanceMonitoringHistoryData_SentMessages, CounterAttributeType, 0x0800, 0, mapset.NewSetWith(Read), false, false, false, 5),
+			6:  Uint32Field(MgcPerformanceMonitoringHistoryData_SentOctets, CounterAttributeType, 0x0400, 0, mapset.NewSetWith(Read), false, false, false, 6),
+			7:  Uint32Field(MgcPerformanceMonitoringHistoryData_ProtocolErrors, CounterAttributeType, 0x0200, 0, mapset.NewSetWith(Read), false, false, false, 7),
+			8:  Uint32Field(MgcPerformanceMonitoringHistoryData_TransportLosses, CounterAttributeType, 0x0100, 0, mapset.NewSetWith(Read), false, false, false, 8),
+			9:  ByteField(MgcPerformanceMonitoringHistoryData_LastDetectedEvent, CounterAttributeType, 0x0080, 0, mapset.NewSetWith(Read), false, false, false, 9),
+			10: Uint32Field(MgcPerformanceMonitoringHistoryData_LastDetectedEventTime, CounterAttributeType, 0x0040, 0, mapset.NewSetWith(Read), false, false, false, 10),
+			11: Uint32Field(MgcPerformanceMonitoringHistoryData_LastDetectedResetTime, CounterAttributeType, 0x0020, 0, mapset.NewSetWith(Read), false, false, false, 11),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,

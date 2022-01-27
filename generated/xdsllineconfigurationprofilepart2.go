@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2018 - present.  Boling Consulting Solutions (bcsw.net)
  * Copyright 2020-present Open Networking Foundation
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -147,10 +147,28 @@ type XdslLineConfigurationProfilePart2 struct {
 	Attributes AttributeValueMap
 }
 
+// Attribute name constants
+
+const XdslLineConfigurationProfilePart2_DownstreamMinimumTimeIntervalForUpshiftRateAdaptation = "DownstreamMinimumTimeIntervalForUpshiftRateAdaptation"
+const XdslLineConfigurationProfilePart2_UpstreamMinimumTimeIntervalForUpshiftRateAdaptation = "UpstreamMinimumTimeIntervalForUpshiftRateAdaptation"
+const XdslLineConfigurationProfilePart2_DownstreamDownshiftNoiseMargin = "DownstreamDownshiftNoiseMargin"
+const XdslLineConfigurationProfilePart2_UpstreamDownshiftNoiseMargin = "UpstreamDownshiftNoiseMargin"
+const XdslLineConfigurationProfilePart2_DownstreamMinimumTimeIntervalForDownshiftRateAdaptation = "DownstreamMinimumTimeIntervalForDownshiftRateAdaptation"
+const XdslLineConfigurationProfilePart2_UpstreamMinimumTimeIntervalForDownshiftRateAdaptation = "UpstreamMinimumTimeIntervalForDownshiftRateAdaptation"
+const XdslLineConfigurationProfilePart2_XtuImpedanceStateForced = "XtuImpedanceStateForced"
+const XdslLineConfigurationProfilePart2_L0Time = "L0Time"
+const XdslLineConfigurationProfilePart2_L2Time = "L2Time"
+const XdslLineConfigurationProfilePart2_DownstreamMaximumNominalPowerSpectralDensity = "DownstreamMaximumNominalPowerSpectralDensity"
+const XdslLineConfigurationProfilePart2_UpstreamMaximumNominalPowerSpectralDensity = "UpstreamMaximumNominalPowerSpectralDensity"
+const XdslLineConfigurationProfilePart2_DownstreamMaximumNominalAggregateTransmitPower = "DownstreamMaximumNominalAggregateTransmitPower"
+const XdslLineConfigurationProfilePart2_UpstreamMaximumNominalAggregateTransmitPower = "UpstreamMaximumNominalAggregateTransmitPower"
+const XdslLineConfigurationProfilePart2_UpstreamMaximumAggregateReceivePower = "UpstreamMaximumAggregateReceivePower"
+const XdslLineConfigurationProfilePart2_Vdsl2TransmissionSystemEnabling = "Vdsl2TransmissionSystemEnabling"
+
 func init() {
 	xdsllineconfigurationprofilepart2BME = &ManagedEntityDefinition{
 		Name:    "XdslLineConfigurationProfilePart2",
-		ClassID: 105,
+		ClassID: XdslLineConfigurationProfilePart2ClassID,
 		MessageTypes: mapset.NewSetWith(
 			Create,
 			Delete,
@@ -159,22 +177,22 @@ func init() {
 		),
 		AllowedAttributeMask: 0xfffe,
 		AttributeDefinitions: AttributeDefinitionMap{
-			0:  Uint16Field("ManagedEntityId", PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
-			1:  Uint16Field("DownstreamMinimumTimeIntervalForUpshiftRateAdaptation", UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 1),
-			2:  Uint16Field("UpstreamMinimumTimeIntervalForUpshiftRateAdaptation", UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 2),
-			3:  Uint16Field("DownstreamDownshiftNoiseMargin", UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
-			4:  Uint16Field("UpstreamDownshiftNoiseMargin", UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
-			5:  Uint16Field("DownstreamMinimumTimeIntervalForDownshiftRateAdaptation", UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
-			6:  Uint16Field("UpstreamMinimumTimeIntervalForDownshiftRateAdaptation", UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
-			7:  ByteField("XtuImpedanceStateForced", UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
-			8:  ByteField("L0Time", UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
-			9:  ByteField("L2Time", UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
-			10: Uint16Field("DownstreamMaximumNominalPowerSpectralDensity", UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
-			11: Uint16Field("UpstreamMaximumNominalPowerSpectralDensity", UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 11),
-			12: ByteField("DownstreamMaximumNominalAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 12),
-			13: ByteField("UpstreamMaximumNominalAggregateTransmitPower", UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 13),
-			14: Uint16Field("UpstreamMaximumAggregateReceivePower", UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 14),
-			15: ByteField("Vdsl2TransmissionSystemEnabling", UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 15),
+			0:  Uint16Field(ManagedEntityID, PointerAttributeType, 0x0000, 0, mapset.NewSetWith(Read, SetByCreate), false, false, false, 0),
+			1:  Uint16Field(XdslLineConfigurationProfilePart2_DownstreamMinimumTimeIntervalForUpshiftRateAdaptation, UnsignedIntegerAttributeType, 0x8000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 1),
+			2:  Uint16Field(XdslLineConfigurationProfilePart2_UpstreamMinimumTimeIntervalForUpshiftRateAdaptation, UnsignedIntegerAttributeType, 0x4000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 2),
+			3:  Uint16Field(XdslLineConfigurationProfilePart2_DownstreamDownshiftNoiseMargin, UnsignedIntegerAttributeType, 0x2000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 3),
+			4:  Uint16Field(XdslLineConfigurationProfilePart2_UpstreamDownshiftNoiseMargin, UnsignedIntegerAttributeType, 0x1000, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 4),
+			5:  Uint16Field(XdslLineConfigurationProfilePart2_DownstreamMinimumTimeIntervalForDownshiftRateAdaptation, UnsignedIntegerAttributeType, 0x0800, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 5),
+			6:  Uint16Field(XdslLineConfigurationProfilePart2_UpstreamMinimumTimeIntervalForDownshiftRateAdaptation, UnsignedIntegerAttributeType, 0x0400, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 6),
+			7:  ByteField(XdslLineConfigurationProfilePart2_XtuImpedanceStateForced, UnsignedIntegerAttributeType, 0x0200, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 7),
+			8:  ByteField(XdslLineConfigurationProfilePart2_L0Time, UnsignedIntegerAttributeType, 0x0100, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 8),
+			9:  ByteField(XdslLineConfigurationProfilePart2_L2Time, UnsignedIntegerAttributeType, 0x0080, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 9),
+			10: Uint16Field(XdslLineConfigurationProfilePart2_DownstreamMaximumNominalPowerSpectralDensity, UnsignedIntegerAttributeType, 0x0040, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 10),
+			11: Uint16Field(XdslLineConfigurationProfilePart2_UpstreamMaximumNominalPowerSpectralDensity, UnsignedIntegerAttributeType, 0x0020, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 11),
+			12: ByteField(XdslLineConfigurationProfilePart2_DownstreamMaximumNominalAggregateTransmitPower, UnsignedIntegerAttributeType, 0x0010, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 12),
+			13: ByteField(XdslLineConfigurationProfilePart2_UpstreamMaximumNominalAggregateTransmitPower, UnsignedIntegerAttributeType, 0x0008, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 13),
+			14: Uint16Field(XdslLineConfigurationProfilePart2_UpstreamMaximumAggregateReceivePower, UnsignedIntegerAttributeType, 0x0004, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, false, false, 14),
+			15: ByteField(XdslLineConfigurationProfilePart2_Vdsl2TransmissionSystemEnabling, UnsignedIntegerAttributeType, 0x0002, 0, mapset.NewSetWith(Read, SetByCreate, Write), false, true, false, 15),
 		},
 		Access:  CreatedByOlt,
 		Support: UnknownSupport,
