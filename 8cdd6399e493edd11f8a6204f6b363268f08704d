@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6bd113f_dcf8da4b",
+        "filename": "generated/attrNames_test.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1329,
+      "author": {
+        "id": 1000617
+      },
+      "writtenOn": "2022-01-27T14:51:54Z",
+      "side": 1,
+      "message": "There were 6 Managed Entities that had document decode errors (invalid characters or multiple attributes combined as one) that the move to exported attribute name constants helped to expose.  These are all on ME\u0027s that are not currently in use by the OpenONU device adapter or BBSIM.",
+      "revId": "8cdd6399e493edd11f8a6204f6b363268f08704d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388"
+    }
+  ]
+}
