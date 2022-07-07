@@ -21,6 +21,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+
 	"github.com/google/gopacket"
 	me "github.com/opencord/omci-lib-go/v2/generated"
 )
@@ -513,7 +514,7 @@ func (omci *GetAllAlarmsNextResponse) SerializeTo(b gopacket.SerializeBuffer, _ 
 		contentLength += 2 // Length field
 		if omci.AdditionalAlarms != nil {
 			extraMEs = len(omci.AdditionalAlarms)
-			contentLength += extraMEs*4 + 28
+			contentLength += extraMEs * (4 + 28)
 		}
 	}
 	if contentLength > maxLength {
