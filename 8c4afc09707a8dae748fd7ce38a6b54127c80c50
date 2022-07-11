@@ -1,0 +1,9 @@
+Verified+1: Jenkins Technical User <do-not-reply@opennetworking.org>
+Code-Review+1: Torsten Thieme <torsten.thieme@adtran.com>
+Code-Review+1: Girish Gowdra <girish.gowdra@intel.com>
+Code-Review+2: Holger Hildebrandt <holger.hildebrandt@adtran.com>
+Submitted-by: Holger Hildebrandt <holger.hildebrandt@adtran.com>
+Submitted-at: Mon, 11 Jul 2022 03:58:25 +0000
+Reviewed-on: https://gerrit.opencord.org/c/omci-lib-go/+/33026
+Project: omci-lib-go
+Branch: refs/heads/master
