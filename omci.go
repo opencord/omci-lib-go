@@ -198,18 +198,23 @@ func decodeOMCI(data []byte, p gopacket.PacketBuilder) error {
 }
 
 func calculateMicAes128(data []byte) (uint32, error) {
-	// See if upstream or downstream
+	// See if upstream or downstream. OMCI header should have been validated before this call
 	var downstreamCDir = [...]byte{0x01}
 	var upstreamCDir = [...]byte{0x02}
 
 	tid := binary.BigEndian.Uint16(data[0:2])
+
+	var length = 44
+	if DeviceIdent(data[3]) == ExtendedIdent {
+		length = 10 + int(binary.BigEndian.Uint16(data[8:10]))
+	}
 	var sum []byte
 	var err error
 
 	if (data[2]&me.AK) == me.AK || tid == 0 {
-		sum, err = aes.Sum(append(upstreamCDir[:], data[:44]...), omciIK, 4)
+		sum, err = aes.Sum(append(upstreamCDir[:], data[:length]...), omciIK, 4)
 	} else {
-		sum, err = aes.Sum(append(downstreamCDir[:], data[:44]...), omciIK, 4)
+		sum, err = aes.Sum(append(downstreamCDir[:], data[:length]...), omciIK, 4)
 	}
 	if err != nil {
 		return 0, err
