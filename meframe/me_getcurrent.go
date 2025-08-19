@@ -20,6 +20,7 @@ package meframe
 import (
 	"errors"
 	"fmt"
+
 	"github.com/google/gopacket"
 	. "github.com/opencord/omci-lib-go/v2"
 	me "github.com/opencord/omci-lib-go/v2/generated"
@@ -29,10 +30,24 @@ func GetCurrentDataRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Seri
 	if opt.frameFormat == ExtendedIdent {
 		return nil, errors.New("extended message set for this message type is not supported")
 	}
-	mask, err := checkAttributeMask(m, opt.attributeMask)
+	// Given mask sent in (could be default of 0xFFFF) get what is allowable.
+	// This will be all allowed if 0xFFFF is passed in, or a subset if a fixed
+	// number of items.
+	maxMask, err := checkAttributeMask(m, opt.attributeMask)
 	if err != nil {
 		return nil, err
 	}
+	// Now scan attributes and reduce mask to only those requested
+	var mask uint16
+	mask, err = calculateAttributeMask(m, maxMask)
+	if err != nil {
+		return nil, err
+	}
+	if mask == 0 {
+		// TODO: Is a GetCurrentData request with no attributes valid?
+		return nil, errors.New("no attributes requested for GetCurrentDataRequest")
+	}
+
 	// Common for all MEs
 	meLayer := &GetCurrentDataRequest{
 		MeBasePacket: MeBasePacket{
@@ -40,14 +55,10 @@ func GetCurrentDataRequestFrame(m *me.ManagedEntity, opt options) (gopacket.Seri
 			EntityInstance: m.GetEntityID(),
 			Extended:       opt.frameFormat == ExtendedIdent,
 		},
+		AttributeMask: mask,
 	}
-	// Get payload space available
-	maxPayload := maxPacketAvailable(m, opt)
 
-	// TODO: Lots of work to do
-
-	fmt.Println(mask, maxPayload)
-	return meLayer, errors.New("todo: Not implemented")
+	return meLayer, nil
 }
 
 func GetCurrentDataResponseFrame(m *me.ManagedEntity, opt options) (gopacket.SerializableLayer, error) {
@@ -58,6 +69,11 @@ func GetCurrentDataResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Ser
 	if err != nil {
 		return nil, err
 	}
+	mask, err = calculateAttributeMask(m, mask)
+	if err != nil {
+		return nil, err
+	}
+
 	// Common for all MEs
 	meLayer := &GetCurrentDataResponse{
 		MeBasePacket: MeBasePacket{
@@ -65,12 +81,66 @@ func GetCurrentDataResponseFrame(m *me.ManagedEntity, opt options) (gopacket.Ser
 			EntityInstance: m.GetEntityID(),
 			Extended:       opt.frameFormat == ExtendedIdent,
 		},
+		Result:        opt.result,
+		AttributeMask: 0,
+		Attributes:    make(me.AttributeValueMap),
 	}
-	// Get payload space available
-	maxPayload := maxPacketAvailable(m, opt)
 
-	// TODO: Lots of work to do
+	if meLayer.Result == me.AttributeFailure {
+		meLayer.UnsupportedAttributeMask = opt.unsupportedMask
+		meLayer.FailedAttributeMask = opt.attrExecutionMask
+	}
 
-	fmt.Println(mask, maxPayload)
-	return meLayer, errors.New("todo: Not implemented")
+	// Encode whatever we can
+	if meLayer.Result == me.Success || meLayer.Result == me.AttributeFailure {
+		// Get payload space available
+		maxPayload := maxPacketAvailable(m, opt)
+		payloadAvailable := int(maxPayload) - 2 - 4 // Less attribute mask and attribute error encoding
+		meDefinition := m.GetManagedEntityDefinition()
+		attrDefs := meDefinition.GetAttributeDefinitions()
+		attrMap := m.GetAttributeValueMap()
+
+		if mask != 0 {
+			// Iterate down the attributes (Attribute 0 is the ManagedEntity ID)
+			var attrIndex uint
+			for attrIndex = 1; attrIndex <= 16; attrIndex++ {
+				// Is this attribute requested
+				if mask&(1<<(16-attrIndex)) != 0 {
+					// Get definitions since we need the name
+					attrDef, ok := attrDefs[attrIndex]
+					if !ok {
+						msg := fmt.Sprintf("Unexpected error, index %v not valued for ME %v",
+							attrIndex, meDefinition.GetName())
+						return nil, errors.New(msg)
+					}
+					var attrValue interface{}
+					attrValue, ok = attrMap[attrDef.Name]
+					if !ok {
+						msg := fmt.Sprintf("Unexpected error, attribute %v not provided in ME %v: %v",
+							attrDef.GetName(), meDefinition.GetName(), m)
+						return nil, errors.New(msg)
+					}
+					// Is space available?
+					if attrDef.Size <= payloadAvailable {
+						// Mark bit handled
+						mask &= ^attrDef.Mask
+						meLayer.AttributeMask |= attrDef.Mask
+						meLayer.Attributes[attrDef.Name] = attrValue
+						payloadAvailable -= attrDef.Size
+
+					} else if opt.failIfTruncated {
+						msg := fmt.Sprintf("out-of-space. Cannot fit attribute %v into GetCurrentDataResponse message",
+							attrDef.GetName())
+						return nil, me.NewMessageTruncatedError(msg)
+					} else {
+						// Add to existing 'failed' mask and update result
+						meLayer.FailedAttributeMask |= attrDef.Mask
+						meLayer.Result = me.AttributeFailure
+					}
+				}
+			}
+		}
+	}
+
+	return meLayer, nil
 }
